@@ -1772,7 +1772,7 @@ msgstr ""
 
 #: redistricting/templates/viewplan.html:730
 msgid "Create and Preview New Report"
-msgstr "Crear y Previsualizar Nuevo Informe"
+msgstr "Crear y previsualizar nuevo informe"
 
 #: redistricting/templates/viewplan.html:734
 msgid "Please generate a report<br/>to preview statistics"
@@ -1780,15 +1780,15 @@ msgstr "Por favor genere un informe<br/>para previsualizar estadísticas"
 
 #: redistricting/templates/viewplan.html:753
 msgid "Top Ranked Users' Plans"
-msgstr "Planes de Usuarios con Mayor Puntuación"
+msgstr "Planes de usuarios con mayor puntuación"
 
 #: redistricting/templates/viewplan.html:755
 msgid "My Ranked Plans"
-msgstr "Mis Planes Calificados"
+msgstr "Mis planes calificados"
 
 #: redistricting/templates/viewplan.html:781
 msgid "Select Legislative Body"
-msgstr "Seleccionar Cuerpo Legislativo"
+msgstr "Seleccionar cuerpo legislativo"
 
 #: redistricting/templates/viewplan.html:805
 #, python-format
@@ -1803,8 +1803,8 @@ msgstr "Este plan ha sido compartido"
 msgid ""
 "Anyone can view this plan by visiting the following URL in a web browser:"
 msgstr ""
-"Cualquier persona puede ver este plan visitando la siguiente URL en un "
-"navegador web:"
+"Cualquiera puede ver este plan visitando el siguiente URL en un "
+"navegador de la red:"
 
 #: redistricting/templates/viewplan.html:827 templates/index.html:135
 msgid "Tweet"
@@ -1812,7 +1812,7 @@ msgstr "Tweet"
 
 #: redistricting/templates/viewplan.html:848
 msgid "Plan File Export"
-msgstr "Exportación de Archivo de Plan"
+msgstr "Exportar el archivo del plan"
 
 #: redistricting/templates/viewplan.html:849
 #, python-format
@@ -1825,26 +1825,26 @@ msgid ""
 "                  (such as ward, census block, etc.) and the district to "
 "which it belongs. This \n"
 "                  file can be imported to your account or someone else's "
-"account or used in analysis\n"
+"account or used in the analysis\n"
 "                  of the %(plan_text)s using other GIS software.\n"
 "                  "
 msgstr ""
 "\n"
 "                  El %(bmlll)s archivo de índice es un archivo con valores "
 "separados por comas (csv).\n"
-"                  Cada fila tiene la identificación única de las bases "
-"geográficas de cada %(plan_text)s \n"
-"                  (tales como distrito electoral, conjunto de cuadras, etc.) "
-"y el distrito al que \n"
+"                  Cada fila tiene la identificación única de las unidades "
+"geográficas base de cada %(plan_text)s \n"
+"                  (tales como los consejos administrativos, los conjuntos de "
+"cuadras, etc.) y el distrito al que \n"
 "                  pertenece. Este archivo puede ser importado a su cuenta o "
-"a la cuenta de algiuen más o \n"
-"                  usado en análisis del %(plan_text)s usando otro software "
-"GIS.\n"
+"a la de algiuen más o \n"
+"                  ser utilizado en el análisis del %(plan_text)s usando otro "
+"software GIS.\n"
 "                  "
 
 #: redistricting/templates/viewplan.html:886
 msgid "Community Map Name:"
-msgstr "Nombre del Mapa de Comunidad"
+msgstr "Nombre del mapa de la comunidad"
 
 #: redistricting/templates/viewplan.html:899
 msgid "Please select a plan"
@@ -1852,21 +1852,21 @@ msgstr "Por favor seleccione un plan"
 
 #: redistricting/templates/viewplan.html:913
 msgid "Currently Viewing:"
-msgstr "Actualmente Viendo:"
+msgstr "Actualmente viendo:"
 
 #: redistricting/templates/viewplan.html:942
 msgid "Plan not saved"
-msgstr "Plan no fue guardado"
+msgstr "El plan no fue guardado"
 
 #: redistricting/templates/viewplan.html:947
 #: redistricting/templates/viewplan.html:948
 #: redistricting/templates/viewplan.html:949
 msgid "Please Wait"
-msgstr "Por favor espere ..."
+msgstr "Por favor espere..."
 
 #: redistricting/templates/viewplan.html:947
 #, python-format
-msgid "Please wait. New %(body_members)s are computed..."
+msgid "Please wait. New %(body_members)s are being computed..."
 msgstr "Por favor espere. Nuevos %(body_members)s se están computando..."
 
 #: redistricting/templates/viewplan.html:948
@@ -1886,15 +1886,15 @@ msgstr "Seleccionar %(layer_type)s Mapa Temático"
 
 #: redistricting/templates/viewplan.html:986
 msgid "Choose District Thematic Map"
-msgstr "Elegir Mapa Temático de Distrito"
+msgstr "Elegir mapa temático del distrito"
 
 #: redistricting/templates/viewplan.html:1010
 msgid "Choose a Reference Layer"
-msgstr "Elegir una Capa de Referencia"
+msgstr "Elegir una capa de referencia"
 
 #: redistricting/templates/viewplan.html:1021
 msgid "Show Labels?"
-msgstr "¿Mostrar Etiquetas?"
+msgstr "¿Mostrar etiquetas?"
 
 #: redistricting/templates/viewplan.html:1024
 msgid "OR..."
@@ -1903,12 +1903,12 @@ msgstr "O..."
 #: redistricting/templates/viewplan.html:1026
 msgid "Choose a:<br/>legislative district or community map<br/>reference layer"
 msgstr ""
-"Elija una<br/>capa de referencia:<br/>distrito legislativo o mapa de "
+"Elija un:<br/>distrito legislativo o una capa de referencia<br/>del mapa de "
 "comunidad"
 
 #: redistricting/templates/viewplan.html:1040
 msgid "Select Plan to Display as Reference Layer"
-msgstr "Seleccionar Plan a Mostrar como Capa de Referencia"
+msgstr "Seleccionar el plan a mostrar como capa de referencia"
 
 #: redistricting/templates/viewplan.html:1045
 msgid "OK"
@@ -1916,7 +1916,7 @@ msgstr "Aceptar"
 
 #: redistricting/templates/viewplan.html:1082
 msgid "Edit Statistics Sets"
-msgstr "Editar Conjuntos de Estadísticas"
+msgstr "Editar los conjuntos de estadísticas"
 
 #: redistricting/templates/viewplan.html:1084
 msgid ""
@@ -1926,11 +1926,12 @@ msgid ""
 "        for you to select or edit later. You may have up to three sets of \n"
 "        statistics saved."
 msgstr ""
-"Usted puede seleccionar hasta tres estadísticas a la vez para \n"
-"        ser mostradas en la barra lateral. Cada conjunto de tres "
+"Puede seleccionar hasta tres estadísticas a la vez para que sean \n"
+"        mostradas en la barra lateral. Cada conjunto de tres "
 "estadísticas \n"
-"        se guardarán en el menú desplegable para que lo seleccione o "
-"modifique más tarde."
+"        se guardará en el menú desplegable para que lo seleccione o "
+"modifique más tarde. Puede tener hasta tres conjuntos de estadísticas \n"
+"        guardados."
 
 #: redistricting/templates/viewplan.html:1089
 msgid "Select up to 3 statistics"
@@ -1938,15 +1939,15 @@ msgstr "Seleccione un máximo de 3 estadísticas"
 
 #: redistricting/templates/viewplan.html:1090
 msgid "Clear Choices"
-msgstr "Limpiar Opciones"
+msgstr "Limpiar opciones"
 
 #: redistricting/templates/viewplan.html:1094
 msgid "Name Statistics Set"
-msgstr "Nombrar Conjunto de Estadísticas"
+msgstr "Nombrar conjunto de estadísticas"
 
 #: redistricting/templates/viewplan.html:1096
 msgid "Save Set"
-msgstr "Guardar Conjunto"
+msgstr "Guardar conjunto"
 
 #: redistricting/templates/viewplan.html:1099
 msgid "... Or select a saved statistics set"
@@ -2038,56 +2039,56 @@ msgstr "veinte"
 
 #: redistricting/templatetags/redistricting_extras.py:142
 msgid "True"
-msgstr ""
+msgstr "Verdadero"
 
 #: redistricting/templatetags/redistricting_extras.py:142
 msgid "False"
-msgstr ""
+msgstr "Falso"
 
 #: templates/404.html:32 templates/404.html.py:35 templates/500.html:32
 #: templates/500.html.py:35
 msgid "Oops"
-msgstr "¡Uy!"
+msgstr "¡Ups!"
 
 #: templates/404.html:36
 msgid ""
 "Sometimes bad things happen. I regret you were not able to find what you "
 "were looking for."
 msgstr ""
-"A veces suceden cosas malas. Lamento que no fue posible encontrar lo "
-"queestaba buscando."
+"A veces suceden estas cosas. Lamento que no fue posible encontrar lo "
+"que buscaba."
 
 #: templates/500.html:36
 msgid ""
 "Sometimes bad things happen. I regret any inconvenience this 500 error has "
 "caused you."
 msgstr ""
-"A veces suceden cosas malas. Lamentamos cualquier inconveniente causado por "
+"A veces suceden estas cosas. Lamentamos cualquier inconveniente causado por "
 "el error 500."
 
 #: templates/account.html:3
 msgid "Account Information"
-msgstr "Información de la Cuenta"
+msgstr "Información de la cuenta"
 
 #: templates/account.html:6
 msgid "Sign Up For An Account"
-msgstr "Regístrese para Obtener una Cuenta"
+msgstr "Regístrese para obtener una cuenta"
 
 #: templates/account.html:12
 msgid ""
 "Please choose a username between 6 and 30 characters. Include at least one "
 "letter. Do not leave leading or trailing spaces."
 msgstr ""
-"Por favor, elija un nombre de usuario que contenga entre 6 y 30 caracteres. "
-"Incluya una letra por lo menos. No deje espacios ni al principio ni al "
+"Por favor elija un nombre de usuario que contenga entre 6 y 30 caracteres. "
+"Incluya una letra por lo menos. No deje espacios al principio ni al "
 "final."
 
 #: templates/account.html:22
 msgid ""
-"Please use a password of 8 or more characters. Include a number, a capital "
+"Please use a password of 8 or more characters. Include at least a number, a capital "
 "letter and a lower-case letter."
 msgstr ""
-"Por favor, use una contraseña de 8 o más caracteres. Incluya un número, una "
+"Por favor use una contraseña de 8 o más caracteres. Incluya al menos un número, una "
 "letra mayúscula y una letra minúscula."
 
 #: templates/account.html:25
@@ -2097,16 +2098,16 @@ msgstr "Contraseña"
 
 #: templates/account.html:29
 msgid "Confirm Password"
-msgstr "Confirmar Contraseña"
+msgstr "Confirmar contraseña"
 
 #: templates/account.html:33
 msgid "Password Hint"
-msgstr "Pista para Recordar Contraseña"
+msgstr "Pista para recordar contraseña"
 
 #: templates/account.html:40
 msgid "An email address is recommended to recover a forgotten password"
 msgstr ""
-"Una dirección de correo electrónico es recomendable para recuperar una "
+"Se recomienda usar una dirección de correo electrónico para recuperar una "
 "contraseña olvidada"
 
 #: templates/account.html:48
@@ -2123,7 +2124,7 @@ msgstr "Organización"
 
 #: templates/account.html:77
 msgid "I have read the <a href=\"#\">Terms of Use</a>"
-msgstr ""
+msgstr "He leído los <a href=\"#\">términos de uso</a>"
 
 #: templates/account.html:92
 msgid "Update"
@@ -2138,12 +2139,12 @@ msgid ""
 "You requested a new password for the Public Mapping Project. Sorry for the "
 "inconvenience!  This is your new password"
 msgstr ""
-"Ud. ha solicitado una nueva contraseña para el Proyecto de Mapeo Público. "
-"Disculpe la molestia! Esta es su nueva contraseña"
+"Ha solicitado una nueva contraseña para el Proyecto de Mapeo Público. "
+"¡Disculpe la molestia! Esta es su nueva contraseña"
 
 #: templates/forgottenpassword.email:16
 msgid "Thank you for using the Public Mapping Project."
-msgstr "Gracias por Usar el Proyecto de Mapeo Público"
+msgstr "Gracias por usar el Proyecto de Mapeo Público"
 
 #: templates/index.html:43
 msgid "Welcome to DistrictBuilder"
@@ -2167,15 +2168,15 @@ msgstr "Sobre el Proyecto de Mapeo Público"
 
 #: templates/index.html:118
 msgid "Frequently Asked Questions"
-msgstr "Preguntas Frecuentes"
+msgstr "Preguntas frecuentes"
 
 #: templates/index.html:119
 msgid "Quick Start Guide"
-msgstr "Guía Rápida de Inicio"
+msgstr "Guía rápida de inicio"
 
 #: templates/index.html:120
 msgid "Redistricting Resources"
-msgstr "Recursos sobre la Redistritación"
+msgstr "Recursos sobre la redistritación"
 
 #: templates/index.html:122
 msgid "About this DistrictBuilder instance"
@@ -2191,7 +2192,7 @@ msgstr "Información de Virginia"
 
 #: templates/index.html:160
 msgid "Log In"
-msgstr "Iniciar Sesión"
+msgstr "Iniciar sesión"
 
 #: templates/index.html:166
 msgid "Forgot your password?"
@@ -2203,11 +2204,11 @@ msgstr "¿No tiene una cuenta?"
 
 #: templates/index.html:173
 msgid "To Draw Your Own Maps..."
-msgstr "Para dibujar sus propios mapas ..."
+msgstr "Para dibujar sus propios mapas..."
 
 #: templates/index.html:177
 msgid "To View Other Users' Maps..."
-msgstr "Para ver los mapas de otros usuarios ..."
+msgstr "Para ver los mapas de otros usuarios..."
 
 #: templates/index.html:180
 msgid "Enter as a guest"
@@ -2215,7 +2216,7 @@ msgstr "Entrar como invitado"
 
 #: templates/index.html:185
 msgid "Terms of Use"
-msgstr "Términos de Uso"
+msgstr "Términos de uso"
 
 #: templates/index.html:197
 msgid "Get A Hint"
@@ -2227,11 +2228,11 @@ msgid ""
 "registering for an account."
 msgstr ""
 "Ingrese su nombre de usuario para recuperar su pista de contraseña que "
-"utilizó al registrarse para obtener una cuenta."
+"proporcionó al registrarse."
 
 #: templates/index.html:204
 msgid "Username"
-msgstr "Nombre de Usuario:"
+msgstr "Nombre de usuario:"
 
 #: templates/index.html:208
 msgid "OR"
@@ -2239,7 +2240,7 @@ msgstr "O"
 
 #: templates/index.html:210
 msgid "Reset Your Password"
-msgstr "Restablecer Contraseña"
+msgstr "Restablecer su contraseña"
 
 #: templates/index.html:212
 msgid ""
@@ -2251,7 +2252,7 @@ msgstr ""
 
 #: templates/index.html:217
 msgid "Email"
-msgstr "Correo Electrónico"
+msgstr "Correo electrónico"
 
 #: templates/index.html:223
 msgid "Begin"
@@ -2259,7 +2260,7 @@ msgstr "Empezar"
 
 #: templates/index.html:227
 msgid "Here Is Your Hint"
-msgstr "Aquí Está su Pista"
+msgstr "Aquí está su pista"
 
 #: templates/index.html:228
 msgid ""
@@ -2267,7 +2268,7 @@ msgid ""
 "in."
 msgstr ""
 "Si esto le ayuda a recordar su contraseña, puede cerrar esta ventana e "
-"iniciar sesión."
+"iniciar la sesión."
 
 #: templates/index.html:232
 msgid ""
@@ -2275,7 +2276,7 @@ msgid ""
 "enter your email address, so we can email your password to you."
 msgstr ""
 "Si usted todavía no puede recordar su contraseña, haga clic en el botón "
-"\"Atrás\", e ingrese su dirección de correo electrónico, para que podamos "
+"\"Atrás\", e ingrese su dirección de correo electrónico para que podamos "
 "enviarle su contraseña."
 
 #: templates/index.html:236
@@ -2285,10 +2286,10 @@ msgstr "Correo electrónico enviado"
 #: templates/index.html:237
 msgid ""
 "Your password has been emailed to you. You should receive your password in "
-"your inbox in the next few minutes."
+"the next few minutes."
 msgstr ""
-"Su contraseña ha sido enviada a su correo electrónico. Usted debería recibir "
-"su contraseña en su correo electrónico en los próximos minutos."
+"Su contraseña ha sido enviada a su correo electrónico. Debería recibir "
+"su contraseña en los próximos minutos."
 
 #: templates/index.html:240
 msgid "Back"
@@ -2305,12 +2306,12 @@ msgstr "Su cuenta tiene demasiadas sesiones."
 #: templates/index.html:248
 msgid "To use DistrictBuilder, you must do one of the following actions:"
 msgstr ""
-"Para utilizar DistrictBuilder, usted debe ejecutar una de las siguientes "
+"Para utilizar DistrictBuilder, debe ejecutar una de las siguientes "
 "acciones:"
 
 #: templates/index.html:251
 msgid "Log in as a different user."
-msgstr "Inicie sesión con un usuario diferente."
+msgstr "Inicie una sesión con un usuario diferente."
 
 #: templates/index.html:254
 msgid "Use the system as a guest."
@@ -2327,16 +2328,16 @@ msgid ""
 "use the application again shortly. We apologize for the inconvenience."
 msgstr ""
 "La aplicación DistrictBuilder ha alcanzado su capacidad máxima. Por favor, "
-"trate de usar la aplicación de nuevo en breve. Pedimos disculpas por los "
+"trate de usar la aplicación de nuevo en breve. Le pedimos una disculpa por los "
 "inconvenientes."
 
 #: templates/index.html:269
 msgid ""
-"The following discloses our information gathering and dissemination "
+"The following information discloses our information gathering and dissemination "
 "practices; and terms of use for this web site."
 msgstr ""
 "La siguiente información revela nuestras prácticas de recopilación, "
-"difusión, y condiciones de uso de este sitio web."
+"difusión y condiciones de uso de éste sitio web."
 
 #: templates/index.html:270
 msgid "Information gathering"
@@ -2347,7 +2348,7 @@ msgid ""
 "Our web server software generates logfiles of the IP addresses of computers "
 "that access this web site and of what files they access."
 msgstr ""
-"Nuestro software de servidor web genera archivos de registro de las "
+"Nuestro software del servidor web genera archivos de registro de las "
 "direcciones IP de los ordenadores que acceden a este sitio web y de los "
 "archivos a los que acceden."
 
@@ -2369,11 +2370,11 @@ msgstr ""
 msgid "We may use cookies to maintain a user's identity between web sessions."
 msgstr ""
 "Podemos utilizar cookies para mantener la identidad de un usuario entre "
-"sesiones web."
+"distintas sesiones web."
 
 #: templates/index.html:277
 msgid "Contributor Terms"
-msgstr "Términos de Uso del Contribuyente"
+msgstr "Términos de uso del contribuyente"
 
 #: templates/index.html:278
 msgid ""
@@ -2385,8 +2386,8 @@ msgstr ""
 "Este sitio permite a los usuarios crear mapas de distritos y hacer "
 "comentarios en los mapas de los demás. Al crear un mapa, un comentario, o "
 "una cuenta, usted acepta las siguientes condiciones aplicables a todos los "
-"mapas, comentarios, informacion, o cualquier otro contenido (colectivamente, "
-"\"Contenidos\") que Ud. aporte a este sitio."
+"mapas, comentarios, información, o cualquier otro contenido (colectivamente, "
+"\"Contenidos\") que usted aporte a este sitio."
 
 #: templates/index.html:279
 msgid ""
@@ -2400,16 +2401,16 @@ msgid ""
 "waive and/or agree not to assert against us or our licensees any moral "
 "rights that You may have in the Contents."
 msgstr ""
-"Por la presente, Ud. nos concede licencia a nivel mundial, libre de "
-"regalías, sin exclusividad, perpetua, irrevocable, para realizar cualquier "
-"acto que está limitado por los derechos de autor sobre cualquier cosa dentro "
-"de los contenidos, ya sea en su forma original o cualquier otra. Estos "
-"derechos incluyen explícitamente el uso comercial, y no excluyen ningún "
-"campo de actividad. Estos derechos incluyen, sin limitación, el derecho a "
+"Por este medio, usted nos concede licencia -a nivel mundial, libre de "
+"regalías, sin exclusividad, perpetua e irrevocable- para realizar cualquier "
+"acto que esté limitado por los derechos de autor sobre la totalidad de los "
+"contenidos, ya sea en su forma original o en cualquier otra. Estos "
+"derechos incluyen explícitamente el uso comercial y no excluyen ningún "
+"campo de actividad. Estos derechos incluyen, sin límite, el derecho a "
 "sublicenciar la obra a través de múltiples niveles de sublicencias. En la "
 "medida permitida por las leyes locales y las convenciones de derechos de "
 "autor, usted también renuncia y / o se compromete a no imponer en contra de "
-"nosotros o nuestros licenciatarios ningún derecho moral que pueda tener en "
+"nosotros o nuestros licenciatarios ningún derecho moral que pueda tener sobre "
 "los Contenidos."
 
 #: templates/index.html:280
@@ -2418,7 +2419,7 @@ msgid ""
 "published&quot; available under at least one of the following licenses: ODbL "
 "1.0; DbCL 1.0; CC-BY-SA 2.0; or another free and open license. "
 msgstr ""
-"Nos comprometemos a hacer disponibles los Contenido que usted aporte y "
+"Nos comprometemos a hacer disponibles los Contenidos que usted aporte y "
 "designe como \"publicado\", en al menos una de las siguientes licencias: "
 "ODbL 1,0; DbCL 1,0; CC-BY-SA 2.0, u otra licencia libre y abierta."
 
@@ -2439,7 +2440,7 @@ msgstr ""
 "información cuando sea necesario para que el tercero pueda proporcionarnos "
 "esos servicios. Hacemos todos los esfuerzos comercialmente razonables para "
 "evitar que estos terceros utilicen su información de identificación personal "
-"para ningún otro propósito."
+"para otro propósito."
 
 #: templates/index.html:283
 msgid ""
@@ -2450,14 +2451,14 @@ msgid ""
 "site content to user needs, and to generate aggregate statistical reports. "
 "At no time do we disclose site usage by individual visitors."
 msgstr ""
-"Utilizamos su dirección IP y los archivos a los que Ud. accede para ayudar a "
+"Utilizamos su dirección IP y los archivos a los que usted accede para ayudar a "
 "diagnosticar problemas con nuestro servidor y para administrar nuestro sitio "
 "Web mediante la identificación de (1) qué partes de nuestro sitio son más "
 "utilizados, y (2) qué parte de nuestra audiencia proviene de diferentes "
 "zonas geográficas. También utilizamos esta información para adaptar el "
-"contenido del sitio a las necesidades de los usuarios, y generar informes "
+"contenido del sitio a las necesidades de los usuarios y generar informes "
 "estadísticos agregados. En ningún momento divulgamos el uso del sitio por "
-"los visitantes individuales."
+"las visitas como individuos."
 
 #: templates/index.html:284
 msgid ""
@@ -2467,7 +2468,7 @@ msgid ""
 "process served on the hosts. "
 msgstr ""
 "Nos reservamos el derecho de revelar su información de identificación "
-"personal requerido por la ley y cuando creamos que dicha divulgación es "
+"personal cuando sea requerida por ley y / o creamos que dicha divulgación es "
 "necesaria para proteger nuestros derechos y / o para cumplir con un "
 "procedimiento judicial, orden judicial o proceso legal en nuestro sitio web."
 
@@ -2488,7 +2489,7 @@ msgstr ""
 "cuenta y marcas de tiempo pueden ser puestos a disposición del público. "
 "Podemos usar esta información para generar informes estadísticos agregados. "
 "En ningún momento se revela el nombre, correo electrónico u otra información "
-"asociada a las cuentas individuales de usuarios, a menos que la persona "
+"asociada a las cuentas individuales de los usuarios, a menos que la persona "
 "explícitamente seleccione el &quot;hacer pública la información de mi  "
 "cuenta&quot; en la configuración del perfil de usuario."
 
@@ -2515,8 +2516,8 @@ msgid ""
 "address at the host domain"
 msgstr ""
 "Si usted tiene alguna pregunta sobre esta declaración de privacidad, las "
-"prácticas de este sitio, o sus relaciones con este sitio, usted puede "
-"contactarse con la dirección de soporte en el dominio del servidor"
+"prácticas de este sitio o su relación con el mismo, usted puede "
+"contactarnos en la dirección de soporte en el dominio del servidor"
 
 #: templates/index.html:289
 msgid ""
@@ -2536,8 +2537,8 @@ msgid ""
 "An announcement of any changes to this policy will be posted on this page "
 "for  thirty days before any changes go into effect."
 msgstr ""
-"Cualquier cambio de política será publicada en esta página por treinta días "
-"antes de que los cambios sean efectivos."
+"Cualquier cambio de política será publicada en esta página treinta días "
+"antes de que sea efectivo."
 
 #: templates/index.html:292
 msgid "Effective Date"
@@ -2545,13 +2546,13 @@ msgstr "Fecha de vigencia"
 
 #: templates/index.html:293
 msgid "The effective date of this policy was May 2, 2011."
-msgstr "Esta política es efectiva desde 02 de mayo 2011."
+msgstr "Esta política es efectiva a partir del 02 de mayo de 2011."
 
 #: templates/index.html:332
 #, fuzzy, python-format
 msgid ""
 "We've designed the software to run on %(firefox_link)s - a free web browser"
-msgstr "Hemos diseñado el software para funcionar en"
+msgstr "Hemos diseñado el software para funcionar en %(firefox_link)s - un navegador gratuito"
 
 #: templates/language_chooser.html:33
 msgid "Language"
@@ -2559,15 +2560,15 @@ msgstr "Idioma"
 
 #: templates/admin/base_site.html:34
 msgid "Redistricting site admin"
-msgstr "Administrador del sitio de redistribución de distritos"
+msgstr "Administrador del sitio de redistritación"
 
 #: templates/admin/base_site.html:37
 msgid "Redistricting administration"
-msgstr "Redistribución de la administración"
+msgstr "Administración de la redistritación"
 
 #: templates/admin/login.orig.html:19
 msgid "Username:"
-msgstr "Nombre de Usuario:"
+msgstr "Nombre de usuario:"
 
 #: templates/admin/login.orig.html:22
 msgid "Password:"
@@ -2596,7 +2597,7 @@ msgstr "Cambiar la contraseña"
 msgid "Please correct the error below."
 msgid_plural "Please correct the errors below."
 msgstr[0] "Por favor corregir el error de abajo."
-msgstr[1] "Por favor corregir errores de abajo."
+msgstr[1] "Por favor corregir los errores de abajo."
 
 #: templates/admin/auth/user/change_password.orig.html:28
 #, python-format
@@ -2611,12 +2612,12 @@ msgstr "Contraseña (otra vez)"
 
 #: templates/admin/auth/user/change_password.orig.html:42
 msgid "Enter the same password as above, for verification."
-msgstr "Volver a ingresar contraseña para su verificación."
+msgstr "Volver a ingresar la contraseña para su verificación."
 
 #: templates/admin/redistricting/subject/add_form.html:33
 #: templates/admin/redistricting/subject/add_form.html:56
 msgid "Download Subject template"
-msgstr "Descargar Modelo de Tema"
+msgstr "Descargar modelo de tema"
 
 #: templates/admin/redistricting/subject/add_form.html:52
 #: templates/admin/redistricting/subject/upload_form.html:121
@@ -2630,32 +2631,32 @@ msgid ""
 "application. For this reason, adding a Subject requires a few extra steps. "
 "The following forms will walk you through the process of:"
 msgstr ""
-"Un tema en DistrictBuilder tiene relaciones con muchos objetos en la "
-"aplicación. Por esta razón, la adición de un tema requiere algunos pasos "
+"Un tema en DistrictBuilder está relacionado con muchos objetos en la "
+"aplicación. Por esta razón, incluir un tema requiere algunos pasos "
 "adicionales. Los siguientes formularios le guiarán en el proceso de:"
 
 #: templates/admin/redistricting/subject/add_form.html:62
 #: templates/admin/redistricting/subject/upload_form.html:131
 msgid "Downloading a Subject template file (CSV)"
-msgstr "Descargando Archivo de Modelo de Tema (CSV)"
+msgstr "Descargando un archivo modelo de tema (CSV)"
 
 #: templates/admin/redistricting/subject/add_form.html:63
 #: templates/admin/redistricting/subject/upload_form.html:132
 msgid "Uploading a complete Subject file (CSV)"
-msgstr "Cargando un Archivo de Tema completa (CSV)"
+msgstr "Cargando un archivo de tema completo (CSV)"
 
 #: templates/admin/redistricting/subject/add_form.html:64
 msgid "Verifying the upload Subject file."
-msgstr "Verificando la carga del Archivo de Tema."
+msgstr "Verificando la carga del archivo de tema."
 
 #: templates/admin/redistricting/subject/add_form.html:65
 #: templates/admin/redistricting/subject/upload_form.html:134
 msgid "Configuring the settings for the uploaded Subject."
-msgstr "Configurando los ajustes del Tema cargado."
+msgstr "Configurando los ajustes del tema cargado."
 
 #: templates/admin/redistricting/subject/add_form.html:67
 msgid "1. Download a Subject template file"
-msgstr "1. Descargar Archivo de Modelo de tema"
+msgstr "1. Descargar archivo del modelo de tema"
 
 #: templates/admin/redistricting/subject/add_form.html:68
 msgid ""
@@ -2667,7 +2668,7 @@ msgstr ""
 
 #: templates/admin/redistricting/subject/add_form.html:69
 msgid "Subject template CSV"
-msgstr "Modelo de Tema CSV"
+msgstr "Modelo de tema CSV"
 
 #: templates/admin/redistricting/subject/add_form.html:71
 #: templates/admin/redistricting/subject/delete_selected_confirmation.html:83
@@ -2696,7 +2697,7 @@ msgid ""
 "the following objects and their related items will be deleted:"
 msgstr ""
 "¿Está seguro que desea eliminar los objetos seleccionados %(object_name)s "
-"Todos los siguientes objetos y sus elementos relacionados serán eliminados:"
+"Todos los siguientes objetos, y sus elementos relacionados, serán eliminados:"
 
 #: templates/admin/redistricting/subject/delete_selected_confirmation.html:52
 msgid "characteristics"
@@ -2754,8 +2755,8 @@ msgid ""
 "The process of deleting a %(object_name)s takes a significant amount of "
 "time, and may not be interrupted once it has been started."
 msgstr ""
-"El proceso de borrado de un %(object_name)s  toma una cantidad significativa "
-"de tiempo, y no puede ser interrumpida una vez que se ha iniciado."
+"El proceso de borrado de un %(object_name)s  toma una cantidad considerable "
+"de tiempo y no puede ser interrumpida una vez que ha iniciado."
 
 #: templates/admin/redistricting/subject/delete_selected_confirmation.html:82
 #, python-format
@@ -2768,7 +2769,7 @@ msgstr ""
 
 #: templates/admin/redistricting/subject/upload_form.html:33
 #: templates/admin/redistricting/subject/upload_form.html:125
-msgid "Upload Subject template"
+msgid "Upload Subject Template"
 msgstr "Cargar plantilla de reserva"
 
 #: templates/admin/redistricting/subject/upload_form.html:66
@@ -2781,7 +2782,7 @@ msgstr ""
 #: templates/admin/redistricting/subject/upload_form.html:75
 msgid "Sorry! This processing step failed with the following error message: "
 msgstr ""
-"¡Lo siento! Este paso del proceso ha fallado con el siguiente mensaje de "
+"¡Lo siento! Este paso del proceso ha fallado. Por favor lea el siguiente mensaje de "
 "error:"
 
 #: templates/admin/redistricting/subject/upload_form.html:77
@@ -2791,7 +2792,7 @@ msgstr "Volver a intentar"
 
 #: templates/admin/redistricting/subject/upload_form.html:85
 msgid "Could not retrieve task status."
-msgstr "No se pudo recuperar el estado de tarea."
+msgstr "No se pudo recuperar el estado de la tarea."
 
 #: templates/admin/redistricting/subject/upload_form.html:133
 msgid "Verifying the uploaded Subject file."
@@ -2806,13 +2807,13 @@ msgid ""
 "Using the file field below, please select the populated Subject template "
 "file, and upload the Subject template file with the 'Upload' button below."
 msgstr ""
-"Utilizando el campo de archivo debajo, por favor seleccione el archivo "
-"poblado de modelo de tema, y cargue el archivo de modelo de tema con el "
-"botón 'Subir' a continuación."
+"Utilizando el campo de archivo que aparece abajo, por favor seleccione el archivo "
+"poblado de modelo de tema y cargue el archivo de modelo de tema con el "
+"botón 'Subir' que se encuentra a enseguida."
 
 #: templates/admin/redistricting/subject/upload_form.html:141
 msgid "3. Verifying the uploaded Subject file"
-msgstr "3. Verificando el Archivo de Tema cargado"
+msgstr "3. Verificando el archivo de tema cargado"
 
 #: templates/admin/redistricting/subject/upload_form.html:142
 msgid ""
@@ -2821,14 +2822,14 @@ msgid ""
 "older hardware, so please wait until the process completes before leaving "
 "this page."
 msgstr ""
-"Por favor espere mientras se comprueba en el Archivo de Tema cargado la "
+"Por favor espere mientras se comprueba en el archivo de tema cargado la "
 "coherencia y la alineación con los datos cargados. Esto puede tomar hasta 1 "
-"hora en hardware antiguo, así que por favor espere hasta que el proceso se "
+"hora en un hardware antiguo, así que por favor espere hasta que el proceso se "
 "complete antes de salir de esta página."
 
 #: templates/admin/redistricting/subject/upload_form.html:145
 msgid "4. Configuring the settings for the uploaded Subject"
-msgstr "4. Configurando ajustes del Tema cargado."
+msgstr "4. Configurando ajustes del tema cargado."
 
 #: templates/admin/redistricting/subject/upload_form.html:146
 msgid ""
@@ -2836,15 +2837,15 @@ msgid ""
 "form to complete filling in the Subject details."
 msgstr ""
 "Se han completado los pasos de verificación, puede proceder al formulario de "
-"cambio de Tema para completar el llenado de los detalles del Tema."
+"cambio de tema para completar el llenado de los detalles del tema."
 
 #: templates/admin/redistricting/subject/upload_form.html:155
 msgid "Verifying counts of uploaded subjects..."
 msgstr "Verificando la cuenta de los temas cargados ..."
 
 #: templates/admin/redistricting/subject/upload_form.html:157
-msgid "Please Wait ..."
-msgstr "Por favor espere ..."
+msgid "Please Wait..."
+msgstr "Por favor espere..."
 
 #: templates/admin/redistricting/subject/upload_form.html:159
 msgid "Upload"
@@ -2856,7 +2857,7 @@ msgstr "Documentación"
 
 #: templates/registration/password_change_form.orig.html:34
 msgid "Log out"
-msgstr "Cerrar Sesión"
+msgstr "Cerrar sesión"
 
 #: templates/registration/password_change_form.orig.html:35
 #: templates/registration/password_change_form.orig.html:37
@@ -2869,8 +2870,8 @@ msgid ""
 "Please enter your old password, for security's sake, and then enter your new "
 "password twice so we can verify you typed it in correctly."
 msgstr ""
-"Por favor, introduzca su antigua contraseña, por el bien de la seguridad, y "
-"luego ingrese su nueva contraseña dos veces para que podamos verificar que "
+"Por seguridad, por favor introduzca su antigua contraseña y luego ingrese su "
+"nueva contraseña dos veces para que podamos verificar que "
 "está escrita correctamente."
 
 #: templates/registration/password_change_form.orig.html:57
