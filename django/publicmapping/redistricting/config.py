@@ -1443,7 +1443,12 @@ class SpatialUtils:
             node = stroke.xpath('sld:CssParameter[@name="stroke-width"]', namespaces=doc._nsmap)[0]
             node.text = '0.25'
 
-        if not subject and nclasses == 1:
+        if subject:
+            # set the name of the layer
+            node = doc._node.xpath('//sld:NamedLayer/sld:Name', namespaces=doc._nsmap)[0]
+            node.text = subject.name
+
+        elif nclasses == 1:
             # remove any fill if subject is missing
             fill = doc._node.xpath('//sld:Fill', namespaces=doc._nsmap)[0]
             fill.getparent().remove(fill)
