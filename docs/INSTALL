@@ -437,7 +437,7 @@ as reports and downloads) and cron jobs.
     init.d folder, and enable it for startup
      
     > sudo wget --no-check-certificate -O /etc/init.d/celeryd \
-        https://raw.github.com/ask/celery/master/contrib/generic-init.d/celeryd
+        https://raw.github.com/celery/celery/v3.0.5/extra/generic-init.d/celeryd
     > sudo chmod a+x /etc/init.d/celeryd 
     > sudo update-rc.d celeryd defaults
    
