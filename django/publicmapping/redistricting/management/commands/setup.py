@@ -355,7 +355,10 @@ ERROR:
         def get_shape_name(shapefile, feature):
             field = shapefile.xpath('Fields/Field[@type="name"]')[0]
             strname = feature.get(field.get('name'))
-            return strname.decode('latin-1')
+            if type(strname) == str:
+                return strname.decode('latin-1')
+            else:
+                return str(strname)
 
         for h,shapefile in enumerate(config['shapefiles']):
             if not exists(shapefile.get('path')):
