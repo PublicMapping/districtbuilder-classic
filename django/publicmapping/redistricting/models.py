@@ -811,7 +811,9 @@ class Geounit(models.Model):
 
                 # aggregate geometry
 
-                newsimple = newgeo.simplify(preserve_topology=True,tolerance=self.geolevel.tolerance)
+                # all geolevels of this geounit should have the same tolerance
+                tolerance = self.geolevel.all()[0].tolerance
+                newsimple = newgeo.simplify(preserve_topology=True,tolerance=tolerance)
 
                 # enforce_multi is defined in redistricting.models
                 self.geom = enforce_multi(newgeo)
