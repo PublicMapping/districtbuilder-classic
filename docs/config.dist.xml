@@ -199,18 +199,6 @@
                 <LegislativeBody ref="senate"/>
             </ScoreFunction>
 
-            <!-- A plan score that aggregates all literal values -->
-            <ScoreFunction id="plan_sum_equipop" type="plan" 
-                calculator="publicmapping.redistricting.calculators.SumValues"
-                label="Equal Population">
-                <ScoreArgument name="value1" ref="district_poptot_range" />
-            </ScoreFunction>
-            <ScoreFunction id="plan_all_equipop" type="plan" 
-                calculator="publicmapping.redistricting.calculators.Threshold" >
-                <ScoreArgument name="value" ref="plan_sum_equipop" />
-                <Argument name="threshold" value="0" />
-            </ScoreFunction>
-
             <!-- A plan score that aggregates all districts over a threshold -->
             <ScoreFunction id="plan_count_majmin" type="plan" 
                 calculator="publicmapping.redistricting.calculators.SumValues">
@@ -225,15 +213,6 @@
             <ScoreFunction id="plan_hispvap_thresh" type="plan"
                 calculator="publicmapping.redistricting.calculators.SumValues">
                 <ScoreArgument name="value1" ref="district_hispvap_thresh" />
-            </ScoreFunction>
-
-            <!-- A plan score that evaluates a threshold, and returns T/F.
-                This plan score checks that all districts are within the
-                population limits. -->
-            <ScoreFunction id="plan_poptot_inrange" type="plan" 
-                calculator="publicmapping.redistricting.calculators.Threshold">
-                <ScoreArgument name="value" ref="district_poptot_range" />
-                <Argument name="threshold" value="0" />
             </ScoreFunction>
            
             <!-- A plan score that evaluates all districts, and returns
