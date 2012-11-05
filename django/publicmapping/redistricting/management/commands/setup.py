@@ -597,6 +597,12 @@ ERROR:
 
         admin = admin[0]
 
+        deflang = 'en'
+        try:
+            deflang = config.xpath('//Internationalization')[0].get('default')
+        except:
+            pass
+
         templates = config.xpath('/DistrictBuilder/Templates/Template')
         for template in templates:
             lbconfig = config.xpath('//LegislativeBody[@id="%s"]' % template.xpath('LegislativeBody')[0].get('ref'))[0]
@@ -616,7 +622,7 @@ ERROR:
             fconfig = template.xpath('Blockfile')[0]
             path = fconfig.get('path')
 
-            DistrictIndexFile.index2plan( plan_name, legislative_body.id, path, owner=admin, template=True, purge=False, email=None)
+            DistrictIndexFile.index2plan( plan_name, legislative_body.id, path, owner=admin, template=True, purge=False, email=None, language=deflang)
 
             logger.debug('Created template plan "%s"', plan_name)
 
