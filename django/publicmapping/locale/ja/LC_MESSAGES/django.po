@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-10-06 00:43-0400\n"
+"POT-Creation-Date: 2012-11-05 16:52-0600\n"
 "PO-Revision-Date: 2012-06-07 14:20\n"
 "Language: Japanese\n"
 "MIME-Version: 1.0\n"
@@ -74,11 +74,11 @@ msgstr ""
 msgid "Total number of splits"
 msgstr "境界線総数"
 
-#: redistricting/config.py:1210 redistricting/templates/viewplan.html:664
+#: redistricting/config.py:1210 redistricting/templates/viewplan.html:662
 msgid "Far Over Target"
 msgstr "目標数をかなり超過"
 
-#: redistricting/config.py:1212 redistricting/templates/viewplan.html:668
+#: redistricting/config.py:1212 redistricting/templates/viewplan.html:666
 msgid "Over Target"
 msgstr "目標数を超過"
 
@@ -86,11 +86,11 @@ msgstr "目標数を超過"
 msgid "Meets Target"
 msgstr "目標数を達成"
 
-#: redistricting/config.py:1216 redistricting/templates/viewplan.html:676
+#: redistricting/config.py:1216 redistricting/templates/viewplan.html:674
 msgid "Under Target"
 msgstr "目標数に届きません"
 
-#: redistricting/config.py:1218 redistricting/templates/viewplan.html:680
+#: redistricting/config.py:1218 redistricting/templates/viewplan.html:678
 msgid "Far Under Target"
 msgstr "目標数に遠く届きません"
 
@@ -128,6 +128,10 @@ msgstr "同じ名前で上書き保存する"
 msgid "Uploaded file contains an invalid subject name."
 msgstr "アップロードされたファイルの中に無効なsubject名があります。"
 
+#: redistricting/models.py:2994
+msgid "Unassigned"
+msgstr "割り当て解除"
+
 #: redistricting/reportcalculators.py:51 redistricting/reportcalculators.py:94
 #: redistricting/reportcalculators.py:118
 msgid "DistrictID"
@@ -144,7 +148,7 @@ msgid "Within Target Range"
 msgstr "目標人口範囲内"
 
 #: redistricting/reportcalculators.py:95
-#: redistricting/templates/viewplan.html:997
+#: redistricting/templates/viewplan.html:995
 msgid "Compactness"
 msgstr "Compacidad"
 
@@ -276,353 +280,353 @@ msgid "Upload complete. Subject \"%(subject_name)s\" added."
 msgstr ""
 "アップロードが完了しました。Subject \"%(subject_name)s\"が追加されました。"
 
-#: redistricting/views.py:139
+#: redistricting/views.py:138
 msgid "The current user may only have one session open at a time."
 msgstr "現在のユーザは複数のセッションを同時に開くことはできません。"
 
-#: redistricting/views.py:214
+#: redistricting/views.py:213
 #, python-format
 msgid "User %(user)s doesn't have permission to unload this plan"
 msgstr "ユーザ%(user)sはこの計画案をアンロードすることはできません。"
 
-#: redistricting/views.py:251
+#: redistricting/views.py:250
 #, python-format
 msgid "User %(username)s doesn't have permission to copy this model"
 msgstr "ユーザ%(username)sはこのモデルをコピーすることはできません。"
 
-#: redistricting/views.py:264
+#: redistricting/views.py:263
 msgid "You already have a plan named that. Please pick a unique name."
 msgstr "同じ名前の計画案が既にあります。別の名前をつけてください。"
 
-#: redistricting/views.py:286
+#: redistricting/views.py:285
 msgid "Could not save district copies"
 msgstr "選挙区のコピーを保存できませんでした。"
 
-#: redistricting/views.py:332
+#: redistricting/views.py:331
 msgid "Validation successful"
 msgstr "検証に成功しました"
 
-#: redistricting/views.py:433
+#: redistricting/views.py:432
 msgid "District"
 msgstr "選挙区"
 
-#: redistricting/views.py:538
+#: redistricting/views.py:537
 msgid "community map"
 msgstr "地域マップ"
 
-#: redistricting/views.py:538
+#: redistricting/views.py:537
 msgid "plan"
 msgstr "計画案"
 
-#: redistricting/views.py:772
+#: redistricting/views.py:771
 msgid "Couldn't save new plan"
 msgstr "新しい計画案を保存できませんでした"
 
-#: redistricting/views.py:880 redistricting/views.py:966
-#: redistricting/views.py:1149 redistricting/views.py:1211
-#: redistricting/views.py:1278 redistricting/views.py:1331
-#: redistricting/views.py:1377
+#: redistricting/views.py:879 redistricting/views.py:965
+#: redistricting/views.py:1148 redistricting/views.py:1210
+#: redistricting/views.py:1277 redistricting/views.py:1330
+#: redistricting/views.py:1376
 msgid "No plan with the given id"
 msgstr "指定されたIDの計画案は存在しません"
 
-#: redistricting/views.py:884 redistricting/views.py:970
-#: redistricting/views.py:1381 redistricting/views.py:1393
+#: redistricting/views.py:883 redistricting/views.py:969
+#: redistricting/views.py:1380 redistricting/views.py:1392
 msgid "User can't view the given plan"
 msgstr "指定された計画案を見ることはできません"
 
-#: redistricting/views.py:888
+#: redistricting/views.py:887
 msgid "Reports functionality is turned off."
 msgstr "レポート機能が解除されています。"
 
-#: redistricting/views.py:893 redistricting/views.py:974
+#: redistricting/views.py:892 redistricting/views.py:973
 msgid "Information for report wasn't sent via POST"
 msgstr "レポート情報がPOSTから送られませんでした"
 
-#: redistricting/views.py:904 redistricting/views.py:991
+#: redistricting/views.py:903 redistricting/views.py:990
 msgid "Plan report is ready."
 msgstr "計画案レポートの準備ができました。"
 
-#: redistricting/views.py:912 redistricting/views.py:999
+#: redistricting/views.py:911 redistricting/views.py:998
 msgid "Report is building."
 msgstr "レポートを構築中です。"
 
-#: redistricting/views.py:920 redistricting/views.py:1007
+#: redistricting/views.py:919 redistricting/views.py:1006
 msgid "Report generation started."
 msgstr "レポート作成を開始しました"
 
-#: redistricting/views.py:940 redistricting/views.py:1016
+#: redistricting/views.py:939 redistricting/views.py:1015
 msgid "Unrecognized status when checking report status."
 msgstr ""
 
-#: redistricting/views.py:1110
+#: redistricting/views.py:1109
 msgid "Created 1 new district"
 msgstr "新しい選挙区を作成しました"
 
-#: redistricting/views.py:1116
+#: redistricting/views.py:1115
 msgid "Reached Max districts already"
 msgstr "選挙区数の上限に達しています"
 
-#: redistricting/views.py:1120
+#: redistricting/views.py:1119
 msgid "Couldn't save new district."
 msgstr "新しい選挙区を保存できませんでした。"
 
-#: redistricting/views.py:1122
+#: redistricting/views.py:1121
 msgid "Must specify name, geolevel, and geounit ids for new district."
 msgstr "新しい選挙区の名前、地域レベル、地域単位を指定してください。"
 
-#: redistricting/views.py:1153 redistricting/views.py:1215
-#: redistricting/views.py:1282 redistricting/views.py:1335
+#: redistricting/views.py:1152 redistricting/views.py:1214
+#: redistricting/views.py:1281 redistricting/views.py:1334
 msgid "User can't edit the given plan"
 msgstr "この計画案は編集することができません"
 
-#: redistricting/views.py:1159
+#: redistricting/views.py:1158
 msgid "No districts selected to add to the given plan"
 msgstr "新しい計画案に追加する選挙区が選択されていません"
 
-#: redistricting/views.py:1164
+#: redistricting/views.py:1163
 #, python-format
 msgid "Going to merge %(number_of_merged_districts)d districts"
 msgstr "%(number_of_merged_districts)d個の選挙区を統合します"
 
-#: redistricting/views.py:1172
+#: redistricting/views.py:1171
 #, python-format
 msgid "Tried to merge too many districts; %(allowed_districts)d slots left"
 msgstr ""
 "統合しようとした選挙区が多すぎます。%(allowed_districts)d個分のスロットが残っ"
 "ています。"
 
-#: redistricting/views.py:1180
+#: redistricting/views.py:1179
 #, python-format
 msgid "Merged %(num_merged_districts)d districts"
 msgstr "%(num_merged_districts)d個の選挙区を統合しました"
 
-#: redistricting/views.py:1222
+#: redistricting/views.py:1221
 msgid "Multi-members not allowed for this legislative body"
 msgstr "この議会は複数定員区にすることはできません"
 
-#: redistricting/views.py:1254
+#: redistricting/views.py:1253
 #, python-format
 msgid "Modified members for %(num_districts)d districts"
 msgstr "%(num_districts)d個の選挙区の議員を変更しました"
 
-#: redistricting/views.py:1302
+#: redistricting/views.py:1301
 msgid "Can't combine locked districts"
 msgstr "ロックされた選挙区を統合することはできません"
 
-#: redistricting/views.py:1309
+#: redistricting/views.py:1308
 msgid "Successfully combined districts"
 msgstr "選挙区の統合に成功しました"
 
-#: redistricting/views.py:1312
+#: redistricting/views.py:1311
 msgid "Could not combine districts"
 msgstr "選挙区を統合できませんでした"
 
-#: redistricting/views.py:1345
+#: redistricting/views.py:1344
 msgid "Could not fix unassigned"
 msgstr "未配置地域の修復ができませんでした"
 
-#: redistricting/views.py:1390
+#: redistricting/views.py:1389
 msgid "No other plan with the given id"
 msgstr "指定されたIDの計画案は他にありません。"
 
-#: redistricting/views.py:1401
+#: redistricting/views.py:1400
 #, python-format
 msgid "othertype not supported: %(other)s"
 msgstr "othertypeはサポートされていません: %(other)s"
 
-#: redistricting/views.py:1404
+#: redistricting/views.py:1403
 msgid "split"
 msgstr "分割"
 
-#: redistricting/views.py:1407
+#: redistricting/views.py:1406
 #, python-format
 msgid "Found %(num_splits)d %(split_word)s"
 msgstr "%(num_splits)d個の%(split_word)sが見つかりました"
 
-#: redistricting/views.py:1413
+#: redistricting/views.py:1412
 msgid "Could not query for splits"
 msgstr "分割の問い合わせができませんでした"
 
-#: redistricting/views.py:1426
+#: redistricting/views.py:1425
 msgid "No planIds provided"
 msgstr "計画案IDが指定されていません"
 
-#: redistricting/views.py:1446
+#: redistricting/views.py:1445
 msgid "Plan does not exist."
 msgstr "計画案が存在しません。"
 
-#: redistricting/views.py:1456
+#: redistricting/views.py:1455
 msgid "No layers were provided."
 msgstr "layerが指定されていません。"
 
-#: redistricting/views.py:1510 redistricting/views.py:1529
+#: redistricting/views.py:1509 redistricting/views.py:1528
 msgid "Could not add units to district."
 msgstr "地域単位を選挙区に追加できませんでした。"
 
-#: redistricting/views.py:1521
+#: redistricting/views.py:1520
 #, python-format
 msgid "Updated %(num_fixed_districts)d districts"
 msgstr "%(num_fixed_districts)d個の選挙区を更新しました"
 
-#: redistricting/views.py:1534
+#: redistricting/views.py:1533
 msgid "Geounits weren't found in a district."
 msgstr "選挙区内に地域単位が見つかりませんでした。"
 
-#: redistricting/views.py:1563
+#: redistricting/views.py:1562
 msgid "Must include lock parameter."
 msgstr "lock parameterを組み込んでください。"
 
-#: redistricting/views.py:1565
+#: redistricting/views.py:1564
 msgid "Must include version parameter."
 msgstr "version parameterを組み込んでください。"
 
-#: redistricting/views.py:1571
+#: redistricting/views.py:1570
 msgid "Plan or district does not exist."
 msgstr "計画案か選挙区が存在しません。"
 
-#: redistricting/views.py:1580
+#: redistricting/views.py:1579
 #, python-format
 msgid "District successfully %(locked_state)s"
 msgstr ""
 
-#: redistricting/views.py:1581
+#: redistricting/views.py:1580
 msgid "locked"
 msgstr "ロックされました"
 
-#: redistricting/views.py:1581
+#: redistricting/views.py:1580
 msgid "unlocked"
 msgstr "ロックを解除しました"
 
-#: redistricting/views.py:1635
+#: redistricting/views.py:1634
 msgid "No plan exists with that ID."
 msgstr "そのIDの計画案は存在しません。"
 
-#: redistricting/views.py:1702
+#: redistricting/views.py:1701
 msgid "Subject for districts is required."
 msgstr "選挙区のSubjectが必要です。"
 
-#: redistricting/views.py:1705
+#: redistricting/views.py:1704
 msgid "Query failed."
 msgstr "クエリーに失敗しました。"
 
-#: redistricting/views.py:1802
+#: redistricting/views.py:1801
 msgid "Geometry is required."
 msgstr "Geometryが必要です。"
 
-#: redistricting/views.py:1806
+#: redistricting/views.py:1805
 msgid "Invalid plan."
 msgstr "無効な計画案です。"
 
-#: redistricting/views.py:1819
+#: redistricting/views.py:1818
 msgid "Couldn't get geography info from the server. No plan with the given id."
 msgstr ""
 "サーバーから地域情報が取得できませんでした。指定されたIDの計画案はありませ"
 "ん。"
 
-#: redistricting/views.py:1833
+#: redistricting/views.py:1832
 #, fuzzy
 msgid "Unable to get Demographics ScoreDisplay"
 msgstr "Personalized ScoreDisplayを取得できません。"
 
-#: redistricting/views.py:1840
+#: redistricting/views.py:1839
 msgid "Unable to get Personalized ScoreDisplay"
 msgstr "Personalized ScoreDisplayを取得できません。"
 
-#: redistricting/views.py:1851
+#: redistricting/views.py:1850
 msgid "Couldn't render display tab."
 msgstr "display tabが作成できませんでした。"
 
-#: redistricting/views.py:1883
+#: redistricting/views.py:1882
 msgid "Failed to get file status"
 msgstr "ファイルステータスを取得できませんでした"
 
-#: redistricting/views.py:1915
+#: redistricting/views.py:1914
 msgid "File is not yet ready. Please try again in a few minutes"
 msgstr "ファイルが準備できていません。しばらくしてやり直してください。"
 
-#: redistricting/views.py:1938
+#: redistricting/views.py:1937
 msgid "Task submitted"
 msgstr "タスクを提出しました。"
 
-#: redistricting/views.py:1975
+#: redistricting/views.py:1974
 msgid "No display configured"
 msgstr "ディスプレイが設定されていません"
 
-#: redistricting/views.py:2075
+#: redistricting/views.py:2074
 msgid "Unknown filter method."
 msgstr "検索条件が不明です。"
 
-#: redistricting/views.py:2197
+#: redistricting/views.py:2196
 msgid "Must declare planId, name and description"
 msgstr "計画案IDと名前、説明の記入が必要です"
 
-#: redistricting/views.py:2210
+#: redistricting/views.py:2209
 msgid "Updated plan attributes"
 msgstr "計画案の属性を更新しました"
 
-#: redistricting/views.py:2212
+#: redistricting/views.py:2211
 msgid "Failed to save the changes to your plan"
 msgstr "計画案への変更を保存できませんでした"
 
-#: redistricting/views.py:2217
+#: redistricting/views.py:2216
 msgid "Cannot edit a plan you don't own."
 msgstr "他のユーザの計画案は編集できません。"
 
-#: redistricting/views.py:2233 redistricting/views.py:2265
+#: redistricting/views.py:2232 redistricting/views.py:2264
 msgid "Must declare planId"
 msgstr "計画案IDの指定が必要です"
 
-#: redistricting/views.py:2241
+#: redistricting/views.py:2240
 msgid "Deleted plan"
 msgstr "計画案を削除しました"
 
-#: redistricting/views.py:2243
+#: redistricting/views.py:2242
 msgid "Failed to delete plan"
 msgstr "計画案が削除できませんでした"
 
-#: redistricting/views.py:2248
+#: redistricting/views.py:2247
 msgid "Cannot delete a plan you don't own."
 msgstr "他のユーザの計画案は削除できません。"
 
-#: redistricting/views.py:2279
+#: redistricting/views.py:2278
 msgid "Reaggregating plan"
 msgstr "計画案を再統合しています"
 
-#: redistricting/views.py:2281
+#: redistricting/views.py:2280
 msgid "Failed to reaggregate plan"
 msgstr "計画案の再統合に失敗しました"
 
-#: redistricting/views.py:2286
+#: redistricting/views.py:2285
 msgid "Cannot reaggregate a plan you don't own."
 msgstr "他のユーザの計画案は再統合できません"
 
-#: redistricting/views.py:2307
+#: redistricting/views.py:2306
 #, python-format
 msgid "Health retrieved at %(time)s\n"
 msgstr "プログラム状況取得時刻: %(time)s\n"
 
-#: redistricting/views.py:2308
+#: redistricting/views.py:2307
 #, python-format
 msgid "%(plan_count)d plans in database\n"
 msgstr "データベースには%(plan_count)d個の計画案があります\n"
 
-#: redistricting/views.py:2310
+#: redistricting/views.py:2309
 #, python-format
 msgid "%(session_count)d sessions in use out of %(session_limit)s\n"
 msgstr ""
 "%(session_limit)s個のうち%(session_count)d個のセッションを利用中です。\n"
 
-#: redistricting/views.py:2313
+#: redistricting/views.py:2312
 #, python-format
 msgid "%(num_users)d active users over the last 10 minutes\n"
 msgstr "最新10分間内のｱｸﾃｨﾌﾞﾕｰｻﾞｰ数: %(num_users)d人\n"
 
-#: redistricting/views.py:2316
+#: redistricting/views.py:2315
 #, python-format
 msgid "%(mb_free)s MB of disk space free\n"
 msgstr "空ﾃﾞｨｽｸｽﾍﾟｰｽ: %(mb_free)s MB\n"
 
-#: redistricting/views.py:2318
+#: redistricting/views.py:2317
 #, python-format
 msgid ""
 "Memory Usage:\n"
@@ -631,7 +635,7 @@ msgstr ""
 "メモリ使用量:\n"
 "%(mem_free)s\n"
 
-#: redistricting/views.py:2322
+#: redistricting/views.py:2321
 #, python-format
 msgid ""
 "ERROR! Couldn't get health:\n"
@@ -640,25 +644,25 @@ msgstr ""
 "エラー！プログラム状況が取得できませんでした:\n"
 "%s"
 
-#: redistricting/views.py:2330
+#: redistricting/views.py:2329
 msgid "No plan with that ID exists."
 msgstr "そのIDの計画案はありません。"
 
-#: redistricting/views.py:2384
+#: redistricting/views.py:2383
 #, python-format
 msgid "No functions for %(panel)s"
 msgstr "%(panel)sの機能はありません"
 
-#: redistricting/views.py:2388
+#: redistricting/views.py:2387
 #, python-format
 msgid "No user displays for %(user)s"
 msgstr "%(user)sのﾕｰｻﾞｰﾃﾞｨｽﾌﾟﾚｲはありません"
 
-#: redistricting/views.py:2407
+#: redistricting/views.py:2406
 msgid "Couldn't delete personalized scoredisplay"
 msgstr "個人用のscoredisplayを削除できませんした"
 
-#: redistricting/views.py:2449
+#: redistricting/views.py:2448
 #, python-format
 msgid ""
 "Each user is limited to %(limit)d statistics sets. Please delete one or edit "
@@ -667,45 +671,13 @@ msgstr ""
 "ユーザ１名につき%(limit)d個までの統計しか使えません。削除をするか現存する統計"
 "を編集してください。"
 
-#: redistricting/views.py:2459
+#: redistricting/views.py:2458
 msgid "Didn't get functions in POST parameter"
 msgstr "POST parameterの機能を取得できませんでした"
 
-#: redistricting/views.py:2492
+#: redistricting/views.py:2491
 msgid "No plan with that ID was found."
 msgstr "そのIDの計画案は見つかりませんでした。"
-
-#: redistricting/templates/admin.email:17
-msgid "Hello Admin"
-msgstr "こんにちはAdminさん"
-
-#: redistricting/templates/admin.email:19
-msgid "There was a problem importing a plan file from user"
-msgstr "ユーザからの計画案ファイルの取り込みに問題が生じました"
-
-#: redistricting/templates/admin.email:19
-msgid ""
-"This user attempted to upload a file containing a plan but had some "
-"trouble.  The plan may have been imported."
-msgstr ""
-"このユーザは計画案の入ったファイルをアップロードしようとしましたが、成功しま"
-"せんでした。計画案は取り込まれた可能性があります。"
-
-#: redistricting/templates/admin.email:22
-msgid "Plan name"
-msgstr "計画案名"
-
-#: redistricting/templates/admin.email:32
-msgid ""
-"If the user continues to have problems with this process, please check the "
-"application settings."
-msgstr ""
-"このプロセスに問題が続くようであれば、アプリケーション設定を確認してくださ"
-"い。"
-
-#: redistricting/templates/admin.email:34
-msgid "Thank you."
-msgstr "ありがとうございます。"
 
 #: redistricting/templates/basic_information.html:44
 #: redistricting/templates/demographics.html:44
@@ -744,7 +716,7 @@ msgid "Far Under target"
 msgstr "目標数に遠く届きません"
 
 #: redistricting/templates/basic_information.html:81
-#: redistricting/templates/viewplan.html:998
+#: redistricting/templates/viewplan.html:996
 msgid "Contiguity"
 msgstr "同一境界内"
 
@@ -780,19 +752,19 @@ msgstr "新しい%(district_label)s"
 
 #: redistricting/templates/editplan.html:58
 #: redistricting/templates/editplan.html:119
-#: redistricting/templates/viewplan.html:465
+#: redistricting/templates/viewplan.html:463
 msgid "Pan"
 msgstr "ドラッグ"
 
 #: redistricting/templates/editplan.html:59
 #: redistricting/templates/editplan.html:120
-#: redistricting/templates/viewplan.html:466
+#: redistricting/templates/viewplan.html:464
 msgid "Click on a geounit to see its demographic info."
 msgstr "人口統計情報を見るには地域単位をクリックしてください。"
 
 #: redistricting/templates/editplan.html:59
 #: redistricting/templates/editplan.html:120
-#: redistricting/templates/viewplan.html:466
+#: redistricting/templates/viewplan.html:464
 msgid "Info"
 msgstr "情報"
 
@@ -925,12 +897,12 @@ msgid "Copy and</br>Paste"
 msgstr "コピー・</br>ペースト"
 
 #: redistricting/templates/editplan.html:136
-#: redistricting/templates/viewplan.html:474
+#: redistricting/templates/viewplan.html:472
 msgid "Show<br/>Splits"
 msgstr "境界を</br>表示"
 
 #: redistricting/templates/editplan.html:137
-#: redistricting/templates/viewplan.html:475
+#: redistricting/templates/viewplan.html:473
 msgid "Generate<br/>Splits Report"
 msgstr "境界のレポートを<br/>作成する"
 
@@ -1134,7 +1106,7 @@ msgstr ""
 "span>個の複数定員区があります。"
 
 #: redistricting/templates/editplan.html:282
-#: redistricting/templates/viewplan.html:403
+#: redistricting/templates/viewplan.html:401
 msgid "Save"
 msgstr "保存"
 
@@ -1229,55 +1201,6 @@ msgstr ""
 "残念ながら、あなたの情報は保存されませんでした。しばらく経ってからやり直して"
 "ください。"
 
-#: redistricting/templates/error.email:15
-#: redistricting/templates/importedplan.email:16
-#: redistricting/templates/submitted.email:12
-#: templates/forgottenpassword.email:12
-msgid "Hello"
-msgstr "こんにちは"
-
-#: redistricting/templates/error.email:17
-msgid ""
-"We apologize for the inconvenience, but your uploaded file was not converted "
-"into a plan. There are a few reasons why this might have happened. As best "
-"we can tell, your file failed to upload for the following reason:"
-msgstr ""
-"申し訳ありません。アップロードされたファイルが計画案に変換されませんでした。"
-"いくつかの理由が考えられます。おそらく、以下の理由によりファイルのアップロー"
-"ドに失敗しました。:"
-
-#: redistricting/templates/error.email:23
-msgid "If you correct this issue and upload your file again, we can try again."
-msgstr ""
-"この問題を直してからファイルを再アップロードしてください。もう一度変換を行い"
-"ます。"
-
-#: redistricting/templates/error.email:25
-#: redistricting/templates/importedplan.email:28
-#: redistricting/templates/submitted.email:16
-#: templates/forgottenpassword.email:18
-msgid "Happy Redistricting!"
-msgstr "選挙区再編をお楽しみください！"
-
-#: redistricting/templates/error.email:26
-#: redistricting/templates/importedplan.email:29
-#: redistricting/templates/submitted.email:17
-#: templates/forgottenpassword.email:19
-msgid "The Public Mapping Team"
-msgstr "公共選挙区再編チーム"
-
-#: redistricting/templates/importedplan.email:18
-msgid ""
-"Your plan was created successfully. You can view, edit, and share your new "
-"plan by logging in to DistrictBuilder, and pulling up the plan entitled"
-msgstr ""
-"計画案の作成に成功しました。DistrictBbuilderにログインして新しい計画案を見た"
-"り、編集・共有することができます。また該当する計画案を見ることができます。"
-
-#: redistricting/templates/importedplan.email:21
-msgid "There were a few errors during import:"
-msgstr "インポート中にエラーが発生しました。:"
-
 #: redistricting/templates/leaderboard_panel_all.html:38
 msgid "Top"
 msgstr "トップ"
@@ -1304,7 +1227,7 @@ msgid "Score"
 msgstr "スコア"
 
 #: redistricting/templates/leaderboard_panel_mine.html:36
-#: redistricting/templates/viewplan.html:310
+#: redistricting/templates/viewplan.html:308
 msgid "My Plans"
 msgstr "マイ計画案"
 
@@ -1418,34 +1341,6 @@ msgstr "%(other_name)sのタイプ概要"
 msgid "Total"
 msgstr "総数"
 
-#: redistricting/templates/submission.email:12
-msgid "user name"
-msgstr "ユーザ名:"
-
-#: redistricting/templates/submission.email:13
-msgid "plan id"
-msgstr "計画案ID"
-
-#: redistricting/templates/submission.email:14
-msgid "plan version"
-msgstr "計画案バージョン"
-
-#: redistricting/templates/submission.email:15
-msgid "plan name"
-msgstr "計画案名"
-
-#: redistricting/templates/submission.email:16
-msgid "legislative body"
-msgstr "議会"
-
-#: redistricting/templates/submitted.email:14
-msgid "Your plan"
-msgstr "あなたの計画案"
-
-#: redistricting/templates/submitted.email:14
-msgid "has been successfully submitted. Thank you for your submission."
-msgstr "は提出されました。ありがとうございました。"
-
 #: redistricting/templates/viewplan.html:41
 msgid "Redistricting plan by DistrictBuilder"
 msgstr "DistrictBuilderによる選挙区再編計画案"
@@ -1466,91 +1361,91 @@ msgstr "DistrictBuilderからの最新計画案"
 msgid "Recently Shared Plans from DistrictBuilder"
 msgstr "DistrictBuilderから最近共有された計画案"
 
-#: redistricting/templates/viewplan.html:239
+#: redistricting/templates/viewplan.html:237
 msgid "Plan"
 msgstr "計画案"
 
-#: redistricting/templates/viewplan.html:240
+#: redistricting/templates/viewplan.html:238
 msgid "Draw"
 msgstr "描く"
 
-#: redistricting/templates/viewplan.html:240
+#: redistricting/templates/viewplan.html:238
 msgid "View"
 msgstr "見る"
 
-#: redistricting/templates/viewplan.html:241
+#: redistricting/templates/viewplan.html:239
 msgid "Evaluate"
 msgstr "審査"
 
-#: redistricting/templates/viewplan.html:242
+#: redistricting/templates/viewplan.html:240
 msgid "Share"
 msgstr "共有"
 
-#: redistricting/templates/viewplan.html:244
+#: redistricting/templates/viewplan.html:242
 msgid "Leaderboards"
 msgstr "スコアボード"
 
-#: redistricting/templates/viewplan.html:259 templates/index.html:164
+#: redistricting/templates/viewplan.html:257 templates/index.html:164
 msgid "Login"
 msgstr "ログイン"
 
-#: redistricting/templates/viewplan.html:268
+#: redistricting/templates/viewplan.html:266
 msgid "My Account"
 msgstr "マイアカウント"
 
-#: redistricting/templates/viewplan.html:269
+#: redistricting/templates/viewplan.html:267
 msgid "Logout"
 msgstr "ログアウト"
 
-#: redistricting/templates/viewplan.html:282
+#: redistricting/templates/viewplan.html:280
 msgid "Choose a Plan. Start Drawing."
 msgstr "計画案を選んでください。再編を始めましょう。"
 
-#: redistricting/templates/viewplan.html:292
+#: redistricting/templates/viewplan.html:290
 msgid "Select District Layer"
 msgstr "選挙区Layerを選んでください"
 
+#: redistricting/templates/viewplan.html:301
 #: redistricting/templates/viewplan.html:303
-#: redistricting/templates/viewplan.html:305
-#: redistricting/templates/viewplan.html:1033
+#: redistricting/templates/viewplan.html:1031
 msgid "Select Plan Type"
 msgstr "選挙区タイプを選んでください"
 
-#: redistricting/templates/viewplan.html:308
+#: redistricting/templates/viewplan.html:306
 msgid "Template"
 msgstr "テンプレート"
 
-#: redistricting/templates/viewplan.html:309
+#: redistricting/templates/viewplan.html:307
 msgid "Shared"
 msgstr "共有された"
 
-#: redistricting/templates/viewplan.html:311
+#: redistricting/templates/viewplan.html:309
 msgid "Upload Plan"
 msgstr "計画案をアップロード"
 
+#: redistricting/templates/viewplan.html:316
 #: redistricting/templates/viewplan.html:318
-#: redistricting/templates/viewplan.html:320
 msgid "Select Plan"
 msgstr "計画案を選択"
 
-#: redistricting/templates/viewplan.html:323
+#: redistricting/templates/viewplan.html:321
 msgid "Search"
 msgstr "検索"
 
-#: redistricting/templates/viewplan.html:328
+#: redistricting/templates/viewplan.html:326
 msgid "Upload a District Index file:"
 msgstr "選挙区インデックスファイルをアップロード"
 
-#: redistricting/templates/viewplan.html:333
+#: redistricting/templates/viewplan.html:331
 msgid ""
 "You must choose a legislative body to which the new plan will be applied."
 msgstr "新しい計画案が該当する議会を選ぶ必要があります。"
 
-#: redistricting/templates/viewplan.html:336
+#: redistricting/templates/viewplan.html:334
 msgid "Select a body"
 msgstr "議会を選択"
 
-#: redistricting/templates/viewplan.html:351
+#: redistricting/templates/viewplan.html:349
 msgid ""
 "Please enter your email address so DistrictBuilder can send you a "
 "confirmation when your plan has been uploaded. Your email will not be saved "
@@ -1560,193 +1455,193 @@ msgstr ""
 "う、Eメールアドレスを入力してください。あなたのEメールアドレスは保存・共有さ"
 "れることはありません。"
 
+#: redistricting/templates/viewplan.html:360
 #: redistricting/templates/viewplan.html:362
-#: redistricting/templates/viewplan.html:364
 msgid "Name Plan and Start Drawing:"
 msgstr "計画案に名前をつけ、再編をスタート:"
 
-#: redistricting/templates/viewplan.html:368
+#: redistricting/templates/viewplan.html:366
 msgid "Edit Selected Plan"
 msgstr "選択した計画案を編集"
 
-#: redistricting/templates/viewplan.html:369
+#: redistricting/templates/viewplan.html:367
 msgid "Copy and Save Selected Plan"
 msgstr "選択した計画案をコピーして保存"
 
-#: redistricting/templates/viewplan.html:374
+#: redistricting/templates/viewplan.html:372
 msgid "Start Drawing"
 msgstr "再編をスタート"
 
-#: redistricting/templates/viewplan.html:381
+#: redistricting/templates/viewplan.html:379
 msgid "Plan Details"
 msgstr "計画案詳細"
 
-#: redistricting/templates/viewplan.html:382
+#: redistricting/templates/viewplan.html:380
 msgid "User Name:"
 msgstr "ユーザ名:"
 
-#: redistricting/templates/viewplan.html:385
-#: redistricting/templates/viewplan.html:888
+#: redistricting/templates/viewplan.html:383
+#: redistricting/templates/viewplan.html:886
 msgid "Plan Name:"
 msgstr "計画案名:"
 
-#: redistricting/templates/viewplan.html:388
+#: redistricting/templates/viewplan.html:386
 msgid "Description:"
 msgstr "説明:"
 
-#: redistricting/templates/viewplan.html:391
+#: redistricting/templates/viewplan.html:389
 msgid "# of Districts:"
 msgstr "選挙区数:"
 
-#: redistricting/templates/viewplan.html:394
+#: redistricting/templates/viewplan.html:392
 msgid "Shared:"
 msgstr "共有済:"
 
-#: redistricting/templates/viewplan.html:397
+#: redistricting/templates/viewplan.html:395
 msgid "Last Modified:"
 msgstr "最終更新日時:"
 
-#: redistricting/templates/viewplan.html:402
+#: redistricting/templates/viewplan.html:400
 msgid "Edit Details"
 msgstr "詳細を編集"
 
-#: redistricting/templates/viewplan.html:404
+#: redistricting/templates/viewplan.html:402
 msgid "Cancel"
 msgstr "キャンセル"
 
-#: redistricting/templates/viewplan.html:418
+#: redistricting/templates/viewplan.html:416
 msgid "Set Map<br/>Layers"
 msgstr "地図レイヤー<br/>を設定"
 
-#: redistricting/templates/viewplan.html:421
+#: redistricting/templates/viewplan.html:419
 msgid "Export"
 msgstr "出力"
 
-#: redistricting/templates/viewplan.html:423
+#: redistricting/templates/viewplan.html:421
 msgid "Print"
 msgstr "印刷"
 
-#: redistricting/templates/viewplan.html:424
+#: redistricting/templates/viewplan.html:422
 msgid "Shape File"
 msgstr "ファイルをシェープする"
 
-#: redistricting/templates/viewplan.html:425
+#: redistricting/templates/viewplan.html:423
 msgid "Raw Data"
 msgstr "未加工データ"
 
-#: redistricting/templates/viewplan.html:447
+#: redistricting/templates/viewplan.html:445
 msgid "Map Tools"
 msgstr "地図ツール"
 
-#: redistricting/templates/viewplan.html:469
+#: redistricting/templates/viewplan.html:467
 #, fuzzy, python-format
 msgid "Click on a %(district_label)s to see its ID."
 msgstr "IDを見るには選挙区をクリックしてください。"
 
-#: redistricting/templates/viewplan.html:470
+#: redistricting/templates/viewplan.html:468
 #, fuzzy, python-format
 msgid "%(district_label)s Info"
 msgstr "新しい%(district_label)s"
 
-#: redistricting/templates/viewplan.html:506
+#: redistricting/templates/viewplan.html:504
 msgid "Edit Stats"
 msgstr "統計を編集"
 
-#: redistricting/templates/viewplan.html:511
+#: redistricting/templates/viewplan.html:509
 msgid "Statistics"
 msgstr "統計"
 
-#: redistricting/templates/viewplan.html:518
+#: redistricting/templates/viewplan.html:516
 msgid "Loading Statistics..."
 msgstr "統計を読み込んでいます..."
 
-#: redistricting/templates/viewplan.html:533
+#: redistricting/templates/viewplan.html:531
 msgid "Reference Layer:"
 msgstr "参考レイヤー:"
 
-#: redistricting/templates/viewplan.html:534
-#: redistricting/templates/viewplan.html:975
-#: redistricting/templates/viewplan.html:996
-#: redistricting/templates/viewplan.html:1012
+#: redistricting/templates/viewplan.html:532
+#: redistricting/templates/viewplan.html:973
+#: redistricting/templates/viewplan.html:994
+#: redistricting/templates/viewplan.html:1010
 msgid "None"
 msgstr "該当なし"
 
-#: redistricting/templates/viewplan.html:558
+#: redistricting/templates/viewplan.html:556
 #, python-format
 msgid "Generate Splits Report for Current %(plan_text_title)s"
 msgstr "現在の%(plan_text_title)sの境界レポートを作成する"
 
-#: redistricting/templates/viewplan.html:560
+#: redistricting/templates/viewplan.html:558
 msgid "Select reference layer(s) for comparison."
 msgstr "比較する参考レイヤーを選択"
 
-#: redistricting/templates/viewplan.html:572
+#: redistricting/templates/viewplan.html:570
 msgid "Advanced options"
 msgstr "応用オプション"
 
-#: redistricting/templates/viewplan.html:575
+#: redistricting/templates/viewplan.html:573
 msgid "Reverse splits detection"
 msgstr "境界検出を元に戻す"
 
-#: redistricting/templates/viewplan.html:580
+#: redistricting/templates/viewplan.html:578
 msgid "Extended report: List all"
 msgstr "詳細レポート: 全てリストする"
 
-#: redistricting/templates/viewplan.html:582
+#: redistricting/templates/viewplan.html:580
 msgid "districts or communities contained within each district."
 msgstr "選挙区、または各選挙区内の地域"
 
-#: redistricting/templates/viewplan.html:585
+#: redistricting/templates/viewplan.html:583
 msgid ""
 "(Choosing this option will significantly increase the amount of time it "
 "takes to generate the report.)"
 msgstr "（このオプションを選択するとレポート作成の時間が長くなります。）"
 
-#: redistricting/templates/viewplan.html:590
+#: redistricting/templates/viewplan.html:588
 msgid "Generate Report"
 msgstr "レポートを作成する"
 
-#: redistricting/templates/viewplan.html:594
+#: redistricting/templates/viewplan.html:592
 msgid "Splits Report"
 msgstr "境界レポート"
 
-#: redistricting/templates/viewplan.html:596
+#: redistricting/templates/viewplan.html:594
 msgid "No report generated."
 msgstr "レポートが作成されませんでした。"
 
-#: redistricting/templates/viewplan.html:622
+#: redistricting/templates/viewplan.html:620
 msgid "Map Legend"
 msgstr "地図凡例"
 
-#: redistricting/templates/viewplan.html:640
+#: redistricting/templates/viewplan.html:638
 msgid "Total Population"
 msgstr "人口総数"
 
-#: redistricting/templates/viewplan.html:672
+#: redistricting/templates/viewplan.html:670
 msgid "Within Target"
 msgstr "目標数を達成"
 
-#: redistricting/templates/viewplan.html:690
+#: redistricting/templates/viewplan.html:688
 msgid "Locked For Editing"
 msgstr "編集ロック済"
 
-#: redistricting/templates/viewplan.html:697
+#: redistricting/templates/viewplan.html:695
 msgid "Highlighted"
 msgstr "強調表示"
 
-#: redistricting/templates/viewplan.html:704
+#: redistricting/templates/viewplan.html:702
 msgid "Reference"
 msgstr "参考"
 
-#: redistricting/templates/viewplan.html:710
+#: redistricting/templates/viewplan.html:708
 msgid "reference"
 msgstr "参考"
 
-#: redistricting/templates/viewplan.html:720
+#: redistricting/templates/viewplan.html:718
 msgid "Evaluate Statistics"
 msgstr "統計を審査"
 
-#: redistricting/templates/viewplan.html:726
+#: redistricting/templates/viewplan.html:724
 msgid ""
 "Select the plan statistics you'd like included in a comprehensive report on "
 "your redistricting plan.  After you've made your selections click \"Create "
@@ -1755,49 +1650,49 @@ msgstr ""
 "再編計画案の総合レポートに入れる計画案統計を選んだあと、「レポートを作成して"
 "プレビュー」をクリックすると最終レポートを見ることができます。"
 
-#: redistricting/templates/viewplan.html:730
+#: redistricting/templates/viewplan.html:728
 msgid "Create and Preview New Report"
 msgstr "新しいレポートを作成してプレビュー"
 
-#: redistricting/templates/viewplan.html:734
+#: redistricting/templates/viewplan.html:732
 msgid "Please generate a report<br/>to preview statistics"
 msgstr "統計を見るにはレポートを作成してください。"
 
-#: redistricting/templates/viewplan.html:753
+#: redistricting/templates/viewplan.html:751
 msgid "Top Ranked Users' Plans"
 msgstr "トップにランクインしたユーザの計画案"
 
-#: redistricting/templates/viewplan.html:755
+#: redistricting/templates/viewplan.html:753
 msgid "My Ranked Plans"
 msgstr "ランクインした自分の計画案"
 
-#: redistricting/templates/viewplan.html:781
+#: redistricting/templates/viewplan.html:779
 msgid "Select Legislative Body"
 msgstr "議会を選択"
 
-#: redistricting/templates/viewplan.html:805
+#: redistricting/templates/viewplan.html:803
 #, fuzzy, python-format
 msgid "Share a %(plan_text_title)s"
 msgstr "%(plan_text)sを共有"
 
-#: redistricting/templates/viewplan.html:818
+#: redistricting/templates/viewplan.html:816
 msgid "This plan has been shared"
 msgstr "この計画案は共有されました"
 
-#: redistricting/templates/viewplan.html:819
+#: redistricting/templates/viewplan.html:817
 msgid ""
 "Anyone can view this plan by visiting the following URL in a web browser:"
 msgstr "このURLから誰でもこの計画案を見ることができます。"
 
-#: redistricting/templates/viewplan.html:827 templates/index.html:135
+#: redistricting/templates/viewplan.html:825 templates/index.html:135
 msgid "Tweet"
 msgstr "ツイートする"
 
-#: redistricting/templates/viewplan.html:848
+#: redistricting/templates/viewplan.html:846
 msgid "Plan File Export"
 msgstr "プランファイルプランファイルを出力"
 
-#: redistricting/templates/viewplan.html:849
+#: redistricting/templates/viewplan.html:847
 #, fuzzy, python-format
 msgid ""
 "\n"
@@ -1823,81 +1718,81 @@ msgstr ""
 "て%(plan_text)sの\n"
 "                  分析に使うことができます。\n"
 
-#: redistricting/templates/viewplan.html:886
+#: redistricting/templates/viewplan.html:884
 #, fuzzy
 msgid "Community Map Name:"
 msgstr "地域マップ"
 
-#: redistricting/templates/viewplan.html:899
+#: redistricting/templates/viewplan.html:897
 msgid "Please select a plan"
 msgstr "計画案を選択してください"
 
-#: redistricting/templates/viewplan.html:913
+#: redistricting/templates/viewplan.html:911
 msgid "Currently Viewing:"
 msgstr "現在見ている計画案："
 
-#: redistricting/templates/viewplan.html:942
+#: redistricting/templates/viewplan.html:940
 msgid "Plan not saved"
 msgstr "計画案が保存されませんでした"
 
+#: redistricting/templates/viewplan.html:945
+#: redistricting/templates/viewplan.html:946
 #: redistricting/templates/viewplan.html:947
-#: redistricting/templates/viewplan.html:948
-#: redistricting/templates/viewplan.html:949
 msgid "Please Wait"
 msgstr "少々お待ちください..."
 
-#: redistricting/templates/viewplan.html:947
+#: redistricting/templates/viewplan.html:945
 #, python-format
 msgid "Please wait. New %(body_members)s are computed..."
 msgstr "少々お待ちください。新しい%(body_members)sを計算しています..."
 
-#: redistricting/templates/viewplan.html:948
+#: redistricting/templates/viewplan.html:946
 msgid "Please wait. Data is being retrieved..."
 msgstr "少々お待ちください。データを読み込んでいます..."
 
-#: redistricting/templates/viewplan.html:949
+#: redistricting/templates/viewplan.html:947
 msgid "Please wait. Plan is being validated. This may take a few minutes."
 msgstr "少々お待ちください。計画案を確認しています。"
 
-#: redistricting/templates/viewplan.html:973
+#: redistricting/templates/viewplan.html:971
 #, python-format
 msgid "Select %(layer_type)s Thematic Map"
 msgstr "%(layer_type)sのテーママップを選択"
 
-#: redistricting/templates/viewplan.html:986
+#: redistricting/templates/viewplan.html:984
 msgid "Choose District Thematic Map"
 msgstr "選挙区テーママップを選択"
 
-#: redistricting/templates/viewplan.html:1010
+#: redistricting/templates/viewplan.html:1008
 msgid "Choose a Reference Layer"
 msgstr "参考レイヤーを選択"
 
-#: redistricting/templates/viewplan.html:1021
+#: redistricting/templates/viewplan.html:1019
 msgid "Show Labels?"
 msgstr "名前を見せますか？"
 
-#: redistricting/templates/viewplan.html:1024
+#: redistricting/templates/viewplan.html:1022
 msgid "OR..."
 msgstr "もしくは..."
 
-#: redistricting/templates/viewplan.html:1026
+#: redistricting/templates/viewplan.html:1024
 msgid "Choose a:<br/>legislative district or community map<br/>reference layer"
 msgstr "選挙区か地域マップレイヤーを選択"
 
-#: redistricting/templates/viewplan.html:1040
+#: redistricting/templates/viewplan.html:1038
 msgid "Select Plan to Display as Reference Layer"
 msgstr "参考レイヤーとして表示する計画案を選択"
 
-#: redistricting/templates/viewplan.html:1045
+#: redistricting/templates/viewplan.html:1043
 msgid "OK"
 msgstr "OK."
 
-#: redistricting/templates/viewplan.html:1082
+#: redistricting/templates/viewplan.html:1080
 #, fuzzy
 msgid "Edit Statistics Sets"
 msgstr "統計セットに名前をつける"
 
-#: redistricting/templates/viewplan.html:1084
+#: redistricting/templates/viewplan.html:1082
 #, fuzzy
 msgid ""
 "You can select up to three statistics at once to display in \n"
@@ -1912,23 +1807,23 @@ msgstr ""
 "一度に３セット\n"
 "        まで保存することができます。\n"
 
-#: redistricting/templates/viewplan.html:1089
+#: redistricting/templates/viewplan.html:1087
 msgid "Select up to 3 statistics"
 msgstr "統計を３つまで選択"
 
-#: redistricting/templates/viewplan.html:1090
+#: redistricting/templates/viewplan.html:1088
 msgid "Clear Choices"
 msgstr "選択を解除する"
 
-#: redistricting/templates/viewplan.html:1094
+#: redistricting/templates/viewplan.html:1092
 msgid "Name Statistics Set"
 msgstr "統計セットに名前をつける"
 
-#: redistricting/templates/viewplan.html:1096
+#: redistricting/templates/viewplan.html:1094
 msgid "Save Set"
 msgstr "セットを保存"
 
-#: redistricting/templates/viewplan.html:1099
+#: redistricting/templates/viewplan.html:1097
 msgid "... Or select a saved statistics set"
 msgstr "... もしくは、保存した統計セットを選択"
 
@@ -2108,18 +2003,6 @@ msgstr "更新"
 #: templates/account.html:94 templates/index.html:175
 msgid "Sign Up"
 msgstr "登録"
-
-#: templates/forgottenpassword.email:14
-msgid ""
-"You requested a new password for the Public Mapping Project. Sorry for the "
-"inconvenience!  This is your new password"
-msgstr ""
-"公共選挙区再編プロジェクトの新しいパスワードのリクエストを受け付けました。下"
-"記が新しいパスワードです。ご迷惑をおかけいたしました。"
-
-#: templates/forgottenpassword.email:16
-msgid "Thank you for using the Public Mapping Project."
-msgstr "公共選挙区再編プロジェクトのご利用ありがとうございます。"
 
 #: templates/index.html:43
 msgid "Welcome to DistrictBuilder"
@@ -2834,6 +2717,100 @@ msgstr "新しいパスワード"
 msgid "Change my password"
 msgstr "パスワードを変更する"
 
+#~ msgid "Hello Admin"
+#~ msgstr "こんにちはAdminさん"
+
+#~ msgid "There was a problem importing a plan file from user"
+#~ msgstr "ユーザからの計画案ファイルの取り込みに問題が生じました"
+
+#~ msgid ""
+#~ "This user attempted to upload a file containing a plan but had some "
+#~ "trouble.  The plan may have been imported."
+#~ msgstr ""
+#~ "このユーザは計画案の入ったファイルをアップロードしようとしましたが、成功し"
+#~ "ませんでした。計画案は取り込まれた可能性があります。"
+
+#~ msgid "Plan name"
+#~ msgstr "計画案名"
+
+#~ msgid ""
+#~ "If the user continues to have problems with this process, please check "
+#~ "the application settings."
+#~ msgstr ""
+#~ "このプロセスに問題が続くようであれば、アプリケーション設定を確認してくださ"
+#~ "い。"
+
+#~ msgid "Thank you."
+#~ msgstr "ありがとうございます。"
+
+#~ msgid "Hello"
+#~ msgstr "こんにちは"
+
+#~ msgid ""
+#~ "We apologize for the inconvenience, but your uploaded file was not "
+#~ "converted into a plan. There are a few reasons why this might have "
+#~ "happened. As best we can tell, your file failed to upload for the "
+#~ "following reason:"
+#~ msgstr ""
+#~ "申し訳ありません。アップロードされたファイルが計画案に変換されませんでし"
+#~ "た。いくつかの理由が考えられます。おそらく、以下の理由によりファイルのアッ"
+#~ "プロードに失敗しました。:"
+
+#~ msgid ""
+#~ "If you correct this issue and upload your file again, we can try again."
+#~ msgstr ""
+#~ "この問題を直してからファイルを再アップロードしてください。もう一度変換を行"
+#~ "います。"
+
+#~ msgid "Happy Redistricting!"
+#~ msgstr "選挙区再編をお楽しみください！"
+
+#~ msgid "The Public Mapping Team"
+#~ msgstr "公共選挙区再編チーム"
+
+#~ msgid ""
+#~ "Your plan was created successfully. You can view, edit, and share your "
+#~ "new plan by logging in to DistrictBuilder, and pulling up the plan "
+#~ "entitled"
+#~ msgstr ""
+#~ "計画案の作成に成功しました。DistrictBbuilderにログインして新しい計画案を見"
+#~ "たり、編集・共有することができます。また該当する計画案を見ることができま"
+#~ "す。"
+
+#~ msgid "There were a few errors during import:"
+#~ msgstr "インポート中にエラーが発生しました。:"
+
+#~ msgid "user name"
+#~ msgstr "ユーザ名:"
+
+#~ msgid "plan id"
+#~ msgstr "計画案ID"
+
+#~ msgid "plan version"
+#~ msgstr "計画案バージョン"
+
+#~ msgid "plan name"
+#~ msgstr "計画案名"
+
+#~ msgid "legislative body"
+#~ msgstr "議会"
+
+#~ msgid "Your plan"
+#~ msgstr "あなたの計画案"
+
+#~ msgid "has been successfully submitted. Thank you for your submission."
+#~ msgstr "は提出されました。ありがとうございました。"
+
+#~ msgid ""
+#~ "You requested a new password for the Public Mapping Project. Sorry for "
+#~ "the inconvenience!  This is your new password"
+#~ msgstr ""
+#~ "公共選挙区再編プロジェクトの新しいパスワードのリクエストを受け付けました。"
+#~ "下記が新しいパスワードです。ご迷惑をおかけいたしました。"
+
+#~ msgid "Thank you for using the Public Mapping Project."
+#~ msgstr "公共選挙区再編プロジェクトのご利用ありがとうございます。"
+
 #~ msgid "Polygon"
 #~ msgstr "多角形"
 
@@ -2851,9 +2828,6 @@ msgstr "パスワードを変更する"
 
 #~ msgid "Lock"
 #~ msgstr "ロック"
-
-#~ msgid "Unassign"
-#~ msgstr "割り当て解除"
 
 #~ msgid "Name:"
 #~ msgstr "名前:"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-10-04 13:01-0400\n"
+"POT-Creation-Date: 2012-11-05 16:54-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -253,7 +253,7 @@ msgstr ""
 #: redistricting/static/js/mapping.js:1159
 #: redistricting/static/js/mapping.js:1171
 #: redistricting/static/js/mapping.js:1307
-#: redistricting/static/js/mapping.js:2982
+#: redistricting/static/js/mapping.js:2976
 msgid "OK"
 msgstr ""
 
@@ -413,22 +413,22 @@ msgid "Unassigned"
 msgstr ""
 
 #: redistricting/static/js/mapping.js:1980
-#: redistricting/static/js/mapping.js:3001
+#: redistricting/static/js/mapping.js:2995
 msgid "New "
 msgstr ""
 
 #: redistricting/static/js/mapping.js:2540
-#: redistricting/static/js/mapping.js:2726
+#: redistricting/static/js/mapping.js:2720
 msgid "Contiguity"
 msgstr ""
 
 #: redistricting/static/js/mapping.js:2544
-#: redistricting/static/js/mapping.js:2729
+#: redistricting/static/js/mapping.js:2723
 msgid "Compactness"
 msgstr ""
 
 #: redistricting/static/js/mapping.js:2548
-#: redistricting/static/js/mapping.js:2732
+#: redistricting/static/js/mapping.js:2726
 msgid "None"
 msgstr ""
 
@@ -476,19 +476,19 @@ msgstr ""
 msgid "Far Under Target"
 msgstr ""
 
-#: redistricting/static/js/mapping.js:2978
+#: redistricting/static/js/mapping.js:2972
 msgid "Please select a name for the %(bml)s"
 msgstr ""
 
-#: redistricting/static/js/mapping.js:2991
+#: redistricting/static/js/mapping.js:2985
 msgid "Cancel"
 msgstr ""
 
-#: redistricting/static/js/mapping.js:3008
+#: redistricting/static/js/mapping.js:3002
 msgid "Community Label"
 msgstr ""
 
-#: redistricting/static/js/mapping.js:3009
+#: redistricting/static/js/mapping.js:3003
 msgid "Community Type"
 msgstr ""
 

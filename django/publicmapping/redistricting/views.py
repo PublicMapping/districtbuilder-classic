@@ -50,7 +50,6 @@ from django.template import loader, Context as DjangoContext, RequestContext
 from django.utils import simplejson as json, translation
 from django.utils.translation import ugettext as _, ungettext as _n
 from django.template.defaultfilters import slugify, force_escape
-from django.utils.translation import ugettext as _
 from django.conf import settings
 from tagging.utils import parse_tag_input
 from tagging.models import Tag, TaggedItem

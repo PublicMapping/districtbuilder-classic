@@ -41,6 +41,7 @@ from django.forms import ModelForm
 from django.conf import settings
 from django.utils import simplejson as json
 from django.utils import translation
+from django.utils.translation import ugettext as _
 from django.template.loader import render_to_string
 from django.contrib.comments.models import Comment
 from django.contrib.contenttypes.models import ContentType
@@ -1514,7 +1515,7 @@ class Plan(models.Model):
 
         # Don't return Unassigned district unless it was explicitly requested
         if exclude_unassigned:
-            qset = qset.filter( ~Q(long_label='Unassigned') )
+            qset = qset.filter( ~Q(district_id=0) )
 
         features = []
 
@@ -1993,7 +1994,7 @@ class Plan(models.Model):
         version = version if not version is None else self.version
         districts = self.get_districts_at_version(version, include_geom=False)
         districts = sorted(districts, key=attrgetter('district_id'))
-        districts = filter(lambda d:d.long_label!='Unassigned', districts)
+        districts = filter(lambda d:d.district_id!=0, districts)
         districts = map(lambda d:(d.long_label,d.num_members,), districts)
 
         return districts
@@ -2990,7 +2991,7 @@ def create_unassigned_district(sender, **kwargs):
     if created and plan.create_unassigned:
         plan.create_unassigned = False
 
-        unassigned = District(short_label=u"\u0398",long_label="Unassigned", version = 0, plan = plan, district_id=0)
+        unassigned = District(short_label=u"\u0398",long_label=_("Unassigned"), version=0, plan=plan, district_id=0)
 
         biggest_geolevel = plan.get_biggest_geolevel()
         all_geom = biggest_geolevel.geounit_set.collect().buffer(0)
