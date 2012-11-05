@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-05 16:54-0600\n"
+"POT-Creation-Date: 2012-11-05 17:07-0600\n"
 "PO-Revision-Date: 2011-11-29 14:20\n"
 "Last-Translator: Admin User <ajennings+saigon@azavea.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -693,6 +693,10 @@ msgstr "No se obtuvieron las funciones en el parámetro POST"
 #: redistricting/views.py:2491
 msgid "No plan with that ID was found."
 msgstr "No se encontró un plan bajo esa identificación."
+
+#: redistricting/management/commands/setup.py:633
+msgid "Blank"
+msgstr "Vacío"
 
 #: redistricting/templates/admin.email:17
 msgid "Hello Admin"

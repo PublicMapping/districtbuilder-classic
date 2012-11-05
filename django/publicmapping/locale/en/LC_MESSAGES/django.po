@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-05 16:54-0600\n"
+"POT-Creation-Date: 2012-11-05 17:08-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -656,6 +656,10 @@ msgstr ""
 
 #: redistricting/views.py:2491
 msgid "No plan with that ID was found."
+msgstr ""
+
+#: redistricting/management/commands/setup.py:633
+msgid "Blank"
 msgstr ""
 
 #: redistricting/templates/admin.email:17
