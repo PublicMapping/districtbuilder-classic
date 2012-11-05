@@ -630,7 +630,7 @@ ERROR:
         for lbody in lbodies:
             owner = User.objects.filter(is_staff=True)[0]
             legislative_body = LegislativeBody.objects.get(name=lbody.get('id')[:256])
-            plan,created = Plan.objects.get_or_create(name='Blank',legislative_body=legislative_body,owner=owner,is_template=True, processing_state=ProcessingState.READY)
+            plan,created = Plan.objects.get_or_create(name=_('Blank'),legislative_body=legislative_body,owner=owner,is_template=True, processing_state=ProcessingState.READY)
             if created:
                 logger.debug('Created Plan named "Blank" for LegislativeBody "%s"', legislative_body.name)
             else:
