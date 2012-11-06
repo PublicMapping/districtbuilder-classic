@@ -37,6 +37,7 @@ from django.core.management.base import BaseCommand
 from django.conf import settings
 from django.utils import simplejson as json
 from django.utils import translation
+from django.utils.translation import ugettext as _, activate
 from optparse import make_option
 from os.path import exists
 from lxml.etree import parse, XSLT
@@ -600,6 +601,7 @@ ERROR:
         deflang = 'en'
         try:
             deflang = config.xpath('//Internationalization')[0].get('default')
+            activate(deflang)
         except:
             pass
 
