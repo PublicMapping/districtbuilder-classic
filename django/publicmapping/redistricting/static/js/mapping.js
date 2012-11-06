@@ -480,7 +480,10 @@ function mapinit(srs,maxExtent) {
                     autoOpen: true,
                     resizable:false,
                     title: (data.success ? gettext('Success') : gettext('Error')),
-                    buttons: { OK: function() { $(this).dialog('close'); }}
+                    buttons: [{
+                        label: gettext('OK'),
+                        click: function() { $(this).dialog('close'); }
+                    }]
                 });                
             },
             error: function(xhr, textStatus, error) {
@@ -496,14 +499,15 @@ function mapinit(srs,maxExtent) {
     $('#show_splits_button').click(function(){
         var referenceLayerId = $('#reference_layer_select').val();
         if (!referenceLayerId || (referenceLayerId === 'None')) {
-            var buttons = {};
-            buttons[gettext('OK')] = function(){
-                $(this).dialog('close');
-                $('#choose_layers_button').click();
-            };
             $('<div />').text(gettext('No reference layer selected.')).dialog({
                 modal: true, autoOpen: true, title: gettext('Warning'), resizable:false,
-                buttons: buttons
+                buttons: [{
+                    label: gettext('OK'),
+                    click: function(){
+                        $(this).dialog('close');
+                        $('#choose_layers_button').click();
+                    }
+                }]
             });
             return;
         }
@@ -1050,15 +1054,16 @@ function mapinit(srs,maxExtent) {
     var assignOnSelect = function(feature) {
         // If there's an outbound request, hold the user from more clicking
         if (outboundRequest === true) {
-            var buttons = {};
-            buttons[gettext('OK')] = function() {
-                $('#busyDiv').remove();
-            };
             $('<div id="busyDiv" />').text(gettext('Please wait until your previous changes have been accepted.')).dialog({
                 modal: true,
                 autoOpen: true,
                 title: gettext('Busy'),
-                buttons: buttons
+                buttons: [{
+                    label: gettext('OK'),
+                    click: function() {
+                        $('#busyDiv').remove();
+                    }
+                }]
             });
             return false;
         }
@@ -1093,17 +1098,18 @@ function mapinit(srs,maxExtent) {
                 if (data.success) {
                     // if no districts were updated, display a warning
                     if (!data.updated) {
-                        var buttons = {};
-                        buttons[gettext('OK')] = function() {
-                            $('#errorDiv').remove();
-                        };
                         OpenLayers.Element.removeClass(olmap.viewPortDiv, 'olCursorWait');
                         $('#working').dialog('close');
                         $('<div id="errorDiv" />').text(gettext('No districts were updated')).dialog({
                             modal: true,
                             autoOpen: true,
                             title: gettext('Error'),
-                            buttons: buttons
+                            buttons: [{
+                                label: gettext('OK'),
+                                click: function() {
+                                    $('#errorDiv').remove();
+                                }
+                            }]
                         });
                         updateInfoDisplay();
                     } else {
@@ -1158,27 +1164,29 @@ function mapinit(srs,maxExtent) {
         else {
 	    // Check to make sure we haven't exceeded the FEATURE_LIMIT in this selection or total selection
             if (features.length > FEATURE_LIMIT) {
-                var buttons = {};
-                buttons[gettext('OK')] = function() {
-                    $('#toomanyfeaturesdialog').remove();
-                };
                 $('<div  id="toomanyfeaturesdialog" />').text(gettext('You cannot select that many features at once.\n\nConsider drawing a smaller area with the selection tool.')).dialog({
                     modal: true,
                     autoOpen: true,
                     title: gettext('Sorry'),
-                    buttons: buttons
+                    buttons: [{
+                        label: gettext('OK'),
+                        click: function() {
+                            $('#toomanyfeaturesdialog').remove();
+                        }
+                    }]
                 });
                 return;
             } else if (features.length + selection.features.length > FEATURE_LIMIT) {
-                var buttons = {};
-                buttons[gettext('OK')] = function() {
-                    $('#toomanyfeaturesdialog').remove();
-                };
                 $('<div id="toomanyfeaturesdialog" />').text(gettext('You cannot select any more features.\n\nConsider assigning your current selection to a district first.')).dialog({
                     modal: true,
                     autoOpen: true,
                     title: gettext('Sorry'),
-                    buttons: buttons
+                    buttons: [{
+                        label: gettext('OK'),
+                        click: function() {
+                            $('#toomanyfeaturesdialog').remove();
+                        }
+                    }]
                 });
                 return;
             }
@@ -1306,39 +1314,46 @@ function mapinit(srs,maxExtent) {
             clickFeature: function(feature, event) {
                 // Show a dialog asking to unmerge
                 // to combine with unassigned
-                var buttons = {};
-                buttons[gettext('OK')] = function() {
-                    $(this).dialog('close');
-                    // submit an ajax call to the handler
-                    $('#working').dialog('open');
-                    $.ajax({
-                        type: 'POST',
-                        url: '/districtmapping/plan/' + PLAN_ID + '/combinedistricts/',
-                        data: {
-                            from_district_id: feature.attributes.district_id,
-                            to_district_id: 0, /*Always Unassigned */
-                            version: getPlanVersion()
-                        },
-                        success: function(data, textStatus, xhr) {
-                            $('#working').dialog('close');
-                            if (data.success == true) {
-                                var updateAssignments = true;
-                                $('#map').trigger('version_changed', [data.version, updateAssignments]);
-                            } else {
-                                $('<div class="error" />').attr('title', gettext('Sorry'))
-                                        .text(gettext('Unable to combine districts: ') + 
-                                        data.message ).dialog({
-                                    modal: true,
-                                    autoOpen: true,
-                                    resizable: false
-                                });
-                            }
+                var buttons = [
+                    { 
+                        label: gettext('OK'),
+                        click: function() {
+                            $(this).dialog('close');
+                            // submit an ajax call to the handler
+                            $('#working').dialog('open');
+                            $.ajax({
+                                type: 'POST',
+                                url: '/districtmapping/plan/' + PLAN_ID + '/combinedistricts/',
+                                data: {
+                                    from_district_id: feature.attributes.district_id,
+                                    to_district_id: 0, /*Always Unassigned */
+                                    version: getPlanVersion()
+                                },
+                                success: function(data, textStatus, xhr) {
+                                    $('#working').dialog('close');
+                                    if (data.success == true) {
+                                        var updateAssignments = true;
+                                        $('#map').trigger('version_changed', [data.version, updateAssignments]);
+                                    } else {
+                                        $('<div class="error" />').attr('title', gettext('Sorry'))
+                                            .text(gettext('Unable to combine districts: ') + 
+                                            data.message ).dialog({
+                                                modal: true,
+                                                autoOpen: true,
+                                                resizable: false
+                                        });
+                                    }
+                                }
+                            });
                         }
-                    });
-                };
-                buttons[gettext('No')] = function() {
-                    $(this).dialog('close');
-                };
+                    },{
+                        label: gettext('No'),
+                        click: function() {
+                            $(this).dialog('close');
+                        }
+                    }
+                ];
+
                 $('<div id="unassign_district" />').text(
                         gettext('Would you like to unassign the geography in ') + 
                         feature.attributes.name + '?').dialog({
@@ -1502,9 +1517,10 @@ function mapinit(srs,maxExtent) {
         modal: true,
         draggable: true,
         autoOpen: false,
-        buttons: {
-            gettext('Save'): postInfo
-        },
+        buttons: [{
+            label: gettext('Save'),
+            click: postInfo
+        }],
         open: function(){
             var typeRE = new RegExp('([^,]+)','g');
             var label_field = $('#id_label');
@@ -1593,11 +1609,12 @@ function mapinit(srs,maxExtent) {
         modal: true,
         draggable: true,
         autoOpen: false,
-        buttons:{
-            'Close': function() {
+        buttons: [{
+            label: gettext('Close'),
+            click: function() {
                 districtCommentErr.dialog('close');
             }
-        }
+        }]
     });
 
     // Create a tool that toggles whether a district is locked when clicked on.
@@ -2975,21 +2992,28 @@ function mapinit(srs,maxExtent) {
                 .text(printFormat(gettext('Please select a name for the %(bml)s'), i18nParams));
             markup.append($('<br/><select id="newdistrictname">' + avail.join('') + '</select>'));
 
-            buttons = {};
-            buttons[gettext('OK')] = function() { 
-                var did, dname;
-                var dinfo = $('#newdistrictname').val().split(';');
-                did = dinfo[0];
-                dname = dinfo[1];
-                createDistrict(did, dname);
-                $(this).dialog("close"); 
-                $('#newdistrictdialog').remove(); 
-            };
-            buttons[gettext('Cancel')] = function() { 
-                $(this).dialog("close"); 
-                $('#newdistrictdialog').remove(); 
-                $('#assign_district').val('-1');
-            };
+            var buttons = [
+                {
+                    label: gettext('OK'),
+                    click: function() { 
+                        var did, dname;
+                        var dinfo = $('#newdistrictname').val().split(';');
+                        did = dinfo[0];
+                        dname = dinfo[1];
+                        createDistrict(did, dname);
+                        $(this).dialog("close"); 
+                        $('#newdistrictdialog').remove(); 
+                    }
+                },{
+                    label: gettext('Cancel'),
+                    click: function() { 
+                        $(this).dialog("close"); 
+                        $('#newdistrictdialog').remove(); 
+                        $('#assign_district').val('-1');
+                    }
+                }
+            ];
+
             // Create a dialog to get the new district's name from the user.
             // On close, destroy the dialog.
             markup.dialog({

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-05 16:54-0600\n"
+"POT-Creation-Date: 2012-11-06 16:02-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -177,7 +177,7 @@ msgstr ""
 #: redistricting/static/js/chooseplan.js:421
 #: redistricting/static/js/chooseplan.js:487
 #: redistricting/static/js/chooseplan.js:663
-#: redistricting/static/js/mapping.js:1336
+#: redistricting/static/js/mapping.js:1347
 msgid "No"
 msgstr ""
 
@@ -247,13 +247,14 @@ msgid ""
 msgstr ""
 
 #: redistricting/static/js/emailplan.js:116
-#: redistricting/static/js/mapping.js:497
-#: redistricting/static/js/mapping.js:1051
-#: redistricting/static/js/mapping.js:1094
-#: redistricting/static/js/mapping.js:1159
-#: redistricting/static/js/mapping.js:1171
-#: redistricting/static/js/mapping.js:1307
-#: redistricting/static/js/mapping.js:2976
+#: redistricting/static/js/mapping.js:481
+#: redistricting/static/js/mapping.js:502
+#: redistricting/static/js/mapping.js:1059
+#: redistricting/static/js/mapping.js:1105
+#: redistricting/static/js/mapping.js:1169
+#: redistricting/static/js/mapping.js:1182
+#: redistricting/static/js/mapping.js:1316
+#: redistricting/static/js/mapping.js:2994
 msgid "OK"
 msgstr ""
 
@@ -307,25 +308,25 @@ msgid "Success"
 msgstr ""
 
 #: redistricting/static/js/mapping.js:479
-#: redistricting/static/js/mapping.js:486
-#: redistricting/static/js/mapping.js:540
-#: redistricting/static/js/mapping.js:547
-#: redistricting/static/js/mapping.js:1102
+#: redistricting/static/js/mapping.js:489
+#: redistricting/static/js/mapping.js:544
+#: redistricting/static/js/mapping.js:551
+#: redistricting/static/js/mapping.js:1103
 #: redistricting/static/js/splitsreport.js:97 static/js/register.js:197
 #: static/js/register.js.c:205 static/js/ui.js:231 static/js/ui.js.c:263
 #: static/js/ui.js.c:508
 msgid "Error"
 msgstr ""
 
-#: redistricting/static/js/mapping.js:485
+#: redistricting/static/js/mapping.js:488
 msgid "Error encountered while fixing unassigned"
 msgstr ""
 
-#: redistricting/static/js/mapping.js:501
+#: redistricting/static/js/mapping.js:499
 msgid "No reference layer selected."
 msgstr ""
 
-#: redistricting/static/js/mapping.js:502
+#: redistricting/static/js/mapping.js:500
 #: redistricting/static/js/splitsreport.js:109
 #: redistricting/static/js/statisticssets.js:338
 #: redistricting/static/js/statisticssets.js:347
@@ -333,24 +334,24 @@ msgstr ""
 msgid "Warning"
 msgstr ""
 
-#: redistricting/static/js/mapping.js:515
+#: redistricting/static/js/mapping.js:519
 msgid "Please wait. Querying for splits."
 msgstr ""
 
-#: redistricting/static/js/mapping.js:519
+#: redistricting/static/js/mapping.js:523
 msgid "Finding Splits"
 msgstr ""
 
-#: redistricting/static/js/mapping.js:534
+#: redistricting/static/js/mapping.js:538
 msgid "This plan contains no splits."
 msgstr ""
 
-#: redistricting/static/js/mapping.js:535
+#: redistricting/static/js/mapping.js:539
 msgid "No Splits Found"
 msgstr ""
 
-#: redistricting/static/js/mapping.js:539
-#: redistricting/static/js/mapping.js:546
+#: redistricting/static/js/mapping.js:543
+#: redistricting/static/js/mapping.js:550
 msgid "Error encountered while querying for splits: "
 msgstr ""
 
@@ -362,20 +363,20 @@ msgstr ""
 msgid "Busy"
 msgstr ""
 
-#: redistricting/static/js/mapping.js:1099
+#: redistricting/static/js/mapping.js:1100
 msgid "No districts were updated"
 msgstr ""
 
-#: redistricting/static/js/mapping.js:1162
+#: redistricting/static/js/mapping.js:1164
 msgid ""
 "You cannot select that many features at once.\n"
 "\n"
 "Consider drawing a smaller area with the selection tool."
 msgstr ""
 
-#: redistricting/static/js/mapping.js:1165
-#: redistricting/static/js/mapping.js:1177
-#: redistricting/static/js/mapping.js:1325
+#: redistricting/static/js/mapping.js:1167
+#: redistricting/static/js/mapping.js:1180
+#: redistricting/static/js/mapping.js:1335
 #: redistricting/static/js/multimember.js:213
 #: redistricting/static/js/multimember.js:219
 #: redistricting/static/js/reaggregator.js:192
@@ -384,111 +385,119 @@ msgstr ""
 msgid "Sorry"
 msgstr ""
 
-#: redistricting/static/js/mapping.js:1174
+#: redistricting/static/js/mapping.js:1177
 msgid ""
 "You cannot select any more features.\n"
 "\n"
 "Consider assigning your current selection to a district first."
 msgstr ""
 
-#: redistricting/static/js/mapping.js:1326
+#: redistricting/static/js/mapping.js:1336
 msgid "Unable to combine districts: "
 msgstr ""
 
-#: redistricting/static/js/mapping.js:1340
+#: redistricting/static/js/mapping.js:1355
 msgid "Would you like to unassign the geography in "
 msgstr ""
 
-#: redistricting/static/js/mapping.js:1423
+#: redistricting/static/js/mapping.js:1438
 msgid "Sorry, your information could not be saved. Please try again later."
 msgstr ""
 
-#: redistricting/static/js/mapping.js:1956
+#: redistricting/static/js/mapping.js:1518
+msgid "Save"
+msgstr ""
+
+#: redistricting/static/js/mapping.js:1610
+msgid "Close"
+msgstr ""
+
+#: redistricting/static/js/mapping.js:1973
 msgid "Select One"
 msgstr ""
 
-#: redistricting/static/js/mapping.js:1957
-#: redistricting/static/js/mapping.js:1971
+#: redistricting/static/js/mapping.js:1974
+#: redistricting/static/js/mapping.js:1988
 msgid "Unassigned"
 msgstr ""
 
-#: redistricting/static/js/mapping.js:1980
-#: redistricting/static/js/mapping.js:2995
+#: redistricting/static/js/mapping.js:1997
+#: redistricting/static/js/mapping.js:3019
 msgid "New "
 msgstr ""
 
-#: redistricting/static/js/mapping.js:2540
-#: redistricting/static/js/mapping.js:2720
+#: redistricting/static/js/mapping.js:2557
+#: redistricting/static/js/mapping.js:2737
 msgid "Contiguity"
 msgstr ""
 
-#: redistricting/static/js/mapping.js:2544
-#: redistricting/static/js/mapping.js:2723
+#: redistricting/static/js/mapping.js:2561
+#: redistricting/static/js/mapping.js:2740
 msgid "Compactness"
 msgstr ""
 
-#: redistricting/static/js/mapping.js:2548
-#: redistricting/static/js/mapping.js:2726
+#: redistricting/static/js/mapping.js:2565
+#: redistricting/static/js/mapping.js:2743
 msgid "None"
 msgstr ""
 
-#: redistricting/static/js/mapping.js:2620
+#: redistricting/static/js/mapping.js:2637
 msgid "Boundary"
 msgstr ""
 
-#: redistricting/static/js/mapping.js:2626
+#: redistricting/static/js/mapping.js:2643
 msgid "Noncontiguous"
 msgstr ""
 
-#: redistricting/static/js/mapping.js:2628
+#: redistricting/static/js/mapping.js:2645
 msgid "Contiguous"
 msgstr ""
 
-#: redistricting/static/js/mapping.js:2634
+#: redistricting/static/js/mapping.js:2651
 msgid "Very Compact"
 msgstr ""
 
-#: redistricting/static/js/mapping.js:2636
+#: redistricting/static/js/mapping.js:2653
 msgid "Average"
 msgstr ""
 
-#: redistricting/static/js/mapping.js:2638
+#: redistricting/static/js/mapping.js:2655
 msgid "Hardly Compact"
 msgstr ""
 
-#: redistricting/static/js/mapping.js:2644
+#: redistricting/static/js/mapping.js:2661
 msgid "Far Over Target"
 msgstr ""
 
-#: redistricting/static/js/mapping.js:2646
+#: redistricting/static/js/mapping.js:2663
 msgid "Over Target"
 msgstr ""
 
-#: redistricting/static/js/mapping.js:2648
+#: redistricting/static/js/mapping.js:2665
 msgid "Within Target"
 msgstr ""
 
-#: redistricting/static/js/mapping.js:2650
+#: redistricting/static/js/mapping.js:2667
 msgid "Under Target"
 msgstr ""
 
-#: redistricting/static/js/mapping.js:2652
+#: redistricting/static/js/mapping.js:2669
 msgid "Far Under Target"
 msgstr ""
 
-#: redistricting/static/js/mapping.js:2972
+#: redistricting/static/js/mapping.js:2989
 msgid "Please select a name for the %(bml)s"
 msgstr ""
 
-#: redistricting/static/js/mapping.js:2985
+#: redistricting/static/js/mapping.js:3005
 msgid "Cancel"
 msgstr ""
 
-#: redistricting/static/js/mapping.js:3002
+#: redistricting/static/js/mapping.js:3026
 msgid "Community Label"
 msgstr ""
 
-#: redistricting/static/js/mapping.js:3003
+#: redistricting/static/js/mapping.js:3027
 msgid "Community Type"
 msgstr ""
 
