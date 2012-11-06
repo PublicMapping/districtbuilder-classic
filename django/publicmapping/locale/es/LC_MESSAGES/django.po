@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-06 12:08-0600\n"
+"POT-Creation-Date: 2012-11-06 15:28-0600\n"
 "PO-Revision-Date: 2011-11-29 14:20\n"
 "Last-Translator: Admin User <ajennings+saigon@azavea.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -82,23 +82,27 @@ msgstr "Número total de separaciones"
 
 #: redistricting/config.py:1210 redistricting/templates/viewplan.html:662
 msgid "Far Over Target"
-msgstr "Muy por Encima del Objetivo"
+msgstr "Muy por Encima"
 
 #: redistricting/config.py:1212 redistricting/templates/viewplan.html:666
 msgid "Over Target"
-msgstr "Por Encima del objetivo"
+msgstr "Por Encima"
 
 #: redistricting/config.py:1214
 msgid "Meets Target"
-msgstr "Cumple con el Objetivo"
+msgstr "Cumple con"
 
 #: redistricting/config.py:1216 redistricting/templates/viewplan.html:674
 msgid "Under Target"
-msgstr "Por Debajo del Objetivo"
+msgstr "Por Debajo"
 
 #: redistricting/config.py:1218 redistricting/templates/viewplan.html:678
 msgid "Far Under Target"
-msgstr "Muy por Debajo del Objetivo"
+msgstr "Muy por Debajo"
+
+#: redistricting/config.py:1467
+msgid "Boundary"
+msgstr "Límite"
 
 #: redistricting/forms.py:95
 msgid "Could not store uploaded Subject template."
@@ -694,7 +698,7 @@ msgstr "No se obtuvieron las funciones en el parámetro POST"
 msgid "No plan with that ID was found."
 msgstr "No se encontró un plan bajo esa identificación."
 
-#: redistricting/management/commands/setup.py:634
+#: redistricting/management/commands/setup.py:635
 msgid "Blank"
 msgstr "Vacío"
 
@@ -749,23 +753,23 @@ msgstr "Leyenda de Estadísticas"
 
 #: redistricting/templates/basic_information.html:73
 msgid "Far over target"
-msgstr "Muy por encima del objetivo"
+msgstr "Muy por encima"
 
 #: redistricting/templates/basic_information.html:74
 msgid "Over target"
-msgstr "Por encima del objetivo"
+msgstr "Por encima"
 
 #: redistricting/templates/basic_information.html:75
 msgid "Meets target"
-msgstr "Cumple con el objetivo"
+msgstr "Cumple con"
 
 #: redistricting/templates/basic_information.html:76
 msgid "Under target"
-msgstr "Por debajo del objetivo"
+msgstr "Por debajo"
 
 #: redistricting/templates/basic_information.html:77
 msgid "Far Under target"
-msgstr "Muy por debajo del objetivo"
+msgstr "Muy por debajo"
 
 #: redistricting/templates/basic_information.html:81
 #: redistricting/templates/viewplan.html:996
@@ -818,7 +822,7 @@ msgstr "Haga clic sobre una geounidad para ver su información demográfica."
 #: redistricting/templates/editplan.html:120
 #: redistricting/templates/viewplan.html:464
 msgid "Info"
-msgstr "Información"
+msgstr "Datos"
 
 #: redistricting/templates/editplan.html:67
 #, python-format
@@ -1356,7 +1360,7 @@ msgstr "Clase/s:"
 
 #: redistricting/templates/plan_comments.html:26
 msgid "Comments:"
-msgstr "3. Comentarios:"
+msgstr "Comentarios:"
 
 #: redistricting/templates/plan_summary.html:39
 msgid "Score (Target)"
@@ -1552,7 +1556,7 @@ msgstr "Seleccionar capa de los distritos"
 #: redistricting/templates/viewplan.html:303
 #: redistricting/templates/viewplan.html:1031
 msgid "Select Plan Type"
-msgstr "Seleccionar tipo de plan"
+msgstr "Tipo de plan"
 
 #: redistricting/templates/viewplan.html:306
 msgid "Template"
@@ -1602,7 +1606,7 @@ msgstr ""
 #: redistricting/templates/viewplan.html:360
 #: redistricting/templates/viewplan.html:362
 msgid "Name Plan and Start Drawing:"
-msgstr "Nombrar plan y empezar a dibujar"
+msgstr "Nombrar plan y dibujar:"
 
 #: redistricting/templates/viewplan.html:366
 msgid "Edit Selected Plan"
@@ -1655,7 +1659,7 @@ msgstr "Cancelar"
 
 #: redistricting/templates/viewplan.html:416
 msgid "Set Map<br/>Layers"
-msgstr "Definir capas<br/>de Mapa"
+msgstr "Capas<br/>de Mapa"
 
 #: redistricting/templates/viewplan.html:419
 msgid "Export"

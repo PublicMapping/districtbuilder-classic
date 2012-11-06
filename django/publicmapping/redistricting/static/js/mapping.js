@@ -1503,7 +1503,7 @@ function mapinit(srs,maxExtent) {
         draggable: true,
         autoOpen: false,
         buttons: {
-            'Save': postInfo
+            gettext('Save'): postInfo
         },
         open: function(){
             var typeRE = new RegExp('([^,]+)','g');

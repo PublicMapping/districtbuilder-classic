@@ -188,7 +188,7 @@ ul#steps_tabs li.ui-state-default.ui-state-disabled a {
 }
 
 ul#steps_tabs li#tab_plan {border-left: 1px solid #5F8081 !important; background-position: 100% 0; z-index: 31 }
-ul#steps_tabs li#tab_plan a {padding-left: 20px; }
+ul#steps_tabs li#tab_plan a {padding-left: 15px; }
 ul#steps_tabs li#tab_draw {background-position: 100% -31px; z-index: 30}
 ul#steps_tabs li#tab_evaluate {background-position: 100% -62px; z-index: 29}
 ul#steps_tabs li#tab_share {
@@ -215,7 +215,7 @@ ul#steps_tabs li#tab_leaderboard a {
 
 ul#steps_tabs li a {
 color: #fff;
-padding: 7px 30px 10px; 
+padding: 7px 25px 10px; 
 }
 
 
@@ -1014,11 +1014,11 @@ div#toolsets {
     background:none;
     border:none;
     padding: 0;
-    }  
+}  
     
 div#control_header .button_group {
-  display:inline-block;
-  vertical-align:top;
+    display:inline-block;
+    vertical-align:top;
     margin: 0 3px;
 }
 div#control_header .button_group#control_assign_district {
@@ -1040,11 +1040,11 @@ div#control_header div.toolset {
 }
     
 div#control_header  .ui-button {
-text-align:center;
-background:none; 
-border:1px solid transparent;
-padding:0;
-margin: 0 3px;
+    text-align:center;
+    background:none; 
+    border:1px solid transparent;
+    padding:0;
+    margin: 0;
 }
 
 div#control_header .ui-button .ui-button-text {padding: 0.4em 1em 0.4em 2.6em}
@@ -1074,7 +1074,7 @@ filter: Alpha(opacity=50);
 }
 
 
-div#control_header  .toolset_group_lg .ui-button {margin: 0; padding: 3px 5px}
+div#control_header  .toolset_group_lg .ui-button {margin: 0; padding: 3px 3px}
 div#control_header  .toolset_group_lg .ui-button .ui-icon {
     background-position: 50% 50%;
     background-repeat:none;
@@ -2592,7 +2592,7 @@ span.multi_val.invalid {
 }
 .community_comments {
     overflow-y: auto;
-    height: 98%;
+    height: 90%;
 }
 .community_comments .comm2 {
     background-color: #F0FCFA;
