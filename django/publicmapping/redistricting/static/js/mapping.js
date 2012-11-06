@@ -481,7 +481,7 @@ function mapinit(srs,maxExtent) {
                     resizable:false,
                     title: (data.success ? gettext('Success') : gettext('Error')),
                     buttons: [{
-                        label: gettext('OK'),
+                        text: gettext('OK'),
                         click: function() { $(this).dialog('close'); }
                     }]
                 });                
@@ -502,7 +502,7 @@ function mapinit(srs,maxExtent) {
             $('<div />').text(gettext('No reference layer selected.')).dialog({
                 modal: true, autoOpen: true, title: gettext('Warning'), resizable:false,
                 buttons: [{
-                    label: gettext('OK'),
+                    text: gettext('OK'),
                     click: function(){
                         $(this).dialog('close');
                         $('#choose_layers_button').click();
@@ -1059,7 +1059,7 @@ function mapinit(srs,maxExtent) {
                 autoOpen: true,
                 title: gettext('Busy'),
                 buttons: [{
-                    label: gettext('OK'),
+                    text: gettext('OK'),
                     click: function() {
                         $('#busyDiv').remove();
                     }
@@ -1105,7 +1105,7 @@ function mapinit(srs,maxExtent) {
                             autoOpen: true,
                             title: gettext('Error'),
                             buttons: [{
-                                label: gettext('OK'),
+                                text: gettext('OK'),
                                 click: function() {
                                     $('#errorDiv').remove();
                                 }
@@ -1169,7 +1169,7 @@ function mapinit(srs,maxExtent) {
                     autoOpen: true,
                     title: gettext('Sorry'),
                     buttons: [{
-                        label: gettext('OK'),
+                        text: gettext('OK'),
                         click: function() {
                             $('#toomanyfeaturesdialog').remove();
                         }
@@ -1182,7 +1182,7 @@ function mapinit(srs,maxExtent) {
                     autoOpen: true,
                     title: gettext('Sorry'),
                     buttons: [{
-                        label: gettext('OK'),
+                        text: gettext('OK'),
                         click: function() {
                             $('#toomanyfeaturesdialog').remove();
                         }
@@ -1316,7 +1316,7 @@ function mapinit(srs,maxExtent) {
                 // to combine with unassigned
                 var buttons = [
                     { 
-                        label: gettext('OK'),
+                        text: gettext('OK'),
                         click: function() {
                             $(this).dialog('close');
                             // submit an ajax call to the handler
@@ -1347,7 +1347,7 @@ function mapinit(srs,maxExtent) {
                             });
                         }
                     },{
-                        label: gettext('No'),
+                        text: gettext('No'),
                         click: function() {
                             $(this).dialog('close');
                         }
@@ -1518,7 +1518,7 @@ function mapinit(srs,maxExtent) {
         draggable: true,
         autoOpen: false,
         buttons: [{
-            label: gettext('Save'),
+            text: gettext('Save'),
             click: postInfo
         }],
         open: function(){
@@ -1610,7 +1610,7 @@ function mapinit(srs,maxExtent) {
         draggable: true,
         autoOpen: false,
         buttons: [{
-            label: gettext('Close'),
+            text: gettext('Close'),
             click: function() {
                 districtCommentErr.dialog('close');
             }

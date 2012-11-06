@@ -316,7 +316,6 @@ msgid "Fixing Unassigned"
 msgstr "Sin Asignar"
 
 #: redistricting/static/js/mapping.js:479
-#, fuzzy
 msgid "Success"
 msgstr "Éxito!"
 
@@ -349,7 +348,6 @@ msgid "Warning"
 msgstr "Advertencia"
 
 #: redistricting/static/js/mapping.js:519
-#, fuzzy
 msgid "Please wait. Querying for splits."
 msgstr "Por favor, espere mientras se recupera el informe de separaciones."
 
@@ -367,7 +365,6 @@ msgstr ""
 
 #: redistricting/static/js/mapping.js:543
 #: redistricting/static/js/mapping.js:550
-#, fuzzy
 msgid "Error encountered while querying for splits: "
 msgstr "Error al recuperar informe de separaciones: "
 
@@ -384,7 +381,6 @@ msgid "No districts were updated"
 msgstr "Ningún distrito fue actualizado"
 
 #: redistricting/static/js/mapping.js:1164
-#, fuzzy
 msgid ""
 "You cannot select that many features at once.\n"
 "\n"
@@ -405,7 +401,6 @@ msgid "Sorry"
 msgstr "Disculpas"
 
 #: redistricting/static/js/mapping.js:1177
-#, fuzzy
 msgid ""
 "You cannot select any more features.\n"
 "\n"
@@ -433,7 +428,7 @@ msgstr "Guardar"
 
 #: redistricting/static/js/mapping.js:1610
 msgid "Close"
-msgstr ""
+msgstr "Cerrar"
 
 #: redistricting/static/js/mapping.js:1973
 msgid "Select One"
