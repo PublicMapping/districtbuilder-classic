@@ -1464,7 +1464,7 @@ class SpatialUtils:
         
                 # set the title of the rule
                 name = doc._node.xpath('//sld:Rule/sld:Title', namespaces=doc._nsmap)[0]
-                name.text = 'Boundary'
+                name.text = _('Boundary')
 
                 if layername == 'boundary':
                     stroke = doc._node.xpath('//sld:Stroke', namespaces=doc._nsmap)[0]
