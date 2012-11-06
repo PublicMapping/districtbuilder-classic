@@ -932,7 +932,7 @@ msgstr "Haga clic en un %(body_member_long_label)s para ver su identificación."
 #: redistricting/templates/editplan.html:127
 #, python-format
 msgid "%(district_label)s<br />Info"
-msgstr "Información de %(district_label)s"
+msgstr "Información de<br />%(district_label)s"
 
 #: redistricting/templates/editplan.html:129
 #, python-format
