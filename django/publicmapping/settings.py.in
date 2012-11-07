@@ -186,3 +186,4 @@ LOGGING = {
     }
 }
 
+BANNER_IMAGE = '/static-media/images/banner-home-es.png'
