@@ -982,7 +982,7 @@ msgstr "計画案を照合してスコアボードに提出する"
 #: redistricting/templates/editplan.html:184
 msgid ""
 "In order to be considered for placement on the leaderboards your plan must "
-"meet the criteria for creating a legal redistricitng plan. Keep in mind that "
+"meet the criteria for creating a legal redistricting plan. Keep in mind that "
 "as soon as you edit a verified plan, it will automatically become "
 "\"unverified\" and you will need to re-verify it in order for it to again be "
 "considered for the leaderboards."
