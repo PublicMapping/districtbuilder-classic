@@ -943,7 +943,7 @@ msgstr ""
 #: redistricting/templates/editplan.html:130
 #, python-format
 msgid "Unassign<br/>%(district_label)s"
-msgstr "Cancelar la asignación<br/>%(district_label)s"
+msgstr "Eliminar<br/>%(district_label)s"
 
 #: redistricting/templates/editplan.html:132
 #, python-format
@@ -962,7 +962,7 @@ msgstr "Mostrar<br/>separaciones"
 #: redistricting/templates/editplan.html:137
 #: redistricting/templates/viewplan.html:473
 msgid "Generate<br/>Splits Report"
-msgstr "Generar<br/>informe de separaciones"
+msgstr "Informe<br/>de separaciones"
 
 #: redistricting/templates/editplan.html:142
 msgid "Select Multi-<br/>Member Districts"
@@ -1701,7 +1701,7 @@ msgstr "Estadísticas"
 
 #: redistricting/templates/viewplan.html:516
 msgid "Loading Statistics..."
-msgstr "Cargando estadísticas..."
+msgstr "Cargando Estadísticas..."
 
 #: redistricting/templates/viewplan.html:531
 msgid "Reference Layer:"
