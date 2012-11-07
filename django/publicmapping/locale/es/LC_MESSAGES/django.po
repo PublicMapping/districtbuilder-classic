@@ -922,7 +922,7 @@ msgstr ""
 #: redistricting/templates/editplan.html:124
 #, python-format
 msgid "Lock<br />%(district_label)s"
-msgstr "Anclar<br/>%(district_label)s"
+msgstr "Bloquear<br/>%(district_label)s"
 
 #: redistricting/templates/editplan.html:126
 #, python-format
