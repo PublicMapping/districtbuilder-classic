@@ -2233,11 +2233,11 @@ msgstr "¿No tiene una cuenta?"
 
 #: templates/index.html:173
 msgid "To Draw Your Own Maps..."
-msgstr "Para dibujar sus propios mapas..."
+msgstr "Para dibujar unos mapas..."
 
 #: templates/index.html:177
 msgid "To View Other Users' Maps..."
-msgstr "Para ver los mapas de otros usuarios..."
+msgstr "Para ver los mapas compartidos..."
 
 #: templates/index.html:180
 msgid "Enter as a guest"
