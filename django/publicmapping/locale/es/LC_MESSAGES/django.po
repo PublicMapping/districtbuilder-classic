@@ -2127,11 +2127,11 @@ msgstr "Contraseña"
 
 #: templates/account.html:29
 msgid "Confirm Password"
-msgstr "Confirmar contraseña"
+msgstr "Confirme contraseña"
 
 #: templates/account.html:33
 msgid "Password Hint"
-msgstr "Pista para recordar contraseña"
+msgstr "Pista para la contraseña"
 
 #: templates/account.html:40
 msgid "An email address is recommended to recover a forgotten password"
