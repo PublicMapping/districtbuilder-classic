@@ -1622,7 +1622,7 @@ msgstr "Empezar a dibujar"
 
 #: redistricting/templates/viewplan.html:379
 msgid "Plan Details"
-msgstr "Detalles de plan"
+msgstr "Detalles del plan"
 
 #: redistricting/templates/viewplan.html:380
 msgid "User Name:"
@@ -1631,7 +1631,7 @@ msgstr "Nombre de usuario:"
 #: redistricting/templates/viewplan.html:383
 #: redistricting/templates/viewplan.html:886
 msgid "Plan Name:"
-msgstr "Nombre de plan"
+msgstr "Nombre del plan:"
 
 #: redistricting/templates/viewplan.html:386
 msgid "Description:"
@@ -1639,15 +1639,15 @@ msgstr "Descripción:"
 
 #: redistricting/templates/viewplan.html:389
 msgid "# of Districts:"
-msgstr "# de distritos"
+msgstr "# de distritos:"
 
 #: redistricting/templates/viewplan.html:392
 msgid "Shared:"
-msgstr "Compartido"
+msgstr "Compartido:"
 
 #: redistricting/templates/viewplan.html:395
 msgid "Last Modified:"
-msgstr "Última modificación"
+msgstr "Última modificación:"
 
 #: redistricting/templates/viewplan.html:400
 msgid "Edit Details"
@@ -1705,7 +1705,7 @@ msgstr "Cargando Estadísticas..."
 
 #: redistricting/templates/viewplan.html:531
 msgid "Reference Layer:"
-msgstr "Capa de referencia"
+msgstr "Capa de referencia:"
 
 #: redistricting/templates/viewplan.html:532
 #: redistricting/templates/viewplan.html:973
@@ -1839,7 +1839,7 @@ msgstr ""
 
 #: redistricting/templates/viewplan.html:825 templates/index.html:135
 msgid "Tweet"
-msgstr "Tweet"
+msgstr ""
 
 #: redistricting/templates/viewplan.html:846
 msgid "Plan File Export"
@@ -1875,7 +1875,7 @@ msgstr ""
 
 #: redistricting/templates/viewplan.html:884
 msgid "Community Map Name:"
-msgstr "Nombre del mapa de la comunidad"
+msgstr "Nombre del mapa de la comunidad:"
 
 #: redistricting/templates/viewplan.html:897
 msgid "Please select a plan"

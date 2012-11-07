@@ -1,40 +1,22 @@
+# English messages file for DistrictBuilder
+# Copyright (C) 2012
+# This file is distributed under the same license as the DistrictBuilder package.
+# David Zwarg <dzwarg@azavea.com>, 2012.
 # 
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: 1.0\n"
+"Project-Id-Version: 2.0\n"
 "Report-Msgid-Bugs-To: districtbuilder-dev@googlegroups.com\n"
 "POT-Creation-Date: 2012-10-02 20:58+0000\n"
 "PO-Revision-Date: 2012-10-02 20:58+0000\n"
-"Last-Translator: admin <dzwarg+admin@azavea.com>\n"
-"Language-Team: admin <dzwarg+admin@azavea.com>\n"
+"Last-Translator: David Zwarg <dzwarg@azavea.com>\n"
+"Language-Team: Azavea <info@azavea.com>\n"
+"Language: English\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: en\n"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:27
-msgid "va short label"
-msgstr "va"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:27
-msgid "va label"
-msgstr "Virginia"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:27
-msgid "va long description"
-msgstr "The Commonwealth of Virginia"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:45
-msgid "dc short label"
-msgstr "dc"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:45
-msgid "dc label"
-msgstr "DC Metro"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:45
-msgid "dc long description"
-msgstr "The District of Columbia Metropolitan Area"
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:10
 msgid "congress short label"
@@ -52,38 +34,6 @@ msgstr "Congressional"
 msgid "congress members"
 msgstr "districts"
 
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:12
-msgid "house short label"
-msgstr "%(district_id)s"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:12
-msgid "house label"
-msgstr "District %(district_id)s"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:12
-msgid "house long description"
-msgstr "State House"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:12
-msgid "house members"
-msgstr "districts"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:14
-msgid "senate short label"
-msgstr "%(district_id)s"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:14
-msgid "senate label"
-msgstr "District %(district_id)s"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:14
-msgid "senate long description"
-msgstr "State Senate"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:14
-msgid "senate members"
-msgstr "districts"
-
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:16
 msgid "community short label"
 msgstr "%(district_id)s"
@@ -99,386 +49,6 @@ msgstr "Community Map"
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:16
 msgid "community members"
 msgstr "communities"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:18
-msgid "dc_area_council short label"
-msgstr "%(district_id)s"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:18
-msgid "dc_area_council label"
-msgstr "District %(district_id)s"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:18
-msgid "dc_area_council long description"
-msgstr "DC Planning Council"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:18
-msgid "dc_area_council members"
-msgstr "districts"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:20
-msgid "dc_community short label"
-msgstr "%(district_id)s"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:20
-msgid "dc_community label"
-msgstr "Community %(district_id)s"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:20
-msgid "dc_community long description"
-msgstr "DC Community Map"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:20
-msgid "dc_community members"
-msgstr "communities"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:77
-msgid "govdem short label"
-msgstr "% Dem Gov. '09, Two-Party"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:77
-msgid "govdem label"
-msgstr "Democratic Voters, Governor '09"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:77
-msgid "govdem long description"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:80
-msgid "vapblk short label"
-msgstr "Black VAP"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:80
-msgid "vapblk label"
-msgstr "Voting Age Population - African-American"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:80
-msgid "vapblk long description"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:83
-msgid "vaphisp short label"
-msgstr "Hisp. VAP"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:83
-msgid "vaphisp label"
-msgstr "Voting Age Population - Hispanic/Latino"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:83
-msgid "vaphisp long description"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:85
-msgid "pophisp short label"
-msgstr "Hispanic"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:85
-msgid "pophisp label"
-msgstr "Hispanic or Latino"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:85
-msgid "pophisp long description"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:87
-msgid "popasn short label"
-msgstr "As Amer"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:87
-msgid "popasn label"
-msgstr "Asian-American"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:87
-msgid "popasn long description"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:89
-msgid "popnam short label"
-msgstr "Nat Amer"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:89
-msgid "popnam label"
-msgstr "Native American"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:89
-msgid "popnam long description"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:91
-msgid "poppild short label"
-msgstr "Pac Isldr"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:91
-msgid "poppild label"
-msgstr "Pacific Islander"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:91
-msgid "poppild long description"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:93
-msgid "vap short label"
-msgstr "Voters"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:93
-msgid "vap label"
-msgstr "Voting Age Population"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:93
-msgid "vap long description"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:96
-msgid "vapwnh short label"
-msgstr "Wht Votng Age"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:96
-msgid "vapwnh label"
-msgstr "Voting Age Population - White"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:96
-msgid "vapwnh long description"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:98
-msgid "popblk short label"
-msgstr "Black"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:98
-msgid "popblk label"
-msgstr "African-American"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:98
-msgid "popblk long description"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:100
-msgid "popwnh short label"
-msgstr "White"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:100
-msgid "popwnh label"
-msgstr "Total White Non-Hispanic"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:100
-msgid "popwnh long description"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:103
-msgid "vapasn short label"
-msgstr "As Am Votng Age"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:103
-msgid "vapasn label"
-msgstr "Voting Age Population - Asian-American"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:103
-msgid "vapasn long description"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:106
-msgid "vapnam short label"
-msgstr "Nat Amer Votng Age"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:106
-msgid "vapnam label"
-msgstr "Voting Age Population - Native American"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:106
-msgid "vapnam long description"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:109
-msgid "vappild short label"
-msgstr "Pac Isldr Votng Age"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:109
-msgid "vappild label"
-msgstr "Voting Age Population - Pacific Islander"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:109
-msgid "vappild long description"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:111
-msgid "presdem short label"
-msgstr "Democrat 08"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:111
-msgid "presdem label"
-msgstr "Democratic Voters"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:111
-msgid "presdem long description"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:113
-msgid "presrep short label"
-msgstr "Republican 08"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:113
-msgid "presrep label"
-msgstr "Republican Voters"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:113
-msgid "presrep long description"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:115
-msgid "poptot short label"
-msgstr "Total Pop."
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:115
-msgid "poptot label"
-msgstr "Total Population"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:115
-msgid "poptot long description"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:117
-msgid "presoth short label"
-msgstr "Other 08"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:117
-msgid "presoth label"
-msgstr "Other Voters"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:117
-msgid "presoth long description"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:119
-msgid "govrep short label"
-msgstr "Republican 09"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:119
-msgid "govrep label"
-msgstr "Republican Voters, Governor '09"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:119
-msgid "govrep long description"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:121
-msgid "govoth short label"
-msgstr "Other Cand 09"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:121
-msgid "govoth label"
-msgstr "Sum All Other Candidates, Governor '09"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:121
-msgid "govoth long description"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:123
-msgid "govtot short label"
-msgstr "Governor"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:123
-msgid "govtot label"
-msgstr "Total Voter, Governor '09"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:123
-msgid "govtot long description"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:1027
-msgid "block short label"
-msgstr "block"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:1027
-msgid "block label"
-msgstr "Block"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:1027
-msgid "block long description"
-msgstr "Census Blocks"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:1088
-msgid "vtd short label"
-msgstr "vtd"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:1088
-msgid "vtd label"
-msgstr "VTD"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:1088
-msgid "vtd long description"
-msgstr "Voter Tabulation Districts"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:1142
-msgid "county short label"
-msgstr "county"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:1142
-msgid "county label"
-msgstr "county"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:1142
-msgid "county long description"
-msgstr "Counties"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:37
-msgid "va_block short label"
-msgstr "block"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:37
-msgid "va_block label"
-msgstr "Block"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:37
-msgid "va_block long description"
-msgstr "Census Blocks"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:38
-msgid "va_vtd short label"
-msgstr "vtd"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:38
-msgid "va_vtd label"
-msgstr "VTD"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:38
-msgid "va_vtd long description"
-msgstr "Voter Tabulation Districts"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:39
-msgid "va_county short label"
-msgstr "county"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:39
-msgid "va_county label"
-msgstr "County"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:39
-msgid "va_county long description"
-msgstr "Counties"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:62
-msgid "dc_block short label"
-msgstr "block"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:62
-msgid "dc_block label"
-msgstr "Block"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:62
-msgid "dc_block long description"
-msgstr "Census Blocks"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:63
-msgid "dc_vtd short label"
-msgstr "vtd"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:63
-msgid "dc_vtd label"
-msgstr "VTD"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:63
-msgid "dc_vtd long description"
-msgstr "Voter Tabulation Districts"
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:853
 msgid "congress_leader_all short label"
@@ -546,66 +116,6 @@ msgstr ""
 "whose area is equal to the area of the district to the perimeter of "
 "the district."
 
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:697
-msgid "panel_competitive_all short label"
-msgstr "Competitiveness"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:697
-msgid "panel_competitive_all label"
-msgstr "Competitiveness"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:697
-msgid "panel_competitive_all long description"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:435
-msgid "plan_competitiveness short label"
-msgstr "Competitiveness"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:435
-msgid "plan_competitiveness label"
-msgstr "Competitiveness"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:435
-msgid "plan_competitiveness long description"
-msgstr ""
-"Each plan's overall political competitiveness is determined by "
-"averaging each district.s 'partisan differential'.  The partisan "
-"differential of each district is calculated by subtracting the "
-"Democratic 'partisan index' from the Republican 'partisan "
-"index'.<br/><br/>'Heavily' competitive districts are districts with "
-"partisan differentials of less than or equal to 5%. 'Generally' "
-"competitive districts are districts with partisan differentials of "
-"greater than 5% but less than 10%."
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:705
-msgid "panel_rf_all short label"
-msgstr "Representational Fairness"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:705
-msgid "panel_rf_all label"
-msgstr "Representational Fairness"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:705
-msgid "panel_rf_all long description"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:496
-msgid "plan_repfairness short label"
-msgstr "Representational Fairness"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:496
-msgid "plan_repfairness label"
-msgstr "Representational Fairness"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:496
-msgid "plan_repfairness long description"
-msgstr ""
-"Representational fairness is increased when the percentage of "
-"districts a party would likely win (based upon the 'partisan index' "
-"used to determine Competitiveness) closely mirrors that party.s "
-"percentage of the statewide vote."
-
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:860
 msgid "congress_leader_mine short label"
 msgstr "Congressional Leaderboard - Mine"
@@ -652,66 +162,6 @@ msgstr "Competitiveness"
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:701
 msgid "panel_competitive_mine long description"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:709
-msgid "panel_rf_mine short label"
-msgstr "Representational Fairness"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:709
-msgid "panel_rf_mine label"
-msgstr "Representational Fairness"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:709
-msgid "panel_rf_mine long description"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:867
-msgid "house_leader_all short label"
-msgstr "State House Leaderboard - All"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:867
-msgid "house_leader_all label"
-msgstr "State House Leaderboard - All"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:867
-msgid "house_leader_all long description"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:874
-msgid "house_leader_mine short label"
-msgstr "State House Leaderboard - Mine"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:874
-msgid "house_leader_mine label"
-msgstr "State House Leaderboard - Mine"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:874
-msgid "house_leader_mine long description"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:881
-msgid "senate_leader_all short label"
-msgstr "State Senate Leaderboard - All"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:881
-msgid "senate_leader_all label"
-msgstr "State Senate Leaderboard - All"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:881
-msgid "senate_leader_all long description"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:888
-msgid "senate_leader_mine short label"
-msgstr "State Senate Leaderboard - Mine"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:888
-msgid "senate_leader_mine label"
-msgstr "State Senate Leaderboard - Mine"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:888
-msgid "senate_leader_mine long description"
 msgstr ""
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:896
@@ -764,40 +214,6 @@ msgstr "Contiguous"
 msgid "b_plan_congress_noncontiguous long description"
 msgstr ""
 
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:450
-msgid "plan_majority_minority_blk_congress short label"
-msgstr "Black VAP Majority (>50%)"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:450
-msgid "plan_majority_minority_blk_congress label"
-msgstr "Black VAP Majority (>50%)"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:450
-msgid "plan_majority_minority_blk_congress long description"
-msgstr ""
-"Compliance with the Voting Rights Act will be assumed if maps include "
-"a minority-majority district in any area where a minority group is (as"
-" described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) "
-"'sufficiently large and geographically compact to constitute a "
-"majority in a single-member district'."
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:477
-msgid "plan_majority_minority_hisp short label"
-msgstr "Hisp. VAP Majority (>50%)"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:477
-msgid "plan_majority_minority_hisp label"
-msgstr "Hisp. VAP Majority (>50%)"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:477
-msgid "plan_majority_minority_hisp long description"
-msgstr ""
-"Compliance with the Voting Rights Act will be assumed if maps include "
-"a minority-majority district in any area where a minority group is (as"
-" described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) "
-"'sufficiently large and geographically compact to constitute a "
-"majority in a single-member district'."
-
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:749
 msgid "congresional_panel_info short label"
 msgstr "Basic Information"
@@ -822,30 +238,6 @@ msgstr "Tot Pop"
 msgid "a_congressional_population long description"
 msgstr "Population interval calculator for congressional."
 
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:230
-msgid "district_contiguous short label"
-msgstr "Contiguous"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:230
-msgid "district_contiguous label"
-msgstr "Contiguous"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:230
-msgid "district_contiguous long description"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:221
-msgid "district_schwartzberg short label"
-msgstr "Compactness"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:221
-msgid "district_schwartzberg label"
-msgstr "Compactness"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:221
-msgid "district_schwartzberg long description"
-msgstr ""
-
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:901
 msgid "congress_sidebar_demo short label"
 msgstr "Demographics"
@@ -868,270 +260,6 @@ msgstr "Demographics"
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:781
 msgid "congressional_panel_demo long description"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:510
-msgid "partisan_index short label"
-msgstr "Partisan Index"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:510
-msgid "partisan_index label"
-msgstr "Partisan Index"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:510
-msgid "partisan_index long description"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:136
-msgid "district_blkvap_percent short label"
-msgstr "Black VAP"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:136
-msgid "district_blkvap_percent label"
-msgstr "Black VAP"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:136
-msgid "district_blkvap_percent long description"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:152
-msgid "district_hispvap_percent short label"
-msgstr "His. VAP"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:152
-msgid "district_hispvap_percent label"
-msgstr "His. VAP"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:152
-msgid "district_hispvap_percent long description"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:906
-msgid "house_sidebar_basic short label"
-msgstr "Basic Information"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:906
-msgid "house_sidebar_basic label"
-msgstr "Basic Information"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:906
-msgid "house_sidebar_basic long description"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:723
-msgid "house_panel_summary short label"
-msgstr "Plan Summary"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:723
-msgid "house_panel_summary label"
-msgstr "Plan Summary"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:723
-msgid "house_panel_summary long description"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:393
-msgid "a_house_plan_equipopulation_summary short label"
-msgstr "Target Pop. (80,010)"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:393
-msgid "a_house_plan_equipopulation_summary label"
-msgstr "Target Pop. (80,010)"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:393
-msgid "a_house_plan_equipopulation_summary long description"
-msgstr ""
-"The population of each House of Delegates district must be 80,010 +/- "
-"5%."
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:297
-msgid "b_plan_house_noncontiguous short label"
-msgstr "Contiguous"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:297
-msgid "b_plan_house_noncontiguous label"
-msgstr "Contiguous"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:297
-msgid "b_plan_house_noncontiguous long description"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:459
-msgid "plan_majority_minority_blk_house short label"
-msgstr "Black VAP Majority (>50%)"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:459
-msgid "plan_majority_minority_blk_house label"
-msgstr "Black VAP Majority (>50%)"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:459
-msgid "plan_majority_minority_blk_house long description"
-msgstr ""
-"Compliance with the Voting Rights Act will be assumed if maps include "
-"a minority-majority district in any area where a minority group is (as"
-" described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) "
-"'sufficiently large and geographically compact to constitute a "
-"majority in a single-member district'."
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:757
-msgid "house_panel_info short label"
-msgstr "Basic Information"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:757
-msgid "house_panel_info label"
-msgstr "Basic Information"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:757
-msgid "house_panel_info long description"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:321
-msgid "a_house_population short label"
-msgstr "Tot Pop"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:321
-msgid "a_house_population label"
-msgstr "Tot Pop"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:321
-msgid "a_house_population long description"
-msgstr "Population interval calculator for house."
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:911
-msgid "house_sidebar_demo short label"
-msgstr "Demographics"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:911
-msgid "house_sidebar_demo label"
-msgstr "Demographics"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:911
-msgid "house_sidebar_demo long description"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:789
-msgid "house_panel_demo short label"
-msgstr "Demographics"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:789
-msgid "house_panel_demo label"
-msgstr "Demographics"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:789
-msgid "house_panel_demo long description"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:916
-msgid "senate_sidebar_basic short label"
-msgstr "Basic Information"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:916
-msgid "senate_sidebar_basic label"
-msgstr "Basic Information"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:916
-msgid "senate_sidebar_basic long description"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:731
-msgid "senate_panel_summary short label"
-msgstr "Plan Summary"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:731
-msgid "senate_panel_summary label"
-msgstr "Plan Summary"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:731
-msgid "senate_panel_summary long description"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:413
-msgid "a_senate_plan_equipopulation_summary short label"
-msgstr "Target Pop. (200,026)"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:413
-msgid "a_senate_plan_equipopulation_summary label"
-msgstr "Target Pop. (200,026)"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:413
-msgid "a_senate_plan_equipopulation_summary long description"
-msgstr "The population of each State Senate district must be 200,026 +/- 5%."
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:303
-msgid "b_plan_senate_noncontiguous short label"
-msgstr "Contiguous"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:303
-msgid "b_plan_senate_noncontiguous label"
-msgstr "Contiguous"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:303
-msgid "b_plan_senate_noncontiguous long description"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:468
-msgid "plan_majority_minority_blk_senate short label"
-msgstr "Black VAP Majority (>50%)"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:468
-msgid "plan_majority_minority_blk_senate label"
-msgstr "Black VAP Majority (>50%)"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:468
-msgid "plan_majority_minority_blk_senate long description"
-msgstr ""
-"Compliance with the Voting Rights Act will be assumed if maps include "
-"a minority-majority district in any area where a minority group is (as"
-" described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) "
-"'sufficiently large and geographically compact to constitute a "
-"majority in a single-member district'."
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:765
-msgid "senate_panel_info short label"
-msgstr "Basic Information"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:765
-msgid "senate_panel_info label"
-msgstr "Basic Information"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:765
-msgid "senate_panel_info long description"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:331
-msgid "a_senate_population short label"
-msgstr "Tot Pop"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:331
-msgid "a_senate_population label"
-msgstr "Tot Pop"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:331
-msgid "a_senate_population long description"
-msgstr "Population interval calculator for senate."
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:921
-msgid "senate_sidebar_demo short label"
-msgstr "Demographics"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:921
-msgid "senate_sidebar_demo label"
-msgstr "Demographics"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:921
-msgid "senate_sidebar_demo long description"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:797
-msgid "senate_panel_demo short label"
-msgstr "Demographics"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:797
-msgid "senate_panel_demo label"
-msgstr "Demographics"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:797
-msgid "senate_panel_demo long description"
 msgstr ""
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:926
@@ -1170,30 +298,6 @@ msgstr "Demographics"
 msgid "community_panel_demo long description"
 msgstr ""
 
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:530
-msgid "district_poptot short label"
-msgstr "Total Population"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:530
-msgid "district_poptot label"
-msgstr "Total Population"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:530
-msgid "district_poptot long description"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:520
-msgid "district_vap short label"
-msgstr "Voting Age Pop."
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:520
-msgid "district_vap label"
-msgstr "Voting Age Pop."
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:520
-msgid "district_vap long description"
-msgstr ""
-
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:931
 msgid "community_sidebar_comments short label"
 msgstr "Community Mapping"
@@ -1228,6 +332,30 @@ msgstr "Comments"
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:537
 msgid "district_comments long description"
+msgstr ""
+
+#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:230
+msgid "district_contiguous short label"
+msgstr "Contiguous"
+
+#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:230
+msgid "district_contiguous label"
+msgstr "Contiguous"
+
+#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:230
+msgid "district_contiguous long description"
+msgstr ""
+
+#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:221
+msgid "district_schwartzberg short label"
+msgstr "Compactness"
+
+#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:221
+msgid "district_schwartzberg label"
+msgstr "Compactness"
+
+#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:221
+msgid "district_schwartzberg long description"
 msgstr ""
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:938
@@ -1290,78 +418,6 @@ msgstr "Total Population"
 msgid "report_score_total_population_house long description"
 msgstr ""
 
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:572
-msgid "report_score_vap short label"
-msgstr "Voting Age Population"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:572
-msgid "report_score_vap label"
-msgstr "Voting Age Population"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:572
-msgid "report_score_vap long description"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:581
-msgid "report_score_vapblk short label"
-msgstr "VAP African-American"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:581
-msgid "report_score_vapblk label"
-msgstr "VAP African-American"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:581
-msgid "report_score_vapblk long description"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:590
-msgid "report_score_vaphisp short label"
-msgstr "VAP Hispanic/Latino"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:590
-msgid "report_score_vaphisp label"
-msgstr "VAP Hispanic/Latino"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:590
-msgid "report_score_vaphisp long description"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:824
-msgid "report_panel_majmin short label"
-msgstr "Majority Minority Districts"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:824
-msgid "report_panel_majmin label"
-msgstr "Majority Minority Districts"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:824
-msgid "report_panel_majmin long description"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:600
-msgid "report_score_majmin_blk short label"
-msgstr "VAP African-American"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:600
-msgid "report_score_majmin_blk label"
-msgstr "VAP African-American"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:600
-msgid "report_score_majmin_blk long description"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:610
-msgid "report_score_majmin_hisp short label"
-msgstr "VAP Hispanic/Latino"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:610
-msgid "report_score_majmin_hisp label"
-msgstr "VAP Hispanic/Latino"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:610
-msgid "report_score_majmin_hisp long description"
-msgstr ""
-
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:831
 msgid "report_panel_compactness short label"
 msgstr "Compactness"
@@ -1410,42 +466,6 @@ msgstr "Roeck"
 msgid "report_score_compactness_ro long description"
 msgstr ""
 
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:839
-msgid "report_panel_party short label"
-msgstr "Party-Controlled Districts"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:839
-msgid "report_panel_party label"
-msgstr "Party-Controlled Districts"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:839
-msgid "report_panel_party long description"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:649
-msgid "report_score_party_dem short label"
-msgstr "Democratic"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:649
-msgid "report_score_party_dem label"
-msgstr "Democratic"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:649
-msgid "report_score_party_dem long description"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:659
-msgid "report_score_party_rep short label"
-msgstr "Republican"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:659
-msgid "report_score_party_rep label"
-msgstr "Republican"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:659
-msgid "report_score_party_rep long description"
-msgstr ""
-
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:846
 msgid "report_panel_spatial short label"
 msgstr "Spatial Analysis"
@@ -1470,126 +490,6 @@ msgstr "Unassigned Blocks"
 msgid "report_score_unassigned long description"
 msgstr ""
 
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:947
-msgid "senate_reports short label"
-msgstr "State Senate Reports"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:947
-msgid "senate_reports label"
-msgstr "State Senate Reports"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:947
-msgid "senate_reports long description"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:956
-msgid "house_reports short label"
-msgstr "State House Reports"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:956
-msgid "house_reports label"
-msgstr "State House Reports"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:956
-msgid "house_reports long description"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:146
-msgid "district_blkvap_thresh short label"
-msgstr "Black VAP Threshold"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:146
-msgid "district_blkvap_thresh label"
-msgstr "Black VAP Threshold"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:146
-msgid "district_blkvap_thresh long description"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:162
-msgid "district_hispvap_thresh short label"
-msgstr "His. VAP Threshold"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:162
-msgid "district_hispvap_thresh label"
-msgstr "His. VAP Threshold"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:162
-msgid "district_hispvap_thresh long description"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:170
-msgid "district_poptot_uitarget_congress short label"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:170
-msgid "district_poptot_uitarget_congress label"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:170
-msgid "district_poptot_uitarget_congress long description"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:177
-msgid "district_poptot_uitarget_house short label"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:177
-msgid "district_poptot_uitarget_house label"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:177
-msgid "district_poptot_uitarget_house long description"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:184
-msgid "district_poptot_uitarget_senate short label"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:184
-msgid "district_poptot_uitarget_senate label"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:184
-msgid "district_poptot_uitarget_senate long description"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:195
-msgid "district_poptot_range short label"
-msgstr "Tot Pop Range"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:195
-msgid "district_poptot_range label"
-msgstr "Tot Pop Range"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:195
-msgid "district_poptot_range long description"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:206
-msgid "district_mintot short label"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:206
-msgid "district_mintot label"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:206
-msgid "district_mintot long description"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:211
-msgid "district_majmin short label"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:211
-msgid "district_majmin label"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:211
-msgid "district_majmin long description"
-msgstr ""
-
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:239
 msgid "plan_sum_equipop short label"
 msgstr "Equal Population"
@@ -1612,66 +512,6 @@ msgstr ""
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:243
 msgid "plan_all_equipop long description"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:250
-msgid "plan_count_majmin short label"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:250
-msgid "plan_count_majmin label"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:250
-msgid "plan_count_majmin long description"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:255
-msgid "plan_blkvap_thresh short label"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:255
-msgid "plan_blkvap_thresh label"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:255
-msgid "plan_blkvap_thresh long description"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:260
-msgid "plan_hispvap_thresh short label"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:260
-msgid "plan_hispvap_thresh label"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:260
-msgid "plan_hispvap_thresh long description"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:268
-msgid "plan_poptot_inrange short label"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:268
-msgid "plan_poptot_inrange label"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:268
-msgid "plan_poptot_inrange long description"
-msgstr ""
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:278
-msgid "plan_major_minor short label"
-msgstr "Majority-Minority"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:278
-msgid "plan_major_minor label"
-msgstr "Majority-Minority"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:278
-msgid "plan_major_minor long description"
 msgstr ""
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:285
@@ -1700,34 +540,6 @@ msgstr ""
 "The number of districts in a Congressional redistricting plan must be "
 "11."
 
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:349
-msgid "a_house_plan_count_districts short label"
-msgstr "Count Districts"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:349
-msgid "a_house_plan_count_districts label"
-msgstr "Count Districts"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:349
-msgid "a_house_plan_count_districts long description"
-msgstr ""
-"The number of districts in a House of Delegates redistricting plan "
-"must be 100."
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:356
-msgid "a_senate_plan_count_districts short label"
-msgstr "Count Districts"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:356
-msgid "a_senate_plan_count_districts label"
-msgstr "Count Districts"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:356
-msgid "a_senate_plan_count_districts long description"
-msgstr ""
-"The number of districts in a State Senate redistricting plan must be "
-"100."
-
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:363
 msgid "a_congress_plan_equipopulation_validation short label"
 msgstr "Target Pop. (727,366)"
@@ -1741,32 +553,6 @@ msgid "a_congress_plan_equipopulation_validation long description"
 msgstr ""
 "The population of each Congressional district must be 727,366 +/- "
 "0.5%."
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:383
-msgid "a_house_plan_equipopulation_validation short label"
-msgstr "Target Pop. (80,010)"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:383
-msgid "a_house_plan_equipopulation_validation label"
-msgstr "Target Pop. (80,010)"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:383
-msgid "a_house_plan_equipopulation_validation long description"
-msgstr ""
-"The population of each House of Delegates district must be 80,010 +/- "
-"5%."
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:403
-msgid "a_senate_plan_equipopulation_validation short label"
-msgstr "Target Pop. (200,026)"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:403
-msgid "a_senate_plan_equipopulation_validation label"
-msgstr "Target Pop. (200,026)"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:403
-msgid "a_senate_plan_equipopulation_validation long description"
-msgstr "The population of each State Senate district must be 200,026 +/- 5%."
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:423
 msgid "plan_all_blocks_assigned short label"
@@ -1797,23 +583,6 @@ msgstr ""
 "permitted given Virginia's extensive coastal region. 'Point "
 "contiguity' or 'touch-point contiguity' where two sections of a "
 "district are connected at a single point is not permitted."
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:486
-msgid "plan_majority_minority short label"
-msgstr "Majority Minority District"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:486
-msgid "plan_majority_minority label"
-msgstr "Majority Minority District"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:486
-msgid "plan_majority_minority long description"
-msgstr ""
-"Compliance with the Voting Rights Act will be assumed if maps include "
-"a minority-majority district in any area where a minority group is (as"
-" described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) "
-"'sufficiently large and geographically compact to constitute a "
-"majority in a single-member district'."
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:969
 msgid "congress-equipop short label"
@@ -1849,18 +618,6 @@ msgstr ""
 "point contiguity' where two sections of a district are connected at a "
 "single point is not permitted.</p>"
 
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:976
-msgid "congress-major-minor short label"
-msgstr "MajorityMinority - Congress"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:976
-msgid "congress-major-minor label"
-msgstr "MajorityMinority - Congress"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:976
-msgid "congress-major-minor long description"
-msgstr ""
-
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:979
 msgid "congress-district-count short label"
 msgstr "CountDistricts - Congress"
@@ -1885,142 +642,218 @@ msgstr "AllBlocksAssigned - Congress"
 msgid "congress-assigned long description"
 msgstr ""
 
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:988
-msgid "house-equipop short label"
-msgstr "Equipopulation - House"
+#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:19
+msgid "mx short label"
+msgstr "mx"
 
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:988
-msgid "house-equipop label"
-msgstr "Equipopulation - House"
+#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:19
+msgid "mx label"
+msgstr "Mexico"
 
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:988
-msgid "house-equipop long description"
-msgstr ""
-"<p>Your plan does not meet the competition criteria for "
-"Equipopulation:</p><p>The population of each House of Delegates "
-"district must be 80,010 +/- 5%.</p>"
+#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:19
+msgid "mx long description"
+msgstr "State of Mexico"
 
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:992
-msgid "house-contiguous short label"
-msgstr "AllContiguous - House"
+#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:41
+msgid "pobtot short label"
+msgstr "Tot Pop"
 
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:992
-msgid "house-contiguous label"
-msgstr "AllContiguous - House"
+#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:41
+msgid "pobtot label"
+msgstr "Total Population"
 
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:992
-msgid "house-contiguous long description"
-msgstr ""
-"<p>Your plan does not meet the competition criteria for "
-"Contiguity</p><p>Every part of a district must be reachable from every"
-" other part without crossing the district's borders. All districts "
-"within a plan must be contiguous. Water contiguity is permitted given "
-"Virginia's extensive coastal region. 'Point contiguity' or 'touch-"
-"point contiguity' where two sections of a district are connected at a "
-"single point is not permitted.</p>"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:995
-msgid "house-major-minor short label"
-msgstr "MajorityMinority - House"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:995
-msgid "house-major-minor label"
-msgstr "MajorityMinority - House"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:995
-msgid "house-major-minor long description"
+#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:41
+msgid "pobtot long description"
 msgstr ""
 
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:998
-msgid "house-district-count short label"
-msgstr "CountDistricts - House"
+#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:43
+msgid "pobmas short label"
+msgstr "Male"
 
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:998
-msgid "house-district-count label"
-msgstr "CountDistricts - House"
+#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:43
+msgid "pobmas label"
+msgstr "Male Population"
 
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:998
-msgid "house-district-count long description"
+#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:43
+msgid "pobmas long description"
 msgstr ""
 
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:1001
-msgid "house-assigned short label"
-msgstr "AllBlocksAssigned - House"
+#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:45
+msgid "pobfem short label"
+msgstr "Female"
 
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:1001
-msgid "house-assigned label"
-msgstr "AllBlocksAssigned - House"
+#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:45
+msgid "pobfem label"
+msgstr "Female Population"
 
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:1001
-msgid "house-assigned long description"
+#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:45
+msgid "pobfem long description"
 msgstr ""
 
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:1007
-msgid "senate-equipop short label"
-msgstr "Equipopulation - Senate"
+#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:47
+msgid "p_18ymas short label"
+msgstr "Voters"
 
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:1007
-msgid "senate-equipop label"
-msgstr "Equipopulation - Senate"
+#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:47
+msgid "p_18ymas label"
+msgstr "Voting Age Population"
 
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:1007
-msgid "senate-equipop long description"
-msgstr ""
-"<p>Your plan does not meet the competition criteria for "
-"Equipopulation:</p><p>The population of each House of Delegates "
-"district must be 200,026 +/- 5%.</p>"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:1011
-msgid "senate-contiguous short label"
-msgstr "AllContiguous - Senate"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:1011
-msgid "senate-contiguous label"
-msgstr "AllContiguous - Senate"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:1011
-msgid "senate-contiguous long description"
-msgstr ""
-"<p>Your plan does not meet the competition criteria for "
-"Contiguity</p><p>Every part of a district must be reachable from every"
-" other part without crossing the district's borders. All districts "
-"within a plan must be contiguous. Water contiguity is permitted given "
-"Virginia's extensive coastal region. 'Point contiguity' or 'touch-"
-"point contiguity' where two sections of a district are connected at a "
-"single point is not permitted.</p>"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:1014
-msgid "senate-major-minor short label"
-msgstr "MajorityMinority - Senate"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:1014
-msgid "senate-major-minor label"
-msgstr "MajorityMinority - Senate"
-
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:1014
-msgid "senate-major-minor long description"
+#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:47
+msgid "p_18ymas long description"
 msgstr ""
 
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:1017
-msgid "senate-district-count short label"
-msgstr "CountDistricts - Senate"
+#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:49
+msgid "p_18ymas_m short label"
+msgstr "Vot M"
 
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:1017
-msgid "senate-district-count label"
-msgstr "CountDistricts - Senate"
+#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:49
+msgid "p_18ymas_m label"
+msgstr "Male Voting Age Population"
 
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:1017
-msgid "senate-district-count long description"
+#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:49
+msgid "p_18ymas_m long description"
 msgstr ""
 
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:1020
-msgid "senate-assigned short label"
-msgstr "AllBlocksAssigned - Senate"
+#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:51
+msgid "p_18ymas_f short label"
+msgstr "Vot F"
 
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:1020
-msgid "senate-assigned label"
-msgstr "AllBlocksAssigned - Senate"
+#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:51
+msgid "p_18ymas_f label"
+msgstr "Female Voting Age Population"
 
-#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:1020
-msgid "senate-assigned long description"
+#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:51
+msgid "p_18ymas_f long description"
 msgstr ""
+
+#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:53
+msgid "rel_h_m short label"
+msgstr "Rel M/F"
+
+#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:53
+msgid "rel_h_m label"
+msgstr "Relative Male/Female"
+
+#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:53
+msgid "rel_h_m long description"
+msgstr ""
+
+#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:380
+msgid "seccion short label"
+msgstr "section"
+
+#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:380
+msgid "seccion label"
+msgstr "section"
+
+#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:380
+msgid "seccion long description"
+msgstr "Section"
+
+#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:441
+msgid "distrito short label"
+msgstr "district"
+
+#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:441
+msgid "distrito label"
+msgstr "district"
+
+#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:441
+msgid "distrito long description"
+msgstr "District"
+
+#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:27
+msgid "mx_seccion short label"
+msgstr "section"
+
+#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:27
+msgid "mx_seccion label"
+msgstr "section"
+
+#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:27
+msgid "mx_seccion long description"
+msgstr "Section"
+
+#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:28
+msgid "mx_distrito short label"
+msgstr "district"
+
+#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:28
+msgid "mx_distrito label"
+msgstr "district"
+
+#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:28
+msgid "mx_distrito long description"
+msgstr "Districts"
+
+#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:105
+msgid "b_congressional_pop short label"
+msgstr "Tot Pop"
+
+#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:105
+msgid "b_congressional_pop label"
+msgstr "Tot Pop"
+
+#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:105
+msgid "b_congressional_pop long description"
+msgstr "District Population"
+
+#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:112
+msgid "c_congressional_vap short label"
+msgstr "Voters"
+
+#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:112
+msgid "c_congressional_vap label"
+msgstr "Voters"
+
+#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:112
+msgid "c_congressional_vap long description"
+msgstr "Voting Age Population"
+
+#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:119
+msgid "d_congressional_relhm short label"
+msgstr "Rel M/F"
+
+#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:119
+msgid "d_congressional_relhm label"
+msgstr "Rel M/F"
+
+#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:119
+msgid "d_congressional_relhm long description"
+msgstr "Relative Male/Female"
+
+#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:178
+msgid "district_pobtot short label"
+msgstr "Total Population"
+
+#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:178
+msgid "district_pobtot label"
+msgstr "Total Population"
+
+#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:178
+msgid "district_pobtot long description"
+msgstr ""
+
+#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:440
+msgid "municipio short label"
+msgstr "municipality"
+
+#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:440
+msgid "municipio label"
+msgstr "municipality"
+
+#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:440
+msgid "municipio long description"
+msgstr "Municipality"
+
+#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:28
+msgid "mx_municipio short label"
+msgstr "municipality"
+
+#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:28
+msgid "mx_municipio label"
+msgstr "municipality"
+
+#: /projects/PublicMapping/DistrictBuilder/docs/config.xml:28
+msgid "mx_municipio long description"
+msgstr "Municipality"
