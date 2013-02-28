@@ -163,36 +163,7 @@ as reports and downloads) and cron jobs.
         
     http://spatialreference.org/ref/epsg/3785/
 
- 8. The code is distributed with a set of SLD files that create color, or
-    choropleth maps of Virginia geography. These SLD files are specific to
-    the data and configuration that are distributed with the sample AMI.
-    If you are using a different dataset, or modify the configuration, edit
-    the SLD files to reflect the population distributions for your area. 
-    The SLD files can be found at:
-
-    > /projects/PublicMapping/DistrictBuilder/sld
-
-    In addition, if you change the namespace in the configuration file, you
-    will need to rename the SLD files to match. This restriction is in place
-    for the circumstances where one admin may want to run multiple instances
-    of DistrictBuilder on the same server.  You can run the following 
-    commands to rename the namespace of "pmp" to "xyz" on all the SLD 
-    files:
-
-    > cd /projects/PublicMapping/DistrictBuilder/sld
-    > for f in "pmp:*sld"; do mv "$f" "xyz:${f:4}"; done
-
-    For more information about editing SLDs, see the wiki page:
-
-    https://github.com/PublicMapping/DistrictBuilder/wiki/Style-Layer-Descriptors
-
- 9. Now we'll use the setup.py script to configure our application. Set the
-    script to be executable:
-    
-    > cd /projects/PublicMapping/DistrictBuilder/django/publicmapping
-    > sudo chmod u+x setup.py
-
-10. Run the setup script with the appropriate parameters - the parts of 
+ 8. Run the setup script with the appropriate parameters - the parts of 
     the app you want to set up, along with the path to an xsd and a 
     config.xml file.  
     
@@ -236,7 +207,9 @@ as reports and downloads) and cron jobs.
     > -nX : Renest the geometry and data values from the Xth* (0 based 
             index) GeoLevel.
     > -V  : Create database views for the spatial layers in Geoserver.
-    > -G  : Configure a running Geoserver with the loaded spatial data. 
+    > -G  : Configure a running Geoserver with the loaded spatial data.
+            **Note** Running this flag requires a configured and running
+            Geoserver.
     > -b  : Compute and store a BARD basemap for BARD reports.
     > -t  : Create the template plans that are configured. This step may 
             happen any time after the nesting step.
@@ -246,7 +219,7 @@ as reports and downloads) and cron jobs.
     * The importing and nesting must occur in the order of smallest 
     geography to largest geography.
 
-11. Django serves up SLD files to clients, and need this mime type added
+ 9. Django serves up SLD files to clients, and need this mime type added
     to the system's known mime types in order to serve the content
     properly.
 
@@ -254,12 +227,12 @@ as reports and downloads) and cron jobs.
     b. Find the line that starts with "application/xml"
     c. Add " sld" to the end of this line, after "xml xsl xsd"
 
-12. Now that you have the app configured and your data imported, you can 
+10. Now that you have the app configured and your data imported, you can 
     run the app using Django's testing server
      
     > python ./manage.py runserver
 
-13. You will see a notice that your server is running and you can access 
+11. You will see a notice that your server is running and you can access 
     your application at 127.0.0.1:8000  Enter that location into your 
     browser on the local machine and you should be able to use the 
     application.
@@ -334,6 +307,12 @@ as reports and downloads) and cron jobs.
    
 
 == Geoserver configuration ==
+
+    Geoserver installation is **required** to complete the installation
+    with the setup.py script. Complete these setup steps before running
+    step 8 in the Installation steps above. It's possible to run sections
+    of the setup script without geoserver installed, but geoserver is 
+    required for the -G setup section.
   
  1. To install geoserver, first make sure Tomcat is installed and running
     properly; that means you can get to http://yourComputerName:8080/ and 
@@ -450,6 +429,9 @@ as reports and downloads) and cron jobs.
     easy_install as stated at the top of the README, there's a bit more
     configuration you need to do to get celeryd (the celery daemon) 
     running when your server starts.
+
+    **Note** The celery configuration points to the configured database,
+    so the setup.py script must be run prior to performing these steps.
     
  1. Download the celery init.d script from github, put it into your 
     init.d folder, and enable it for startup
