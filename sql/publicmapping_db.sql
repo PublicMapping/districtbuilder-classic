@@ -12,9 +12,6 @@ CREATE ROLE publicmapping LOGIN
 
 CREATE DATABASE publicmapping
   WITH OWNER = publicmapping
-       ENCODING = 'UTF8'
-       LC_COLLATE = 'en_US.UTF-8'
-       LC_CTYPE = 'en_US.UTF-8'
        CONNECTION LIMIT = -1
 	   TEMPLATE = template_postgis;
 	   

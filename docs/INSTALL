@@ -118,10 +118,9 @@ as reports and downloads) and cron jobs.
     generate templates:
 
     > sudo su postgres 
-    > createdb template_postgis
-    > createlang plpgsql template_postgis
-    > psql -d template_postgis -f /usr/share/postgresql/8.4/contrib/postgis-1.5/postgis.sql
-    > psql -d template_postgis -f /usr/share/postgresql/8.4/contrib/postgis-1.5/spatial_ref_sys.sql 
+    > createdb -E UTF8 -T template0 -l en_US.UTF-8 template_postgis
+    > psql -d template_postgis -f /usr/share/postgresql/9.1/contrib/postgis-1.5/postgis.sql
+    > psql -d template_postgis -f /usr/share/postgresql/9.1/contrib/postgis-1.5/spatial_ref_sys.sql 
     > exit
 
  5. Once postgis is intalled, run the PublicMapping_db.sql script in 
@@ -145,10 +144,11 @@ as reports and downloads) and cron jobs.
     Put that above the line that reads "local all all ident" so that 
     password authentication is allowed before user ident authentication
      
- 7. Download the datafile to /projects/PublicMapping/DistrictBuilder/data, and unzip into
-    the import directory: /projects/local/data/:
+ 7. Download the datafile to /projects/PublicMapping/data, and unzip into
+    the import directory: /projects/PublicMapping/local/data/:
 
-    > cd /projects/PublicMapping/DistrictBuilder/data
+    > sudo mkdir /projects/PublicMapping/data
+    > cd /projects/PublicMapping/data
     > sudo wget --no-check-certificate -O VA_data.zip \
           https://s3.amazonaws.com/districtbuilderdata/VA_data.zip
     > sudo mkdir /projects/PublicMapping/local/data
