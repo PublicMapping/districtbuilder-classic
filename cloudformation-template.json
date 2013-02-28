@@ -54,26 +54,33 @@
                             [
                                 "#!/bin/bash -ex\n",
                                 "LOG=/var/log/instance.log\n",
-                                "SignalURL=\"", { "Ref": "AptWaitHandle" }, "\"\n",
                                 "START=$(date +%s)\n",
                                 "apt-get update", " &>> $LOG\n",
                                 "apt-get -y install apache2 libapache2-mod-wsgi python-dev python-django python-lxml python-gdal python-rpy2 python-scipy python-psycopg2 python-setuptools postgresql-9.1-postgis tomcat6 tomcat6-admin gettext git gfortran python-dev g++", " &>> $LOG\n",
                                 "easy_install pip", " &>> $LOG\n",
-                                "curl -X PUT -H 'Content-Type:' --data-binary '{\"Status\":\"SUCCESS\",\"Reason\":\"APT packages installed.\",\"UniqueId\":\"AptWait\",\"Data\":\"This step: $(expr $(expr $(date +%s) - $START); cumulative: $(expr $(date +%s) - $START)\"}' $SignalURL", " &>> $LOG\n",
+                                
+                                
+                                "SignalURL=\"", { "Ref": "AptWaitHandle" }, "\"\n",
+                                "t0=$(expr $(date +%s) - $START)\n",
+                                "t1=$(expr $(date +%s) - $START)\n",
+                                "curl -X PUT -H 'Content-Type:' --data-binary '{\"Status\":\"SUCCESS\",\"Reason\":\"APT packages installed.\",\"UniqueId\":\"AptWait\",\"Data\":\"This step: '$t0'; cumulative: '$t1'\"}' $SignalURL", " &>> $LOG\n",
                                 "STEP=$(date +%s)\n",
 
 
-                                "SignalURL=\"", { "Ref": "PipWaitHandle" }, "\"\n",
                                 "mkdir -p /projects/PublicMapping", " &>> $LOG\n",
                                 "cd /projects/PublicMapping", " &>> $LOG\n",
                                 "git clone git://github.com/PublicMapping/DistrictBuilder.git", " &>> $LOG\n",
                                 "cd DistrictBuilder", " &>> $LOG\n",
                                 "pip install -r requirements.txt", " &>> $LOG\n",
-                                "curl -X PUT -H 'Content-Type:' --data-binary '{\"Status\":\"SUCCESS\",\"Reason\":\"PIP packages installed.\",\"UniqueId\":\"PipWait\",\"Data\":\"This step: $(expr $(date +%s) - $STEP); cumulative: $(expr $(date +%s) - $START)\"}' $SignalURL", " &>> $LOG\n",
+                                
+                                
+                                "SignalURL=\"", { "Ref": "PipWaitHandle" }, "\"\n",
+                                "t0=$(expr $(date +%s) - $STEP)\n",
+                                "t1=$(expr $(date +%s) - $START)\n",
+                                "curl -X PUT -H 'Content-Type:' --data-binary '{\"Status\":\"SUCCESS\",\"Reason\":\"PIP packages installed.\",\"UniqueId\":\"PipWait\",\"Data\":\"This step: '$t0'; cumulative: '$t1'\"}' $SignalURL", " &>> $LOG\n",
                                 "STEP=$(date +%s)\n",
 
 
-                                "SignalURL=\"", { "Ref": "DataWaitHandle" }, "\"\n",
                                 "mkdir -p /projects/PublicMapping/local/reports", " &>> $LOG\n",
                                 "chown www-data:www-data /projects/PublicMapping/local/reports", " &>> $LOG\n",
                                 "for f in django/publicmapping/locale/*; do chown www-data:www-data $f/LC_MESSAGES/*o; done", " &>> $LOG\n",
@@ -102,19 +109,48 @@
                                 "cd /var/lib/tomcat6/webapps/geoserver/WEB-INF", " &>> $LOG\n",
                                 "echo -e '5a6,10\n>    <context-param>\n>      <param-name>GEOWEBCACHE_CACHE_DIR</param-name>\n>      <param-value>/var/lib/tomcat6/webapps/geoserver/data/gwc</param-value>\n>    </context-param>\n>  \n' | patch web.xml", " &>> $LOG\n",
                                 "service tomcat6 restart", " &>> $LOG\n",
-                                "curl -X PUT -H 'Content-Type:' --data-binary '{\"Status\":\"SUCCESS\",\"Reason\":\"DB cluster, map server initialized and copied sample data.\",\"UniqueId\":\"DataWait\",\"Data\":\"This step: $(expr $(date +%s) - $STEP); cumulative: $(expr $(data +%s) - $START)\"}' $SignalURL", " &>> $LOG\n",
+                                
+                                
+                                "SignalURL=\"", { "Ref": "DataWaitHandle" }, "\"\n",
+                                "t0=$(expr $(date +%s) - $STEP)\n",
+                                "t1=$(expr $(date +%s) - $START)\n",
+                                "curl -X PUT -H 'Content-Type:' --data-binary '{\"Status\":\"SUCCESS\",\"Reason\":\"DB cluster, map server initialized and copied sample data.\",\"UniqueId\":\"DataWait\",\"Data\":\"This step: '$t0'; cumulative: '$t1'\"}' $SignalURL", " &>> $LOG\n",
                                 "STEP=$(date +%s)\n",
 
 
-                                "SignalURL=\"", { "Ref": "AppWaitHandle" }, "\"\n",
                                 "cd /projects/PublicMapping/DistrictBuilder/docs/", " &>> $LOG\n",
                                 "cp config.dist.xml config.xml", " &>> $LOG\n",
                                 "echo -e '1191c1191\n<         <Database name=\"YOUR-DATABASE-NAME\" user=\"publicmapping\" password=\"YOUR-DATABASE-PASSWORD\" host=\"OPTIONAL\"/>\n---\n>         <Database name=\"publicmapping\" user=\"publicmapping\" password=\"publicmapping\" host=\"localhost\"/>\n1214c1214\n<         <Admin user=\"ADMIN-USER-NAME\" email=\"ADMIN-EMAIL\" password=\"STRONG-PASSWORD\"/>\n---\n>         <Admin user=\"", { "Ref": "AdminUser" }, "\" email=\"", { "Ref": "AdminEmail" }, "\" password=\"", { "Ref": "AdminPassword" }, "\"/>\n1240c1240\n<                 adminuser=\"GEOSERVER-ADMIN-USER\" adminpass=\"GEOSERVER-ADMIN-PASS\" maxfeatures=\"100\" \n---\n>                 adminuser=\"admin\" adminpass=\"geoserver\" maxfeatures=\"100\" ' | patch config.xml", " &>> $LOG\n",
-
                                 "cd /projects/PublicMapping/DistrictBuilder/django/publicmapping", " &>> $LOG\n",
                                 "./setup.py ../../docs/config.xsd ../../docs/config.xml -v2 -d", " &>> $LOG\n",
+                                "SignalURL=\"", { "Ref": "CfgWaitHandle" }, "\"\n",
+                                "t0=$(expr $(date +%s) - $STEP)\n",
+                                "t1=$(expr $(date +%s) - $START)\n",
+                                "curl -X PUT -H 'Content-Type:' --data-binary '{\"Status\":\"SUCCESS\",\"Reason\":\"Configuration loaded.\",\"UniqueId\":\"CfgWait\",\"Data\":\"This step: '$t0'; cumulative: '$t1'\"}' $SignalURL", " &>> $LOG\n",
+                                "STEP=$(date +%s)\n",
 
-
+                                "./setup.py ../../docs/config.xsd ../../docs/config.xml -v2 -g0 -g1 -g2 -n1 -n2", " &>> $LOG\n",
+                                "SignalURL=\"", { "Ref": "ImportWaitHandle" }, "\"\n",
+                                "t0=$(expr $(date +%s) - $STEP)\n",
+                                "t1=$(expr $(date +%s) - $START)\n",
+                                "curl -X PUT -H 'Content-Type:' --data-binary '{\"Status\":\"SUCCESS\",\"Reason\":\"Import & renest complete.\",\"UniqueId\":\"ImportWait\",\"Data\":\"This step: '$t0'; cumulative: '$t1'\"}' $SignalURL", " &>> $LOG\n",
+                                "STEP=$(date +%s)\n",
+                                
+                                "./setup.py ../../docs/config.xsd ../../docs/config.xml -v2 -V -G", " &>> $LOG\n",
+                                "SignalURL=\"", { "Ref": "GeoWaitHandle" }, "\"\n",
+                                "t0=$(expr $(date +%s) - $STEP)\n",
+                                "t1=$(expr $(date +%s) - $START)\n",
+                                "curl -X PUT -H 'Content-Type:' --data-binary '{\"Status\":\"SUCCESS\",\"Reason\":\"Geo views & mapserver configuration complete.\",\"UniqueId\":\"GeoWait\",\"Data\":\"This step: '$t0'; cumulative: '$t1'\"}' $SignalURL", " &>> $LOG\n",
+                                "STEP=$(date +%s)\n",
+                                
+                                "./setup.py ../../docs/config.xsd ../../docs/config.xml -v2 -t -s", " &>> $LOG\n",
+                                "SignalURL=\"", { "Ref": "TplWaitHandle" }, "\"\n",
+                                "t0=$(expr $(date +%s) - $STEP)\n",
+                                "t1=$(expr $(date +%s) - $START)\n",
+                                "curl -X PUT -H 'Content-Type:' --data-binary '{\"Status\":\"SUCCESS\",\"Reason\":\"Templates and static files configuration complete.\",\"UniqueId\":\"TplWait\",\"Data\":\"This step: '$t0'; cumulative: '$t1'\"}' $SignalURL", " &>> $LOG\n",
+                                "STEP=$(date +%s)\n",
+                                
+                                
                                 "wget -q --no-check-certificate -O /etc/init.d/celeryd https://raw.github.com/ask/celery/master/contrib/generic-init.d/celeryd", " &>> $LOG\n",
                                 "chmod a+x /etc/init.d/celeryd", " &>> $LOG\n",
                                 "update-rc.d celeryd defaults", " &>> $LOG\n",
@@ -123,7 +159,11 @@
                                 "chown www-data:www-data /var/log/celery /var/run/celery/", " &>> $LOG\n",
                                 "service celeryd start", " &>> $LOG\n",
 
-                                "curl -X PUT -H 'Content-Type:' --data-binary '{\"Status\":\"SUCCESS\",\"Reason\":\"Initialization complete.\",\"UniqueId\":\"AppWait\",\"Data\":\"This step: $(expr $(date +%s) - $STEP); cumulative: $(expr $(date +%s) - $START)\"}' $SignalURL", " &>> $LOG\n"
+
+                                "SignalURL=\"", { "Ref": "AppWaitHandle" }, "\"\n",
+                                "t0=$(expr $(date +%s) - $STEP)\n",
+                                "t1=$(expr $(date +%s) - $START)\n",
+                                "curl -X PUT -H 'Content-Type:' --data-binary '{\"Status\":\"SUCCESS\",\"Reason\":\"Initialization complete.\",\"UniqueId\":\"AppWait\",\"Data\":\"This step: '$t0'; cumulative: '$t1'\"}' $SignalURL", " &>> $LOG\n"
                             ]
                         ]
                     }
@@ -173,6 +213,22 @@
             "Type": "AWS::CloudFormation::WaitConditionHandle",
             "Properties": {}
         },
+        "CfgWaitHandle": {
+            "Type": "AWS::CloudFormation::WaitConditionHandle",
+            "Properties": {}
+        },
+        "ImportWaitHandle": {
+            "Type": "AWS::CloudFormation::WaitConditionHandle",
+            "Properties": {}
+        },
+        "GeoWaitHandle": {
+            "Type": "AWS::CloudFormation::WaitConditionHandle",
+            "Properties": {}
+        },
+        "TplWaitHandle": {
+            "Type": "AWS::CloudFormation::WaitConditionHandle",
+            "Properties": {}
+        },
         "AppWaitHandle": {
             "Type": "AWS::CloudFormation::WaitConditionHandle",
             "Properties": {}
@@ -201,12 +257,44 @@
                 "Timeout": "2400"
             }
         },
-        "AppCondition": {
+        "CfgCondition": {
             "Type": "AWS::CloudFormation::WaitCondition",
             "DependsOn": "DataCondition",
             "Properties": {
-                "Handle": { "Ref": "DataWaitHandle" },
-                "Timeout": "2400"
+                "Handle": { "Ref": "CfgWaitHandle" },
+                "Timeout": "600"
+            }
+        },
+        "ImportCondition": {
+            "Type": "AWS::CloudFormation::WaitCondition",
+            "DependsOn": "CfgCondition",
+            "Properties": {
+                "Handle": { "Ref": "ImportWaitHandle" },
+                "Timeout": "43200"
+            }
+        },
+        "GeoCondition": {
+            "Type": "AWS::CloudFormation::WaitCondition",
+            "DependsOn": "ImportCondition",
+            "Properties": {
+                "Handle": { "Ref": "GeoWaitHandle" },
+                "Timeout": "600"
+            }
+        },
+        "TplCondition": {
+            "Type": "AWS::CloudFormation::WaitCondition",
+            "DependsOn": "GeoCondition",
+            "Properties": {
+                "Handle": { "Ref": "TplWaitHandle" },
+                "Timeout": "600"
+            }
+        },
+        "AppCondition": {
+            "Type": "AWS::CloudFormation::WaitCondition",
+            "DependsOn": "TplCondition",
+            "Properties": {
+                "Handle": { "Ref": "AppWaitHandle" },
+                "Timeout": "43200"
             }
         }
     },
@@ -231,6 +319,22 @@
         "DataTime": {
             "Value": { "Fn::GetAtt": [ "DataCondition", "Data" ]},
             "Description": "The time required to install Example Data, setup the database, setup the map server."
+        },
+        "CfgTime": {
+            "Value": { "Fn::GetAtt": [ "CfgCondition", "Data" ]},
+            "Description": "The time required to configure the application database."
+        },
+        "ImportTime": {
+            "Value": { "Fn::GetAtt": [ "ImportCondition", "Data" ]},
+            "Description": "The time required to import the application data."
+        },
+        "GeoTime": {
+            "Value": { "Fn::GetAtt": [ "GeoCondition", "Data" ]},
+            "Description": "The time required to configure spatial views and Geoserver."
+        },
+        "TplTime": {
+            "Value": { "Fn::GetAtt": [ "TplCondition", "Data" ]},
+            "Description": "The time required to load the default templates."
         },
         "AppTime": {
             "Value": { "Fn::GetAtt": [ "AppCondition", "Data" ]},
