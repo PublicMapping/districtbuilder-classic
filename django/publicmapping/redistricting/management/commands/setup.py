@@ -45,7 +45,7 @@ import redistricting
 from redistricting.models import *
 from redistricting.tasks import *
 from redistricting.config import *
-import traceback, logging
+import traceback, logging, time
 
 logger = logging.getLogger()
 
@@ -280,15 +280,12 @@ ERROR:
     import geographic levels.""")
             return
 
-        region_filters = self.create_filter_functions(store)
-
         gconfig = {
             'shapefiles': shapeconfig,
             'attributes': attrconfig,
             'geolevel': geolevel.get('name')[:50],
             'subject_fields': [],
-            'tolerance': geolevel.get('tolerance'),
-            'region_filters': region_filters
+            'tolerance': geolevel.get('tolerance')
         }
 
         sconfigs = store.filter_subjects()
@@ -392,6 +389,8 @@ ERROR:
                 subject_objects[attr_name] = sub
                 subject_objects['%s_by_id' % sub.name] = attr_name
 
+            region_filters = self.create_filter_functions(store)
+
             progress = 0.0
             logger.debug('0% .. ')
             for i,feat in enumerate(lyr):
@@ -401,7 +400,7 @@ ERROR:
                     logger.debug('%2.0f%% .. ', progress * 100)
 
                 levels = [level]
-                for region, filter_list in config['region_filters'].iteritems():
+                for region, filter_list in region_filters.iteritems():
                     # Check for applicability of the function by examining the config
                     geolevel_xpath = '/DistrictBuilder/GeoLevels/GeoLevel[@name="%s"]' % config['geolevel']
                     geolevel_config = store.data.xpath(geolevel_xpath)
@@ -595,6 +594,7 @@ ERROR:
         admin = admin[0]
 
         templates = config.xpath('/DistrictBuilder/Templates/Template')
+        async_ops = []
         for template in templates:
             lbconfig = config.xpath('//LegislativeBody[@id="%s"]' % template.xpath('LegislativeBody')[0].get('ref'))[0]
             query = LegislativeBody.objects.filter(name=lbconfig.get('id')[:256])
@@ -613,9 +613,19 @@ ERROR:
             fconfig = template.xpath('Blockfile')[0]
             path = fconfig.get('path')
 
-            DistrictIndexFile.index2plan( plan_name, legislative_body.id, path, owner=admin, template=True, purge=False, email=None)
+            # Import these templates asynchronously
+            async_ops.append(DistrictIndexFile.index2plan.delay(plan_name, legislative_body.id, path, owner=admin, template=True, purge=False, email=None))
 
-            logger.debug('Created template plan "%s"', plan_name)
+        # Only notify once per template, but wait for all templates to load before proceeding
+        notified = [False] * len(async_ops)
+        working = len(async_ops) > 0
+        while working:
+            time.sleep(5)
+            for i,op in enumerate(async_ops):
+                if op.ready() and not notified[i]:
+                    logger.debug('Created template plan "%s"', op.result)
+                    notified[i] = True
+            working = len([x for x in notified if x]) != len(async_ops)
 
         lbodies = config.xpath('//LegislativeBody[@id]')
         for lbody in lbodies:
