@@ -45,7 +45,7 @@ import redistricting
 from redistricting.models import *
 from redistricting.tasks import *
 from redistricting.config import *
-import traceback, logging, time, multiprocessing
+import traceback, logging, time, subprocess, multiprocessing
 
 logger = logging.getLogger()
 
@@ -318,6 +318,22 @@ ERROR:
         Parameters:
             config -- A dictionary with 'shapepath', 'geolevel', 'name_field', 'region_filters' and 'subject_fields' keys.
         """
+        
+        # Make sure celery is running
+        try:
+            pidfile = open('/var/run/celery/celeryd.pid', 'r')
+            pid = int(pidfile.read())
+            pidfile.close()
+        
+            p1 = subprocess.Popen(['ps', '-eaf'], stdout=subprocess.PIPE)
+            p2 = subprocess.Popen(['awk', '$2 ~ /%d/' % pid], stdin=p1.stdout, stdout=subprocess.PIPE)
+            out = p2.communicate()[0]
+        
+            if len(out.split('\n')) != 2:
+                logger.error('Could not find a running celery process. Please start the celery service.');
+        except:
+            logger.error('Could not find a running celery process. Please start the celery service.')
+            return
 
         for sidx,shapefile in enumerate(config['shapefiles']):
             if not exists(shapefile.get('path')):

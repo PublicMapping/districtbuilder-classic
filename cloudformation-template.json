@@ -365,18 +365,6 @@
             "Value": { "Fn::GetAtt": [ "CfgCondition", "Data" ]},
             "Description": "The time required to configure the application database."
         },
-        "ImportG0Time": {
-            "Value": { "Fn::GetAtt": [ "ImportG0Condition", "Data" ]},
-            "Description": "The time required to import the application data."
-        },
-        "ImportG1Time": {
-            "Value": { "Fn::GetAtt": [ "ImportG1Condition", "Data" ]},
-            "Description": "The time required to import the application data."
-        },
-        "ImportG2Time": {
-            "Value": { "Fn::GetAtt": [ "ImportG2Condition", "Data" ]},
-            "Description": "The time required to import the application data."
-        },
         "GeoTime": {
             "Value": { "Fn::GetAtt": [ "GeoCondition", "Data" ]},
             "Description": "The time required to configure spatial views and Geoserver."
