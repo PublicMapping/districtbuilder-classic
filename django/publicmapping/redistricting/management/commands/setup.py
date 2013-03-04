@@ -45,7 +45,7 @@ import redistricting
 from redistricting.models import *
 from redistricting.tasks import *
 from redistricting.config import *
-import traceback, logging, time
+import traceback, logging, time, multiprocessing
 
 logger = logging.getLogger()
 
@@ -185,7 +185,7 @@ file and try again.
                         importme = len(optlevels) == 0
                         importme = importme or (i in optlevels)
                         if importme:
-                            self.import_geolevel(store, geolevel)
+                            self.import_geolevel(options.get('config'), geolevel, i)
 
                     if not nestlevels is None:
                         nestme = len(nestlevels) == 0
@@ -256,7 +256,7 @@ file and try again.
         sys.exit(not all_ok)
 
     
-    def import_geolevel(self, store, geolevel):
+    def import_geolevel(self, configfile, geolevel, glidx):
         """
         Import the geography at a geolevel.
 
@@ -282,20 +282,10 @@ ERROR:
 
         gconfig = {
             'shapefiles': shapeconfig,
-            'attributes': attrconfig,
-            'geolevel': geolevel.get('name')[:50],
-            'subject_fields': [],
-            'tolerance': geolevel.get('tolerance')
+            'attributes': attrconfig
         }
 
-        sconfigs = store.filter_subjects()
-        for sconfig in sconfigs:
-            if 'aliasfor' in sconfig.attrib:
-                salconfig = store.get_subject(sconfig.get('aliasfor'))
-                sconfig.append(salconfig)
-            gconfig['subject_fields'].append( sconfig )
-
-        self.import_shape(store, gconfig)
+        self.import_shape(configfile, gconfig, glidx)
 
 
     def import_prereq(self, config, force):
@@ -321,40 +311,15 @@ ERROR:
 
         return success
 
-    def import_shape(self, store, config):
+    def import_shape(self, configfile, config, glidx):
         """
         Import a shapefile, based on a config.
 
         Parameters:
             config -- A dictionary with 'shapepath', 'geolevel', 'name_field', 'region_filters' and 'subject_fields' keys.
         """
-        def get_shape_tree(shapefile, feature):
-            shpfields = shapefile.xpath('Fields/Field')
-            builtid = ''
-            for idx in range(0,len(shpfields)):
-                idpart = shapefile.xpath('Fields/Field[@type="tree" and @pos=%d]' % idx)
-                if len(idpart) > 0:
-                    idpart = idpart[0]
-                    part = feature.get(idpart.get('name'))
-                    # strip any spaces in the treecode
-                    if not (isinstance(part, types.StringTypes)):
-                        part = '%d' % part
-                    part = part.strip(' ')
-                    width = int(idpart.get('width'))
-                    builtid = '%s%s' % (builtid, part.zfill(width))
-            return builtid
-        def get_shape_portable(shapefile, feature):
-            field = shapefile.xpath('Fields/Field[@type="portable"]')[0]
-            portable = feature.get(field.get('name'))
-            if not (isinstance(portable, types.StringTypes)):
-                portable = '%d' % portable
-            return portable
-        def get_shape_name(shapefile, feature):
-            field = shapefile.xpath('Fields/Field[@type="name"]')[0]
-            strname = feature.get(field.get('name'))
-            return strname.decode('latin-1')
 
-        for h,shapefile in enumerate(config['shapefiles']):
+        for sidx,shapefile in enumerate(config['shapefiles']):
             if not exists(shapefile.get('path')):
                 logger.info("""
 ERROR:
@@ -368,113 +333,25 @@ ERROR:
                 raise IOError('Cannot find the file "%s"' % shapefile.get('path'))
 
             ds = DataSource(shapefile.get('path'))
-
-            logger.debug('Importing from %s, %d of %d shapefiles...', ds, h+1, len(config['shapefiles']))
-
+            logger.debug('Importing from %s, %d of %d shapefiles...', ds, sidx+1, len(config['shapefiles']))
             lyr = ds[0]
             logger.debug('%d objects in shapefile', len(lyr))
-
-            level = Geolevel.objects.get(name=config['geolevel'].lower()[:50])
-            # Create the subjects we need
-            subject_objects = {}
-            for sconfig in config['subject_fields']:
-                attr_name = sconfig.get('field')
-                foundalias = False
-                for elem in sconfig.getchildren():
-                    if elem.tag == 'Subject':
-                        foundalias = True
-                        sub = Subject.objects.get(name=elem.get('id').lower()[:50])
-                if not foundalias:
-                    sub = Subject.objects.get(name=sconfig.get('id').lower()[:50])
-                subject_objects[attr_name] = sub
-                subject_objects['%s_by_id' % sub.name] = attr_name
-
-            region_filters = self.create_filter_functions(store)
-
-            progress = 0.0
-            logger.debug('0% .. ')
-            for i,feat in enumerate(lyr):
-                
-                if (float(i) / len(lyr)) > (progress + 0.1):
-                    progress += 0.1
-                    logger.debug('%2.0f%% .. ', progress * 100)
-
-                levels = [level]
-                for region, filter_list in region_filters.iteritems():
-                    # Check for applicability of the function by examining the config
-                    geolevel_xpath = '/DistrictBuilder/GeoLevels/GeoLevel[@name="%s"]' % config['geolevel']
-                    geolevel_config = store.data.xpath(geolevel_xpath)
-                    geolevel_region_xpath = '/DistrictBuilder/Regions/Region[@name="%s"]/GeoLevels//GeoLevel[@ref="%s"]' % (region, geolevel_config[0].get('id'))
-                    if len(store.data.xpath(geolevel_region_xpath)) > 0:
-                        # If the geolevel is in the region, check the filters
-                        for f in filter_list:
-                            if f(feat) == True:
-                                levels.append(Geolevel.objects.get(name='%s_%s' % (region, level.name)))
-                prefetch = Geounit.objects.filter(
-                    Q(name=get_shape_name(shapefile, feat)), 
-                    Q(geolevel__in=levels),
-                    Q(portable_id=get_shape_portable(shapefile, feat)),
-                    Q(tree_code=get_shape_tree(shapefile, feat))
-                )
-                if prefetch.count() == 0:
-                    try :
-
-                        # Store the geos geometry
-                        # Buffer by 0 to get rid of any self-intersections which may make this geometry invalid.
-                        geos = feat.geom.geos.buffer(0)
-                        # Coerce the geometry into a MultiPolygon
-                        if geos.geom_type == 'MultiPolygon':
-                            my_geom = geos
-                        elif geos.geom_type == 'Polygon':
-                            my_geom = MultiPolygon(geos)
-                        simple = my_geom.simplify(tolerance=Decimal(config['tolerance']),preserve_topology=True)
-                        if simple.geom_type != 'MultiPolygon':
-                            simple = MultiPolygon(simple)
-                        center = my_geom.centroid
-
-                        geos = None
-
-                        # Ensure the centroid is within the geometry
-                        if not center.within(my_geom):
-                            # Get the first polygon in the multipolygon
-                            first_poly = my_geom[0]
-                            # Get the extent of the first poly
-                            first_poly_extent = first_poly.extent
-                            min_x = first_poly_extent[0]
-                            max_x = first_poly_extent[2]
-                            # Create a line through the bbox and the poly center
-                            my_y = first_poly.centroid.y
-                            centerline = LineString( (min_x, my_y), (max_x, my_y))
-                            # Get the intersection of that line and the poly
-                            intersection = centerline.intersection(first_poly)
-                            if type(intersection) is MultiLineString:
-                                intersection = intersection[0]
-                            # the center of that line is my within-the-poly centroid.
-                            center = intersection.centroid
-                            first_poly = first_poly_extent = min_x = max_x = my_y = centerline = intersection = None
-
-                        g = Geounit(geom = my_geom, 
-                            name = get_shape_name(shapefile, feat), 
-                            simple = simple, 
-                            center = center,
-                            portable_id = get_shape_portable(shapefile, feat),
-                            tree_code = get_shape_tree(shapefile, feat)
-                        )
-                        g.save()
-                        g.geolevel = levels
-                        g.save()
-
-                    except:
-                        logger.info('Failed to import geometry for feature %d', feat.fid)
-                        logger.debug(traceback.format_exc())
-                        continue
-                else:
-                    g = prefetch[0]
-                    g.geolevel = levels
-                    g.save()
-
-                if not config['attributes']:
-                    self.set_geounit_characteristic(g, subject_objects, feat)
+            logger.info('0% .. ')
+            
+            lyr = None
+            ds = None
+            
+            queue = ShapeQueue(shapefile.get('path'),
+                    nworkers=multiprocessing.cpu_count() * 2,
+                    configfile=configfile,
+                    geolevel_idx=glidx,
+                    shape_idx=sidx,
+                    attr_idx=None)
+                    
+            results = queue.load()
+            
+            while not results.ready():
+                time.sleep(10)
 
             logger.info('100%')
 
@@ -482,7 +359,7 @@ ERROR:
             progress = 0
             logger.info("Assigning subject values to imported geography...")
             logger.info('0% .. ')
-            for h,attrconfig in enumerate(config['attributes']):
+            for attridx,attrconfig in enumerate(config['attributes']):
                 if not exists(attrconfig.get('path')):
                     logger.info("""
 ERROR:
@@ -495,87 +372,20 @@ ERROR:
 """, attrconfig.get('path'))
                     raise IOError('Cannot find the file "%s"' % attrconfig.get('path'))
 
-                lyr = DataSource(attrconfig.get('path'))[0]
+                queue = ShapeQueue(attrconfig.get('path'),
+                        nworkers=multiprocessing.cpu_count() * 2,
+                        configfile=configfile,
+                        geolevel_idx=glidx,
+                        shape_idx=None,
+                        attr_idx=attr_idx)
+                        
+                results = queue.load()
+            
+                while not results.ready():
+                    time.sleep(10)
 
-                found = 0
-                missed = 0
-                for i,feat in enumerate(lyr):
-                    if (float(i) / len(lyr)) > (progress + 0.1):
-                        progress += 0.1
-                        logger.info('%2.0f%% .. ', progress * 100)
+                logger.info('100%')
 
-                    gid = get_shape_treeid(attrconfig, feat)
-                    g = Geounit.objects.filter(tree_code=gid)
-
-                    if g.count() > 0:
-                        self.set_geounit_characteristic(g[0], subject_objects, feat)
-
-            logger.info('100%')
-
-    def set_geounit_characteristic(self, g, subject_objects, feat):
-        for attr, obj in subject_objects.iteritems():
-            if attr.endswith('_by_id'):
-                continue
-            try:
-                value = Decimal(str(feat.get(attr))).quantize(Decimal('000000.0000', 'ROUND_DOWN'))
-            except:
-                logger.info('No attribute "%s" on feature %d' , attr, feat.fid)
-                continue
-            percentage = '0000.00000000'
-            if obj.percentage_denominator:
-                denominator_field = subject_objects['%s_by_id' % obj.percentage_denominator.name]
-                denominator_value = Decimal(str(feat.get(denominator_field))).quantize(Decimal('000000.0000', 'ROUND_DOWN'))
-                if denominator_value > 0:
-                    percentage = value / denominator_value
-
-            query =  Characteristic.objects.filter(subject=obj, geounit=g)
-            if query.count() > 0:
-                c = query[0]
-                c.number = value
-                c.percentage = percentage
-            else:
-                c = Characteristic(subject=obj, geounit=g, number=value, percentage=percentage)
-            try:
-                c.save()
-            except:
-                c.number = '0.0'
-                c.save()
-                logger.info('Failed to set value "%s" to %d in feature "%s"', attr, feat.get(attr), g.name)
-                logger.debug(traceback.format_exc())
-
-
-    def create_filter_functions(self, store):
-        """
-        Given a Regions node, create a dictionary of functions that can
-        be used to filter a feature from a shapefile into the correct
-        region.  The dictionary keys are region ids from the config, the 
-        values are lists of functions which return true when applied to
-        a feature that should be in the region
-        """
-        def get_filter_lambda(region_code):
-            attribute = region_code.get('attr')
-            pattern = region_code.get('value')
-            start = region_code.get('start')
-            if start is not None:
-                start = int(start)
-            end = region_code.get('width')
-            if end is not None:
-                end = int(end)
-            return lambda feature: feature.get(attribute)[start:end] == pattern
-
-        function_dict = {}
-        regions = store.filter_regions()
-        for region in regions:
-            key = region.get('name')
-            values = []
-            filters = region.xpath('RegionFilter/RegionCode')
-            if len(filters) == 0:
-                values.append(lambda feature: True)
-            else:
-                for f in filters:
-                    values.append(get_filter_lambda(f))
-            function_dict[key] = values
-        return function_dict
 
     def create_template(self, config):
         """

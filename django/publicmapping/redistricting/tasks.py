@@ -24,6 +24,7 @@ Author:
     Andrew Jennings, David Zwarg
 """
 
+from celery import group
 from celery.task import task
 from celery.task.http import HttpDispatchTask
 from codecs import open
@@ -37,6 +38,7 @@ from django.db import connection, transaction
 from django.db.models import Sum, Min, Max, Avg
 from django.conf import settings
 from django.utils.translation import ugettext as _, ungettext as _n, get_language, activate
+import redistricting
 from redistricting.models import *
 from redistricting.config import *
 from tagging.utils import parse_tag_input
@@ -450,6 +452,8 @@ class DistrictIndexFile():
         # reset translation back to default
         if not prev_lang is None:
             activate(prev_lang)
+            
+        return plan.name
 
     @staticmethod
     @task
@@ -1888,3 +1892,325 @@ def clean_quarantined(upload_id, language=None):
         activate(prev_lang)
 
     return status
+
+    
+class ShapeQueue:
+    """
+    An class that will load a set of shapefiles asynchronously via a celery
+    task.
+    """
+    results = None
+    shapefile = ''
+    nworkers = 1
+    workersize = 1
+    configfile = ''
+    geolevel_idx = 0
+    shape_idx = None
+    attr_idx = None
+        
+    def __init__(self, shapefile, nworkers=1, configfile='', geolevel_idx=0, shape_idx=None, attr_idx=None):
+        """
+        Initializer
+        """
+        try:
+            ds = DataSource(shapefile)
+        except Exception, ex:
+            logger.error('Shapefile %s could not be found.' % shapefile)
+            raise ex
+
+        if len(ds) == 0:
+            # no work to do at all
+            logger.warn('Shapefile %s exists, but contains no layers.' % shapefile)
+            return
+            
+        layer = ds[0]
+        
+        if len(layer) == 0:
+            # no work to do here
+            logger.warn('Shapefile %s exists, but contains no features.' % shapefile)
+            return
+            
+        self.shapefile = shapefile
+        self.nworkers = nworkers
+        self.workersize = len(layer) / nworkers + 1
+        self.configfile = configfile
+        self.geolevel_idx = geolevel_idx
+        self.shape_idx = shape_idx
+        self.attr_idx = attr_idx
+                
+        layer = None
+        ds = None
+        
+    def load(self):
+        """
+        Start loading this shapefile asynchronously.
+        """
+        async_ops = []
+        
+        for wrange in range(0, self.nworkers):
+            begin = wrange * self.workersize
+            end = (wrange + 1) * self.workersize
+            
+            async_ops.append(ShapeQueue._loadslice.s(self.shapefile, begin, end, self.configfile, self.geolevel_idx, self.shape_idx, self.attr_idx))
+            
+        return group(async_ops).apply_async()
+        
+    @staticmethod
+    @task
+    def _loadslice(shapefile, begin, end, configfile, glidx, sidx, attridx):
+        """
+        Load a segment of features from a shapefile.
+        """
+        store = redistricting.StoredConfig(configfile)
+        store.validate()
+        store_geolevel = store.filter_geolevels()[glidx]
+
+        shapeconfig = store_geolevel.xpath('Shapefile')
+        attrconfig = None
+        if len(shapeconfig) == 0:
+            shapeconfig = store_geolevel.xpath('Files/Geography')
+            attrconfig = store_geolevel.xpath('Files/Attributes')
+        
+        subjects = get_subject_objects(store)
+        region_filters = create_filter_functions(store)
+        
+        level = Geolevel.objects.get(name=store_geolevel.get('name')[:50])
+        levels = [level]
+        
+        ds = DataSource(shapefile)
+        layer = ds[0]
+        for fidx in range(begin, end):
+            # skip the tail end that didn't divide nicely into the 
+            # number of workers
+            if fidx >= len(layer):
+                continue
+            
+            feat = layer[fidx]
+            
+            if not sidx is None:
+                # load shapes if this is an shapefile listed in the config
+                
+                for region, filter_list in region_filters.iteritems():
+                    # Check for applicability of the function by examining the config
+                    geolevel_xpath = '/DistrictBuilder/GeoLevels/GeoLevel[@name="%s"]' % level.name
+                    geolevel_config = store.data.xpath(geolevel_xpath)
+                    geolevel_region_xpath = '/DistrictBuilder/Regions/Region[@name="%s"]/GeoLevels//GeoLevel[@ref="%s"]' % (region, geolevel_config[0].get('id'))
+                    if len(store.data.xpath(geolevel_region_xpath)) > 0:
+                        # If the geolevel is in the region, check the filters
+                        for f in filter_list:
+                            if f(feat) == True:
+                                levels.append(Geolevel.objects.get(name='%s_%s' % (region, level.name)))
+                
+                prefetch = Geounit.objects.filter(
+                    Q(name=get_shape_name(shapeconfig[sidx], feat)), 
+                    Q(geolevel__in=levels),
+                    Q(portable_id=get_shape_portable(shapeconfig[sidx], feat)),
+                    Q(tree_code=get_shape_tree(shapeconfig[sidx], feat))
+                )
+                
+                if prefetch.count() == 0:
+                    try :
+
+                        # Store the geos geometry
+                        # Buffer by 0 to get rid of any self-intersections which may make this geometry invalid.
+                        geos = feat.geom.geos.buffer(0)
+                        # Coerce the geometry into a MultiPolygon
+                        if geos.geom_type == 'MultiPolygon':
+                            my_geom = geos
+                        elif geos.geom_type == 'Polygon':
+                            my_geom = MultiPolygon(geos)
+                        simple = my_geom.simplify(tolerance=Decimal(config['tolerance']),preserve_topology=True)
+                        if simple.geom_type != 'MultiPolygon':
+                            simple = MultiPolygon(simple)
+                        center = my_geom.centroid
+
+                        geos = None
+
+                        # Ensure the centroid is within the geometry
+                        if not center.within(my_geom):
+                            # Get the first polygon in the multipolygon
+                            first_poly = my_geom[0]
+                            # Get the extent of the first poly
+                            first_poly_extent = first_poly.extent
+                            min_x = first_poly_extent[0]
+                            max_x = first_poly_extent[2]
+                            # Create a line through the bbox and the poly center
+                            my_y = first_poly.centroid.y
+                            centerline = LineString( (min_x, my_y), (max_x, my_y))
+                            # Get the intersection of that line and the poly
+                            intersection = centerline.intersection(first_poly)
+                            if type(intersection) is MultiLineString:
+                                intersection = intersection[0]
+                            # the center of that line is my within-the-poly centroid.
+                            center = intersection.centroid
+                            first_poly = first_poly_extent = min_x = max_x = my_y = centerline = intersection = None
+
+                        g = Geounit(geom = my_geom, 
+                            name = get_shape_name(shapeconfig[sidx], feat), 
+                            simple = simple, 
+                            center = center,
+                            portable_id = get_shape_portable(shapeconfig[sidx], feat),
+                            tree_code = get_shape_tree(shapeconfig[sidx], feat)
+                        )
+                        g.save()
+                        g.geolevel = levels
+                        g.save()
+                    except:
+                        logger.info('Failed to import geometry for feature %d', feat.fid)
+                        logger.debug(traceback.format_exc())
+                        continue
+
+                else:
+                    g = prefetch[0]
+                    g.geolevel = levels
+                    g.save()
+                    
+                if not attrconfig:
+                    set_geounit_characteristic(g, subjects, feat)
+                    
+            elif not attridx is None:
+                # load attributes from the data file
+                gid = get_shape_treeid(attrconfig[attridx], feat)
+                g = Geounit.objects.filter(tree_code=gid)
+
+                if g.count() > 0:
+                    set_geounit_characteristic(g[0], subjects, feat)
+
+# Assistant methods to _loadslice
+def set_geounit_characteristic(g, subjects, feat):
+    """
+    Assign characteristics to a geounit.
+    """
+    for attr, obj in subjects.iteritems():
+        if attr.endswith('_by_id'):
+            continue
+        try:
+            value = Decimal(str(feat.get(attr))).quantize(Decimal('000000.0000', 'ROUND_DOWN'))
+        except:
+            logger.debug('No attribute "%s" on feature %d' , attr, feat.fid)
+            continue
+        percentage = '0000.00000000'
+        if obj.percentage_denominator:
+            denominator_field = subjects['%s_by_id' % obj.percentage_denominator.name]
+            denominator_value = Decimal(str(feat.get(denominator_field))).quantize(Decimal('000000.0000', 'ROUND_DOWN'))
+            if denominator_value > 0:
+                percentage = value / denominator_value
+
+        query =  Characteristic.objects.filter(subject=obj, geounit=g)
+        if query.count() > 0:
+            c = query[0]
+            c.number = value
+            c.percentage = percentage
+        else:
+            c = Characteristic(subject=obj, geounit=g, number=value, percentage=percentage)
+        try:
+            c.save()
+        except:
+            c.number = '0.0'
+            c.save()
+            logger.info('Failed to set value "%s" to %d in feature "%s"', attr, feat.get(attr), g.name)
+            logger.debug(traceback.format_exc())
+            
+        
+def get_subject_objects(store):
+    """
+    Get the Subject models from the DB that match the subjects configured for
+    all geolevels.
+    """
+    sfields = []
+    sconfigs = store.filter_subjects()
+    for sconfig in sconfigs:
+        if 'aliasfor' in sconfig.attrib:
+            salconfig = store.get_subject(sconfig.get('aliasfor'))
+            sconfig.append(salconfig)
+        sfields.append( sconfig )
+    
+    # Create the subjects we need
+    subject_objects = {}
+    for sconfig in sfields:
+        attr_name = sconfig.get('field')
+        foundalias = False
+        for elem in sconfig.getchildren():
+            if elem.tag == 'Subject':
+                foundalias = True
+                sub = Subject.objects.get(name=elem.get('id').lower()[:50])
+        if not foundalias:
+            sub = Subject.objects.get(name=sconfig.get('id').lower()[:50])
+        subject_objects[attr_name] = sub
+        subject_objects['%s_by_id' % sub.name] = attr_name
+        
+    return subject_objects
+
+
+def create_filter_functions(store):
+    """
+    Given a Regions node, create a dictionary of functions that can
+    be used to filter a feature from a shapefile into the correct
+    region.  The dictionary keys are region ids from the config, the 
+    values are lists of functions which return true when applied to
+    a feature that should be in the region
+    """
+    def get_filter_lambda(region_code):
+        attribute = region_code.get('attr')
+        pattern = region_code.get('value')
+        start = region_code.get('start')
+        if start is not None:
+            start = int(start)
+        end = region_code.get('width')
+        if end is not None:
+            end = int(end)
+        return lambda feature: feature.get(attribute)[start:end] == pattern
+
+    function_dict = {}
+    regions = store.filter_regions()
+    for region in regions:
+        key = region.get('name')
+        values = []
+        filters = region.xpath('RegionFilter/RegionCode')
+        if len(filters) == 0:
+            values.append(lambda feature: True)
+        else:
+            for f in filters:
+                values.append(get_filter_lambda(f))
+        function_dict[key] = values
+    return function_dict
+        
+        
+def get_shape_tree(shapecfg, feature):
+    """
+    Get the tree code for this feature.
+    """
+    shpfields = shapecfg.xpath('Fields/Field')
+    builtid = ''
+    for idx in range(0,len(shpfields)):
+        idpart = shapecfg.xpath('Fields/Field[@type="tree" and @pos=%d]' % idx)
+        if len(idpart) > 0:
+            idpart = idpart[0]
+            part = feature.get(idpart.get('name'))
+            # strip any spaces in the treecode
+            if not (isinstance(part, types.StringTypes)):
+                part = '%d' % part
+            part = part.strip(' ')
+            width = int(idpart.get('width'))
+            builtid = '%s%s' % (builtid, part.zfill(width))
+    return builtid
+    
+    
+def get_shape_portable(shapecfg, feature):
+    """
+    Get the portable code for this feature.
+    """
+    field = shapecfg.xpath('Fields/Field[@type="portable"]')[0]
+    portable = feature.get(field.get('name'))
+    if not (isinstance(portable, types.StringTypes)):
+        portable = '%d' % portable
+    return portable
+    
+    
+def get_shape_name(shapecfg, feature):
+    """
+    Get the name of this feature.
+    """
+    field = shapecfg.xpath('Fields/Field[@type="name"]')[0]
+    strname = feature.get(field.get('name'))
+    return strname.decode('latin-1')
