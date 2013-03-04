@@ -18,6 +18,10 @@
             "Description": "The password of the system administrator of this DistrictBuilder installation",
             "Type": "String",
             "NoEcho": "TRUE"
+        },
+        "RepoBranch": {
+            "Description": "The name of the repository branch to deploy for testing",
+            "Type": "String"
         }
     },
     "Mappings": {
@@ -70,6 +74,7 @@
                                 "mkdir -p /projects/PublicMapping", " &>> $LOG\n",
                                 "cd /projects/PublicMapping", " &>> $LOG\n",
                                 "git clone git://github.com/PublicMapping/DistrictBuilder.git", " &>> $LOG\n",
+                                "git checkout ", { "Ref": "RepoBranch" }, " &>> $LOG\n",
                                 "cd DistrictBuilder", " &>> $LOG\n",
                                 "pip install -r requirements.txt", " &>> $LOG\n",
                                 
