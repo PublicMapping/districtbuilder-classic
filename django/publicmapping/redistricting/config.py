@@ -38,6 +38,7 @@ from models import *
 from rosetta import polib
 from djsld import generator
 import sld
+from lxml import etree
 
 logger = logging.getLogger(__name__)
 
@@ -1058,7 +1059,7 @@ class SpatialUtils:
 
         # Create the feature types and their styles
 
-        if self.create_featuretype('identify_geounit'):
+        if self.create_featuretype('identify_geounit', srid=srid):
             logger.debug('Created feature type "identify_geounit"')
         else:
             logger.warn('Could not create "identify_geounit" feature type')
@@ -1068,15 +1069,15 @@ class SpatialUtils:
                 # Skip 'abstract' geolevels if regions are configured
                 continue
             
-            if self.create_featuretype('simple_%s' % geolevel.name):
+            if self.create_featuretype('simple_%s' % geolevel.name, srid=srid):
                 logger.debug('Created "simple_%s" feature type' % geolevel.name)
             else:
                 logger.warn('Could not create "simple_%s" feature type' % geolevel.name)
 
-            if self.create_featuretype('simple_district_%s' % geolevel.name):
+            if self.create_featuretype('simple_district_%s' % geolevel.name, srid=srid):
                 logger.debug('Created "simple_district_%s" feature type' % geolevel.name)
             else:
-                logger.warn('Colud not create "simple_district_%s" feature type' % geolevel.name)
+                logger.warn('Could not create "simple_district_%s" feature type' % geolevel.name)
 
             all_subjects = Subject.objects.all().order_by('sort_key') 
             if all_subjects.count() > 0:
@@ -1084,7 +1085,7 @@ class SpatialUtils:
 
                 # Create NONE demographic layer, based on first subject
                 featuretype_name = get_featuretype_name(geolevel.name)
-                if self.create_featuretype(featuretype_name, alias=get_featuretype_name(geolevel.name, subject.name)):
+                if self.create_featuretype(featuretype_name, alias=get_featuretype_name(geolevel.name, subject.name), srid=srid):
                     logger.debug('Created "%s" feature type' % featuretype_name)
                 else:
                     logger.warn('Could not create "%s" feature type' % featuretype_name)
@@ -1114,7 +1115,7 @@ class SpatialUtils:
 
                 # Create boundary layer, based on geographic boundaries
                 featuretype_name = '%s_boundaries' % geolevel.name
-                if self.create_featuretype(featuretype_name, alias=get_featuretype_name(geolevel.name, subject.name)):
+                if self.create_featuretype(featuretype_name, alias=get_featuretype_name(geolevel.name, subject.name), srid=srid):
                     logger.debug('Created "%s" feature type' % featuretype_name)
                 else:
                     logger.warn('Could not create "%s" feature type' % featuretype_name)
@@ -1144,7 +1145,7 @@ class SpatialUtils:
             for subject in all_subjects:
                 featuretype_name = get_featuretype_name(geolevel.name, subject.name)
 
-                if self.create_featuretype(featuretype_name):
+                if self.create_featuretype(featuretype_name, srid=srid):
                     logger.debug('Created "%s" feature type' % featuretype_name)
                 else:
                     logger.warn('Could not create "%s" feature type' % featuretype_name)
@@ -1185,7 +1186,7 @@ class SpatialUtils:
         geolevel = ngeolevels_map[0][2]
 
         # create simple_district as an alias to the largest geolevel (e.g. counties)
-        if self.create_featuretype('simple_district', alias='simple_district_%s' % geolevel.name):
+        if self.create_featuretype('simple_district', alias='simple_district_%s' % geolevel.name, srid=srid):
             logger.debug('Created "simple_district" feature type')
         else:
             logger.warn('Could not create "simple_district" feature type')
@@ -1258,7 +1259,7 @@ class SpatialUtils:
         # finished configure_geoserver
         return True
 
-    def create_featuretype(self, feature_type_name, data_store_name='PostGIS', alias=None):
+    def create_featuretype(self, feature_type_name, data_store_name='PostGIS', alias=None, srid=3785):
         """
         Create a featuretype.
 
@@ -1269,8 +1270,31 @@ class SpatialUtils:
         """
         feature_type_url = '/geoserver/rest/workspaces/%s/datastores/%s/featuretypes' % (self.ns, data_store_name)
 
-        feature_type_obj = SpatialUtils.feature_template(feature_type_name, alias=alias)
-        return self._check_spatial_resource(feature_type_url, feature_type_name, feature_type_obj)
+        feature_type_obj = SpatialUtils.feature_template(feature_type_name, alias=alias, srid=srid)
+        if not self._check_spatial_resource(feature_type_url, feature_type_name, feature_type_obj):
+            return False
+            
+        gwc_ft_url = '/geoserver/gwc/rest/layers/%s%%3a%s.xml' % (self.ns, feature_type_name)
+        
+        # get the feature info
+        info = self._rest_get(gwc_ft_url)
+        if info is None:
+            return False
+
+        # append the gridset
+        ftdoc = etree.fromstring(info)
+        subsets = ftdoc.find('gridSubsets')
+        subset = etree.Element('gridSubset')
+        subsets.append(subset)
+        setname = etree.Element('gridSetName')
+        subset.append(setname)
+        setname.text = 'EPSG:%d' % srid
+        
+        headers = self.headers['sld']
+        data = etree.tostring(ftdoc)
+    
+        # update the feature info
+        return self._rest_config( 'POST', gwc_ft_url, headers=headers, data=data)
 
     def _check_spatial_resource(self, url, name, dictionary, update=False):
         """ 
@@ -1297,7 +1321,7 @@ class SpatialUtils:
 
 
     @staticmethod
-    def feature_template(name, title=None, alias=None):
+    def feature_template(name, title=None, alias=None, srid=3785):
         """
         Return a common format for feature types.
 
@@ -1323,10 +1347,24 @@ class SpatialUtils:
                     'maxy': '%0.1f' % 20037508.342789244
                 },
                 'maxFeatures': settings.FEATURE_LIMIT + 1,
-                'nativeName': nativeName
+                'nativeName': nativeName,
+                'srs': 'EPSG:%d' % srid
             }
         }
 
+    def _rest_get(self, url):
+        """
+        Get the contents of a URL.
+        """
+        try:
+            conn = httplib.HTTPConnection(self.host, self.port)
+            conn.request('GET', url, None, self.headers['default'])
+            rsp = conn.getresponse()
+            return rsp.read()
+        except:
+            # HTTP 400, 500 errors are also considered exceptions by the httplib
+            return None
+        
     def _rest_check(self, url):
         """
         Attempt to get a REST resource. If the resource exists, and can
