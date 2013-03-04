@@ -46,7 +46,7 @@
                         "64"
                     ]
                 },
-                "InstanceType": "m1.small",
+                "InstanceType": "m1.xlarge",
                 "UserData": {
                     "Fn::Base64": {
                         "Fn::Join": [
@@ -128,12 +128,38 @@
                                 "t1=$(expr $(date +%s) - $START)\n",
                                 "curl -X PUT -H 'Content-Type:' --data-binary '{\"Status\":\"SUCCESS\",\"Reason\":\"Configuration loaded.\",\"UniqueId\":\"CfgWait\",\"Data\":\"This step: '$t0'; cumulative: '$t1'\"}' $SignalURL", " &>> $LOG\n",
                                 "STEP=$(date +%s)\n",
+                                
 
-                                "./setup.py ../../docs/config.xsd ../../docs/config.xml -v2 -g0 -g1 -g2 -n1 -n2", " &>> $LOG\n",
-                                "SignalURL=\"", { "Ref": "ImportWaitHandle" }, "\"\n",
+                                "WORKERS=$(expr $(grep -c ^processor /proc/cpuinfo) \\* 2)\n",
+                                "wget -q --no-check-certificate -O /etc/init.d/celeryd https://raw.github.com/ask/celery/master/contrib/generic-init.d/celeryd", " &>> $LOG\n",
+                                "chmod a+x /etc/init.d/celeryd", " &>> $LOG\n",
+                                "update-rc.d celeryd defaults", " &>> $LOG\n",
+                                "cp /projects/PublicMapping/DistrictBuilder/docs/celeryd /etc/default", " &>> $LOG\n",
+                                "echo -e \"6c6\n< CELERYD_OPTS='-B -s /tmp/celerybeat-schedule'\n---\n> CELERYD_OPTS='-B -s /tmp/celerybeat-schedule --concurrency=$WORKERS'\" | patch /etc/default/celeryd", " &>> $LOG\n",
+                                "mkdir /var/log/celery /var/run/celery", " &>> $LOG\n",
+                                "chown www-data:www-data /var/log/celery /var/run/celery/", " &>> $LOG\n",
+                                "service celeryd start", " &>> $LOG\n",
+
+
+                                "./setup.py ../../docs/config.xsd ../../docs/config.xml -v2 -g0", " &>> $LOG\n",
+                                "SignalURL=\"", { "Ref": "ImportG0WaitHandle" }, "\"\n",
                                 "t0=$(expr $(date +%s) - $STEP)\n",
                                 "t1=$(expr $(date +%s) - $START)\n",
-                                "curl -X PUT -H 'Content-Type:' --data-binary '{\"Status\":\"SUCCESS\",\"Reason\":\"Import & renest complete.\",\"UniqueId\":\"ImportWait\",\"Data\":\"This step: '$t0'; cumulative: '$t1'\"}' $SignalURL", " &>> $LOG\n",
+                                "curl -X PUT -H 'Content-Type:' --data-binary '{\"Status\":\"SUCCESS\",\"Reason\":\"Import g0 complete.\",\"UniqueId\":\"ImportG0Wait\",\"Data\":\"This step: '$t0'; cumulative: '$t1'\"}' $SignalURL", " &>> $LOG\n",
+                                "STEP=$(date +%s)\n",
+                                
+                                "./setup.py ../../docs/config.xsd ../../docs/config.xml -v2 -g1 -n1", " &>> $LOG\n",
+                                "SignalURL=\"", { "Ref": "ImportG1WaitHandle" }, "\"\n",
+                                "t0=$(expr $(date +%s) - $STEP)\n",
+                                "t1=$(expr $(date +%s) - $START)\n",
+                                "curl -X PUT -H 'Content-Type:' --data-binary '{\"Status\":\"SUCCESS\",\"Reason\":\"Import & renest g1 complete.\",\"UniqueId\":\"ImportG1Wait\",\"Data\":\"This step: '$t0'; cumulative: '$t1'\"}' $SignalURL", " &>> $LOG\n",
+                                "STEP=$(date +%s)\n",
+                                
+                                "./setup.py ../../docs/config.xsd ../../docs/config.xml -v2 -g2 -n2", " &>> $LOG\n",
+                                "SignalURL=\"", { "Ref": "ImportG2WaitHandle" }, "\"\n",
+                                "t0=$(expr $(date +%s) - $STEP)\n",
+                                "t1=$(expr $(date +%s) - $START)\n",
+                                "curl -X PUT -H 'Content-Type:' --data-binary '{\"Status\":\"SUCCESS\",\"Reason\":\"Import & renest g2 complete.\",\"UniqueId\":\"ImportG2Wait\",\"Data\":\"This step: '$t0'; cumulative: '$t1'\"}' $SignalURL", " &>> $LOG\n",
                                 "STEP=$(date +%s)\n",
                                 
                                 "./setup.py ../../docs/config.xsd ../../docs/config.xml -v2 -V -G", " &>> $LOG\n",
@@ -151,15 +177,6 @@
                                 "STEP=$(date +%s)\n",
                                 
                                 
-                                "wget -q --no-check-certificate -O /etc/init.d/celeryd https://raw.github.com/ask/celery/master/contrib/generic-init.d/celeryd", " &>> $LOG\n",
-                                "chmod a+x /etc/init.d/celeryd", " &>> $LOG\n",
-                                "update-rc.d celeryd defaults", " &>> $LOG\n",
-                                "cp /projects/PublicMapping/DistrictBuilder/docs/celeryd /etc/default", " &>> $LOG\n",
-                                "mkdir /var/log/celery /var/run/celery", " &>> $LOG\n",
-                                "chown www-data:www-data /var/log/celery /var/run/celery/", " &>> $LOG\n",
-                                "service celeryd start", " &>> $LOG\n",
-
-
                                 "SignalURL=\"", { "Ref": "AppWaitHandle" }, "\"\n",
                                 "t0=$(expr $(date +%s) - $STEP)\n",
                                 "t1=$(expr $(date +%s) - $START)\n",
@@ -217,7 +234,15 @@
             "Type": "AWS::CloudFormation::WaitConditionHandle",
             "Properties": {}
         },
-        "ImportWaitHandle": {
+        "ImportG0WaitHandle": {
+            "Type": "AWS::CloudFormation::WaitConditionHandle",
+            "Properties": {}
+        },
+        "ImportG1WaitHandle": {
+            "Type": "AWS::CloudFormation::WaitConditionHandle",
+            "Properties": {}
+        },
+        "ImportG2WaitHandle": {
             "Type": "AWS::CloudFormation::WaitConditionHandle",
             "Properties": {}
         },
@@ -265,17 +290,33 @@
                 "Timeout": "600"
             }
         },
-        "ImportCondition": {
+        "ImportG0Condition": {
             "Type": "AWS::CloudFormation::WaitCondition",
             "DependsOn": "CfgCondition",
             "Properties": {
-                "Handle": { "Ref": "ImportWaitHandle" },
+                "Handle": { "Ref": "ImportG0WaitHandle" },
+                "Timeout": "43200"
+            }
+        },
+        "ImportG1Condition": {
+            "Type": "AWS::CloudFormation::WaitCondition",
+            "DependsOn": "ImportG0Condition",
+            "Properties": {
+                "Handle": { "Ref": "ImportG1WaitHandle" },
+                "Timeout": "43200"
+            }
+        },
+        "ImportG2Condition": {
+            "Type": "AWS::CloudFormation::WaitCondition",
+            "DependsOn": "G1Condition",
+            "Properties": {
+                "Handle": { "Ref": "ImportG2WaitHandle" },
                 "Timeout": "43200"
             }
         },
         "GeoCondition": {
             "Type": "AWS::CloudFormation::WaitCondition",
-            "DependsOn": "ImportCondition",
+            "DependsOn": "ImportG2Condition",
             "Properties": {
                 "Handle": { "Ref": "GeoWaitHandle" },
                 "Timeout": "600"
@@ -324,8 +365,16 @@
             "Value": { "Fn::GetAtt": [ "CfgCondition", "Data" ]},
             "Description": "The time required to configure the application database."
         },
-        "ImportTime": {
-            "Value": { "Fn::GetAtt": [ "ImportCondition", "Data" ]},
+        "ImportG0Time": {
+            "Value": { "Fn::GetAtt": [ "ImportG0Condition", "Data" ]},
+            "Description": "The time required to import the application data."
+        },
+        "ImportG1Time": {
+            "Value": { "Fn::GetAtt": [ "ImportG1Condition", "Data" ]},
+            "Description": "The time required to import the application data."
+        },
+        "ImportG2Time": {
+            "Value": { "Fn::GetAtt": [ "ImportG2Condition", "Data" ]},
             "Description": "The time required to import the application data."
         },
         "GeoTime": {
