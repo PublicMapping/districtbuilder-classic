@@ -308,7 +308,7 @@
         },
         "ImportG2Condition": {
             "Type": "AWS::CloudFormation::WaitCondition",
-            "DependsOn": "G1Condition",
+            "DependsOn": "ImportG1Condition",
             "Properties": {
                 "Handle": { "Ref": "ImportG2WaitHandle" },
                 "Timeout": "43200"
