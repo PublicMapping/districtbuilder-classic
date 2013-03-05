@@ -98,8 +98,8 @@
                                 "su postgres -c \"psql -f publicmapping_db.sql\"", " &>> $LOG\n",
 
                                 "cd /var/lib/tomcat6/webapps", " &>> $LOG\n",
-                                "wget -q -O geoserver-2.0.2-war.zip 'http://downloads.sourceforge.net/project/geoserver/GeoServer/2.0.2/geoserver-2.0.2-war.zip?r=http%3A%2F%2Fgeoserver.org%2Fdisplay%2FGEOS%2FGeoServer%2B2.0.2&ts=1362073334&use_mirror=superb-dca2'", " &>> $LOG\n",
-                                "unzip geoserver-2.0.2-war.zip", " &>> $LOG\n",
+                                "wget -q -O geoserver-2.2.5-war.zip 'http://downloads.sourceforge.net/project/geoserver/GeoServer/2.2.5/geoserver-2.2.5-war.zip?r=http%3A%2F%2Fgeoserver.org%2Fdisplay%2FGEOS%2FStable&ts=1362581444&use_mirror=hivelocity'", " &>> $LOG\n",
+                                "unzip geoserver-2.2.5-war.zip", " &>> $LOG\n",
 
                                 "mkdir /projects/PublicMapping/data", " &>> $LOG\n",
                                 "cd /projects/PublicMapping/data", " &>> $LOG\n",
