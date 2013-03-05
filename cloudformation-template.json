@@ -74,8 +74,8 @@
                                 "mkdir -p /projects/PublicMapping", " &>> $LOG\n",
                                 "cd /projects/PublicMapping", " &>> $LOG\n",
                                 "git clone git://github.com/PublicMapping/DistrictBuilder.git", " &>> $LOG\n",
-                                "git checkout ", { "Ref": "RepoBranch" }, " &>> $LOG\n",
                                 "cd DistrictBuilder", " &>> $LOG\n",
+                                "git checkout ", { "Ref": "RepoBranch" }, " &>> $LOG\n",
                                 "pip install -r requirements.txt", " &>> $LOG\n",
                                 "pip install -r requirements2.txt", " &>> $PIPLOG &\n",
                                 
@@ -110,7 +110,9 @@
                                 "service tomcat6 stop", " &>> $LOG\n",
                                 "cd /var/lib/tomcat6/webapps/geoserver/WEB-INF", " &>> $LOG\n",
                                 "echo -e '5a6,10\n>    <context-param>\n>      <param-name>GEOWEBCACHE_CACHE_DIR</param-name>\n>      <param-value>/var/lib/tomcat6/webapps/geoserver/data/gwc</param-value>\n>    </context-param>\n>  \n' | patch web.xml", " &>> $LOG\n",
+                                "mkdir -p /var/lib/tomcat6/webapps/geoserver/data/gwc", " &>> $LOG\n",
                                 "cp /projects/PublicMapping/DistrictBuilder/docs/geowebcache.xml /var/lib/tomcat6/webapps/geoserver/data/gwc/", " &>> $LOG\n",
+                                "chown tomcat6:tomcat6 -R /var/lib/tomcat6/webapps/geoserver/data/gwc", " &>> $LOG\n",
                                 "service tomcat6 start", " &>> $LOG\n",
                                 
                                 "SignalURL=\"", { "Ref": "DataWaitHandle" }, "\"\n",
@@ -384,7 +386,7 @@
                 [
                     { "Fn::GetAtt": [ "Pip1Condition", "Data" ]},
                     " -- ",
-                    { "Fn::GetAtt": [ "Pip2Condition", "Data" ]},
+                    { "Fn::GetAtt": [ "Pip2Condition", "Data" ]}
                 ]
              ]},
             "Description": "The time required to install PIP sources."
