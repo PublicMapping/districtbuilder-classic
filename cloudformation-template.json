@@ -58,11 +58,11 @@
                             [
                                 "#!/bin/bash -ex\n",
                                 "LOG=/var/log/instance.log\n",
+                                "PIPLOG=/var/log/instance-pipextra.log\n",
                                 "START=$(date +%s)\n",
                                 "apt-get update", " &>> $LOG\n",
                                 "apt-get -y install apache2 libapache2-mod-wsgi python-dev python-django python-lxml python-gdal python-rpy2 python-scipy python-psycopg2 python-setuptools postgresql-9.1-postgis tomcat6 tomcat6-admin gettext git gfortran python-dev g++", " &>> $LOG\n",
                                 "easy_install pip", " &>> $LOG\n",
-                                
                                 
                                 "SignalURL=\"", { "Ref": "AptWaitHandle" }, "\"\n",
                                 "t0=$(expr $(date +%s) - $START)\n",
@@ -77,12 +77,12 @@
                                 "git checkout ", { "Ref": "RepoBranch" }, " &>> $LOG\n",
                                 "cd DistrictBuilder", " &>> $LOG\n",
                                 "pip install -r requirements.txt", " &>> $LOG\n",
+                                "pip install -r requirements2.txt", " &>> $PIPLOG &\n",
                                 
-                                
-                                "SignalURL=\"", { "Ref": "PipWaitHandle" }, "\"\n",
+                                "SignalURL=\"", { "Ref": "Pip1WaitHandle" }, "\"\n",
                                 "t0=$(expr $(date +%s) - $STEP)\n",
                                 "t1=$(expr $(date +%s) - $START)\n",
-                                "curl -X PUT -H 'Content-Type:' --data-binary '{\"Status\":\"SUCCESS\",\"Reason\":\"PIP packages installed.\",\"UniqueId\":\"PipWait\",\"Data\":\"This step: '$t0'; cumulative: '$t1'\"}' $SignalURL", " &>> $LOG\n",
+                                "curl -X PUT -H 'Content-Type:' --data-binary '{\"Status\":\"SUCCESS\",\"Reason\":\"PIP packages (1 of 2) installed.\",\"UniqueId\":\"Pip1Wait\",\"Data\":\"This step: '$t0'; cumulative: '$t1'\"}' $SignalURL", " &>> $LOG\n",
                                 "STEP=$(date +%s)\n",
 
 
@@ -98,8 +98,8 @@
                                 "su postgres -c \"psql -f publicmapping_db.sql\"", " &>> $LOG\n",
 
                                 "cd /var/lib/tomcat6/webapps", " &>> $LOG\n",
-                                "wget -q -O geoserver-2.0.2-war.zip 'http://downloads.sourceforge.net/project/geoserver/GeoServer/2.0.2/geoserver-2.0.2-war.zip?r=http%3A%2F%2Fgeoserver.org%2Fdisplay%2FGEOS%2FGeoServer%2B2.0.2&ts=1362073334&use_mirror=superb-dca2'", " &>> $LOG\n",
-                                "unzip geoserver-2.0.2-war.zip", " &>> $LOG\n",
+                                "wget -q -O geoserver-2.2.5-war.zip 'http://downloads.sourceforge.net/project/geoserver/GeoServer/2.2.5/geoserver-2.2.5-war.zip?r=http%3A%2F%2Fgeoserver.org%2Fdisplay%2FGEOS%2FStable&ts=1362494536&use_mirror=superb-dca3'", " &>> $LOG\n",
+                                "unzip geoserver-2.2.5-war.zip", " &>> $LOG\n",
 
                                 "mkdir /projects/PublicMapping/data", " &>> $LOG\n",
                                 "cd /projects/PublicMapping/data", " &>> $LOG\n",
@@ -107,14 +107,11 @@
                                 "mkdir -p /projects/PublicMapping/local/data", " &>> $LOG\n",
                                 "cd /projects/PublicMapping/local/data", " &>> $LOG\n",
                                 "unzip /projects/PublicMapping/data/VA_data.zip", " &>> $LOG\n",
-                                "cd /var/lib/tomcat6/webapps/geoserver/WEB-INF/lib", " &>> $LOG\n",
-                                "wget -q http://downloads.sourceforge.net/project/geoserver/GeoServer%20Extensions/2.0.2/geoserver-2.0.2-restconfig-plugin.zip", " &>> $LOG\n",
-                                "unzip geoserver-2.0.2-restconfig-plugin.zip", " &>> $LOG\n",
-                                "chown tomcat6:tomcat6 restconfig*", " &>> $LOG\n",
+                                "service tomcat6 stop", " &>> $LOG\n",
                                 "cd /var/lib/tomcat6/webapps/geoserver/WEB-INF", " &>> $LOG\n",
                                 "echo -e '5a6,10\n>    <context-param>\n>      <param-name>GEOWEBCACHE_CACHE_DIR</param-name>\n>      <param-value>/var/lib/tomcat6/webapps/geoserver/data/gwc</param-value>\n>    </context-param>\n>  \n' | patch web.xml", " &>> $LOG\n",
-                                "service tomcat6 restart", " &>> $LOG\n",
-                                
+                                "cp /projects/PublicMapping/DistrictBuilder/docs/geowebcache.xml /var/lib/tomcat6/webapps/geoserver/data/gwc/", " &>> $LOG\n",
+                                "service tomcat6 start", " &>> $LOG\n",
                                 
                                 "SignalURL=\"", { "Ref": "DataWaitHandle" }, "\"\n",
                                 "t0=$(expr $(date +%s) - $STEP)\n",
@@ -145,6 +142,13 @@
                                 "chown www-data:www-data /var/log/celery /var/run/celery/", " &>> $LOG\n",
                                 "service celeryd start", " &>> $LOG\n",
 
+                                "fg\n",
+                                "SignalURL=\"", { "Ref": "Pip2WaitHandle" }, "\"\n",
+                                "t0=$(expr $(date +%s) - $STEP)\n",
+                                "t1=$(expr $(date +%s) - $START)\n",
+                                "curl -X PUT -H 'Content-Type:' --data-binary '{\"Status\":\"SUCCESS\",\"Reason\":\"PIP packages (2 of 2) installed.\",\"UniqueId\":\"Pip2Wait\",\"Data\":\"This step: '$t0'; cumulative: '$t1'\"}' $SignalURL", " &>> $LOG\n",
+                                "STEP=$(date +%s)\n",                                
+
 
                                 "./setup.py ../../docs/config.xsd ../../docs/config.xml -v2 -g0", " &>> $LOG\n",
                                 "SignalURL=\"", { "Ref": "ImportG0WaitHandle" }, "\"\n",
@@ -153,12 +157,14 @@
                                 "curl -X PUT -H 'Content-Type:' --data-binary '{\"Status\":\"SUCCESS\",\"Reason\":\"Import g0 complete.\",\"UniqueId\":\"ImportG0Wait\",\"Data\":\"This step: '$t0'; cumulative: '$t1'\"}' $SignalURL", " &>> $LOG\n",
                                 "STEP=$(date +%s)\n",
                                 
+                                
                                 "./setup.py ../../docs/config.xsd ../../docs/config.xml -v2 -g1 -n1", " &>> $LOG\n",
                                 "SignalURL=\"", { "Ref": "ImportG1WaitHandle" }, "\"\n",
                                 "t0=$(expr $(date +%s) - $STEP)\n",
                                 "t1=$(expr $(date +%s) - $START)\n",
                                 "curl -X PUT -H 'Content-Type:' --data-binary '{\"Status\":\"SUCCESS\",\"Reason\":\"Import & renest g1 complete.\",\"UniqueId\":\"ImportG1Wait\",\"Data\":\"This step: '$t0'; cumulative: '$t1'\"}' $SignalURL", " &>> $LOG\n",
                                 "STEP=$(date +%s)\n",
+                                
                                 
                                 "./setup.py ../../docs/config.xsd ../../docs/config.xml -v2 -g2 -n2", " &>> $LOG\n",
                                 "SignalURL=\"", { "Ref": "ImportG2WaitHandle" }, "\"\n",
@@ -167,12 +173,14 @@
                                 "curl -X PUT -H 'Content-Type:' --data-binary '{\"Status\":\"SUCCESS\",\"Reason\":\"Import & renest g2 complete.\",\"UniqueId\":\"ImportG2Wait\",\"Data\":\"This step: '$t0'; cumulative: '$t1'\"}' $SignalURL", " &>> $LOG\n",
                                 "STEP=$(date +%s)\n",
                                 
+                                
                                 "./setup.py ../../docs/config.xsd ../../docs/config.xml -v2 -V -G", " &>> $LOG\n",
                                 "SignalURL=\"", { "Ref": "GeoWaitHandle" }, "\"\n",
                                 "t0=$(expr $(date +%s) - $STEP)\n",
                                 "t1=$(expr $(date +%s) - $START)\n",
                                 "curl -X PUT -H 'Content-Type:' --data-binary '{\"Status\":\"SUCCESS\",\"Reason\":\"Geo views & mapserver configuration complete.\",\"UniqueId\":\"GeoWait\",\"Data\":\"This step: '$t0'; cumulative: '$t1'\"}' $SignalURL", " &>> $LOG\n",
                                 "STEP=$(date +%s)\n",
+                                
                                 
                                 "./setup.py ../../docs/config.xsd ../../docs/config.xml -v2 -t -s", " &>> $LOG\n",
                                 "SignalURL=\"", { "Ref": "TplWaitHandle" }, "\"\n",
@@ -227,7 +235,11 @@
             "Type": "AWS::CloudFormation::WaitConditionHandle",
             "Properties": {}
         },
-        "PipWaitHandle": {
+        "Pip1WaitHandle": {
+            "Type": "AWS::CloudFormation::WaitConditionHandle",
+            "Properties": {}
+        },
+        "Pip2WaitHandle": {
             "Type": "AWS::CloudFormation::WaitConditionHandle",
             "Properties": {}
         },
@@ -271,17 +283,17 @@
                 "Timeout": "2400"
             }
         },
-        "PipCondition": {
+        "Pip1Condition": {
             "Type": "AWS::CloudFormation::WaitCondition",
             "DependsOn": "AptCondition",
             "Properties": {
-                "Handle": { "Ref": "PipWaitHandle" },
+                "Handle": { "Ref": "Pip1WaitHandle" },
                 "Timeout": "2400"
             }
         },
         "DataCondition": {
             "Type": "AWS::CloudFormation::WaitCondition",
-            "DependsOn": "PipCondition",
+            "DependsOn": "Pip1Condition",
             "Properties": {
                 "Handle": { "Ref": "DataWaitHandle" },
                 "Timeout": "2400"
@@ -295,9 +307,17 @@
                 "Timeout": "600"
             }
         },
-        "ImportG0Condition": {
+        "Pip2Condition": {
             "Type": "AWS::CloudFormation::WaitCondition",
             "DependsOn": "CfgCondition",
+            "Properties": {
+                "Handle": { "Ref": "Pip2WaitHandle" },
+                "Timeout": "2400"
+            }
+        },
+        "ImportG0Condition": {
+            "Type": "AWS::CloudFormation::WaitCondition",
+            "DependsOn": "Pip2Condition",
             "Properties": {
                 "Handle": { "Ref": "ImportG0WaitHandle" },
                 "Timeout": "43200"
@@ -359,7 +379,14 @@
             "Description": "The time required to install APT sources."
         },
         "PipTime": {
-            "Value": { "Fn::GetAtt": [ "PipCondition", "Data" ]},
+            "Value": { "Fn::Join": [
+                "",
+                [
+                    { "Fn::GetAtt": [ "Pip1Condition", "Data" ]},
+                    " -- ",
+                    { "Fn::GetAtt": [ "Pip2Condition", "Data" ]},
+                ]
+             ]},
             "Description": "The time required to install PIP sources."
         },
         "DataTime": {

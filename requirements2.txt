@@ -1,0 +1,5 @@
+django-sld==1.0.7
+python-sld==1.0.9
+numpy==1.6.2
+scipy==0.11.0
+PySAL==1.5.0
