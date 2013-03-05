@@ -1933,7 +1933,7 @@ class ShapeQueue:
         self.shapefile = shapefile
         self.nworkers = nworkers
         self.workersize = len(layer) / nworkers + 1
-        self.configfile = configfile
+        self.configfile = configfile if configfile.startswith('/') else os.path.abspath(os.getcwd() + '/' + configfile)
         self.geolevel_idx = geolevel_idx
         self.shape_idx = shape_idx
         self.attr_idx = attr_idx
