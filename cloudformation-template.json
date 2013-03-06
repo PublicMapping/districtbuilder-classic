@@ -107,6 +107,7 @@
                                 "mkdir -p /projects/PublicMapping/local/data", " &>> $LOG\n",
                                 "cd /projects/PublicMapping/local/data", " &>> $LOG\n",
                                 "unzip /projects/PublicMapping/data/VA_data.zip", " &>> $LOG\n",
+                                "while [ ! -x /var/lib/tomcat6/webapps/geoserver ]; do echo 'restarting tomcat to get geoserver app to auto-deploy...'; service tomcat6 restart; sleep 10; done\n",
                                 "service tomcat6 stop", " &>> $LOG\n",
                                 "cd /var/lib/tomcat6/webapps/geoserver/WEB-INF", " &>> $LOG\n",
                                 "echo -e '5a6,10\n>    <context-param>\n>      <param-name>GEOWEBCACHE_CACHE_DIR</param-name>\n>      <param-value>/var/lib/tomcat6/webapps/geoserver/data/gwc</param-value>\n>    </context-param>\n>  \n' | patch web.xml", " &>> $LOG\n",
