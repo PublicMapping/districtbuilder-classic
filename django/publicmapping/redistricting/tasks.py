@@ -32,6 +32,7 @@ from django.core import management
 from django.contrib.comments.models import Comment
 from django.contrib.sessions.models import Session
 from django.contrib.sites.models import Site
+from django.contrib.gis.geos import *
 from django.core.mail import send_mail, mail_admins, EmailMessage
 from django.template import loader, Context as DjangoContext
 from django.db import connection, transaction
@@ -2007,64 +2008,58 @@ class ShapeQueue:
                     Q(portable_id=get_shape_portable(shapeconfig[sidx], feat)),
                     Q(tree_code=get_shape_tree(shapeconfig[sidx], feat))
                 )
-                
+
                 if prefetch.count() == 0:
-                    try :
+                    # Store the geos geometry
+                    # Buffer by 0 to get rid of any self-intersections which may make this geometry invalid.
+                    geos = feat.geom.geos.buffer(0)
+                    # Coerce the geometry into a MultiPolygon
+                    if geos.geom_type == 'MultiPolygon':
+                        my_geom = geos
+                    elif geos.geom_type == 'Polygon':
+                        my_geom = MultiPolygon(geos)
+                    simple = my_geom.simplify(tolerance=Decimal(store_geolevel.get('tolerance')),preserve_topology=True)
+                    if simple.geom_type != 'MultiPolygon':
+                        simple = MultiPolygon(simple)
+                    center = my_geom.centroid
 
-                        # Store the geos geometry
-                        # Buffer by 0 to get rid of any self-intersections which may make this geometry invalid.
-                        geos = feat.geom.geos.buffer(0)
-                        # Coerce the geometry into a MultiPolygon
-                        if geos.geom_type == 'MultiPolygon':
-                            my_geom = geos
-                        elif geos.geom_type == 'Polygon':
-                            my_geom = MultiPolygon(geos)
-                        simple = my_geom.simplify(tolerance=Decimal(config['tolerance']),preserve_topology=True)
-                        if simple.geom_type != 'MultiPolygon':
-                            simple = MultiPolygon(simple)
-                        center = my_geom.centroid
+                    geos = None
 
-                        geos = None
+                    # Ensure the centroid is within the geometry
+                    if not center.within(my_geom):
+                        # Get the first polygon in the multipolygon
+                        first_poly = my_geom[0]
+                        # Get the extent of the first poly
+                        first_poly_extent = first_poly.extent
+                        min_x = first_poly_extent[0]
+                        max_x = first_poly_extent[2]
+                        # Create a line through the bbox and the poly center
+                        my_y = first_poly.centroid.y
+                        centerline = LineString( (min_x, my_y), (max_x, my_y))
+                        # Get the intersection of that line and the poly
+                        intersection = centerline.intersection(first_poly)
+                        if type(intersection) is MultiLineString:
+                            intersection = intersection[0]
+                        # the center of that line is my within-the-poly centroid.
+                        center = intersection.centroid
+                        first_poly = first_poly_extent = min_x = max_x = my_y = centerline = intersection = None
 
-                        # Ensure the centroid is within the geometry
-                        if not center.within(my_geom):
-                            # Get the first polygon in the multipolygon
-                            first_poly = my_geom[0]
-                            # Get the extent of the first poly
-                            first_poly_extent = first_poly.extent
-                            min_x = first_poly_extent[0]
-                            max_x = first_poly_extent[2]
-                            # Create a line through the bbox and the poly center
-                            my_y = first_poly.centroid.y
-                            centerline = LineString( (min_x, my_y), (max_x, my_y))
-                            # Get the intersection of that line and the poly
-                            intersection = centerline.intersection(first_poly)
-                            if type(intersection) is MultiLineString:
-                                intersection = intersection[0]
-                            # the center of that line is my within-the-poly centroid.
-                            center = intersection.centroid
-                            first_poly = first_poly_extent = min_x = max_x = my_y = centerline = intersection = None
-
-                        g = Geounit(geom = my_geom, 
-                            name = get_shape_name(shapeconfig[sidx], feat), 
-                            simple = simple, 
-                            center = center,
-                            portable_id = get_shape_portable(shapeconfig[sidx], feat),
-                            tree_code = get_shape_tree(shapeconfig[sidx], feat)
-                        )
-                        g.save()
-                        g.geolevel = levels
-                        g.save()
-                    except:
-                        logger.info('Failed to import geometry for feature %d', feat.fid)
-                        logger.debug(traceback.format_exc())
-                        continue
+                    g = Geounit(geom = my_geom, 
+                        name = get_shape_name(shapeconfig[sidx], feat), 
+                        simple = simple, 
+                        center = center,
+                        portable_id = get_shape_portable(shapeconfig[sidx], feat),
+                        tree_code = get_shape_tree(shapeconfig[sidx], feat)
+                    )
+                    g.save()
+                    g.geolevel = levels
+                    g.save()
 
                 else:
                     g = prefetch[0]
                     g.geolevel = levels
                     g.save()
-                    
+
                 if not attrconfig:
                     set_geounit_characteristic(g, subjects, feat)
                     

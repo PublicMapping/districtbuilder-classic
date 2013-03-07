@@ -364,10 +364,16 @@ ERROR:
                     shape_idx=sidx,
                     attr_idx=None)
                     
-            results = queue.load()
+            grpResult = queue.load()
             
-            while not results.ready():
+            while not grpResult.ready():
                 time.sleep(10)
+
+            if grpResult.failed():
+                logger.warn('Some tasks failed!')
+                for item in grpResult.results:
+                    if item.failed():
+                        logger.debug(item.traceback)
 
             logger.info('100%')
 
