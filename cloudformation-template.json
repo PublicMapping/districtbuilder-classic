@@ -22,7 +22,17 @@
         "RepoBranch": {
             "Description": "The name of the repository branch to deploy for testing",
             "Type": "String"
-        }
+        },
+        "AWSAccessKey": {
+            "Description": "Your AWS access key",
+            "Type": "String",
+            "NoEcho": "TRUE"
+        },
+        "AWSSecretKey": {
+            "Description": "Your AWS secret key",
+            "Type": "String",
+            "NoEcho": "TRUE"
+        }        
     },
     "Mappings": {
         "RegionMap": {
@@ -59,8 +69,13 @@
                                 "#!/bin/bash -ex\n",
                                 "LOG=/var/log/instance.log\n",
                                 "START=$(date +%s)\n",
+                                "PMPHOME=/projects/PublicMapping\n",
+                                "AWS_ACCESS_KEY=", { "Ref": "AWSAccessKey" }, "\n",
+                                "AWS_SECRET_KEY=", { "Ref": "AWSSecretKey" }, "\n",
+                                "echo -e '33,36c33,36\n< # deb http://us-west-1.ec2.archive.ubuntu.com/ubuntu/ quantal multiverse\n< # deb-src http://us-west-1.ec2.archive.ubuntu.com/ubuntu/ quantal multiverse\n< # deb http://us-west-1.ec2.archive.ubuntu.com/ubuntu/ quantal-updates multiverse\n< # deb-src http://us-west-1.ec2.archive.ubuntu.com/ubuntu/ quantal-updates multiverse\n---\n> deb http://us-west-1.ec2.archive.ubuntu.com/ubuntu/ quantal multiverse\n> deb-src http://us-west-1.ec2.archive.ubuntu.com/ubuntu/ quantal multiverse\n> deb http://us-west-1.ec2.archive.ubuntu.com/ubuntu/ quantal-updates multiverse\n> deb-src http://us-west-1.ec2.archive.ubuntu.com/ubuntu/ quantal-updates multiverse\n59,60c59,60\n< # deb http://security.ubuntu.com/ubuntu quantal-security multiverse\n< # deb-src http://security.ubuntu.com/ubuntu quantal-security multiverse\n---\n> deb http://security.ubuntu.com/ubuntu quantal-security multiverse\n> deb-src http://security.ubuntu.com/ubuntu quantal-security multiverse' | patch /etc/apt/sources.list", " &>> $LOG\n",
+
                                 "apt-get update", " &>> $LOG\n",
-                                "apt-get -y install apache2 libapache2-mod-wsgi python-dev python-django python-lxml python-gdal python-rpy2 python-scipy python-psycopg2 python-setuptools postgresql-9.1-postgis tomcat6 tomcat6-admin gettext git gfortran python-dev g++", " &>> $LOG\n",
+                                "apt-get -y install apache2 libapache2-mod-wsgi python-dev python-django python-lxml python-gdal python-rpy2 python-scipy python-psycopg2 python-setuptools postgresql-9.1-postgis tomcat6 tomcat6-admin gettext git gfortran python-dev g++ pgtune ec2-api-tools", " &>> $LOG\n",
                                 "easy_install pip", " &>> $LOG\n",
                                 
                                 
@@ -71,8 +86,8 @@
                                 "STEP=$(date +%s)\n",
 
 
-                                "mkdir -p /projects/PublicMapping", " &>> $LOG\n",
-                                "cd /projects/PublicMapping", " &>> $LOG\n",
+                                "mkdir -p $PMPHOME", " &>> $LOG\n",
+                                "cd $PMPHOME", " &>> $LOG\n",
                                 "git clone git://github.com/PublicMapping/DistrictBuilder.git", " &>> $LOG\n",
                                 "cd DistrictBuilder", " &>> $LOG\n",
                                 "git checkout ", { "Ref": "RepoBranch" }, " &>> $LOG\n",
@@ -86,33 +101,35 @@
                                 "STEP=$(date +%s)\n",
 
 
-                                "mkdir -p /projects/PublicMapping/local/reports", " &>> $LOG\n",
-                                "chown www-data:www-data /projects/PublicMapping/local/reports", " &>> $LOG\n",
+                                "mkdir -p $PMPHOME/local/reports", " &>> $LOG\n",
+                                "chown www-data:www-data $PMPHOME/local/reports", " &>> $LOG\n",
                                 "for f in django/publicmapping/locale/*; do chown www-data:www-data $f/LC_MESSAGES/*o; done", " &>> $LOG\n",
                                 "su postgres -c \"createdb -E UTF8 -T template0 -l en_US.UTF-8 template_postgis\"", " &>> $LOG\n",
                                 "su postgres -c \"psql -f /usr/share/postgresql/9.1/contrib/postgis-1.5/postgis.sql template_postgis\"", " &>> $LOG\n",
                                 "su postgres -c \"psql -f /usr/share/postgresql/9.1/contrib/postgis-1.5/spatial_ref_sys.sql template_postgis\"", " &>> $LOG\n",
                                 "echo -e '89a90\n> local   all             all                                     md5' | patch /etc/postgresql/9.1/main/pg_hba.conf", " &>> $LOG\n",
+                                "cp /etc/postgresql/9.1/main/postgresql.conf /etc/postgresql/9.1/main/postgresql.conf.orig", " &>> $LOG\n",
+                                "pgtune -i /etc/postgresql/9.1/main/postgresql.conf -T OLTP -o /etc/postgresql/9.1/main/postgresql.conf", " &>> $LOG\n",
                                 "service postgresql restart", " &>> $LOG\n",
-                                "cd /projects/PublicMapping/DistrictBuilder/sql", " &>> $LOG\n",
+                                "cd $PMPHOME/DistrictBuilder/sql", " &>> $LOG\n",
                                 "su postgres -c \"psql -f publicmapping_db.sql\"", " &>> $LOG\n",
 
                                 "cd /var/lib/tomcat6/webapps", " &>> $LOG\n",
                                 "wget -q -O geoserver-2.2.5-war.zip 'http://downloads.sourceforge.net/project/geoserver/GeoServer/2.2.5/geoserver-2.2.5-war.zip?r=http%3A%2F%2Fgeoserver.org%2Fdisplay%2FGEOS%2FStable&ts=1362581444&use_mirror=hivelocity'", " &>> $LOG\n",
                                 "unzip geoserver-2.2.5-war.zip", " &>> $LOG\n",
 
-                                "mkdir /projects/PublicMapping/data", " &>> $LOG\n",
-                                "cd /projects/PublicMapping/data", " &>> $LOG\n",
+                                "mkdir $PMPHOME/data", " &>> $LOG\n",
+                                "cd $PMPHOME/data", " &>> $LOG\n",
                                 "wget -q --no-check-certificate -O VA_data.zip https://s3.amazonaws.com/districtbuilderdata/VA_data.zip", " &>> $LOG\n",
-                                "mkdir -p /projects/PublicMapping/local/data", " &>> $LOG\n",
-                                "cd /projects/PublicMapping/local/data", " &>> $LOG\n",
-                                "unzip /projects/PublicMapping/data/VA_data.zip", " &>> $LOG\n",
+                                "mkdir -p $PMPHOME/local/data", " &>> $LOG\n",
+                                "cd $PMPHOME/local/data", " &>> $LOG\n",
+                                "unzip $PMPHOME/data/VA_data.zip", " &>> $LOG\n",
                                 "while [ ! -x /var/lib/tomcat6/webapps/geoserver ]; do echo 'restarting tomcat to get geoserver app to auto-deploy...'; service tomcat6 restart; sleep 10; done\n",
                                 "service tomcat6 stop", " &>> $LOG\n",
                                 "cd /var/lib/tomcat6/webapps/geoserver/WEB-INF", " &>> $LOG\n",
                                 "echo -e '5a6,10\n>    <context-param>\n>      <param-name>GEOWEBCACHE_CACHE_DIR</param-name>\n>      <param-value>/var/lib/tomcat6/webapps/geoserver/data/gwc</param-value>\n>    </context-param>\n>  \n' | patch web.xml", " &>> $LOG\n",
                                 "mkdir -p /var/lib/tomcat6/webapps/geoserver/data/gwc", " &>> $LOG\n",
-                                "cp /projects/PublicMapping/DistrictBuilder/docs/geowebcache.xml /var/lib/tomcat6/webapps/geoserver/data/gwc/", " &>> $LOG\n",
+                                "cp $PMPHOME/DistrictBuilder/docs/geowebcache.xml /var/lib/tomcat6/webapps/geoserver/data/gwc/", " &>> $LOG\n",
                                 "chown tomcat6:tomcat6 -R /var/lib/tomcat6/webapps/geoserver/data/gwc", " &>> $LOG\n",
                                 "service tomcat6 start", " &>> $LOG\n",
                                 
@@ -123,10 +140,10 @@
                                 "STEP=$(date +%s)\n",
 
 
-                                "cd /projects/PublicMapping/DistrictBuilder/docs/", " &>> $LOG\n",
+                                "cd $PMPHOME/DistrictBuilder/docs/", " &>> $LOG\n",
                                 "cp config.dist.xml config.xml", " &>> $LOG\n",
                                 "echo -e '1191c1191\n<         <Database name=\"YOUR-DATABASE-NAME\" user=\"publicmapping\" password=\"YOUR-DATABASE-PASSWORD\" host=\"OPTIONAL\"/>\n---\n>         <Database name=\"publicmapping\" user=\"publicmapping\" password=\"publicmapping\" host=\"localhost\"/>\n1214c1214\n<         <Admin user=\"ADMIN-USER-NAME\" email=\"ADMIN-EMAIL\" password=\"STRONG-PASSWORD\"/>\n---\n>         <Admin user=\"", { "Ref": "AdminUser" }, "\" email=\"", { "Ref": "AdminEmail" }, "\" password=\"", { "Ref": "AdminPassword" }, "\"/>\n1240c1240\n<                 adminuser=\"GEOSERVER-ADMIN-USER\" adminpass=\"GEOSERVER-ADMIN-PASS\" maxfeatures=\"100\" \n---\n>                 adminuser=\"admin\" adminpass=\"geoserver\" maxfeatures=\"100\" ' | patch config.xml", " &>> $LOG\n",
-                                "cd /projects/PublicMapping/DistrictBuilder/django/publicmapping", " &>> $LOG\n",
+                                "cd $PMPHOME/DistrictBuilder/django/publicmapping", " &>> $LOG\n",
                                 "./setup.py ../../docs/config.xsd ../../docs/config.xml -v2 -d", " &>> $LOG\n",
                                 "SignalURL=\"", { "Ref": "CfgWaitHandle" }, "\"\n",
                                 "t0=$(expr $(date +%s) - $STEP)\n",
@@ -139,8 +156,8 @@
                                 "wget -q --no-check-certificate -O /etc/init.d/celeryd https://raw.github.com/ask/celery/master/contrib/generic-init.d/celeryd", " &>> $LOG\n",
                                 "chmod a+x /etc/init.d/celeryd", " &>> $LOG\n",
                                 "update-rc.d celeryd defaults", " &>> $LOG\n",
-                                "cp /projects/PublicMapping/DistrictBuilder/docs/celeryd /etc/default", " &>> $LOG\n",
-                                "echo -e \"6c6\n< CELERYD_OPTS='-B -s /tmp/celerybeat-schedule'\n---\n> CELERYD_OPTS='-B -s /tmp/celerybeat-schedule --concurrency=$WORKERS'\" | patch /etc/default/celeryd", " &>> $LOG\n",
+                                "cp $PMPHOME/DistrictBuilder/docs/celeryd /etc/default", " &>> $LOG\n",
+                                "echo -e \"7c7\n< CELERYD_OPTS='-B -s /tmp/celerybeat-schedule'\n---\n> CELERYD_OPTS='-B -s /tmp/celerybeat-schedule --concurrency=$WORKERS'\" | patch /etc/default/celeryd", " &>> $LOG\n",
                                 "mkdir /var/log/celery /var/run/celery", " &>> $LOG\n",
                                 "chown www-data:www-data /var/log/celery /var/run/celery/", " &>> $LOG\n",
                                 "service celeryd start", " &>> $LOG\n",
@@ -181,11 +198,24 @@
                                 "curl -X PUT -H 'Content-Type:' --data-binary '{\"Status\":\"SUCCESS\",\"Reason\":\"Templates and static files configuration complete.\",\"UniqueId\":\"TplWait\",\"Data\":\"This step: '$t0'; cumulative: '$t1'\"}' $SignalURL", " &>> $LOG\n",
                                 "STEP=$(date +%s)\n",
                                 
+                                "cp $PMPHOME/DistrictBuilder/django/publicmapping.apache /etc/apache2/sites-available/publicmapping", " &>> $LOG\n",
+                                "a2ensite publicmapping", " &>> $LOG\n",
+                                "a2dissite default", " &>> $LOG\n",
+                                "a2enmod proxy proxy_http rewrite wsgi ssl", " &>> $LOG\n",
+                                "chgrp -R www-data $PMPHOME/", " &>> $LOG\n",
+                                "chmod -R 750 $PMPHOME/", " &>> $LOG\n",
+                                "chmod 770 $PMPHOME/local/reports", " &>> $LOG\n",
+                                "service apache2 restart", " &>> $LOG\n",
                                 
                                 "SignalURL=\"", { "Ref": "AppWaitHandle" }, "\"\n",
                                 "t0=$(expr $(date +%s) - $STEP)\n",
                                 "t1=$(expr $(date +%s) - $START)\n",
-                                "curl -X PUT -H 'Content-Type:' --data-binary '{\"Status\":\"SUCCESS\",\"Reason\":\"Initialization complete.\",\"UniqueId\":\"AppWait\",\"Data\":\"This step: '$t0'; cumulative: '$t1'\"}' $SignalURL", " &>> $LOG\n"
+                                "curl -X PUT -H 'Content-Type:' --data-binary '{\"Status\":\"SUCCESS\",\"Reason\":\"Initialization complete.\",\"UniqueId\":\"AppWait\",\"Data\":\"This step: '$t0'; cumulative: '$t1'\"}' $SignalURL", " &>> $LOG\n",
+                                
+                                "az=$(ec2metadata | grep availability-zone | cut -d ' ' -f 2)\n",
+                                "region=$(echo ${az/%[a-z]/})\n",
+                                "id=$(ec2metadata | grep instance-id | cut -d ' ' -f 2)\n",
+                                "ec2-create-image $id --region $region -O $AWS_ACCESS_KEY -W $AWS_SECRET_KEY --no-reboot\n"
                             ]
                         ]
                     }

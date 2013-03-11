@@ -1,7 +1,8 @@
 # Where to chdir at start.
-CELERYD_CHDIR='/projects/PublicMapping/DistrictBuilder/django/publicmapping/'
+CELERYD_CHDIR='/projects/PublicMapping/DistrictBuilder/django/publicmapping'
 # Path to celeryd
-CELERYD='/projects/PublicMapping/DistrictBuilder/django/publicmapping/manage.py celeryd_detach'
+CELERYD_MULTI="$CELERYD_CHDIR/manage.py celeryd_multi"
+CELERYCTL="$CELERYD_CHDIR/manage.py celeryctl"
 # Options for celeryd that start the scheduler
 CELERYD_OPTS='-B -s /tmp/celerybeat-schedule'
 # Name of the projects settings module.
