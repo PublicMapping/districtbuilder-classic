@@ -75,7 +75,7 @@
                                 "ec2-terminate-instances $id --region ", { "Ref" : "AWS::Region" }, " -O $AWS_ACCESS_KEY -W $AWS_SECRET_KEY", " &>> $LOG\n",
                                 
                                 "SignalURL=\"", { "Ref": "DoneWaitHandle" }, "\"\n",
-                                "curl -X PUT -H 'Content-Type:' --data-binary '{\"Status\":\"SUCCESS\",\"Reason\":\"Downgrade complete.\",\"UniqueId\":\"DoneWait\"}' $SignalURL", " &>> $LOG\n",
+                                "curl -X PUT -H 'Content-Type:' --data-binary '{\"Status\":\"SUCCESS\",\"Reason\":\"Downgrade complete.\",\"UniqueId\":\"DoneWait\"}' $SignalURL", " &>> $LOG\n"
                             ]
                         ]
                     }
