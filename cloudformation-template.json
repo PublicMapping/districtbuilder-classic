@@ -152,8 +152,8 @@
                                 "echo -e '89a90\n> local   all             all                                     md5' | patch /etc/postgresql/9.1/main/pg_hba.conf", " &>> $LOG\n",
                                 "cp /etc/postgresql/9.1/main/postgresql.conf /etc/postgresql/9.1/main/postgresql.conf.orig", " &>> $LOG\n",
                                 "pgtune -i /etc/postgresql/9.1/main/postgresql.conf.orig -T OLTP -o /etc/postgresql/9.1/main/postgresql.conf", " &>> $LOG\n",
-                                "echo -e '7c7\n< #kernel.shmmax = 33554432\n---\n> kernel.shmmax = 3867107328' | patch /etc/sysctl.d/30-postgresql.shm.conf", " &>> $LOG\n",
-                                "sysctl -p /etc/sysctl.d/30-postgresql.shm.conf", " &>> $LOG\n",
+                                "echo -e '7c7\n< #kernel.shmmax = 33554432\n---\n> kernel.shmmax = 3867107328' | patch /etc/sysctl.d/30-postgresql-shm.conf", " &>> $LOG\n",
+                                "sysctl -p /etc/sysctl.d/30-postgresql-shm.conf", " &>> $LOG\n",
 
                                 "service postgresql restart", " &>> $LOG\n",
                                 "cd $PMPHOME/DistrictBuilder/sql", " &>> $LOG\n",
