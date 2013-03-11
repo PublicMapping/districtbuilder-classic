@@ -45,7 +45,49 @@
         }
     },
     "Resources": {
-        "Ec2Instance": {
+        "RunInstance": {
+            "Type": "AWS::EC2::Instance",
+            "DependsOn": "AmiCondition",
+            "Properties": {
+                "KeyName": {
+                    "Ref": "KeyName"
+                },
+                "ImageId": { "Fn::GetAtt": [ "AmiCondition", "Data" ]},
+                "InstanceType": "m1.small",
+                "UserData": {
+                    "Fn::Base64": {
+                        "Fn::Join": [
+                            "",
+                            [
+                                "#!/bin/bash -ex\n",
+                                "LOG=/var/log/instance.log\n",
+                                "AWS_ACCESS_KEY=", { "Ref": "AWSAccessKey" }, "\n",
+                                "AWS_SECRET_KEY=", { "Ref": "AWSSecretKey" }, "\n",
+                                "pgtune -i /etc/postgresql/9.1/main/postgresql.conf.orig -T OLTP -o /etc/postgresql/9.1/main/postgresql.conf", " &>> $LOG\n",
+                                "service postgresql restart", " &>> $LOG\n",
+                                "service celeryd restart", " &>> $LOG\n",
+                                "service tomcat6 restart", " &>> $LOG\n",
+                                "service apache2 restart", " &>> $LOG\n",
+                                
+                                "service postgresql restart", " &>> $LOG\n",
+                                
+                                "id=$(ec2-describe-instances --filter instance-type=m1.xlarge | grep INSTANCE | cut -d ' ' -f 2)", " &>> $LOG\n",
+                                "ec2-terminate-instances $id --region ", { "Ref" : "AWS::Region" }, " -O $AWS_ACCESS_KEY -W $AWS_SECRET_KEY", " &>> $LOG\n",
+                                
+                                "SignalURL=\"", { "Ref": "DoneWaitHandle" }, "\"\n",
+                                "curl -X PUT -H 'Content-Type:' --data-binary '{\"Status\":\"SUCCESS\",\"Reason\":\"Downgrade complete.\",\"UniqueId\":\"DoneWait\"}' $SignalURL", " &>> $LOG\n",
+                            ]
+                        ]
+                    }
+                },
+                "SecurityGroups": [
+                    {
+                        "Ref": "InstanceSecurityGroup"
+                    }
+                ]
+            }
+        },
+        "SetupInstance": {
             "Type": "AWS::EC2::Instance",
             "Properties": {
                 "KeyName": {
@@ -109,7 +151,10 @@
                                 "su postgres -c \"psql -f /usr/share/postgresql/9.1/contrib/postgis-1.5/spatial_ref_sys.sql template_postgis\"", " &>> $LOG\n",
                                 "echo -e '89a90\n> local   all             all                                     md5' | patch /etc/postgresql/9.1/main/pg_hba.conf", " &>> $LOG\n",
                                 "cp /etc/postgresql/9.1/main/postgresql.conf /etc/postgresql/9.1/main/postgresql.conf.orig", " &>> $LOG\n",
-                                "pgtune -i /etc/postgresql/9.1/main/postgresql.conf -T OLTP -o /etc/postgresql/9.1/main/postgresql.conf", " &>> $LOG\n",
+                                "pgtune -i /etc/postgresql/9.1/main/postgresql.conf.orig -T OLTP -o /etc/postgresql/9.1/main/postgresql.conf", " &>> $LOG\n",
+                                "echo -e '7c7\n< #kernel.shmmax = 33554432\n---\n> kernel.shmmax = 3867107328' | patch /etc/sysctl.d/30-postgresql.shm.conf", " &>> $LOG\n",
+                                "sysctl -p /etc/sysctl.d/30-postgresql.shm.conf", " &>> $LOG\n",
+
                                 "service postgresql restart", " &>> $LOG\n",
                                 "cd $PMPHOME/DistrictBuilder/sql", " &>> $LOG\n",
                                 "su postgres -c \"psql -f publicmapping_db.sql\"", " &>> $LOG\n",
@@ -212,10 +257,13 @@
                                 "t1=$(expr $(date +%s) - $START)\n",
                                 "curl -X PUT -H 'Content-Type:' --data-binary '{\"Status\":\"SUCCESS\",\"Reason\":\"Initialization complete.\",\"UniqueId\":\"AppWait\",\"Data\":\"This step: '$t0'; cumulative: '$t1'\"}' $SignalURL", " &>> $LOG\n",
                                 
-                                "az=$(ec2metadata | grep availability-zone | cut -d ' ' -f 2)\n",
-                                "region=$(echo ${az/%[a-z]/})\n",
                                 "id=$(ec2metadata | grep instance-id | cut -d ' ' -f 2)\n",
-                                "ec2-create-image $id --region $region -O $AWS_ACCESS_KEY -W $AWS_SECRET_KEY --no-reboot\n"
+                                "AMI=$(ec2-create-image $id --region ", { "Ref" : "AWS::Region" }, " -O $AWS_ACCESS_KEY -W $AWS_SECRET_KEY --no-reboot | cut -d ' ' -f 2)", " &>> $LOG\n",
+                                
+                                "SignalURL=\"", { "Ref": "AmiWaitHandle" }, "\"\n",
+                                "t0=$(expr $(date +%s) - $STEP)\n",
+                                "t1=$(expr $(date +%s) - $START)\n",
+                                "curl -X PUT -H 'Content-Type:' --data-binary '{\"Status\":\"SUCCESS\",\"Reason\":\"AMI image created.\",\"UniqueId\":\"AmiWait\",\"Data\":\"'$AMI'\"}' $SignalURL", " &>> $LOG\n"
                             ]
                         ]
                     }
@@ -293,9 +341,17 @@
             "Type": "AWS::CloudFormation::WaitConditionHandle",
             "Properties": {}
         },
+        "AmiWaitHandle": {
+            "Type": "AWS::CloudFormation::WaitConditionHandle",
+            "Properties": {}
+        },
+        "DoneWaitHandle": {
+            "Type": "AWS::CloudFormation::WaitConditionHandle",
+            "Properties": {}
+        },
         "AptCondition": {
             "Type": "AWS::CloudFormation::WaitCondition",
-            "DependsOn": "Ec2Instance",
+            "DependsOn": "SetupInstance",
             "Properties": {
                 "Handle": { "Ref": "AptWaitHandle" },
                 "Timeout": "2400"
@@ -370,7 +426,23 @@
             "DependsOn": "TplCondition",
             "Properties": {
                 "Handle": { "Ref": "AppWaitHandle" },
-                "Timeout": "43200"
+                "Timeout": "30"
+            }
+        },
+        "AmiCondition": {
+            "Type": "AWS::CloudFormation::WaitCondition",
+            "DependsOn": "AppCondition",
+            "Properties": {
+                "Handle": { "Ref": "AmiWaitHandle" },
+                "Timeout": "60"
+            }
+        },
+        "DoneCondition": {
+            "Type": "AWS::CloudFormation::WaitCondition",
+            "DependsOn": "AmiCondition",
+            "Properties": {
+                "Handle": { "Ref": "AmiWaitHandle" },
+                "Timeout": "6000"
             }
         }
     },
@@ -379,7 +451,7 @@
             "Description": "The public IP of the instance.",
             "Value": {
                 "Fn::GetAtt": [
-                    "Ec2Instance",
+                    "SetupInstance",
                     "PublicIp"
                 ]
             }
