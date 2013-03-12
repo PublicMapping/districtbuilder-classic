@@ -1957,7 +1957,20 @@ class ShapeQueue:
         return group(async_ops).apply_async()
         
     @staticmethod
+    def _bulkinsert(sql, args):
+        if len(args) > 0:
+            # commit a segment of updates
+            try:
+                cursor = connection.cursor()
+                cursor.executemany(sql, tuple(args))
+
+                transaction.commit()
+            except Exception, ex:
+                transaction.rollback()
+
+    @staticmethod
     @task
+    @transaction.commit_manually
     def _loadslice(shapefile, begin, end, configfile, glidx, sidx, attridx):
         """
         Load a segment of features from a shapefile.
@@ -1976,19 +1989,95 @@ class ShapeQueue:
         region_filters = create_filter_functions(store)
         
         level = Geolevel.objects.get(name=store_geolevel.get('name')[:50])
-        levels = [level]
+        
+        # This is most important on the base geolevel
+        is_fresh = Geounit.objects.filter(geolevel__in=[level]).count() == 0
         
         ds = DataSource(shapefile)
         layer = ds[0]
+        
+        gu_insertsql = 'INSERT INTO "%s" ("%s", "%s", "%s", "%s", "%s", "%s") VALUES (%%(name)s, %%(portable_id)s, %%(tree_code)s, %%(geom)s, %%(simple)s, %%(center)s)' % (
+            Geounit._meta.db_table,           # redistricting_geounit
+            Geounit._meta.fields[1].attname,  # name
+            Geounit._meta.fields[2].attname,  # portable_id
+            Geounit._meta.fields[3].attname,  # tree_code
+            Geounit._meta.fields[5].attname,  # geom
+            Geounit._meta.fields[6].attname,  # simple
+            Geounit._meta.fields[7].attname,  # center
+        )
+        
+        glgu = Geounit._meta._many_to_many()[0]
+        gl_cleansql = 'DELETE FROM "%s" WHERE "%s" = (SELECT "%s" FROM "%s" WHERE "%s" = %%(portable_id)s);' % (
+            glgu.m2m_db_table(),              # redistricting_geounit_geolevel
+            glgu.m2m_column_name(),           # geounit_id
+            Geounit._meta.fields[0].attname,  # id
+            Geounit._meta.db_table,           # redistricting_geounit
+            Geounit._meta.fields[2].attname,  # portable_id
+        )
+        gl_insertsql = 'INSERT INTO "%s" ("%s", "%s") VALUES ((SELECT "%s" FROM "%s" WHERE "%s" = %%(portable_id)s), %%(geolevel)s)' % (
+            glgu.m2m_db_table(),              # redistricting_geounit_geolevel
+            glgu.m2m_column_name(),           # geounit_id
+            glgu.m2m_reverse_name(),          # geolevel_id
+            Geounit._meta.fields[0].attname,  # id
+            Geounit._meta.db_table,           # redistricting_geounit
+            Geounit._meta.fields[2].attname,  # portable_id
+        )
+        
+        ch_insertsql = 'INSERT INTO "%s" ("%s", "%s", "%s", "%s") VALUES (%%(subject)s, (SELECT "%s" FROM "%s" WHERE "%s" = %%(portable_id)s), %%(number)s, %%(percentage)s)' % (
+            Characteristic._meta.db_table,           # redistricting_characteristic
+            Characteristic._meta.fields[1].attname,  # subject_id
+            Characteristic._meta.fields[2].attname,  # geounit_id
+            Characteristic._meta.fields[3].attname,  # number
+            Characteristic._meta.fields[4].attname,  # percentage
+            Geounit._meta.fields[0].attname,         # id
+            Geounit._meta.db_table,                  # redistricting_geounit
+            Geounit._meta.fields[2].attname,         # portable_id
+        )
+        ch_updatesql = 'UPDATE "%s" SET "%s" = %%(number)s, "%s" = %%(percentage)s WHERE "%s" = %%(subject)s AND "%s" = (SELECT "%s" FROM "%s" WHERE "%s" = %%(portable_id)s)' % (
+            Characteristic._meta.db_table,           # redistricting_characteristic
+            Characteristic._meta.fields[3].attname,  # number
+            Characteristic._meta.fields[4].attname,  # percentage
+            Characteristic._meta.fields[1].attname,  # subject_id
+            Characteristic._meta.fields[2].attname,  # geounit_id
+            Geounit._meta.fields[0].attname,         # id
+            Geounit._meta.db_table,                  # redistricting_geounit
+            Geounit._meta.fields[2].attname,         # portable_id
+        )
+        
+        gu_insertq = []
+        gl_cleanq = []
+        gl_insertq = []
+        ch_insertq = []
+        ch_updateq = []
+        checkpt = 500
+        cursor = connection.cursor()
         for fidx in range(begin, end):
             # skip the tail end that didn't divide nicely into the 
             # number of workers
             if fidx >= len(layer):
                 continue
-            
+                
+            if (fidx - begin) % checkpt == 0:
+                ShapeQueue._bulkinsert(gu_insertsql, gu_insertq)
+                gu_insertq = []
+                
+                ShapeQueue._bulkinsert(gl_cleansql, gl_cleanq)
+                gl_cleanq = []
+                
+                ShapeQueue._bulkinsert(gl_insertsql, gl_insertq)
+                gl_insertq = []
+                
+                ShapeQueue._bulkinsert(ch_insertsql, ch_insertq)
+                ch_insertq = []
+                
+                ShapeQueue._bulkinsert(ch_updatesql, ch_updateq)
+                ch_updateq = []
+                
             feat = layer[fidx]
             
             if not sidx is None:
+                levels = [level]
+                
                 # load shapes if this is an shapefile listed in the config
                 
                 for region, filter_list in region_filters.iteritems():
@@ -2002,28 +2091,30 @@ class ShapeQueue:
                             if f(feat) == True:
                                 levels.append(Geolevel.objects.get(name='%s_%s' % (region, level.name)))
                 
-                prefetch = Geounit.objects.filter(
-                    Q(name=get_shape_name(shapeconfig[sidx], feat)), 
-                    Q(geolevel__in=levels),
-                    Q(portable_id=get_shape_portable(shapeconfig[sidx], feat)),
-                    Q(tree_code=get_shape_tree(shapeconfig[sidx], feat))
-                )
+                if not is_fresh:
+                    prefetch = Geounit.objects.filter(
+                        Q(name=get_shape_name(shapeconfig[sidx], feat)), 
+                        Q(geolevel__in=levels),
+                        Q(portable_id=get_shape_portable(shapeconfig[sidx], feat)),
+                        Q(tree_code=get_shape_tree(shapeconfig[sidx], feat))
+                    ).count()
 
-                if prefetch.count() == 0:
+                if is_fresh or prefetch == 0:
                     # Store the geos geometry
                     # Buffer by 0 to get rid of any self-intersections which may make this geometry invalid.
                     geos = feat.geom.geos.buffer(0)
+                    geos.srid = 3785;
                     # Coerce the geometry into a MultiPolygon
                     if geos.geom_type == 'MultiPolygon':
                         my_geom = geos
                     elif geos.geom_type == 'Polygon':
                         my_geom = MultiPolygon(geos)
+                        my_geom.srid = geos.srid
                     simple = my_geom.simplify(tolerance=Decimal(store_geolevel.get('tolerance')),preserve_topology=True)
                     if simple.geom_type != 'MultiPolygon':
                         simple = MultiPolygon(simple)
+                        simple.srid = geos.srid
                     center = my_geom.centroid
-
-                    geos = None
 
                     # Ensure the centroid is within the geometry
                     if not center.within(my_geom):
@@ -2042,47 +2133,75 @@ class ShapeQueue:
                             intersection = intersection[0]
                         # the center of that line is my within-the-poly centroid.
                         center = intersection.centroid
-                        first_poly = first_poly_extent = min_x = max_x = my_y = centerline = intersection = None
+                        center.srid = geos.srid
 
-                    g = Geounit(geom = my_geom, 
-                        name = get_shape_name(shapeconfig[sidx], feat), 
-                        simple = simple, 
-                        center = center,
-                        portable_id = get_shape_portable(shapeconfig[sidx], feat),
-                        tree_code = get_shape_tree(shapeconfig[sidx], feat)
-                    )
-                    g.save()
-                    g.geolevel = levels
-                    g.save()
-
-                else:
-                    g = prefetch[0]
-                    g.geolevel = levels
-                    g.save()
+                    gu_insertq.append({
+                        'geom': my_geom.ewkt, 
+                        'name': get_shape_name(shapeconfig[sidx], feat), 
+                        'simple': simple.ewkt, 
+                        'center': center.ewkt,
+                        'portable_id': get_shape_portable(shapeconfig[sidx], feat),
+                        'tree_code': get_shape_tree(shapeconfig[sidx], feat),
+                    })
+                
+                if not is_fresh:
+                    gl_cleanq.append({'portable_id': get_shape_portable(shapeconfig[sidx], feat) })
+                    
+                for l in levels:
+                    mapping = {
+                        'portable_id': get_shape_portable(shapeconfig[sidx], feat),
+                        'geolevel': l.id
+                    }
+                    gl_insertq.append(mapping)
 
                 if not attrconfig:
-                    set_geounit_characteristic(g, subjects, feat)
-                    
+                    try:
+                        chadd, chup = set_geounit_characteristic(subjects, feat, portable_id=get_shape_portable(shapeconfig[sidx], feat))
+                        ch_insertq += chadd
+                        ch_updateq += chup
+                    except Exception,ex:
+                        print traceback.format_exc()
+                        return None
+                        
             elif not attridx is None:
                 # load attributes from the data file
                 gid = get_shape_treeid(attrconfig[attridx], feat)
+                
+                # load attributes after spatial data -- g should exist
                 g = Geounit.objects.filter(tree_code=gid)
 
                 if g.count() > 0:
-                    set_geounit_characteristic(g[0], subjects, feat)
-
+                    chadd, chup = set_geounit_characteristic(subjects, feat, geounit=g[0])
+                    ch_insertq += chadd
+                    ch_updateq += chup
+                    
+        # insert any remainders
+        ShapeQueue._bulkinsert(gu_insertsql, gu_insertq)
+        
+        ShapeQueue._bulkinsert(gl_cleansql, gl_cleanq)
+        
+        ShapeQueue._bulkinsert(gl_insertsql, gl_insertq)
+        
+        ShapeQueue._bulkinsert(ch_insertsql, ch_insertq)
+        
+        ShapeQueue._bulkinsert(ch_updatesql, ch_updateq)
+        
+        return end - begin
+        
 # Assistant methods to _loadslice
-def set_geounit_characteristic(g, subjects, feat):
+def set_geounit_characteristic(subjects, feat, geounit=None, portable_id=None):
     """
     Assign characteristics to a geounit.
     """
+    updates = []
+    inserts = []
     for attr, obj in subjects.iteritems():
         if attr.endswith('_by_id'):
             continue
         try:
             value = Decimal(str(feat.get(attr))).quantize(Decimal('000000.0000', 'ROUND_DOWN'))
         except:
-            logger.debug('No attribute "%s" on feature %d' , attr, feat.fid)
+            logger.debug('No attribute "%s" on feature %d', attr, feat.fid)
             continue
         percentage = '0000.00000000'
         if obj.percentage_denominator:
@@ -2091,21 +2210,22 @@ def set_geounit_characteristic(g, subjects, feat):
             if denominator_value > 0:
                 percentage = value / denominator_value
 
-        query =  Characteristic.objects.filter(subject=obj, geounit=g)
-        if query.count() > 0:
-            c = query[0]
-            c.number = value
-            c.percentage = percentage
+        if not geounit is None:
+            updates.append({
+                'subject': obj.id,
+                'geounit': g.id,
+                'number': value,
+                'percentage': percentage,
+            })
         else:
-            c = Characteristic(subject=obj, geounit=g, number=value, percentage=percentage)
-        try:
-            c.save()
-        except:
-            c.number = '0.0'
-            c.save()
-            logger.info('Failed to set value "%s" to %d in feature "%s"', attr, feat.get(attr), g.name)
-            logger.debug(traceback.format_exc())
-            
+            inserts.append({
+                'subject': obj.id,
+                'portable_id': portable_id,
+                'number': value,
+                'percentage': percentage,
+            })
+        
+    return inserts, updates
         
 def get_subject_objects(store):
     """

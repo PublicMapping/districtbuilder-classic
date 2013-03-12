@@ -370,7 +370,7 @@
             "DependsOn": "PipCondition",
             "Properties": {
                 "Handle": { "Ref": "DataWaitHandle" },
-                "Timeout": "2400"
+                "Timeout": "600"
             }
         },
         "CfgCondition": {
@@ -386,7 +386,7 @@
             "DependsOn": "CfgCondition",
             "Properties": {
                 "Handle": { "Ref": "ImportG0WaitHandle" },
-                "Timeout": "43200"
+                "Timeout": "1200"
             }
         },
         "ImportG1Condition": {
@@ -394,7 +394,7 @@
             "DependsOn": "ImportG0Condition",
             "Properties": {
                 "Handle": { "Ref": "ImportG1WaitHandle" },
-                "Timeout": "43200"
+                "Timeout": "600"
             }
         },
         "ImportG2Condition": {
@@ -402,7 +402,7 @@
             "DependsOn": "ImportG1Condition",
             "Properties": {
                 "Handle": { "Ref": "ImportG2WaitHandle" },
-                "Timeout": "43200"
+                "Timeout": "300"
             }
         },
         "GeoCondition": {
