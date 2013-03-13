@@ -394,7 +394,7 @@
             "DependsOn": "ImportG0Condition",
             "Properties": {
                 "Handle": { "Ref": "ImportG1WaitHandle" },
-                "Timeout": "1200"
+                "Timeout": "43200"
             }
         },
         "ImportG2Condition": {
@@ -402,7 +402,7 @@
             "DependsOn": "ImportG1Condition",
             "Properties": {
                 "Handle": { "Ref": "ImportG2WaitHandle" },
-                "Timeout": "600"
+                "Timeout": "43200"
             }
         },
         "GeoCondition": {
