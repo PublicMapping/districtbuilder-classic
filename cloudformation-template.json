@@ -386,7 +386,7 @@
             "DependsOn": "CfgCondition",
             "Properties": {
                 "Handle": { "Ref": "ImportG0WaitHandle" },
-                "Timeout": "1200"
+                "Timeout": "2400"
             }
         },
         "ImportG1Condition": {
@@ -394,7 +394,7 @@
             "DependsOn": "ImportG0Condition",
             "Properties": {
                 "Handle": { "Ref": "ImportG1WaitHandle" },
-                "Timeout": "600"
+                "Timeout": "1200"
             }
         },
         "ImportG2Condition": {
@@ -402,7 +402,7 @@
             "DependsOn": "ImportG1Condition",
             "Properties": {
                 "Handle": { "Ref": "ImportG2WaitHandle" },
-                "Timeout": "300"
+                "Timeout": "600"
             }
         },
         "GeoCondition": {
