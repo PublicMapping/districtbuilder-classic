@@ -418,7 +418,7 @@
             "DependsOn": "GeoCondition",
             "Properties": {
                 "Handle": { "Ref": "TplWaitHandle" },
-                "Timeout": "600"
+                "Timeout": "1200"
             }
         },
         "AppCondition": {
