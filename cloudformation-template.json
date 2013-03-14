@@ -410,7 +410,7 @@
             "DependsOn": "ImportG2Condition",
             "Properties": {
                 "Handle": { "Ref": "GeoWaitHandle" },
-                "Timeout": "600"
+                "Timeout": "2400"
             }
         },
         "TplCondition": {
@@ -418,7 +418,7 @@
             "DependsOn": "GeoCondition",
             "Properties": {
                 "Handle": { "Ref": "TplWaitHandle" },
-                "Timeout": "1200"
+                "Timeout": "2400"
             }
         },
         "AppCondition": {
