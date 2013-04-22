@@ -2214,3 +2214,52 @@ class SplitCounter(CalculatorBase):
 
         return render
 
+class ConvexHull(CalculatorBase):
+    """
+    Calculate the convex hull of a district.
+    
+    This calculator will either calculate the area of a single district's convex
+    hull, or the average area of all districts convex hulls.
+    """
+    def compute(self, **kwargs):
+        """
+        Calculate the convex hull area of a district or a plan.
+
+        @keyword district: A L{District} whose convex hull should be 
+            computed.
+        @keyword plan: A L{Plan} whose district convex hulls should be 
+            averaged.
+        @keyword version: Optional. The version of the plan, defaults to 
+            the most recent version.
+        """
+        districts = []
+        if 'district' in kwargs:
+            districts = [kwargs['district']]
+            if districts[0].geom.empty:
+                return
+
+        elif 'plan' in kwargs:
+            plan = kwargs['plan']
+            version = kwargs['version'] if 'version' in kwargs else plan.version
+            districts = plan.get_districts_at_version(version, include_geom=True)
+
+        else:
+            return
+            
+        num = 0
+        area = 0.0
+        for district in districts:
+            if district.district_id == 0:
+                continue
+
+            if district.geom.empty:
+                continue
+
+            if district.geom.length == 0:
+                continue
+        
+            area += district.geom.convex_hull.area
+            num += 1
+
+        self.result = { 'value': (area / num) if num > 0 else 0 }
+
