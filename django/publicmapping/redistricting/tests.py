@@ -2803,6 +2803,153 @@ class CalculatorTestCase(BaseTestCase):
         self.assertEqual(2, district_splits, 'Did not find expected splits. e:2, a:%s' % district_splits)
         self.assertTrue((3, u'0000004', u'District 3', u'Unit 1-4') in calc.result['value']['splits'], 'Did not find expected splits')
 
+    def test_convexhull_l1(self):
+        """
+        Test the convex hull calculator for the middle geolevel
+        """
+        geolevel = Geolevel.objects.get(name='middle level')
+        dist1ids = list(geolevel.geounit_set.all())[0:1]
+        dist1ids = map(lambda x: str(x.id), dist1ids)
+        
+        self.plan.add_geounits(self.district1.district_id, dist1ids, geolevel.id, self.plan.version)
+        district1 = self.plan.district_set.get(district_id=self.district1.district_id,version=self.plan.version)
+
+        calc = ConvexHull()
+        calc.compute(district=district1)
+        
+        self.assertEqual(0.012345679012345678, calc.result['value'])
+
+    def test_convexhull_l2(self):
+        """
+        Test the convex hull calculator for the biggest geolevel
+        """
+        geolevel = Geolevel.objects.get(name='biggest level')
+        dist1ids = list(geolevel.geounit_set.all())[0:1]
+        dist1ids = map(lambda x: str(x.id), dist1ids)
+        
+        self.plan.add_geounits(self.district1.district_id, dist1ids, geolevel.id, self.plan.version)
+        district1 = self.plan.district_set.get(district_id=self.district1.district_id,version=self.plan.version)
+
+        calc = ConvexHull()
+        calc.compute(district=district1)
+        
+        self.assertEqual(0.1111111111111111, calc.result['value'])
+
+    def test_convexhull_row(self):
+        """
+        Test the convex hull calculator averaging a horizontal row of 9 smaller
+        geounits
+        """
+        dist1ids = list(self.geolevel.geounit_set.all())[0:9]
+        dist1ids = map(lambda x: str(x.id), dist1ids)
+        
+        self.plan.add_geounits(self.district1.district_id, dist1ids, self.geolevel.id, self.plan.version)
+        district1 = self.plan.district_set.get(district_id=self.district1.district_id,version=self.plan.version)
+
+        calc = ConvexHull()
+        calc.compute(district=district1)
+        
+        # 9 contiguous geounits at the middle level have the same area as one
+        # geounit at the biggest level
+        self.assertEqual(0.1111111111111111, calc.result['value'])
+
+    def test_convexhull_block(self):
+        """
+        Test the convex hull calculator averaging a block of 9 smaller geounits
+        """
+        dist1ids = list(self.geolevel.geounit_set.all())
+        dist1ids = dist1ids[0:3] + dist1ids[9:12] + dist1ids[18:21]
+        dist1ids = map(lambda x: str(x.id), dist1ids)
+        
+        self.plan.add_geounits(self.district1.district_id, dist1ids, self.geolevel.id, self.plan.version)
+        district1 = self.plan.district_set.get(district_id=self.district1.district_id,version=self.plan.version)
+
+        calc = ConvexHull()
+        calc.compute(district=district1)
+        
+        # 9 contiguous geounits at the middle level have the same area as one
+        # geounit at the biggest level
+        self.assertEqual(0.1111111111111111, calc.result['value'])
+
+    def test_convexhull_column(self):
+        """
+        Test the convex hull calculator averaging a column of 9 smaller geounits
+        """
+        dist1ids = list(self.geolevel.geounit_set.all())
+        dist1ids = dist1ids[0:1] + dist1ids[9:10] + dist1ids[18:19] + \
+            dist1ids[27:28] + dist1ids[36:37] + dist1ids[45:46] + \
+            dist1ids[54:55] + dist1ids[63:64] + dist1ids[72:73]
+        dist1ids = map(lambda x: str(x.id), dist1ids)
+        
+        self.plan.add_geounits(self.district1.district_id, dist1ids, self.geolevel.id, self.plan.version)
+        district1 = self.plan.district_set.get(district_id=self.district1.district_id,version=self.plan.version)
+
+        calc = ConvexHull()
+        calc.compute(district=district1)
+        
+        # 9 contiguous geounits at the middle level have the same area as one
+        # geounit at the biggest level
+        self.assertEqual(0.1111111111111111, calc.result['value'])
+
+    def test_convexhull_sparse(self):
+        """
+        Test the convex hull calculator averaging a sparse set of geounits
+        """
+        dist1ids = list(self.geolevel.geounit_set.all())
+        dist1ids = dist1ids[0:1] + dist1ids[8:9] + dist1ids[72:73] + dist1ids[80:81]
+        dist1ids = map(lambda x: str(x.id), dist1ids)
+        
+        self.plan.add_geounits(self.district1.district_id, dist1ids, self.geolevel.id, self.plan.version)
+        district1 = self.plan.district_set.get(district_id=self.district1.district_id,version=self.plan.version)
+
+        calc = ConvexHull()
+        calc.compute(district=district1)
+        
+        # the convex hull that covers this sparse district is bigger than the 
+        # sum of the areas
+        self.assertEqual(1, calc.result['value'])
+
+    def test_convexhull_avg(self):
+        """
+        Test the convex hull calculator averaging a sparse set of geounits
+        """
+        dist1ids = list(self.geolevel.geounit_set.all())
+        dist1ids = dist1ids[0:9]
+        dist1ids = map(lambda x: str(x.id), dist1ids)
+        
+        self.plan.add_geounits(self.district1.district_id, dist1ids, self.geolevel.id, self.plan.version)
+
+        calc = ConvexHull()
+        calc.compute(plan=self.plan)
+        
+        # the average convex hull that covers this plan is the same as the 
+        # district convex hull
+        self.assertEqual(0.1111111111111111, calc.result['value'])
+
+    def test_convexhull_avg2(self):
+        """
+        Test the convex hull calculator averaging a sparse set of geounits
+        """
+        distids = list(self.geolevel.geounit_set.all())
+        dist1ids = distids[0:9]
+        dist1ids = map(lambda x: str(x.id), dist1ids)
+        
+        self.plan.add_geounits(self.district1.district_id, dist1ids, self.geolevel.id, self.plan.version)
+        
+        dist2ids = distids[9:18]
+        dist2ids = map(lambda x: str(x.id), dist2ids)
+        
+        self.plan.add_geounits(self.district2.district_id, dist2ids, self.geolevel.id, self.plan.version)
+
+        calc = ConvexHull()
+        calc.compute(plan=self.plan)
+        
+        # the average convex hull that covers this plan is the same as the 
+        # district convex hull (both of them!)
+        self.assertEqual(0.1111111111111111, calc.result['value'])
+
+
+
 class AllBlocksTestCase(BaseTestCase):
     fixtures = ['redistricting_testdata.json',
                 'redistricting_testdata_geolevel2.json',
@@ -4272,6 +4419,7 @@ class ReportCalculatorTestCase(BaseTestCase):
         col1 = calc.result['raw'][0]
         self.assertEqual('list', col1['type'])
         self.assertEqual(675, len(col1['value']))
+
 
 from redistricting.management.commands.setup import Command
 from redistricting.config import ConfigImporter

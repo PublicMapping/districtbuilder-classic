@@ -2376,6 +2376,11 @@ div.districtidtip {
 	top: 10px !important;
 }
 
+.olControlZoom.olControlZoomBarInactive {
+    left: 13px !important;
+    top: 83px !important;
+}
+
 .olControlPanUpItemInactive {
 	left: 0 !important;
   top: 0 !important
@@ -2430,7 +2435,7 @@ div.districtidtip {
   height: 22px !important;
 }
 .olControlZoomGrabInactive  {
-  left: 14px !important;
+  left: 12px !important;
   }
 .olControlZoomGrabInactive  img{
   width: 23px !important;
