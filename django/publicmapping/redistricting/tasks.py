@@ -1965,7 +1965,7 @@ class ShapeQueue:
                 cursor.executemany(sql, tuple(args))
 
                 transaction.commit()
-            except Exception, ex:
+            except:
                 transaction.rollback()
 
     @staticmethod
@@ -1989,9 +1989,10 @@ class ShapeQueue:
         region_filters = create_filter_functions(store)
         
         level = Geolevel.objects.get(name=store_geolevel.get('name')[:50])
+        levels = [level]
         
         # This is most important on the base geolevel
-        is_fresh = Geounit.objects.filter(geolevel__in=[level]).count() == 0
+        is_fresh = Geounit.objects.filter(geolevel__in=levels).count() == 0
         
         ds = DataSource(shapefile)
         layer = ds[0]
@@ -2145,24 +2146,19 @@ class ShapeQueue:
                     })
                 
                 if not is_fresh:
-                    gl_cleanq.append({'portable_id': get_shape_portable(shapeconfig[sidx], feat) })
+                    gl_cleanq.append({'portable_id': get_shape_portable(shapeconfig[sidx], feat))
                     
                 for l in levels:
-                    mapping = {
+                    gl_insertq.append({
                         'portable_id': get_shape_portable(shapeconfig[sidx], feat),
                         'geolevel': l.id
-                    }
-                    gl_insertq.append(mapping)
+                    })
 
                 if not attrconfig:
-                    try:
-                        chadd, chup = set_geounit_characteristic(subjects, feat, portable_id=get_shape_portable(shapeconfig[sidx], feat))
-                        ch_insertq += chadd
-                        ch_updateq += chup
-                    except Exception,ex:
-                        print traceback.format_exc()
-                        return None
-                        
+                    chadd, chup = set_geounit_characteristic(subjects, feat, portable_id=get_shape_portable(shapeconfig[sidx], feat))
+                    ch_insertq += chadd
+                    ch_updateq += chup
+                    
             elif not attridx is None:
                 # load attributes from the data file
                 gid = get_shape_treeid(attrconfig[attridx], feat)
@@ -2174,7 +2170,7 @@ class ShapeQueue:
                     chadd, chup = set_geounit_characteristic(subjects, feat, geounit=g[0])
                     ch_insertq += chadd
                     ch_updateq += chup
-                    
+
         # insert any remainders
         ShapeQueue._bulkinsert(gu_insertsql, gu_insertq)
         
@@ -2187,7 +2183,7 @@ class ShapeQueue:
         ShapeQueue._bulkinsert(ch_updatesql, ch_updateq)
         
         return end - begin
-        
+    
 # Assistant methods to _loadslice
 def set_geounit_characteristic(subjects, feat, geounit=None, portable_id=None):
     """
