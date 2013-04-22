@@ -253,6 +253,9 @@ function mapinit(srs,maxExtent) {
         handleRightClicks: true
     });
 
+    OpenLayers.Control.PanZoom.X = 2;
+    OpenLayers.Control.PanZoom.Y = 2;
+
     // Create a slippy map.
     olmap = new OpenLayers.Map('map', {
         maxExtent: maxExtent,
