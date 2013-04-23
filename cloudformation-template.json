@@ -64,6 +64,8 @@
                                 "AWS_ACCESS_KEY=", { "Ref": "AWSAccessKey" }, "\n",
                                 "AWS_SECRET_KEY=", { "Ref": "AWSSecretKey" }, "\n",
                                 "pgtune -i /etc/postgresql/9.1/main/postgresql.conf.orig -T OLTP -o /etc/postgresql/9.1/main/postgresql.conf", " &>> $LOG\n",
+                                "echo -e '7c7\n< kernel.shmmax = 3867107328\n---\n> kernel.shmmax = 440000000' | patch /etc/sysctl.d/30-postgresql-shm.conf", " &>> $LOG\n",
+                                "sysctl -p /etc/sysctl.d/30-postgresql-shm.conf", " &>> $LOG\n",
                                 "service postgresql restart", " &>> $LOG\n",
                                 "service celeryd restart", " &>> $LOG\n",
                                 "service tomcat6 restart", " &>> $LOG\n",
@@ -130,9 +132,10 @@
 
                                 "mkdir -p $PMPHOME", " &>> $LOG\n",
                                 "cd $PMPHOME", " &>> $LOG\n",
-                                "git clone git://github.com/PublicMapping/DistrictBuilder.git", " &>> $LOG\n",
+                                "git clone git://github.com/PublicMapping/DistrictBuilder.git", " &>> $LOG\n",                                
                                 "cd DistrictBuilder", " &>> $LOG\n",
                                 "git checkout ", { "Ref": "RepoBranch" }, " &>> $LOG\n",
+                                "rev=$(git reflog | head -n 1 | cut -d ' ' -f 1)", " &>> $LOG\n",
                                 "pip install -r requirements.txt", " &>> $LOG\n",
                                 
                                 
@@ -257,9 +260,10 @@
                                 "t1=$(expr $(date +%s) - $START)\n",
                                 "curl -X PUT -H 'Content-Type:' --data-binary '{\"Status\":\"SUCCESS\",\"Reason\":\"Initialization complete.\",\"UniqueId\":\"AppWait\",\"Data\":\"This step: '$t0'; cumulative: '$t1'\"}' $SignalURL", " &>> $LOG\n",
                                 
-                                "id=$(ec2metadata | grep instance-id | cut -d ' ' -f 2)\n",
-                                "AMI=$(ec2-create-image $id --region ", { "Ref" : "AWS::Region" }, " -O $AWS_ACCESS_KEY -W $AWS_SECRET_KEY --no-reboot | cut -d ' ' -f 2)", " &>> $LOG\n",
+                                "id=$(ec2metadata | grep ^instance-id | cut -d ' ' -f 2)\n",
+                                "AMI=$(ec2-create-image $id --region ", { "Ref" : "AWS::Region" }, " -n db-test-$rev -O $AWS_ACCESS_KEY -W $AWS_SECRET_KEY --no-reboot | cut -d ' ' -f 2)", " &>> $LOG\n",
                                 
+                                "echo 'created AMI:'$AMI' from instance ID:'$id", " &>> $LOG\n",
                                 "SignalURL=\"", { "Ref": "AmiWaitHandle" }, "\"\n",
                                 "t0=$(expr $(date +%s) - $STEP)\n",
                                 "t1=$(expr $(date +%s) - $START)\n",
