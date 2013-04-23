@@ -2146,7 +2146,7 @@ class ShapeQueue:
                     })
                 
                 if not is_fresh:
-                    gl_cleanq.append({'portable_id': get_shape_portable(shapeconfig[sidx], feat))
+                    gl_cleanq.append({'portable_id': get_shape_portable(shapeconfig[sidx], feat)})
                     
                 for l in levels:
                     gl_insertq.append({
