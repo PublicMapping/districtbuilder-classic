@@ -45,50 +45,6 @@
         }
     },
     "Resources": {
-        "RunInstance": {
-            "Type": "AWS::EC2::Instance",
-            "DependsOn": "AmiCondition",
-            "Properties": {
-                "KeyName": {
-                    "Ref": "KeyName"
-                },
-                "ImageId": { "Fn::GetAtt": [ "AmiCondition", "Data" ]},
-                "InstanceType": "m1.small",
-                "UserData": {
-                    "Fn::Base64": {
-                        "Fn::Join": [
-                            "",
-                            [
-                                "#!/bin/bash -ex\n",
-                                "LOG=/var/log/instance.log\n",
-                                "AWS_ACCESS_KEY=", { "Ref": "AWSAccessKey" }, "\n",
-                                "AWS_SECRET_KEY=", { "Ref": "AWSSecretKey" }, "\n",
-                                "pgtune -i /etc/postgresql/9.1/main/postgresql.conf.orig -T OLTP -o /etc/postgresql/9.1/main/postgresql.conf", " &>> $LOG\n",
-                                "echo -e '7c7\n< kernel.shmmax = 3867107328\n---\n> kernel.shmmax = 440000000' | patch /etc/sysctl.d/30-postgresql-shm.conf", " &>> $LOG\n",
-                                "sysctl -p /etc/sysctl.d/30-postgresql-shm.conf", " &>> $LOG\n",
-                                "service postgresql restart", " &>> $LOG\n",
-                                "service celeryd restart", " &>> $LOG\n",
-                                "service tomcat6 restart", " &>> $LOG\n",
-                                "service apache2 restart", " &>> $LOG\n",
-                                
-                                "service postgresql restart", " &>> $LOG\n",
-                                
-                                "id=$(ec2-describe-instances --filter instance-type=m1.xlarge | grep INSTANCE | cut -d ' ' -f 2)", " &>> $LOG\n",
-                                "ec2-terminate-instances $id --region ", { "Ref" : "AWS::Region" }, " -O $AWS_ACCESS_KEY -W $AWS_SECRET_KEY", " &>> $LOG\n",
-                                
-                                "SignalURL=\"", { "Ref": "DoneWaitHandle" }, "\"\n",
-                                "curl -X PUT -H 'Content-Type:' --data-binary '{\"Status\":\"SUCCESS\",\"Reason\":\"Downgrade complete.\",\"UniqueId\":\"DoneWait\"}' $SignalURL", " &>> $LOG\n"
-                            ]
-                        ]
-                    }
-                },
-                "SecurityGroups": [
-                    {
-                        "Ref": "InstanceSecurityGroup"
-                    }
-                ]
-            }
-        },
         "SetupInstance": {
             "Type": "AWS::EC2::Instance",
             "Properties": {
@@ -261,13 +217,16 @@
                                 "curl -X PUT -H 'Content-Type:' --data-binary '{\"Status\":\"SUCCESS\",\"Reason\":\"Initialization complete.\",\"UniqueId\":\"AppWait\",\"Data\":\"This step: '$t0'; cumulative: '$t1'\"}' $SignalURL", " &>> $LOG\n",
                                 
                                 "id=$(ec2metadata | grep ^instance-id | cut -d ' ' -f 2)\n",
-                                "AMI=$(ec2-create-image $id --region ", { "Ref" : "AWS::Region" }, " -n db-test-$rev -O $AWS_ACCESS_KEY -W $AWS_SECRET_KEY --no-reboot | cut -d ' ' -f 2)", " &>> $LOG\n",
+                                "AMI=$(ec2-create-image $id --region ", { "Ref" : "AWS::Region" }, " -n db-test-$rev -O $AWS_ACCESS_KEY -W $AWS_SECRET_KEY --no-reboot)", " &>> $LOG\n",
+                                "AMI=$(echo $AMI | cut -d ' ' -f 2)", " &>> $LOG\n",
                                 
                                 "echo 'created AMI:'$AMI' from instance ID:'$id", " &>> $LOG\n",
                                 "SignalURL=\"", { "Ref": "AmiWaitHandle" }, "\"\n",
                                 "t0=$(expr $(date +%s) - $STEP)\n",
                                 "t1=$(expr $(date +%s) - $START)\n",
-                                "curl -X PUT -H 'Content-Type:' --data-binary '{\"Status\":\"SUCCESS\",\"Reason\":\"AMI image created.\",\"UniqueId\":\"AmiWait\",\"Data\":\"'$AMI'\"}' $SignalURL", " &>> $LOG\n"
+                                "DATA='{\"Status\":\"SUCCESS\",\"Reason\":\"AMI image created.\",\"UniqueId\":\"AmiWait\",\"Data\":\"'$AMI'\"}'", "\n",
+                                "echo 'Submitting data: '$DATA", " &>> $LOG\n",
+                                "curl -X PUT -H 'Content-Type:' --data-binary $DATA $SignalURL", " &>> $LOG\n"
                             ]
                         ]
                     }
@@ -346,10 +305,6 @@
             "Properties": {}
         },
         "AmiWaitHandle": {
-            "Type": "AWS::CloudFormation::WaitConditionHandle",
-            "Properties": {}
-        },
-        "DoneWaitHandle": {
             "Type": "AWS::CloudFormation::WaitConditionHandle",
             "Properties": {}
         },
@@ -440,14 +395,6 @@
                 "Handle": { "Ref": "AmiWaitHandle" },
                 "Timeout": "60"
             }
-        },
-        "DoneCondition": {
-            "Type": "AWS::CloudFormation::WaitCondition",
-            "DependsOn": "AmiCondition",
-            "Properties": {
-                "Handle": { "Ref": "AmiWaitHandle" },
-                "Timeout": "6000"
-            }
         }
     },
     "Outputs": {
@@ -457,6 +404,15 @@
                 "Fn::GetAtt": [
                     "SetupInstance",
                     "PublicIp"
+                ]
+            }
+        },
+        "TestingAMI": {
+            "Description": "The AMI of the test system.",
+            "Value": {
+                "Fn::GetAtt": [
+                    "AmiCondition",
+                    "Data"
                 ]
             }
         },
