@@ -109,12 +109,7 @@
                                 "su postgres -c \"psql -f /usr/share/postgresql/9.1/contrib/postgis-1.5/postgis.sql template_postgis\"", " &>> $LOG\n",
                                 "su postgres -c \"psql -f /usr/share/postgresql/9.1/contrib/postgis-1.5/spatial_ref_sys.sql template_postgis\"", " &>> $LOG\n",
                                 "echo -e '89a90\n> local   all             all                                     md5' | patch /etc/postgresql/9.1/main/pg_hba.conf", " &>> $LOG\n",
-                                "cp /etc/postgresql/9.1/main/postgresql.conf /etc/postgresql/9.1/main/postgresql.conf.orig", " &>> $LOG\n",
-                                "pgtune -i /etc/postgresql/9.1/main/postgresql.conf.orig -T OLTP -o /etc/postgresql/9.1/main/postgresql.conf", " &>> $LOG\n",
-                                "echo -e '7c7\n< #kernel.shmmax = 33554432\n---\n> kernel.shmmax = 3867107328' | patch /etc/sysctl.d/30-postgresql-shm.conf", " &>> $LOG\n",
-                                "sysctl -p /etc/sysctl.d/30-postgresql-shm.conf", " &>> $LOG\n",
-
-                                "service postgresql restart", " &>> $LOG\n",
+                                "scripts/ami-pgtune.sh", " &>> $LOG\n",
                                 "cd $PMPHOME/DistrictBuilder/sql", " &>> $LOG\n",
                                 "su postgres -c \"psql -f publicmapping_db.sql\"", " &>> $LOG\n",
 
@@ -227,6 +222,11 @@
                                 "DATA='{\"Status\":\"SUCCESS\",\"Reason\":\"AMI image created.\",\"UniqueId\":\"AmiWait\",\"Data\":\"'$AMI'\"}'", "\n",
                                 "echo \"Submitting data: $DATA\"", " &>> $LOG\n",
                                 "curl -X PUT -H 'Content-Type:' --data-binary \"$DATA\" $SignalURL", " &>> $LOG\n"
+								
+								"echo \"Configuring instance initializations...\"", " &>> $LOG\n",
+								"cloud-init-per instance $PMPHOME/DistrictBuilder/scripts/ami-pgtune.sh\n",
+								"echo \"Sanitizing...\"", " &>> $LOG\n",
+								"rm /var/lib/cloud/instance/scripts/\n"
                             ]
                         ]
                     }
