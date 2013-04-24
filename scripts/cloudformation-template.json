@@ -109,7 +109,7 @@
                                 "su postgres -c \"psql -f /usr/share/postgresql/9.1/contrib/postgis-1.5/postgis.sql template_postgis\"", " &>> $LOG\n",
                                 "su postgres -c \"psql -f /usr/share/postgresql/9.1/contrib/postgis-1.5/spatial_ref_sys.sql template_postgis\"", " &>> $LOG\n",
                                 "echo -e '89a90\n> local   all             all                                     md5' | patch /etc/postgresql/9.1/main/pg_hba.conf", " &>> $LOG\n",
-                                "scripts/ami-pgtune.sh", " &>> $LOG\n",
+                                "bash scripts/ami-pgtune.sh", " &>> $LOG\n",
                                 "cd $PMPHOME/DistrictBuilder/sql", " &>> $LOG\n",
                                 "su postgres -c \"psql -f publicmapping_db.sql\"", " &>> $LOG\n",
 
@@ -224,7 +224,7 @@
                                 "curl -X PUT -H 'Content-Type:' --data-binary \"$DATA\" $SignalURL", " &>> $LOG\n",
 								
 								"echo \"Configuring instance initializations...\"", " &>> $LOG\n",
-								"cloud-init-per instance $PMPHOME/DistrictBuilder/scripts/ami-pgtune.sh\n",
+								"cloud-init-per instance bash $PMPHOME/DistrictBuilder/scripts/ami-pgtune.sh\n",
 								"echo \"Sanitizing...\"", " &>> $LOG\n",
 								"rm /var/lib/cloud/instance/scripts/\n"
                             ]
