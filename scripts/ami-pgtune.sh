@@ -5,6 +5,7 @@ if [ $(whoami) != 'root' ]; then
 	exit 1
 fi
 
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 PGCONF=/etc/postgresql/9.1/main/postgresql.conf
 PGSHM=/etc/sysctl.d/30-postgresql-shm.conf
 
@@ -18,7 +19,7 @@ cp $PGCONF $PGCONF-$STAMP
 pgtune -i $PGCONF-$STAMP -T OLTP -o $PGCONF
 
 # Get an approximation of the total memory from the tuned config
-MEM=$(awk -f ami-pgtune.awk $PGCONF)
+MEM=$(awk -f $DIR/ami-pgtune.awk $PGCONF)
 
 # Make a backup of the postgresql kernel shared memory config for now
 cp $PGSHM $PGSHM-$STAMP
