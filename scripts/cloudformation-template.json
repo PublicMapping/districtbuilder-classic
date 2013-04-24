@@ -222,7 +222,7 @@
                                 "curl -X PUT -H 'Content-Type:' --data-binary \"$DATA\" $SignalURL", " &>> $LOG\n",
                                 
                                 "echo \"Configuring instance initializations...\"", " &>> $LOG\n",
-                                "cloud-init-per instance $PMPHOME/DistrictBuilder/scripts/ami-pgtune.sh\n",
+                                "cloud-init-per instance $PMPHOME/DistrictBuilder/scripts/ami-pgtune.sh\n"
                             ]
                         ]
                     }
