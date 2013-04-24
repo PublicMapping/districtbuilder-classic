@@ -1,8 +1,8 @@
 #!/bin/bash
 
 if [ $(whoami) != 'root' ]; then 
-	echo "This script may only be run as root."
-	exit 1
+    echo "This script may only be run as root."
+    exit 1
 fi
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
