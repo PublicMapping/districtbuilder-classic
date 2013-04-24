@@ -221,7 +221,7 @@
                                 "t1=$(expr $(date +%s) - $START)\n",
                                 "DATA='{\"Status\":\"SUCCESS\",\"Reason\":\"AMI image created.\",\"UniqueId\":\"AmiWait\",\"Data\":\"'$AMI'\"}'", "\n",
                                 "echo \"Submitting data: $DATA\"", " &>> $LOG\n",
-                                "curl -X PUT -H 'Content-Type:' --data-binary \"$DATA\" $SignalURL", " &>> $LOG\n"
+                                "curl -X PUT -H 'Content-Type:' --data-binary \"$DATA\" $SignalURL", " &>> $LOG\n",
 								
 								"echo \"Configuring instance initializations...\"", " &>> $LOG\n",
 								"cloud-init-per instance $PMPHOME/DistrictBuilder/scripts/ami-pgtune.sh\n",
