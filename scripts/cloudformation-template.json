@@ -210,9 +210,10 @@
                                 "curl -X PUT -H 'Content-Type:' --data-binary '{\"Status\":\"SUCCESS\",\"Reason\":\"Initialization complete.\",\"UniqueId\":\"AppWait\",\"Data\":\"This step: '$t0'; cumulative: '$t1'\"}' $SignalURL", " &>> $LOG\n",
 
                                 "echo \"Configuring instance initializations...\"", " &>> $LOG\n",
-                                "cloud-init-per instance $PMPHOME/DistrictBuilder/scripts/ami-pgtune.sh\n",
-                                "cloud-init-per always $PMPHOME/DistrictBuilder/scripts/site-dns.sh\n",                                
-                                "$PMPHOME/DistrictBuilder/scripts/site-dns.sh\n",
+                                "cp $PMPHOME/DistrictBuilder/scripts/ami-pgtune.sh /var/lib/cloud/scripts/per-instance/\n",
+                                "cp $PMPHOME/DistrictBuilder/scripts/site-dns.sh /var/lib/cloud/scripts/per-instance/\n",
+                                "$PMPHOME/DistrictBuilder/scripts/site-dns.sh", " &>> $LOG\n",
+                                "rm /var/lib/cloud/instance/scripts/*\n",
                                 
                                 "id=$(ec2metadata | grep ^instance-id | cut -d ' ' -f 2)\n",
                                 "AMI=$(ec2-create-image $id --region ", { "Ref" : "AWS::Region" }, " -n db-test-$rev -O ", { "Ref": "AWSAccessKey" }, " -W ", { "Ref": "AWSSecretKey" }, " --no-reboot)", " &>> $LOG\n",
