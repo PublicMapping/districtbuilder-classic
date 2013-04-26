@@ -107,7 +107,7 @@
                                 "su postgres -c \"psql -f /usr/share/postgresql/9.1/contrib/postgis-1.5/postgis.sql template_postgis\"", " &>> $LOG\n",
                                 "su postgres -c \"psql -f /usr/share/postgresql/9.1/contrib/postgis-1.5/spatial_ref_sys.sql template_postgis\"", " &>> $LOG\n",
                                 "echo -e '89a90\n> local   all             all                                     md5' | patch /etc/postgresql/9.1/main/pg_hba.conf", " &>> $LOG\n",
-                                "scripts/ami-pgtune.sh", " &>> $LOG\n",
+                                "cloud-init-once-per instance ami-pgtune $PMPHOME/DistrictBuilder/scripts/ami-pgtune.sh", " &>> $LOG\n",
                                 "cd $PMPHOME/DistrictBuilder/sql", " &>> $LOG\n",
                                 "su postgres -c \"psql -f publicmapping_db.sql\"", " &>> $LOG\n",
 
@@ -210,21 +210,17 @@
                                 "curl -X PUT -H 'Content-Type:' --data-binary '{\"Status\":\"SUCCESS\",\"Reason\":\"Initialization complete.\",\"UniqueId\":\"AppWait\",\"Data\":\"This step: '$t0'; cumulative: '$t1'\"}' $SignalURL", " &>> $LOG\n",
 
                                 "echo \"Configuring instance initializations...\"", " &>> $LOG\n",
-                                "cp $PMPHOME/DistrictBuilder/scripts/ami-pgtune.sh /var/lib/cloud/scripts/per-instance/\n",
-                                "cp $PMPHOME/DistrictBuilder/scripts/site-dns.sh /var/lib/cloud/scripts/per-instance/\n",
-                                "$PMPHOME/DistrictBuilder/scripts/site-dns.sh", " &>> $LOG\n",
+                                "cloud-init-once-per instance site-dns $PMPHOME/DistrictBuilder/scripts/site-dns.sh", " &>> $LOG\n",
                                 "rm /var/lib/cloud/instance/scripts/*\n",
                                 
                                 "id=$(ec2metadata | grep ^instance-id | cut -d ' ' -f 2)\n",
-                                "AMI=$(ec2-create-image $id --region ", { "Ref" : "AWS::Region" }, " -n db-test-$rev -O ", { "Ref": "AWSAccessKey" }, " -W ", { "Ref": "AWSSecretKey" }, " --no-reboot)", " &>> $LOG\n",
+                                "AMI=$(ec2-create-image $id --region ", { "Ref" : "AWS::Region" }, " -n db-test-$rev -O ", { "Ref": "AWSAccessKey" }, " -W ", { "Ref": "AWSSecretKey" }, ")", " &>> $LOG\n",
                                 "AMI=$(echo $AMI | cut -d ' ' -f 2)", " &>> $LOG\n",
                                 
-                                "echo 'created AMI:'$AMI' from instance ID:'$id", " &>> $LOG\n",
                                 "SignalURL=\"", { "Ref": "AmiWaitHandle" }, "\"\n",
                                 "t0=$(expr $(date +%s) - $STEP)\n",
                                 "t1=$(expr $(date +%s) - $START)\n",
                                 "DATA='{\"Status\":\"SUCCESS\",\"Reason\":\"AMI image created.\",\"UniqueId\":\"AmiWait\",\"Data\":\"'$AMI'\"}'", "\n",
-                                "echo \"Submitting data: $DATA\"", " &>> $LOG\n",
                                 "curl -X PUT -H 'Content-Type:' --data-binary \"$DATA\" $SignalURL", " &>> $LOG\n"
                             ]
                         ]
