@@ -107,7 +107,7 @@
                                 "su postgres -c \"psql -f /usr/share/postgresql/9.1/contrib/postgis-1.5/postgis.sql template_postgis\"", " &>> $LOG\n",
                                 "su postgres -c \"psql -f /usr/share/postgresql/9.1/contrib/postgis-1.5/spatial_ref_sys.sql template_postgis\"", " &>> $LOG\n",
                                 "echo -e '89a90\n> local   all             all                                     md5' | patch /etc/postgresql/9.1/main/pg_hba.conf", " &>> $LOG\n",
-                                "cloud-init-once-per instance ami-pgtune $PMPHOME/DistrictBuilder/scripts/ami-pgtune.sh", " &>> $LOG\n",
+                                "cloud-init-per instance ami-pgtune $PMPHOME/DistrictBuilder/scripts/ami-pgtune.sh", " &>> $LOG\n",
                                 "cd $PMPHOME/DistrictBuilder/sql", " &>> $LOG\n",
                                 "su postgres -c \"psql -f publicmapping_db.sql\"", " &>> $LOG\n",
 
@@ -210,7 +210,7 @@
                                 "curl -X PUT -H 'Content-Type:' --data-binary '{\"Status\":\"SUCCESS\",\"Reason\":\"Initialization complete.\",\"UniqueId\":\"AppWait\",\"Data\":\"This step: '$t0'; cumulative: '$t1'\"}' $SignalURL", " &>> $LOG\n",
 
                                 "echo \"Configuring instance initializations...\"", " &>> $LOG\n",
-                                "cloud-init-once-per instance site-dns $PMPHOME/DistrictBuilder/scripts/site-dns.sh", " &>> $LOG\n",
+                                "cloud-init-per instance site-dns $PMPHOME/DistrictBuilder/scripts/site-dns.sh", " &>> $LOG\n",
                                 "rm /var/lib/cloud/instance/scripts/*\n",
                                 
                                 "id=$(ec2metadata | grep ^instance-id | cut -d ' ' -f 2)\n",
