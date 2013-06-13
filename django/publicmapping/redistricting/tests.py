@@ -2817,7 +2817,7 @@ class CalculatorTestCase(BaseTestCase):
         calc = ConvexHull()
         calc.compute(district=district1)
         
-        self.assertEqual(0.012345679012345678, calc.result['value'])
+        self.assertAlmostEqual(0.012345679012345678, calc.result['value'], places=9)
 
     def test_convexhull_l2(self):
         """
@@ -2833,7 +2833,7 @@ class CalculatorTestCase(BaseTestCase):
         calc = ConvexHull()
         calc.compute(district=district1)
         
-        self.assertEqual(0.1111111111111111, calc.result['value'])
+        self.assertAlmostEqual(0.1111111111111111, calc.result['value'], places=9)
 
     def test_convexhull_row(self):
         """
@@ -2851,7 +2851,7 @@ class CalculatorTestCase(BaseTestCase):
         
         # 9 contiguous geounits at the middle level have the same area as one
         # geounit at the biggest level
-        self.assertEqual(0.1111111111111111, calc.result['value'])
+        self.assertAlmostEqual(0.1111111111111111, calc.result['value'], places=9)
 
     def test_convexhull_block(self):
         """
@@ -2869,7 +2869,7 @@ class CalculatorTestCase(BaseTestCase):
         
         # 9 contiguous geounits at the middle level have the same area as one
         # geounit at the biggest level
-        self.assertEqual(0.1111111111111111, calc.result['value'])
+        self.assertAlmostEqual(0.1111111111111111, calc.result['value'], places=9)
 
     def test_convexhull_column(self):
         """
@@ -2889,7 +2889,7 @@ class CalculatorTestCase(BaseTestCase):
         
         # 9 contiguous geounits at the middle level have the same area as one
         # geounit at the biggest level
-        self.assertEqual(0.1111111111111111, calc.result['value'])
+        self.assertAlmostEqual(0.1111111111111111, calc.result['value'], places=9)
 
     def test_convexhull_sparse(self):
         """
@@ -2924,7 +2924,7 @@ class CalculatorTestCase(BaseTestCase):
         
         # the average convex hull that covers this plan is the same as the 
         # district convex hull
-        self.assertEqual(0.1111111111111111, calc.result['value'])
+        self.assertAlmostEqual(0.1111111111111111, calc.result['value'], places=9)
 
     def test_convexhull_avg2(self):
         """
@@ -2946,7 +2946,7 @@ class CalculatorTestCase(BaseTestCase):
         
         # the average convex hull that covers this plan is the same as the 
         # district convex hull (both of them!)
-        self.assertEqual(0.1111111111111111, calc.result['value'])
+        self.assertAlmostEqual(0.1111111111111111, calc.result['value'], places=9)
 
 
 
