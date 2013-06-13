@@ -509,7 +509,7 @@ function mapinit(srs,maxExtent) {
         }
 
         var urlSuffix = '';
-        if (referenceLayerId.startsWith('plan')) {
+        if (db_util.startsWith(referenceLayerId, 'plan')) {
             urlSuffix = 'plan/' + referenceLayerId.substring('plan.'.length);
         } else {
             urlSuffix = 'geolevel/' + referenceLayerId.substring('geolevel.'.length);
@@ -2376,7 +2376,7 @@ function mapinit(srs,maxExtent) {
             }
             vislayers = olmap.getLayersBy('visibility',true);
             for (var i = 0; i < vislayers.length; i++ ) {
-                if (vislayers[i].name.startsWith(NAMESPACE)) {
+                if (db_util.startsWith(vislayers[i].name, NAMESPACE)) {
                     vislayers = vislayers[i].name;
                     break;
                 }

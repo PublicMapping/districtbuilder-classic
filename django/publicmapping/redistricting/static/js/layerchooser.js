@@ -109,7 +109,7 @@ layerchooser = function(options) {
 
             // See if we need to display the labels checkbox. This should only
             // be displayed if the reference layer is a plan.
-            _options.referenceLayerLabelsWrapper.toggle(selector.val().startsWith("plan"))
+            _options.referenceLayerLabelsWrapper.toggle(db_util.startsWith(selector.val(), "plan"))
         });
 
         // Trigger event when the show reference layer labels checkbox changes
