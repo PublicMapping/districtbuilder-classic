@@ -3036,8 +3036,8 @@ class ScoreRenderTestCase(BaseTestCase):
             markup = panel.render([self.plan,self.plan2])
             expected = 'testPlan:<span>9</span>' + \
                 'testPlan2:<span>9</span>' + \
-                'testPlan:<span>18.18%</span>' + \
-                'testPlan2:<span>10.64%</span>'
+                'testPlan:18.18%' + \
+                'testPlan2:10.64%'
                 
             self.assertEqual(expected, markup, 'The markup was incorrect. (e:"%s", a:"%s")' % (expected, markup))
 
@@ -3108,8 +3108,8 @@ class ScoreRenderTestCase(BaseTestCase):
 
         markup = display.render(plans)
 
-        expected = 'testPlan2:<span>10.64%</span>' + \
-            'testPlan:<span>18.18%</span>' + \
+        expected = 'testPlan2:10.64%' + \
+            'testPlan:18.18%' + \
             'testPlan:<span>9</span>' + \
             'testPlan2:<span>9</span>'
         self.assertEqual(expected, markup, 'The markup was incorrect. (e:"%s", a:"%s")' % (expected, markup))
@@ -3173,7 +3173,7 @@ class ScoreRenderTestCase(BaseTestCase):
         components = [(panel, [(function, arg1, arg2)])]
         district_result = display.render([self.district1], components=components)
         expected = 'District 1:<span>5</span>'
-        self.assertEqual(expected, district_result, 'Didn\'t get expected result when overriding district\'s display')
+        self.assertEqual(expected, district_result, 'Didn\'t get expected result when overriding district\'s display (e:"%s", a:"%s")' % (expected, district_result))
 
         os.remove(tplfile)
 
@@ -3202,8 +3202,8 @@ class ScoreRenderTestCase(BaseTestCase):
 
         # Check the result
         plan_result = display.render(self.plan, components=components)
-        expected = "testPlan:['<span>24</span>']"
-        self.assertEqual(expected, plan_result, 'Didn\'t get expected result when overriding plan\'s display')
+        expected = "testPlan:[u'<span>24</span>']"
+        self.assertEqual(expected, plan_result, 'Didn\'t get expected result when overriding plan\'s display (e: "%s", a:"%s")' % (expected, plan_result))
 
         os.remove(tplfile)
 
