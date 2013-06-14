@@ -127,7 +127,7 @@ chooseplan = function(options) {
      */
     var selectPlan = function () {
         // Notify the reaggregator of reaggregation button clicks
-        if (db_util.startsWith($('#start_mapping .ui-button-text').html(), 'Reaggregate')) {
+        if (DB.util.startsWith($('#start_mapping .ui-button-text').html(), 'Reaggregate')) {
             _reaggregator.reaggregateClicked(_selectedPlanId);
             return;
         }
@@ -200,7 +200,7 @@ chooseplan = function(options) {
                         // if the content is text/html, redirect to '/',
                         // since we probably just got logged out from 
                         // another session
-                        if (db_util.startsWith(contentType, 'text/html')) {
+                        if (DB.util.startsWith(contentType, 'text/html')) {
                             window.location.href='/?msg=logoff';
                         }
                     },
@@ -483,7 +483,7 @@ chooseplan = function(options) {
 
         // workaround for problem with jqGrid custom formatter with boolean (is_shared)
         var shared = $('#is_shared');
-        if (db_util.contains(shared.val(), "unshared")) {
+        if (DB.util.contains(shared.val(), "unshared")) {
             shared.val(gettext('No'));
         } else {
             shared.val(gettext('Yes'));
@@ -659,7 +659,7 @@ chooseplan = function(options) {
         _cancelButton.button().click( function() {
             _table.jqGrid('GridToForm', _selectedPlanId, '#plan_form'); 
             var shared = $('#is_shared');
-            if (db_util.contains(shared.val(), "unshared")) {
+            if (DB.util.contains(shared.val(), "unshared")) {
                 shared.val(gettext('No'));
             } else {
                 shared.val(gettext('Yes'));

@@ -126,7 +126,7 @@ splitsreport = function(options) {
             }
       
             // Only add the option if it hasn't already been added, and is a plan
-            if (db_util.startsWith(rid, 'plan') && (_options.availableLayers.find('input[id=' + rid.replace('.', '\\.') + ']').length === 0)) {
+            if (DB.util.startsWith(rid, 'plan') && (_options.availableLayers.find('input[id=' + rid.replace('.', '\\.') + ']').length === 0)) {
                 // Clear out the old plans first
                 _options.availableLayers.find('input[value*=plan]').each( function() { $(this).parent().remove(); });
                 
