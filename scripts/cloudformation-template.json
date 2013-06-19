@@ -191,6 +191,9 @@
                                 "t1=$(expr $(date +%s) - $START)\n",
                                 "curl -X PUT -H 'Content-Type:' --data-binary '{\"Status\":\"SUCCESS\",\"Reason\":\"Templates and static files configuration complete.\",\"UniqueId\":\"TplWait\",\"Data\":\"This step: '$t0'; cumulative: '$t1'\"}' $SignalURL", " &>> $LOG\n",
                                 "STEP=$(date +%s)\n",
+
+                                "cd $PMPHOME/DistrictBuilder/django/publicmapping", " &>> $LOG\n",
+                                "./manage.py makelanguagefiles", " &>> $LOG\n",
                                 
                                 "cp $PMPHOME/DistrictBuilder/django/publicmapping.apache /etc/apache2/sites-available/publicmapping", " &>> $LOG\n",
                                 "a2ensite publicmapping", " &>> $LOG\n",
