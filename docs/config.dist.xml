@@ -190,6 +190,15 @@
                 <LegislativeBody ref="senate"/>
             </ScoreFunction>
             
+            <!-- A custom calculator to calculate the convex hull of a district -->
+            <ScoreFunction id="district_convexhull" type="district"
+                calculator="publicmapping.redistricting.calculators.ConvexHull"
+                label="Convex Hull" user_selectable="true">
+                <LegislativeBody ref="congress"/>
+                <LegislativeBody ref="house"/>
+                <LegislativeBody ref="senate"/>
+            </ScoreFunction>
+            
             <!-- A custom calculator to do contiguity, and is boolean. -->
             <ScoreFunction id="district_contiguous" type="district"
                 calculator="publicmapping.redistricting.calculators.Contiguity"
