@@ -212,6 +212,8 @@
                                 "echo \"Configuring instance initializations...\"", " &>> $LOG\n",
                                 "cloud-init-per instance site-dns $PMPHOME/DistrictBuilder/scripts/site-dns.sh", " &>> $LOG\n",
                                 "rm /var/lib/cloud/instance/scripts/*\n",
+				"cp /etc/postgresql/9.1/main/postgresql.conf /etc/postgresql/9.1/main/postgresql.xlarge.conf\n",
+				"cp /etc/postgresql/9.1/main/postgresql.conf-* /etc/postgresql/9.1/main/postgresql.conf\n",
                                 
                                 "id=$(ec2metadata | grep ^instance-id | cut -d ' ' -f 2)\n",
                                 "AMI=$(ec2-create-image $id --region ", { "Ref" : "AWS::Region" }, " -n db-test-$rev -O ", { "Ref": "AWSAccessKey" }, " -W ", { "Ref": "AWSSecretKey" }, ")", " &>> $LOG\n",
