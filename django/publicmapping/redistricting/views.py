@@ -731,8 +731,12 @@ def printplan(request, planid):
         t = loader.get_template('printplan.html')
         page = t.render(DjangoContext(cfg))
         result = StringIO.StringIO()
-        
-        CreatePDF( page, result, show_error_as_pdf=True, encoding='UTF-8')
+
+        # setting encoding='UTF-8' causes an exception. removing this for now,
+        # as allowing the method to set an encoding itself fixes the problem.
+        # we may need to find an alternate strategy if it finds encodings that
+        # it isn't able to decipher.
+        CreatePDF(page, result, show_error_as_pdf=True)
 
         response = HttpResponse(result.getvalue(), mimetype='application/pdf')
         response['Content-Disposition'] = 'attachment; filename=plan.pdf'
