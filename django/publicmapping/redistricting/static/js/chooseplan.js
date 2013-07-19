@@ -539,7 +539,7 @@ chooseplan = function(options) {
             difile = districtfile({
                 target: $('#chooserFileDownloadTarget'),
                 planId: id,
-                type: 'shape'
+                type: 'index'
             });
             row.data('difile', difile);
         }
