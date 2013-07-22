@@ -2214,20 +2214,20 @@ class SplitCounter(CalculatorBase):
 
         return render
 
-class ConvexHull(CalculatorBase):
+class ConvexHullRatio(CalculatorBase):
     """
-    Calculate the convex hull of a district.
+    Calculate the ratio of the area of a district to the area of its convex hull.
     
-    This calculator will either calculate the area of a single district's convex
-    hull, or the average area of all districts convex hulls.
+    This calculator will either calculate a single district's convex hull ratio,
+    or the average convex hull ratio of all districts.
     """
     def compute(self, **kwargs):
         """
-        Calculate the convex hull area of a district or a plan.
+        Calculate the convex hull ratio of a district or a plan.
 
-        @keyword district: A L{District} whose convex hull should be 
+        @keyword district: A L{District} whose convex hull ratio should be 
             computed.
-        @keyword plan: A L{Plan} whose district convex hulls should be 
+        @keyword plan: A L{Plan} whose district convex hull ratios should be 
             averaged.
         @keyword version: Optional. The version of the plan, defaults to 
             the most recent version.
@@ -2247,19 +2247,24 @@ class ConvexHull(CalculatorBase):
             return
             
         num = 0
-        area = 0.0
+        ratios = 0.0
         for district in districts:
-            if district.district_id == 0:
+            if district.geom.empty or district.geom.length == 0 or district.district_id == 0:
                 continue
 
-            if district.geom.empty:
-                continue
-
-            if district.geom.length == 0:
-                continue
-        
-            area += district.geom.convex_hull.area
+            ratios += district.geom.area / district.geom.convex_hull.area
             num += 1
 
-        self.result = { 'value': (area / num) if num > 0 else 0 }
+        self.result = { 'value': (ratios / num) if num > 0 else 0 }
 
+    def html(self):
+        """
+        Generate an HTML representation of the convex hull ratio. This
+        is represented as a percentage or "n/a"
+
+        @return: A number formatted similar to "1.00%", or "n/a"
+        """
+        if not self.result is None and 'value' in self.result:
+            return self.percentage()
+        else:
+            return _('n/a')

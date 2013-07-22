@@ -2814,10 +2814,10 @@ class CalculatorTestCase(BaseTestCase):
         self.plan.add_geounits(self.district1.district_id, dist1ids, geolevel.id, self.plan.version)
         district1 = self.plan.district_set.get(district_id=self.district1.district_id,version=self.plan.version)
 
-        calc = ConvexHull()
+        calc = ConvexHullRatio()
         calc.compute(district=district1)
         
-        self.assertAlmostEqual(0.012345679012345678, calc.result['value'], places=9)
+        self.assertAlmostEqual(district1.geom.area / 0.012345679012345678, calc.result['value'], places=9)
 
     def test_convexhull_l2(self):
         """
@@ -2830,10 +2830,10 @@ class CalculatorTestCase(BaseTestCase):
         self.plan.add_geounits(self.district1.district_id, dist1ids, geolevel.id, self.plan.version)
         district1 = self.plan.district_set.get(district_id=self.district1.district_id,version=self.plan.version)
 
-        calc = ConvexHull()
+        calc = ConvexHullRatio()
         calc.compute(district=district1)
         
-        self.assertAlmostEqual(0.1111111111111111, calc.result['value'], places=9)
+        self.assertAlmostEqual(district1.geom.area / 0.1111111111111111, calc.result['value'], places=9)
 
     def test_convexhull_row(self):
         """
@@ -2846,12 +2846,12 @@ class CalculatorTestCase(BaseTestCase):
         self.plan.add_geounits(self.district1.district_id, dist1ids, self.geolevel.id, self.plan.version)
         district1 = self.plan.district_set.get(district_id=self.district1.district_id,version=self.plan.version)
 
-        calc = ConvexHull()
+        calc = ConvexHullRatio()
         calc.compute(district=district1)
         
         # 9 contiguous geounits at the middle level have the same area as one
         # geounit at the biggest level
-        self.assertAlmostEqual(0.1111111111111111, calc.result['value'], places=9)
+        self.assertAlmostEqual(district1.geom.area / 0.1111111111111111, calc.result['value'], places=9)
 
     def test_convexhull_block(self):
         """
@@ -2864,12 +2864,12 @@ class CalculatorTestCase(BaseTestCase):
         self.plan.add_geounits(self.district1.district_id, dist1ids, self.geolevel.id, self.plan.version)
         district1 = self.plan.district_set.get(district_id=self.district1.district_id,version=self.plan.version)
 
-        calc = ConvexHull()
+        calc = ConvexHullRatio()
         calc.compute(district=district1)
         
         # 9 contiguous geounits at the middle level have the same area as one
         # geounit at the biggest level
-        self.assertAlmostEqual(0.1111111111111111, calc.result['value'], places=9)
+        self.assertAlmostEqual(district1.geom.area / 0.1111111111111111, calc.result['value'], places=9)
 
     def test_convexhull_column(self):
         """
@@ -2884,12 +2884,12 @@ class CalculatorTestCase(BaseTestCase):
         self.plan.add_geounits(self.district1.district_id, dist1ids, self.geolevel.id, self.plan.version)
         district1 = self.plan.district_set.get(district_id=self.district1.district_id,version=self.plan.version)
 
-        calc = ConvexHull()
+        calc = ConvexHullRatio()
         calc.compute(district=district1)
         
         # 9 contiguous geounits at the middle level have the same area as one
         # geounit at the biggest level
-        self.assertAlmostEqual(0.1111111111111111, calc.result['value'], places=9)
+        self.assertAlmostEqual(district1.geom.area / 0.1111111111111111, calc.result['value'], places=9)
 
     def test_convexhull_sparse(self):
         """
@@ -2902,12 +2902,12 @@ class CalculatorTestCase(BaseTestCase):
         self.plan.add_geounits(self.district1.district_id, dist1ids, self.geolevel.id, self.plan.version)
         district1 = self.plan.district_set.get(district_id=self.district1.district_id,version=self.plan.version)
 
-        calc = ConvexHull()
+        calc = ConvexHullRatio()
         calc.compute(district=district1)
         
         # the convex hull that covers this sparse district is bigger than the 
         # sum of the areas
-        self.assertEqual(1, calc.result['value'])
+        self.assertEqual(district1.geom.area / 1, calc.result['value'])
 
     def test_convexhull_avg(self):
         """
@@ -2918,13 +2918,14 @@ class CalculatorTestCase(BaseTestCase):
         dist1ids = map(lambda x: str(x.id), dist1ids)
         
         self.plan.add_geounits(self.district1.district_id, dist1ids, self.geolevel.id, self.plan.version)
+        district1 = self.plan.district_set.get(district_id=self.district1.district_id,version=self.plan.version)        
 
-        calc = ConvexHull()
+        calc = ConvexHullRatio()
         calc.compute(plan=self.plan)
         
         # the average convex hull that covers this plan is the same as the 
         # district convex hull
-        self.assertAlmostEqual(0.1111111111111111, calc.result['value'], places=9)
+        self.assertAlmostEqual(district1.geom.area / 0.1111111111111111, calc.result['value'], places=9)
 
     def test_convexhull_avg2(self):
         """
@@ -2935,18 +2936,19 @@ class CalculatorTestCase(BaseTestCase):
         dist1ids = map(lambda x: str(x.id), dist1ids)
         
         self.plan.add_geounits(self.district1.district_id, dist1ids, self.geolevel.id, self.plan.version)
+        district1 = self.plan.district_set.get(district_id=self.district1.district_id,version=self.plan.version)
         
         dist2ids = distids[9:18]
         dist2ids = map(lambda x: str(x.id), dist2ids)
         
         self.plan.add_geounits(self.district2.district_id, dist2ids, self.geolevel.id, self.plan.version)
 
-        calc = ConvexHull()
+        calc = ConvexHullRatio()
         calc.compute(plan=self.plan)
         
         # the average convex hull that covers this plan is the same as the 
         # district convex hull (both of them!)
-        self.assertAlmostEqual(0.1111111111111111, calc.result['value'], places=9)
+        self.assertAlmostEqual(district1.geom.area / 0.1111111111111111, calc.result['value'], places=9)
 
 
 
