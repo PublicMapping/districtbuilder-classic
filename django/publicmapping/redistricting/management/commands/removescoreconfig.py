@@ -28,7 +28,6 @@ from datetime import datetime
 from django.core.management.base import BaseCommand
 from optparse import make_option
 from redistricting.models import *
-#from redistricting.utils import *
 
 class Command(BaseCommand):
     """
