@@ -190,10 +190,10 @@
                 <LegislativeBody ref="senate"/>
             </ScoreFunction>
             
-            <!-- A custom calculator to calculate the convex hull of a district -->
-            <ScoreFunction id="district_convexhull" type="district"
-                calculator="publicmapping.redistricting.calculators.ConvexHull"
-                label="Convex Hull" user_selectable="true">
+            <!-- A custom calculator to calculate the convex hull ratio of a district -->
+            <ScoreFunction id="district_convexhullratio" type="district"
+                calculator="publicmapping.redistricting.calculators.ConvexHullRatio"
+                label="Convex Hull Ratio" user_selectable="true">
                 <LegislativeBody ref="congress"/>
                 <LegislativeBody ref="house"/>
                 <LegislativeBody ref="senate"/>
