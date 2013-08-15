@@ -281,6 +281,22 @@
                         </xs:sequence>
                     </xs:complexType>
                 </xs:element>
+                <xs:element name="Adjacencies">
+                  <xs:complexType>
+                    <xs:sequence>
+                      <xs:element name="Adjacency">
+                        <xs:complexType>
+                          <xs:simpleContent>
+                            <xs:extension base="xs:string">
+                              <xs:attribute name="path" type="xs:string" use="required"/>
+                              <xs:attribute name="regionref" type="xs:IDREF" />
+                            </xs:extension>
+                          </xs:simpleContent>
+                        </xs:complexType>
+                      </xs:element>
+                    </xs:sequence>
+                  </xs:complexType>
+                </xs:element>
                 <xs:element name="GeoLevels">
                     <xs:annotation>
                         <xs:documentation>
@@ -490,6 +506,14 @@
         <xs:keyref name="TemplateLegislativeBody" refer="DistrictBuilderLegislativeBodyKey">
             <xs:selector xpath="Templates/Template/LegislativeBody" />
             <xs:field xpath="@ref" />
+        </xs:keyref>
+        <xs:key name="AdjacencyRegionKey">
+            <xs:selector xpath="Regions/Region" />
+            <xs:field xpath="@id" />
+        </xs:key>
+        <xs:keyref name="AdjacencyRegion" refer="AdjacencyRegionKey">
+            <xs:selector xpath="Adjacencies/Adjacency" />
+            <xs:field xpath="@regionref"/>
         </xs:keyref>
         <xs:keyref name="ScoreFunctionScoreFunction" refer="DistrictBuilderScoreFunctionKey">
             <xs:selector xpath="Scoring/ScoreFunctions/ScoreFunction/ScoreArgument" />
