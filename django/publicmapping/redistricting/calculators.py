@@ -38,6 +38,13 @@ from decimal import Decimal
 from copy import copy
 import random
 
+from django.db.models import Q
+import operator
+import itertools
+import redis
+from django.conf import settings
+redis_settings = settings.KEY_VALUE_STORE
+
 class CalculatorBase(object):
     """
     The base class for all calculators. CalculatorBase defines the result 
@@ -2268,3 +2275,100 @@ class ConvexHullRatio(CalculatorBase):
             return self.percentage()
         else:
             return _('n/a')
+
+
+class Adjacency(CalculatorBase):
+    """
+    Calculates travel time, costs, etc. between sections in a district, normalizes by region
+    travel time.
+    """
+
+    def _district_calculator(self, district):
+        geounit_ids = [geo[1] for geo in district.get_base_geounits()]
+        geounit_ids.sort()
+        geounit_id_combos = itertools.combinations(geounit_ids, 2)
+        redis_query = []
+        for ids in geounit_id_combos:
+            redis_query.append('adj:geounit1:%s:geounit2:%s' %(ids[0], ids[1]))
+        redis_results = self.r.mget(redis_query)
+        costs = [float(c) for c in redis_results if c != None]
+        return sum(costs)/len(costs)
+
+    def compute(self, **kwargs):
+        """
+        Calculate the average costs for a district or the overall score for a plan.
+
+        The score for a district is the average cost between all sections within a district.
+
+        The score for a plan is a normalized sum of costs for districts within the plan.
+
+        @keyword district: A L{District} whose cost ratio should be calculated
+
+        @keyword plan: A L{Plan} whose total cost ratio should be calculated
+
+        @keyword version: Optional. The version of the plan, defaults to 
+        the most recent version.
+
+        @keyword host: Optional. The host to connect to redis, defaults to value in settings.
+
+        @keyword port: Optional. The port to connect to redis, defaults to value in settings.
+
+        @keyword redis_db: Optional. The redis database number to connect to, defaults to value in settings.
+        """
+        # Get Redis Connection - might as well re-use it
+        redis_host = kwargs.get('host', redis_settings['HOST'])
+        redis_port = int(kwargs.get('port', redis_settings['PORT']))
+        redis_db = int(kwargs.get('db', redis_settings['DB']))
+        self.r = redis.StrictRedis(host=redis_host, port=redis_port, db=redis_db)
+        
+        districts = []
+        if 'district' in kwargs:
+            districts = [kwargs['district']]
+            if districts[0].geom.empty:
+                return
+
+        elif 'plan' in kwargs:
+            plan = kwargs['plan']
+            version = kwargs['version'] if 'version' in kwargs else plan.version
+            districts = plan.get_districts_at_version(version)
+
+        score = 0
+
+        if len(districts) == 1:
+            score = self._district_calculator(districts[0])
+
+        elif len(districts) > 1:
+            district_scores = []
+            for district in districts:
+                if district.district_id == 0:
+                    continue
+                district_score = self._district_calculator(district)
+                district_scores.append(district_score)
+
+            region = districts[0].plan.legislative_body.region.name
+
+            region_key = 'adj:region:%s' % region
+            region_score = float(self.r.get(region_key))
+            num_districts = len(district_scores)
+
+            for district in district_scores:
+                numerator = (district - region_score/num_districts)**2
+                denominator = (region_score/num_districts)**2
+                score += numerator/denominator
+
+        self.result = { 'value': score}
+
+    def html(self):
+        """
+        Generates an HTML representation of adjacency scores. This is represented as a decimal
+        number.
+
+        @return: A number formatted similar to "10.01"
+        """
+        if not self.result is None and 'value' in self.result:
+            t = Template('{{ result_value|floatformat:2 }}')
+            c = Context({'result_value': self.result['value']})
+            return t.render(c)
+        else:
+            return _('n/a')
+        
