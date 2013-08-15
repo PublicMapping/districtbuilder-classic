@@ -49,7 +49,7 @@ from redistricting.config import *
 import traceback, logging
 
 import redis
-
+from redisutils import key_gen
 from django.db.models import Q
 import subprocess
 
@@ -649,18 +649,6 @@ ERROR:
             else:
                 logger.debug('Plan named "Blank" for LegislativeBody "%s" already exists', legislative_body.name)
 
-
-    def create_report_templates(self, config):
-        """
-        This object takes the full configuration element and the path
-        to an XSLT and does the transforms necessary to create templates
-        for use in BARD reporting
-        """
-        xslt_path = settings.BARD_TRANSFORM
-        template_dir = '%s/django/publicmapping/redistricting/templates' % config.xpath('//Project')[0].get('root')
-
-        # Open up the XSLT file and create a transform
-        f = file(xslt_path)
     def import_adjacency(self, config):
         """
         Imports adjacency files into database using settings from the xml config.
@@ -694,7 +682,7 @@ ERROR:
                     # Upload 10,000 at a time, otherwise redis complains
                     redis_connection.mset(data_dict)
                     data_dict = {}
-                key = 'adj:geounit1:%s:geounit2:%s' %(row[0], row[1])
+                key = key_gen(**{'geounit1': row[0], 'geounit2': row[1]})
                 data_dict[key] = row[2]
 
             # Need to send left over data < 10000 to redis
@@ -702,11 +690,22 @@ ERROR:
 
             # Cache region totals in redis
             region_cost = region_sum/float(c)
-            key = 'adj:region:%s' % region 
+            key = key_gen(**{'region': region})
             redis_connection.set(key, region_cost)
 
         logger.info('Finished processing files and loading data into key value store')
 
+    def create_report_templates(self, config):
+        """
+        This object takes the full configuration element and the path
+        to an XSLT and does the transforms necessary to create templates
+        for use in BARD reporting
+        """
+        xslt_path = settings.BARD_TRANSFORM
+        template_dir = '%s/django/publicmapping/redistricting/templates' % config.xpath('//Project')[0].get('root')
+
+        # Open up the XSLT file and create a transform
+        f = file(xslt_path)
 
         xml = parse(f)
         transform = XSLT(xml)

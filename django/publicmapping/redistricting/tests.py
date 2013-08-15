@@ -42,6 +42,7 @@ from tasks import *
 from calculators import *
 from reportcalculators import *
 from config import *
+from redisutils import key_gen
 from django.conf import settings
 from datetime import datetime
 from tagging.models import Tag, TaggedItem
@@ -134,13 +135,13 @@ class AdjacencyTestCase(BaseTestCase):
         geounit_count = 0
         for combo in base_geounit_combos:
             geounit_count += 1
-            key = 'adj:geounit1:%s:geounit2:%s' %(combo[0].portable_id, combo[1].portable_id)
+            key = key_gen(**{'geounit1': combo[0].portable_id, 'geounit2':combo[1].portable_id})
             value = round(combo[0].center.distance(combo[1].center) * 100, 12)
             redis_dict[key] = value
             region_sum += value
         self.r.mset(redis_dict)
         region_cost = region_sum/geounit_count
-        key = 'adj:region:%s' % self.plan.legislative_body.region.name
+        key = key_gen(**{'region': self.plan.legislative_body.region.name})
         self.r.set(key, region_cost)
 
     def tearDown(self):

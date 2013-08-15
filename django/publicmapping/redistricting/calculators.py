@@ -43,6 +43,7 @@ import operator
 import itertools
 import redis
 from django.conf import settings
+from redisutils import key_gen
 redis_settings = settings.KEY_VALUE_STORE
 
 class CalculatorBase(object):
@@ -2289,7 +2290,7 @@ class Adjacency(CalculatorBase):
         geounit_id_combos = itertools.combinations(geounit_ids, 2)
         redis_query = []
         for ids in geounit_id_combos:
-            redis_query.append('adj:geounit1:%s:geounit2:%s' %(ids[0], ids[1]))
+            redis_query.append(key_gen(**{'geounit1': ids[0], 'geounit2': ids[1]}))
         redis_results = self.r.mget(redis_query)
         costs = [float(c) for c in redis_results if c != None]
         return sum(costs)/len(costs)
@@ -2347,7 +2348,7 @@ class Adjacency(CalculatorBase):
 
             region = districts[0].plan.legislative_body.region.name
 
-            region_key = 'adj:region:%s' % region
+            region_key = key_gen(**{'region': region})
             region_score = float(self.r.get(region_key))
             num_districts = len(district_scores)
 
@@ -2356,7 +2357,7 @@ class Adjacency(CalculatorBase):
                 denominator = (region_score/num_districts)**2
                 score += numerator/denominator
 
-        self.result = { 'value': score}
+        self.result = { 'value': score }
 
     def html(self):
         """
