@@ -382,6 +382,14 @@
                                     <xs:attribute name="password" type="xs:string" use="required" />
                                 </xs:complexType>
                             </xs:element>
+                            <xs:element name="KeyValueStore">
+                                <xs:complexType>
+                                    <xs:attribute name="host" type="xs:string" use="optional" />
+                                    <xs:attribute name="port" type="xs:string" use="required" />
+                                    <xs:attribute name="password" type="xs:string" use="required" />
+                                    <xs:attribute name="db" type="xs:string" use="required" />
+                                </xs:complexType>
+                            </xs:element>
                             <xs:element name="Internationalization">
                                 <xs:complexType>
                                     <xs:sequence>
@@ -499,14 +507,6 @@
             <xs:selector xpath="Scoring/ScorePanels/ScorePanel" />
             <xs:field xpath="@id" />
         </xs:key>
-        <xs:keyref name="GeoLevelBaseGeoLevel" refer="DistrictBuilderGeoLevelKey">
-            <xs:selector xpath="GeoLevels/GeoLevel/BaseGeoLevel" />
-            <xs:field xpath="@ref" />
-        </xs:keyref>
-        <xs:keyref name="TemplateLegislativeBody" refer="DistrictBuilderLegislativeBodyKey">
-            <xs:selector xpath="Templates/Template/LegislativeBody" />
-            <xs:field xpath="@ref" />
-        </xs:keyref>
         <xs:key name="AdjacencyRegionKey">
             <xs:selector xpath="Regions/Region" />
             <xs:field xpath="@id" />
@@ -514,6 +514,14 @@
         <xs:keyref name="AdjacencyRegion" refer="AdjacencyRegionKey">
             <xs:selector xpath="Adjacencies/Adjacency" />
             <xs:field xpath="@regionref"/>
+        </xs:keyref>
+        <xs:keyref name="GeoLevelBaseGeoLevel" refer="DistrictBuilderGeoLevelKey">
+            <xs:selector xpath="GeoLevels/GeoLevel/BaseGeoLevel" />
+            <xs:field xpath="@ref" />
+        </xs:keyref>
+        <xs:keyref name="TemplateLegislativeBody" refer="DistrictBuilderLegislativeBodyKey">
+            <xs:selector xpath="Templates/Template/LegislativeBody" />
+            <xs:field xpath="@ref" />
         </xs:keyref>
         <xs:keyref name="ScoreFunctionScoreFunction" refer="DistrictBuilderScoreFunctionKey">
             <xs:selector xpath="Scoring/ScoreFunctions/ScoreFunction/ScoreArgument" />
