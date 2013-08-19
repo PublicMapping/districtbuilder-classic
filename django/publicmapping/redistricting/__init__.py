@@ -251,6 +251,17 @@ class StoredConfig:
             output.write("MAP_SERVER_USER = '%s'\n" % cfg.get('adminuser'))
             output.write("MAP_SERVER_PASS = '%s'\n" % cfg.get('adminpass'))
 
+            cfg = self.data.xpath('//Project/KeyValueStore')
+            if len(cfg) > 0:
+                output.write("\nKEY_VALUE_STORE = {\n")
+                output.write("    'PASSWORD': '%s',\n" % cfg[0].get('password'))
+                output.write("    'HOST': '%s',\n" % cfg[0].get('host'))
+                output.write("    'PORT': '%s',\n" % cfg[0].get('port'))
+                output.write("    'DB': '%s',\n" % cfg[0].get('db'))
+                output.write("}\n")
+            else:
+                output.write("\nKEY_VALUE_STORE = ''\n")
+            
             cfg = self.data.xpath('//Mailer')[0]
             output.write("\nEMAIL_HOST = '%s'\n" % cfg.get('server'))
             output.write("EMAIL_PORT = %d\n" % int(cfg.get('port')))

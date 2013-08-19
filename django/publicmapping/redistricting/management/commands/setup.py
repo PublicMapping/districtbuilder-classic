@@ -48,7 +48,13 @@ from redistricting.tasks import *
 from redistricting.config import *
 import traceback, logging
 
+import redis
+from redisutils import key_gen
+from django.db.models import Q
+import subprocess
+
 logger = logging.getLogger()
+
 
 class Command(BaseCommand):
     """
@@ -78,6 +84,8 @@ class Command(BaseCommand):
             default=False),
         make_option('-t', '--templates', dest="templates",
             action="store_true", help="Create system templates based on district index files.", default=False),
+        make_option('-a', '--adjacency', dest="adjacency",
+                    help="Import adjacency data", default=False, action='store_true'),
         make_option('-b', '--bard', dest="bard",
             action='store_true', help="Create a BARD map based on the imported spatial data.", default=False),
         make_option('-s', '--static', dest="static",
@@ -241,6 +249,9 @@ file and try again.
         if options.get("languages"):
             call_command('makelanguagefiles', interactive=False, verbosity=options.get('verbosity'))
 
+        if options.get("adjacency"):
+            self.import_adjacency(store.data)
+            
         if options.get("bard_templates"):
             try:
                 self.create_report_templates(store.data)
@@ -638,6 +649,51 @@ ERROR:
             else:
                 logger.debug('Plan named "Blank" for LegislativeBody "%s" already exists', legislative_body.name)
 
+    def import_adjacency(self, config):
+        """
+        Imports adjacency files into database using settings from the xml config.
+
+        Writes a temporary template with SQL commands for the import
+        """
+        logger.info("Loading adjacency data")
+        adjacencies = config.xpath('//DistrictBuilder/Adjacencies/*')
+
+        # Instantiate redis connection with settings from XML config
+        redis_config = config.xpath('//DistrictBuilder/Project/KeyValueStore')[0]
+        redis_connection = redis.StrictRedis(host=redis_config.get('host'),
+                                             port=int(redis_config.get('port')))
+        
+
+        # Read and load data into redis #
+        data_dict = {}
+        file_numbers = len(adjacencies)
+        for counter, adjacency in enumerate(adjacencies):
+            path = adjacency.get('path')
+            logger.info('Processing file %s of %s (%s)' %(counter + 1, file_numbers, path))
+            region = adjacency.get('regionref') # Grab region id to cache avg. cost for region
+            f = open(path, 'r')
+            csv_reader = csv.reader(f, delimiter='\t')
+            c = 0 # Row counter to keep track of when to load data
+            region_sum = 0
+            for row in csv_reader:
+                c += 1
+                region_sum += float(row[2])
+                if c % 10000 == 0:
+                    # Upload 10,000 at a time, otherwise redis complains
+                    redis_connection.mset(data_dict)
+                    data_dict = {}
+                key = key_gen(**{'geounit1': row[0], 'geounit2': row[1]})
+                data_dict[key] = row[2]
+
+            # Need to send left over data < 10000 to redis
+            redis_connection.mset(data_dict)
+
+            # Cache region totals in redis
+            region_cost = region_sum/float(c)
+            key = key_gen(**{'region': region})
+            redis_connection.set(key, region_cost)
+
+        logger.info('Finished processing files and loading data into key value store')
 
     def create_report_templates(self, config):
         """
@@ -650,6 +706,7 @@ ERROR:
 
         # Open up the XSLT file and create a transform
         f = file(xslt_path)
+
         xml = parse(f)
         transform = XSLT(xml)
 

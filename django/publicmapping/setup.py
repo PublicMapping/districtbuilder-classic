@@ -74,6 +74,8 @@ def main():
     parser.add_option('-l', '--languages', dest="languages",
             help="Create and compile a message file for each Language defined.",
             action='store_true', default=False),
+    parser.add_option('-a', '--adjacency', dest="adjacency",
+            help="Load adjacency data", default=False, action='store_true')
     parser.add_option('-b', '--bard', dest="bard",
             help="Create a BARD map based on the imported spatial data.", 
             default=False, action='store_true'),
@@ -89,7 +91,7 @@ def main():
 
     (options, args) = parser.parse_args()
 
-    allops = (not options.database) and (not options.geolevels) and (not options.views) and (not options.geoserver) and (not options.templates) and (not options.nesting) and (not options.bard) and (not options.static) and (not options.languages) and (not options.bard_templates)
+    allops = (not options.database) and (not options.geolevels) and (not options.views) and (not options.geoserver) and (not options.templates) and (not options.nesting) and (not options.bard) and (not options.static) and (not options.languages) and (not options.bard_templates) and (not options.adjacency)
 
     setup_logging(options.verbosity)
 
@@ -146,6 +148,7 @@ ERROR:
         languages = True
         bard = True
         bard_templates = True
+        adjacency = False
     else:
         database = options.database
         geolevels = options.geolevels
@@ -157,8 +160,9 @@ ERROR:
         languages = options.languages
         bard = options.bard
         bard_templates = options.bard_templates
+        adjacency = options.adjacency
 
-    management.call_command('setup', config=args[1], verbosity=options.verbosity, database=database, geolevels=geolevels, views=views, geoserver=geoserver, templates=templates, nesting=nesting, static=static, languages=languages, bard=bard, bard_templates=bard_templates, force=options.force)
+    management.call_command('setup', config=args[1], verbosity=options.verbosity, database=database, geolevels=geolevels, views=views, geoserver=geoserver, templates=templates, nesting=nesting, static=static, languages=languages, bard=bard, bard_templates=bard_templates, force=options.force, adjacency=adjacency)
     
     # Success! Exit-code 0
     sys.exit(0)
