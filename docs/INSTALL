@@ -19,7 +19,7 @@ the necessary software using the command:
 > sudo aptitude install apache2 libapache2-mod-wsgi python-dev \
     python-django python-lxml python-gdal python-rpy2 python-scipy \
     python-psycopg2 python-setuptools postgresql-9.1-postgis \
-    tomcat6 tomcat6-admin gettext
+    tomcat6 tomcat6-admin gettext redis-server
 
 For python libraries that aren't in the ubuntu repositories, you can
 use pip (a replacement for easy_install) to get secondary python libraries,

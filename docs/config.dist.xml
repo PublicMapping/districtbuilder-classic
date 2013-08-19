@@ -979,7 +979,29 @@
             </Criterion>
         </Criteria>
     </Validation>
+    
+    <!--
+    <Adjacencies>
 
+      In order to load 'Adjacency' into the database for use of the adjacency
+      data must be in a tab-delimited text file where:
+      
+      column 1 = geounit1_id
+      column 2 = geounit2_id
+      column 3 = cost/distance/travel time, etc.
+      
+      The geounit_id's *must* be the same IDs that make up the portable_ids in
+      the geounit table.
+      
+      This text file must not have have a header row.
+      
+      Please note, at this time the data import and adjacency calculator do not support
+      data where the cost between A->B != B->A.
+      
+      <Adjacency path="/projects/PublicMapping/DistrictBuilder/processed_15tiemposecciones.txt" regionref="mx"/>
+    </Adjacencies>
+    -->
+    
     <GeoLevels>
       <GeoLevel id="block" name="block" label="block" min_zoom="8" sort_key="3" tolerance="2.5">
           <!--
@@ -1198,6 +1220,15 @@
             The 'host' attribute is optional.
         -->
         <Database name="YOUR-DATABASE-NAME" user="publicmapping" password="YOUR-DATABASE-PASSWORD" host="OPTIONAL"/>
+
+        <!--
+           Key Value Store is required for the adjacency feature. 
+
+           This should be the location of your redis database.
+           All parameters are required.
+
+        <KeyValueStore host="localhost" port="6379" password="" db="0"/>
+        -->        
 
         <!--
            Internationalization and localization information.
