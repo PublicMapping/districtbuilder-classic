@@ -1938,20 +1938,6 @@ function mapinit(srs,maxExtent) {
         
     })();
 
-    // Recompute the rules for the district styling prior to the adding
-    // of the features to the district layer.  This is done at this time
-    // to prevent 2 renderings from being triggered on the district layer.
-    districtLayer.events.register('beforefeaturesadded',districtLayer,function(context){
-        var dby = getDistrictBy();
-        var visualize = (dby.by > 0) ? LEGISLATIVE_BODY : dby.name;
-
-        if (visualize == 'Compactness') {
-            computeCompactnessAvg(context.features);
-        }
-
-        getMapStyles(visualize, dby.name);
-    });
-
     var updatingAssigned = false;
     var updateAssignableDistricts = function() {
         if (updatingAssigned)
@@ -3100,6 +3086,17 @@ function mapinit(srs,maxExtent) {
     PLAN_HISTORY[PLAN_VERSION] = true;
 
     $(document.body).trigger('mapready', olmap);
+    var dby = getDistrictBy();
+    var visualize = (dby.by > 0) ? LEGISLATIVE_BODY : dby.name;
+
+    if (visualize == 'Compactness') {
+        computeAvg(context.features, 'compactness');
+    }
+    if (visualize == 'Adjacency') {
+        computeAvg(context.features, 'adjacency');
+    }
+
+    getMapStyles(visualize, dby.name);
 }
 
 IdGeounit = OpenLayers.Class(OpenLayers.Control.GetFeature, {
