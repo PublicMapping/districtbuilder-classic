@@ -2072,7 +2072,7 @@ function mapinit(srs,maxExtent) {
         sorted.sort(function(a,b){
             return a.attributes.name > b.attributes.name;
         });
-        computeCompactnessAvg(sorted);
+        computeAvg(sorted, 'compactness');
 
         var working = $('#working');
         if (working.dialog('isOpen')) {
@@ -2418,7 +2418,7 @@ function mapinit(srs,maxExtent) {
             }));
         
             return rules;
-        }
+        };
 
         var callbackDistrict = function(sld) {
             var userStyle = getDefaultStyle(sld,getDistrictBy().name);
@@ -2477,70 +2477,77 @@ function mapinit(srs,maxExtent) {
             $('#map').trigger('style_changed', [newStyle, districtLayer.name]);
         };
 
-        var callbackCompactness = function() {
+        /** 
+         * Function that handles styling of choropleths for district scores that 
+         * are continuous. 
+         *
+         * Currently used for compactness and adjacency scores.
+         *
+         * @param {number} scalingConstant amount to scale standard deviation breaks for high/avg/low categories
+         *     for continous distributions
+         * @param {string} featureName string that is the feature name of the continous feature in the returned
+         *     GEOJson from the districtLayer protocol
+         */
+        var callbackContinuous = function(scalingConstant, featureName) {
+
             var newOptions = OpenLayers.Util.extend({}, districtStyle);
-            var compactnessAvg = computeCompactnessAvg(districtLayer.features);
-            var upper = compactnessAvg.mean + (compactnessAvg.deviation);
-            var lower = compactnessAvg.mean - (compactnessAvg.deviation); 
+            var computedAvg = computeAvg(districtLayer.features, featureName);
+            var upper = computedAvg.mean + (computedAvg.deviation) * scalingConstant;  
+            var lower = computedAvg.mean - (computedAvg.deviation) * scalingConstant; 
             var highestColor = $('.farover').first().css('background-color');
             var lowestColor = $('.farunder').first().css('background-color');
+
             var rules = [
                 new OpenLayers.Rule({
-                    title: 'Very Compact',
+                    title: 'High Numbers',
                     filter: new OpenLayers.Filter.Comparison({
                         type: OpenLayers.Filter.Comparison.LESS_THAN,
-                        property: 'compactness',
+                        property: featureName,
                         value: lower 
                     }),
                     symbolizer: {
-                        //Polygon: {
-                            fillColor: lowestColor,
-                            fillOpacity: 0.5,
-                            strokeColor: newOptions.strokeColor,
-                            strokeWidth: newOptions.strokeWidth,
-                            strokeOpacity: newOptions.strokeOpacity
-                        //}
+                        fillColor: lowestColor,
+                        fillOpacity: 0.5,
+                        strokeColor: newOptions.strokeColor,
+                        strokeWidth: newOptions.strokeWidth,
+                        strokeOpacity: newOptions.strokeOpacity
                     }
                 }),
                 new OpenLayers.Rule({
                     title: 'Average',
                     filter: new OpenLayers.Filter.Comparison({
                         type: OpenLayers.Filter.Comparison.BETWEEN,
-                        property: 'compactness',
+                        property: featureName,
                         lowerBoundary: lower,
                         upperBoundary: upper
                     }),
                     symbolizer: {
-                        //Polygon: {
-                            fillColor: '#ffffff',
-                            fillOpacity: 0.01,
-                            strokeColor: newOptions.strokeColor,
-                            strokeWidth: newOptions.strokeWidth,
-                            strokeOpacity: newOptions.strokeOpacity
-                        //}
+                        fillColor: '#ffffff',
+                        fillOpacity: 0.01,
+                        strokeColor: newOptions.strokeColor,
+                        strokeWidth: newOptions.strokeWidth,
+                        strokeOpacity: newOptions.strokeOpacity
                     }
                 }),
                 new OpenLayers.Rule({
-                    title: 'Hardly Compact',
+                    title: 'Low Numbers',
                     filter: new OpenLayers.Filter.Comparison({
                         type: OpenLayers.Filter.Comparison.GREATER_THAN,
-                        property: 'compactness',
+                        property: featureName,
                         value: upper 
                     }),
                     symbolizer: {
-                        //Polygon: {
-                            fillColor: highestColor,
-                            fillOpacity: 0.5,
-                            strokeColor: newOptions.strokeColor,
-                            strokeWidth: newOptions.strokeWidth,
-                            strokeOpacity: newOptions.strokeOpacity
-                        //}
+                        fillColor: highestColor,
+                        fillOpacity: 0.5,
+                        strokeColor: newOptions.strokeColor,
+                        strokeWidth: newOptions.strokeWidth,
+                        strokeOpacity: newOptions.strokeOpacity
                     }
                 })
             ];
             rules = rules.concat(getLockedRules());
             var newStyle = new OpenLayers.Style(newOptions,{
-                title:'Compactness',
+                title:'Continuous Measurement' + featureName,
                 rules: rules
             });
             $('#map').trigger('style_changed', [newStyle, districtLayer.name]);
@@ -2552,7 +2559,11 @@ function mapinit(srs,maxExtent) {
                 return;
             }
             if (snap == gettext('Compactness')) {
-                callbackCompactness();
+                callbackContinuous(1, 'compactness');
+                return;
+            }
+            if (snap == gettext('Adjacency')) {
+                callbackContinuous(0.5, 'adjacency');
                 return;
             }
             if (snap == gettext('None')) {
