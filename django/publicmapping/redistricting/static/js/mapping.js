@@ -2659,6 +2659,16 @@ function mapinit(srs,maxExtent) {
             row = makeDistrictLegendRow('district_swatch_farunder','farunder',gettext('Hardly Compact'));
             lbody.append(row);
         }
+        else if (distDisplay.by == -3) {
+            lbody.empty();
+
+            var row = makeDistrictLegendRow('district_swatch_farover','farover',gettext('Hardly Adjacent'));
+            lbody.append(row);
+            row = makeDistrictLegendRow('district_swatch_within','target',gettext('Average Adjacency'));
+            lbody.append(row);
+            row = makeDistrictLegendRow('district_swatch_farunder','farunder',gettext('Very Adjacent'));
+            lbody.append(row);
+        }
         else {
             lbody.empty();
 
@@ -2737,7 +2747,10 @@ function mapinit(srs,maxExtent) {
 
     // Logic for the 'Show Districts by' dropdown
     $('#districtby').change(function(evt){
-        if (evt.target.value == '-2') {
+        if (evt.target.value == '-3') {
+            getMapStyles(gettext('Adjacency'), '');
+        }
+        else if (evt.target.value == '-2') {
             getMapStyles(gettext('Contiguity'),'');
         }
         else if (evt.target.value == '-1') {
