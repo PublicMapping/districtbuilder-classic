@@ -1520,13 +1520,17 @@ class Plan(models.Model):
         features = []
 
         subj = Subject.objects.get(id=int(subject_id))
-       
-        for district in qset:
-            compactness_calculator = Schwartzberg()
-            compactness_calculator.compute(district=district)
 
-            contiguity_calculator = Contiguity()
-            contiguity_calculator.compute(district=district)
+        # Grab ScoreFunctions so we can use cached scores for districts if they exist
+        computed_district_score = ComputedDistrictScore()
+        schwartzberg_function = ScoreFunction.objects.get(name='district_schwartzberg')
+        contiguity_function = ScoreFunction.objects.get(name='district_contiguous')
+        adjacency_function = ScoreFunction.objects.get(name='district_adjacency')
+
+        for district in qset:
+            computed_compactness = computed_district_score.compute(schwartzberg_function, district=district)
+            computed_contiguity = computed_district_score.compute(contiguity_function, district=district)
+            computed_adjacency = computed_district_score.compute(adjacency_function, district=district)
 
             # If this district contains multiple members, change the label
             label = district.long_label
@@ -1544,8 +1548,9 @@ class Plan(models.Model):
                     'is_locked': district.is_locked,
                     'version': district.version,
                     'number': str(district.computedcharacteristic_set.get(subject=subj).number),
-                    'contiguous': contiguity_calculator.result['value'],
-                    'compactness': compactness_calculator.result['value'],
+                    'contiguous': computed_contiguity['value'],
+                    'compactness': computed_compactness['value'],
+                    'adjacency': computed_adjacency['value'],
                     'num_members': district.num_members
                 },
                 'geometry': json.loads(GEOSGeometry(district.chop).geojson)
