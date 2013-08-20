@@ -1905,10 +1905,16 @@ function mapinit(srs,maxExtent) {
         OpenLayers.Element.addClass(olmap.viewPortDiv, 'olCursorWait');
     });
 
-    var computeCompactnessAvg = (function() {
-        // not all districts are returned every time: it may depend on
-        // the extent of where the user is viewing the map
-        var compactnessCache = {};
+    /**
+     * Generic compute average function designed to compute averages of features
+     * from a list of items.
+     * 
+     * @param {array} features list of objects with a feature to compute average from
+     * @param {string} featureName attribute to calculate average from item
+     */
+    var computeAvg = (function () {
+
+        var scoreCache = {};
 
         var average = function(a){
             //+ Carlos R. L. Rodrigues
@@ -1919,19 +1925,17 @@ function mapinit(srs,maxExtent) {
             return r.deviation = Math.sqrt(r.variance = s / t), r;
         };
 
-        var compute = function(features) {
-            // reduce features to id:compactness
-            $.each(features,function(index,item){
-                compactnessCache[item.attributes.district_id] = item.attributes.compactness;
-            });
+        var compute = function(features, featureName) {
+            // reduce features to id:adjacency
             var scores = [];
-            for (var i in compactnessCache) {
-                scores.push(compactnessCache[i]);
-            }
+            $.each(features,function(index,item){
+                scores.push(item.attributes[featureName]);
+            });
             return average(scores);
         };
 
         return compute;
+        
     })();
 
     // Recompute the rules for the district styling prior to the adding
