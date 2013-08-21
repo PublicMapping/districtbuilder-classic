@@ -2285,15 +2285,30 @@ class Adjacency(CalculatorBase):
     """
 
     def _district_calculator(self, district):
+        def sum_query(query):
+            return sum(map(lambda x: float(x) if x else 0, self.r.mget(query)))
+        
         geounit_ids = [geo[1] for geo in district.get_base_geounits()]
         geounit_ids.sort()
         geounit_id_combos = itertools.combinations(geounit_ids, 2)
         redis_query = []
-        for ids in geounit_id_combos:
+        total = 0
+        num_queries = 0
+        for count, ids in enumerate(geounit_id_combos):
+            num_queries += 1
+            if count % 10000 == 0 and count > 0:
+                total += sum_query(redis_query)
+                redis_query = []
+            
             redis_query.append(key_gen(**{'geounit1': ids[0], 'geounit2': ids[1]}))
-        redis_results = self.r.mget(redis_query)
-        costs = [float(c) for c in redis_results if c != None]
-        return sum(costs)/len(costs)
+
+        total += sum_query(redis_query)
+
+        # return 0 to prevent a divide-by-zero error
+        if num_queries == 0:
+            return 0
+
+        return total / num_queries
 
     def compute(self, **kwargs):
         """
@@ -2336,7 +2351,7 @@ class Adjacency(CalculatorBase):
         score = 0
 
         if len(districts) == 1:
-            score = self._district_calculator(districts[0])
+            score = 0 if districts[0].district_id == 0 else self._district_calculator(districts[0])
 
         elif len(districts) > 1:
             district_scores = []
