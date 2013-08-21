@@ -1545,7 +1545,7 @@ class Plan(models.Model):
             label = district.translated_label
             if (self.legislative_body.multi_members_allowed and (district.num_members > 1)):
                 format = self.legislative_body.multi_district_label_format
-                label = format.format(name=district.long_label, num_members=district.num_members)
+                label = format.format(name=label, num_members=district.num_members)
 
             features_dict = { 
                 'id': district.id,
