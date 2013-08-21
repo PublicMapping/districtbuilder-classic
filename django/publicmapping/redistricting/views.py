@@ -1629,8 +1629,8 @@ def getdistricts(request, planid):
         for district in districts:
             status['districts'].append({
                 'id':district.district_id,
-                'short_label':district.short_label,
-                'long_label':district.long_label,
+                'short_label':' '.join(map(_, district.short_label.split(' '))),
+                'long_label':' '.join(map(_, district.long_label.split(' '))),
                 'version':district.version
             })
         status['canUndo'] = can_undo

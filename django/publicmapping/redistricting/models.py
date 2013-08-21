@@ -1542,7 +1542,7 @@ class Plan(models.Model):
                 computed_adjacency = computed_district_score.compute(adjacency_function[0], district=district)
 
             # If this district contains multiple members, change the label
-            label = district.long_label
+            label = district.translated_label
             if (self.legislative_body.multi_members_allowed and (district.num_members > 1)):
                 format = self.legislative_body.multi_district_label_format
                 label = format.format(name=district.long_label, num_members=district.num_members)
@@ -2602,6 +2602,17 @@ class District(models.Model):
         Unassigned)
         """
         return self.district_id == 0
+
+    @property
+    def translated_label(self):
+        """
+        Returns a translated long district label
+        """
+        # a district label ends with the district id, and potentially other things,
+        # such as a multi-member district suffix. in order to translate it, we need 
+        # to translate just the first part of the string.
+        a, b, c = self.long_label.partition(' ')
+        return '%s%s%s' % (_(a), b, c)
 
     def __unicode__(self):
         """
