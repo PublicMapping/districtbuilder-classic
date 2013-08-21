@@ -1525,12 +1525,15 @@ class Plan(models.Model):
         computed_district_score = ComputedDistrictScore()
         schwartzberg_function = ScoreFunction.objects.get(name='district_schwartzberg')
         contiguity_function = ScoreFunction.objects.get(name='district_contiguous')
-        adjacency_function = ScoreFunction.objects.get(name='district_adjacency')
+        # Need to use filter for adjacency because it may not be in database if it is not in config.xml
+        adjacency_function = ScoreFunction.objects.filter(name='district_adjacency')
 
         for district in qset:
             computed_compactness = computed_district_score.compute(schwartzberg_function, district=district)
             computed_contiguity = computed_district_score.compute(contiguity_function, district=district)
-            computed_adjacency = computed_district_score.compute(adjacency_function, district=district)
+            if settings.ADJACENCY:
+                # Adjacency is an optional calculator
+                computed_adjacency = computed_district_score.compute(adjacency_function[0], district=district)
 
             # If this district contains multiple members, change the label
             label = district.long_label
@@ -1538,8 +1541,7 @@ class Plan(models.Model):
                 format = self.legislative_body.multi_district_label_format
                 label = format.format(name=district.long_label, num_members=district.num_members)
 
-            
-            features.append({ 
+            features_dict = { 
                 'id': district.id,
                 'properties': {
                     'district_id': district.district_id,
@@ -1550,11 +1552,15 @@ class Plan(models.Model):
                     'number': str(district.computedcharacteristic_set.get(subject=subj).number),
                     'contiguous': computed_contiguity['value'],
                     'compactness': computed_compactness['value'],
-                    'adjacency': computed_adjacency['value'],
                     'num_members': district.num_members
                 },
                 'geometry': json.loads(GEOSGeometry(district.chop).geojson)
-            })
+            }
+
+            if settings.ADJACENCY:
+                features_dict['properties']['adjacency'] = computed_adjacency['value']
+
+            features.append(features_dict)
 
         # Return a python dict, which gets serialized into geojson
         return features

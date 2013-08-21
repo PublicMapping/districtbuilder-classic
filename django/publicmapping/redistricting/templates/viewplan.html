@@ -967,6 +967,9 @@ Include the shared_districts markup if we're using the copy/paste tool
                     <option value="0" name="None">{% trans "None" %}</option>
                     <option value="-1" name="Compactness">{% trans "Compactness" %}</option>
                     <option value="-2" name="Contiguity">{% trans "Contiguity" %}</option>
+                    {% if adjacency %}
+                    <option value="-3" name="Adjacency">{% trans "Adjacency" %}</option>
+                    {% endif %}
                     {% for demo in demographics %}
                         {% if demo.isdisplayed == "true" %}
                             <option value="{{ demo.id }}" name="{{ demo.value }}" {% if demo.isdefault == "true" %}selected="true"{% endif %}>

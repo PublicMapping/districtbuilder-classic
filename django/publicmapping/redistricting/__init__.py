@@ -261,7 +261,13 @@ class StoredConfig:
                 output.write("}\n")
             else:
                 output.write("\nKEY_VALUE_STORE = ''\n")
-            
+
+            cfg = self.data.xpath('//Adjacencies/*')
+            if len(cfg) > 0:
+                output.write("\nADJACENCY = True\n")
+            else:
+                output.write("\nADJACENCY = False\n")
+                
             cfg = self.data.xpath('//Mailer')[0]
             output.write("\nEMAIL_HOST = '%s'\n" % cfg.get('server'))
             output.write("EMAIL_PORT = %d\n" % int(cfg.get('port')))
