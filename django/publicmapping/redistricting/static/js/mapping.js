@@ -2757,14 +2757,7 @@ function mapinit(srs,maxExtent) {
                     sameSubj = true;
                 }
             }
-
-            if (!sameSubj) {
-                districtLayer.filter = getVersionAndSubjectFilters(olmap.getExtent());
-                refreshStrategy.refresh();
-            }
-            else {
-                getMapStyles(visualize, dby.name);
-            }
+            getMapStyles(visualize, dby.name);
         }
 
         // Since keyboard defaults are on, if focus remains on this
