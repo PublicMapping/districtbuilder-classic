@@ -2566,6 +2566,10 @@ function mapinit(srs,maxExtent) {
                 callbackContinuous(0.5, 'adjacency');
                 return;
             }
+            if (snap == gettext('Convex Hull Ratio')) {
+                callbackContinuous(1, 'convexhull');
+                return;
+            };
             if (snap == gettext('None')) {
                 var newOptions = OpenLayers.Util.extend({}, districtStyle);
                 var newStyle = new OpenLayers.Style(newOptions,{
@@ -2669,6 +2673,16 @@ function mapinit(srs,maxExtent) {
             row = makeDistrictLegendRow('district_swatch_farunder','farunder',gettext('Very Adjacent'));
             lbody.append(row);
         }
+        else if (distDisplay.by == -4) {
+            lbody.empty();
+
+            var row = makeDistrictLegendRow('district_swatch_farover','farover',gettext('Above Average Ratio'));
+            lbody.append(row);
+            row = makeDistrictLegendRow('district_swatch_within','target',gettext('Average Ratio'));
+            lbody.append(row);
+            row = makeDistrictLegendRow('district_swatch_farunder','farunder',gettext('Below Average Ratio'));
+            lbody.append(row);
+        }
         else {
             lbody.empty();
 
@@ -2758,6 +2772,9 @@ function mapinit(srs,maxExtent) {
         }
         else if (evt.target.value == '0') {
             getMapStyles(gettext('None'), '');
+        }
+        else if (evt.target.value == '-4') {
+            getMapStyles(gettext('Convex Hull Ratio'), '');
         }
         else {
             var dby = getDistrictBy();
