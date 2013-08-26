@@ -515,6 +515,7 @@ def commonplan(request, planid):
         'ns_href': settings.MAP_SERVER_NSHREF,
         'feature_limit': settings.FEATURE_LIMIT,
         'adjacency': settings.ADJACENCY,
+        'convexchoropleth': settings.CONVEX_CHOROPLETH,
         'demographics': layers,
         'snaplayers': snaplayers,
         'unassigned_id': UNASSIGNED_DISTRICT_ID,

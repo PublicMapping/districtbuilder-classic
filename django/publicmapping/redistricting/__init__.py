@@ -267,7 +267,16 @@ class StoredConfig:
                 output.write("\nADJACENCY = True\n")
             else:
                 output.write("\nADJACENCY = False\n")
-                
+
+            # Specific Settings for Convex Hull Choropleth - This choropleth
+            # can only be displayed if convex hull is added to a list of score
+            # functions
+            cfg = self.data.xpath('//Scoring/ScoreFunctions/ScoreFunction[@id="district_convex"]')
+            if len(cfg) > 0:
+                output.write("\nCONVEX_CHOROPLETH = True\n")
+            else:
+                output.write("\nCONVEX_CHOROPLETH = False\n")
+            
             cfg = self.data.xpath('//Mailer')[0]
             output.write("\nEMAIL_HOST = '%s'\n" % cfg.get('server'))
             output.write("EMAIL_PORT = %d\n" % int(cfg.get('port')))

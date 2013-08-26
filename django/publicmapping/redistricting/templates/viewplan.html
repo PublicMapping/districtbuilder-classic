@@ -969,6 +969,8 @@ Include the shared_districts markup if we're using the copy/paste tool
                     <option value="-2" name="Contiguity">{% trans "Contiguity" %}</option>
                     {% if adjacency %}
                     <option value="-3" name="Adjacency">{% trans "Adjacency" %}</option>
+                    {% endif %}
+                    {% if convexchoropleth %}
                     <option value="-4" name="Convex Hull Ratio">{% trans "Convex Hull Ratio" %}</option>
                     {% endif %}
                     {% for demo in demographics %}

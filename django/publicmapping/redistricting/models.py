@@ -1525,16 +1525,20 @@ class Plan(models.Model):
         computed_district_score = ComputedDistrictScore()
         schwartzberg_function = ScoreFunction.objects.get(name='district_schwartzberg')
         contiguity_function = ScoreFunction.objects.get(name='district_contiguous')
-        convex_function = ScoreFunction.objects.get(name='district_convex')
-        # Need to use filter for adjacency because it may not be in database if it is not in config.xml
+
+        # Need to use filter for optional calculators because they may not be in database
+        # if they are not in config.xml
+        convex_function = ScoreFunction.objects.filter(name='district_convex')
         adjacency_function = ScoreFunction.objects.filter(name='district_adjacency')
 
         for district in qset:
             computed_compactness = computed_district_score.compute(schwartzberg_function, district=district)
             computed_contiguity = computed_district_score.compute(contiguity_function, district=district)
-            computed_convex = computed_district_score.compute(convex_function, district=district)
+
+            # Optional Choropleths/Calculators
+            if settings.CONVEX_CHOROPLETH:
+                computed_convex = computed_district_score.compute(convex_function[0], district=district)
             if settings.ADJACENCY:
-                # Adjacency is an optional calculator
                 computed_adjacency = computed_district_score.compute(adjacency_function[0], district=district)
 
             # If this district contains multiple members, change the label
@@ -1554,7 +1558,6 @@ class Plan(models.Model):
                     'number': str(district.computedcharacteristic_set.get(subject=subj).number),
                     'contiguous': computed_contiguity['value'],
                     'compactness': computed_compactness['value'],
-                    'convexhull': computed_convex['value'],
                     'num_members': district.num_members
                 },
                 'geometry': json.loads(GEOSGeometry(district.chop).geojson)
@@ -1562,7 +1565,8 @@ class Plan(models.Model):
 
             if settings.ADJACENCY:
                 features_dict['properties']['adjacency'] = computed_adjacency['value']
-
+            if settings.CONVEX_CHOROPLETH:
+                features_dict['properties']['convexhull'] = computed_convex['value']
             features.append(features_dict)
 
         # Return a python dict, which gets serialized into geojson
