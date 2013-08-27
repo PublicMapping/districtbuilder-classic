@@ -281,7 +281,7 @@
                         </xs:sequence>
                     </xs:complexType>
                 </xs:element>
-                <xs:element name="Adjacencies">
+                <xs:element name="Adjacencies" minOccurs="0">
                   <xs:complexType>
                     <xs:sequence>
                       <xs:element name="Adjacency">
@@ -382,7 +382,7 @@
                                     <xs:attribute name="password" type="xs:string" use="required" />
                                 </xs:complexType>
                             </xs:element>
-                            <xs:element name="KeyValueStore">
+                            <xs:element name="KeyValueStore" minOccurs="0">
                                 <xs:complexType>
                                     <xs:attribute name="host" type="xs:string" use="optional" />
                                     <xs:attribute name="port" type="xs:string" use="required" />
