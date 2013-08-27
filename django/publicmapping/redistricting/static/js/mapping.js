@@ -2349,7 +2349,11 @@ function mapinit(srs,maxExtent) {
         var styleCache = {};
         var callbackSnap = function(sld) {
             var userStyle = getDefaultStyle(sld,getShowBy());
-            $('#legend_title').empty().append(userStyle.title);
+
+            // the legend title should match what is displayed in the thematic map dropdown
+            // (which already takes care of translation). this used to be set to the title 
+            // within the SLD, but that causes hard-to-solve translation issues.
+            $('#legend_title').empty().append($('#showby').find(':selected').text());
 
             var lbody = $('#basemap_legend tbody');
             lbody.empty();
