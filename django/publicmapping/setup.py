@@ -146,8 +146,8 @@ ERROR:
         nesting = []
         static = True
         languages = True
-        bard = True
-        bard_templates = True
+        bard = False
+        bard_templates = False
         adjacency = False
     else:
         database = options.database
