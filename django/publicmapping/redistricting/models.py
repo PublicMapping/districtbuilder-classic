@@ -2912,6 +2912,21 @@ class District(models.Model):
             logger.debug('Reason:', ex)
             return False
 
+    def count_splits(self, geolevel_id):
+        """
+        Count how many times a geolevel is split by this district.
+
+        @param geolevel_id: ID of the geolevel to perform the split
+            comparison on.
+        @return: The number of times the geolevel is split by the district.
+        """
+        query = "SELECT COUNT(1) FROM redistricting_district d, redistricting_geounit_geolevel l JOIN redistricting_geounit g on l.geounit_id = g.id WHERE d.id = %d AND l.geolevel_id = %d AND ST_Relate(d.geom, g.geom, '***T*****');" % (self.id, geolevel_id)
+
+        cursor = connection.cursor()
+        cursor.execute(query)
+        return cursor.fetchone()[0]
+        
+
 # Enable tagging of districts by registering them with the tagging module
 tagging.register(District)
 
