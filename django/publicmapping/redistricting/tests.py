@@ -2877,6 +2877,18 @@ class CalculatorTestCase(BaseTestCase):
         self.assertEqual(2, district_splits, 'Did not find expected splits. e:2, a:%s' % district_splits)
         self.assertTrue((3, u'0000004', u'District 3', u'Unit 1-4') in calc.result['value']['splits'], 'Did not find expected splits')
 
+        # Ensure the district split counter matches up to the plan split counter
+        districts = p2.get_districts_at_version(p2.version)
+        dist_calc = DistrictSplitCounter()
+        dist_calc.arg_dict['geolevel_id'] = ('literal', geolevel.id)
+        dist_calc.compute(district=districts[0])
+        result1 = dist_calc.result['value']
+        dist_calc.compute(district=districts[1])
+        result2 = dist_calc.result['value']
+        num_dist_splits = result1 + result2
+        num_plan_splits = len(calc.result['value']['splits'])
+        self.assertEqual(num_plan_splits, num_dist_splits, 'Did not find expected district splits. e:%d, a:%d' % (num_plan_splits, num_dist_splits))
+
     def test_convexhull_l1(self):
         """
         Test the convex hull calculator for the middle geolevel

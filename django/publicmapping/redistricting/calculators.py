@@ -2222,6 +2222,32 @@ class SplitCounter(CalculatorBase):
 
         return render
 
+class DistrictSplitCounter(CalculatorBase):
+    """
+    This calculator determines how many times a district splits a given geolevel.
+
+    This calculator accepts a "geolevel_id" argument, which is the id of 
+    the geolevel in which to perform the split comparison.
+    """
+    def compute(self, **kwargs):
+        """
+        Calculate splits between a district and a target geolevel.
+
+        @keyword district: A L{District} whose splits should be computed.
+        @keyword boundary_id: The ID of the geolevel to compare for splits.
+        """
+        if not 'district' in kwargs:
+            return
+
+        district = kwargs['district']
+        if district.geom.empty:
+            return
+
+        geolevel_id = self.get_value('geolevel_id')
+        num_splits = district.count_splits(geolevel_id)
+        
+        self.result = { 'value': num_splits }
+
 class ConvexHullRatio(CalculatorBase):
     """
     Calculate the ratio of the area of a district to the area of its convex hull.
