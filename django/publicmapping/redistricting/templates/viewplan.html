@@ -637,7 +637,7 @@
             <table id="district_legend" {% if plan.is_community %}style="display: none;"{% endif %}>
                 <thead>
                     <tr>
-                        <th colspan="2">{{ body_member_long_label|capfirst }}</th>
+                        <th colspan="2">{% blocktrans with body_member_long_label|capfirst as ll %}{{ ll }}{% endblocktrans %}</th>
                     </tr>
                 </thead>
                 <tbody>

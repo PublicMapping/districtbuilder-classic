@@ -77,7 +77,7 @@
               <select id="assign_district" class="titletip" title="{% blocktrans %}Assign {{ body_members }} currently selected on map by choosing a {{ body_member_long_label }} name from drop down list{% endblocktrans %}">
               <option value="-1">-- {% trans "Select One" %} --</option>
               {% for d in districts %}
-                  <option value="{{ d.district_id }}">{{ d.long_label }}</option>
+                  <option value="{{ d.district_id }}">{{ d.translated_label }}</option>
               {% endfor %}
               {% ifnotequal max_dists districts|length %}
                   <option value="new">{% blocktrans with body_member_long_label|capfirst as district_label %}New {{ district_label }}{% endblocktrans %}</option>
