@@ -1905,10 +1905,16 @@ function mapinit(srs,maxExtent) {
         OpenLayers.Element.addClass(olmap.viewPortDiv, 'olCursorWait');
     });
 
-    var computeCompactnessAvg = (function() {
-        // not all districts are returned every time: it may depend on
-        // the extent of where the user is viewing the map
-        var compactnessCache = {};
+    /**
+     * Generic compute average function designed to compute averages of features
+     * from a list of items.
+     * 
+     * @param {array} features list of objects with a feature to compute average from
+     * @param {string} featureName attribute to calculate average from item
+     */
+    var computeAvg = (function () {
+
+        var scoreCache = {};
 
         var average = function(a){
             //+ Carlos R. L. Rodrigues
@@ -1919,34 +1925,18 @@ function mapinit(srs,maxExtent) {
             return r.deviation = Math.sqrt(r.variance = s / t), r;
         };
 
-        var compute = function(features) {
-            // reduce features to id:compactness
-            $.each(features,function(index,item){
-                compactnessCache[item.attributes.district_id] = item.attributes.compactness;
-            });
+        var compute = function(features, featureName) {
+            // reduce features to id:adjacency
             var scores = [];
-            for (var i in compactnessCache) {
-                scores.push(compactnessCache[i]);
-            }
+            $.each(features,function(index,item){
+                scores.push(item.attributes[featureName]);
+            });
             return average(scores);
         };
 
         return compute;
+        
     })();
-
-    // Recompute the rules for the district styling prior to the adding
-    // of the features to the district layer.  This is done at this time
-    // to prevent 2 renderings from being triggered on the district layer.
-    districtLayer.events.register('beforefeaturesadded',districtLayer,function(context){
-        var dby = getDistrictBy();
-        var visualize = (dby.by > 0) ? LEGISLATIVE_BODY : dby.name;
-
-        if (visualize == 'Compactness') {
-            computeCompactnessAvg(context.features);
-        }
-
-        getMapStyles(visualize, dby.name);
-    });
 
     var updatingAssigned = false;
     var updateAssignableDistricts = function() {
@@ -2082,7 +2072,7 @@ function mapinit(srs,maxExtent) {
         sorted.sort(function(a,b){
             return a.attributes.name > b.attributes.name;
         });
-        computeCompactnessAvg(sorted);
+        computeAvg(sorted, 'compactness');
 
         var working = $('#working');
         if (working.dialog('isOpen')) {
@@ -2428,7 +2418,7 @@ function mapinit(srs,maxExtent) {
             }));
         
             return rules;
-        }
+        };
 
         var callbackDistrict = function(sld) {
             var userStyle = getDefaultStyle(sld,getDistrictBy().name);
@@ -2487,70 +2477,77 @@ function mapinit(srs,maxExtent) {
             $('#map').trigger('style_changed', [newStyle, districtLayer.name]);
         };
 
-        var callbackCompactness = function() {
+        /** 
+         * Function that handles styling of choropleths for district scores that 
+         * are continuous. 
+         *
+         * Currently used for compactness and adjacency scores.
+         *
+         * @param {number} scalingConstant amount to scale standard deviation breaks for high/avg/low categories
+         *     for continous distributions
+         * @param {string} featureName string that is the feature name of the continous feature in the returned
+         *     GEOJson from the districtLayer protocol
+         */
+        var callbackContinuous = function(scalingConstant, featureName) {
+
             var newOptions = OpenLayers.Util.extend({}, districtStyle);
-            var compactnessAvg = computeCompactnessAvg(districtLayer.features);
-            var upper = compactnessAvg.mean + (compactnessAvg.deviation);
-            var lower = compactnessAvg.mean - (compactnessAvg.deviation); 
+            var computedAvg = computeAvg(districtLayer.features, featureName);
+            var upper = computedAvg.mean + (computedAvg.deviation) * scalingConstant;  
+            var lower = computedAvg.mean - (computedAvg.deviation) * scalingConstant; 
             var highestColor = $('.farover').first().css('background-color');
             var lowestColor = $('.farunder').first().css('background-color');
+
             var rules = [
                 new OpenLayers.Rule({
-                    title: 'Very Compact',
+                    title: 'High Numbers',
                     filter: new OpenLayers.Filter.Comparison({
                         type: OpenLayers.Filter.Comparison.LESS_THAN,
-                        property: 'compactness',
+                        property: featureName,
                         value: lower 
                     }),
                     symbolizer: {
-                        //Polygon: {
-                            fillColor: lowestColor,
-                            fillOpacity: 0.5,
-                            strokeColor: newOptions.strokeColor,
-                            strokeWidth: newOptions.strokeWidth,
-                            strokeOpacity: newOptions.strokeOpacity
-                        //}
+                        fillColor: lowestColor,
+                        fillOpacity: 0.5,
+                        strokeColor: newOptions.strokeColor,
+                        strokeWidth: newOptions.strokeWidth,
+                        strokeOpacity: newOptions.strokeOpacity
                     }
                 }),
                 new OpenLayers.Rule({
                     title: 'Average',
                     filter: new OpenLayers.Filter.Comparison({
                         type: OpenLayers.Filter.Comparison.BETWEEN,
-                        property: 'compactness',
+                        property: featureName,
                         lowerBoundary: lower,
                         upperBoundary: upper
                     }),
                     symbolizer: {
-                        //Polygon: {
-                            fillColor: '#ffffff',
-                            fillOpacity: 0.01,
-                            strokeColor: newOptions.strokeColor,
-                            strokeWidth: newOptions.strokeWidth,
-                            strokeOpacity: newOptions.strokeOpacity
-                        //}
+                        fillColor: '#ffffff',
+                        fillOpacity: 0.01,
+                        strokeColor: newOptions.strokeColor,
+                        strokeWidth: newOptions.strokeWidth,
+                        strokeOpacity: newOptions.strokeOpacity
                     }
                 }),
                 new OpenLayers.Rule({
-                    title: 'Hardly Compact',
+                    title: 'Low Numbers',
                     filter: new OpenLayers.Filter.Comparison({
                         type: OpenLayers.Filter.Comparison.GREATER_THAN,
-                        property: 'compactness',
+                        property: featureName,
                         value: upper 
                     }),
                     symbolizer: {
-                        //Polygon: {
-                            fillColor: highestColor,
-                            fillOpacity: 0.5,
-                            strokeColor: newOptions.strokeColor,
-                            strokeWidth: newOptions.strokeWidth,
-                            strokeOpacity: newOptions.strokeOpacity
-                        //}
+                        fillColor: highestColor,
+                        fillOpacity: 0.5,
+                        strokeColor: newOptions.strokeColor,
+                        strokeWidth: newOptions.strokeWidth,
+                        strokeOpacity: newOptions.strokeOpacity
                     }
                 })
             ];
             rules = rules.concat(getLockedRules());
             var newStyle = new OpenLayers.Style(newOptions,{
-                title:'Compactness',
+                title:'Continuous Measurement' + featureName,
                 rules: rules
             });
             $('#map').trigger('style_changed', [newStyle, districtLayer.name]);
@@ -2562,9 +2559,17 @@ function mapinit(srs,maxExtent) {
                 return;
             }
             if (snap == gettext('Compactness')) {
-                callbackCompactness();
+                callbackContinuous(1, 'compactness');
                 return;
             }
+            if (snap == gettext('Adjacency')) {
+                callbackContinuous(0.5, 'adjacency');
+                return;
+            }
+            if (snap == gettext('Convex Hull Ratio')) {
+                callbackContinuous(1, 'convexhull');
+                return;
+            };
             if (snap == gettext('None')) {
                 var newOptions = OpenLayers.Util.extend({}, districtStyle);
                 var newStyle = new OpenLayers.Style(newOptions,{
@@ -2658,6 +2663,26 @@ function mapinit(srs,maxExtent) {
             row = makeDistrictLegendRow('district_swatch_farunder','farunder',gettext('Hardly Compact'));
             lbody.append(row);
         }
+        else if (distDisplay.by == -3) {
+            lbody.empty();
+
+            var row = makeDistrictLegendRow('district_swatch_farover','farover',gettext('Hardly Adjacent'));
+            lbody.append(row);
+            row = makeDistrictLegendRow('district_swatch_within','target',gettext('Average Adjacency'));
+            lbody.append(row);
+            row = makeDistrictLegendRow('district_swatch_farunder','farunder',gettext('Very Adjacent'));
+            lbody.append(row);
+        }
+        else if (distDisplay.by == -4) {
+            lbody.empty();
+
+            var row = makeDistrictLegendRow('district_swatch_farover','farover',gettext('Above Average Ratio'));
+            lbody.append(row);
+            row = makeDistrictLegendRow('district_swatch_within','target',gettext('Average Ratio'));
+            lbody.append(row);
+            row = makeDistrictLegendRow('district_swatch_farunder','farunder',gettext('Below Average Ratio'));
+            lbody.append(row);
+        }
         else {
             lbody.empty();
 
@@ -2736,7 +2761,10 @@ function mapinit(srs,maxExtent) {
 
     // Logic for the 'Show Districts by' dropdown
     $('#districtby').change(function(evt){
-        if (evt.target.value == '-2') {
+        if (evt.target.value == '-3') {
+            getMapStyles(gettext('Adjacency'), '');
+        }
+        else if (evt.target.value == '-2') {
             getMapStyles(gettext('Contiguity'),'');
         }
         else if (evt.target.value == '-1') {
@@ -2744,6 +2772,9 @@ function mapinit(srs,maxExtent) {
         }
         else if (evt.target.value == '0') {
             getMapStyles(gettext('None'), '');
+        }
+        else if (evt.target.value == '-4') {
+            getMapStyles(gettext('Convex Hull Ratio'), '');
         }
         else {
             var dby = getDistrictBy();
@@ -2757,14 +2788,7 @@ function mapinit(srs,maxExtent) {
                     sameSubj = true;
                 }
             }
-
-            if (!sameSubj) {
-                districtLayer.filter = getVersionAndSubjectFilters(olmap.getExtent());
-                refreshStrategy.refresh();
-            }
-            else {
-                getMapStyles(visualize, dby.name);
-            }
+            getMapStyles(visualize, dby.name);
         }
 
         // Since keyboard defaults are on, if focus remains on this
@@ -3103,6 +3127,17 @@ function mapinit(srs,maxExtent) {
     PLAN_HISTORY[PLAN_VERSION] = true;
 
     $(document.body).trigger('mapready', olmap);
+    var dby = getDistrictBy();
+    var visualize = (dby.by > 0) ? LEGISLATIVE_BODY : dby.name;
+
+    if (visualize == 'Compactness') {
+        computeAvg(context.features, 'compactness');
+    }
+    if (visualize == 'Adjacency') {
+        computeAvg(context.features, 'adjacency');
+    }
+
+    getMapStyles(visualize, dby.name);
 }
 
 IdGeounit = OpenLayers.Class(OpenLayers.Control.GetFeature, {

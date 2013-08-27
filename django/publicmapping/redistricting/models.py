@@ -1520,13 +1520,26 @@ class Plan(models.Model):
         features = []
 
         subj = Subject.objects.get(id=int(subject_id))
-       
-        for district in qset:
-            compactness_calculator = Schwartzberg()
-            compactness_calculator.compute(district=district)
 
-            contiguity_calculator = Contiguity()
-            contiguity_calculator.compute(district=district)
+        # Grab ScoreFunctions so we can use cached scores for districts if they exist
+        computed_district_score = ComputedDistrictScore()
+        schwartzberg_function = ScoreFunction.objects.get(name='district_schwartzberg')
+        contiguity_function = ScoreFunction.objects.get(name='district_contiguous')
+
+        # Need to use filter for optional calculators because they may not be in database
+        # if they are not in config.xml
+        convex_function = ScoreFunction.objects.filter(name='district_convex')
+        adjacency_function = ScoreFunction.objects.filter(name='district_adjacency')
+
+        for district in qset:
+            computed_compactness = computed_district_score.compute(schwartzberg_function, district=district)
+            computed_contiguity = computed_district_score.compute(contiguity_function, district=district)
+
+            # Optional Choropleths/Calculators
+            if settings.CONVEX_CHOROPLETH:
+                computed_convex = computed_district_score.compute(convex_function[0], district=district)
+            if settings.ADJACENCY:
+                computed_adjacency = computed_district_score.compute(adjacency_function[0], district=district)
 
             # If this district contains multiple members, change the label
             label = district.long_label
@@ -1534,8 +1547,7 @@ class Plan(models.Model):
                 format = self.legislative_body.multi_district_label_format
                 label = format.format(name=district.long_label, num_members=district.num_members)
 
-            
-            features.append({ 
+            features_dict = { 
                 'id': district.id,
                 'properties': {
                     'district_id': district.district_id,
@@ -1544,12 +1556,18 @@ class Plan(models.Model):
                     'is_locked': district.is_locked,
                     'version': district.version,
                     'number': str(district.computedcharacteristic_set.get(subject=subj).number),
-                    'contiguous': contiguity_calculator.result['value'],
-                    'compactness': compactness_calculator.result['value'],
+                    'contiguous': computed_contiguity['value'],
+                    'compactness': computed_compactness['value'],
                     'num_members': district.num_members
                 },
                 'geometry': json.loads(GEOSGeometry(district.chop).geojson)
-            })
+            }
+
+            if settings.ADJACENCY:
+                features_dict['properties']['adjacency'] = computed_adjacency['value']
+            if settings.CONVEX_CHOROPLETH:
+                features_dict['properties']['convexhull'] = computed_convex['value']
+            features.append(features_dict)
 
         # Return a python dict, which gets serialized into geojson
         return features
