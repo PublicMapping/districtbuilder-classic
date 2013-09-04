@@ -536,16 +536,25 @@ chooseplan = function(options) {
         var row = $(_table.getInd(id, true));
         var difile = row.data('difile');
         if (difile == null) {
-            difile = districtfile({
-                target: $('#chooserFileDownloadTarget'),
+            difileIndex = districtfile({
+                target: $('#chooserFileDownloadTargetIndex'),
                 planId: id,
-                type: 'index'
+                type: 'index',
+                display: 'Index File'
             });
-            row.data('difile', difile);
+            difileShape = districtfile({
+                target: $('#chooserFileDownloadTargetShape'),
+                planId: id,
+                type: 'shape',
+                display: 'Shapefile'
+            });
+            row.data('difileIndex', difileIndex);
+            row.data('difileShape', difileShape);
         }
-        difile.setUpdateVisibility(true).init();
-        _districtindexfilePublisher = difile;
-
+        difileIndex.setUpdateVisibility(true).init();
+        _districtindexfilePublisher = difileIndex;
+        difileShape.setUpdateVisibility(true).init();
+        _districtindexfilePublisher = difileShape;
         // Reset the button to starting text and enabled state
         $('#start_mapping .ui-button-text').html(_startText);
         $('#start_mapping').attr('disabled', false);

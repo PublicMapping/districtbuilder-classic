@@ -685,21 +685,33 @@ div#form_container {
 
 .chooserDetailButton {
   float:left;
-  margin-right:4px;
+  margin-right: 4px;
+  width: 74px;
+  margin-top: 0px;
+  margin-bottom: 0px;
 }
 div#chooserFileDownloadTarget .loading {
     background: url('/static-media/images/chooser-loading.gif') no-repeat left center;
     height:25px;
     width:70px;
 }
-div#chooserFileDownloadTarget div#pendingMessage {
-  font-size: 11px; 
-  width: 120px; 
-  text-align:right; 
-  line-height: 12px; 
+div#pendingMessage {
+  font-size: 10px; 
+  width: 67px; 
+  line-height: 9px; 
   border: 1px solid #ccc; 
   padding: 3px; 
   background: #fafafa
+}
+.chooserDetailButton .button {
+  height: 34px;
+}
+#edit_plan_attr {
+  height: 34px;
+}
+.chooserDetailButton .ui-button-text {
+  line-height: 1.1em;
+  font-size: 10px;
 }
 
 div#edit_container {
