@@ -47,7 +47,9 @@ districtfile = function(options) {
             /* The type of file to check/request: index or shape */
             type: 'index',
             /* Is this a menu item or a button? */
-            menu_icon: null
+            menu_icon: null,
+            /* Display Text for D/L Buttons */
+            display: 'Index'
         }, options),
         
         _autoDownload = false,
@@ -96,8 +98,16 @@ districtfile = function(options) {
      */
     var statusRequestCallback = function(data) {
         if (data !== null && data.success) {
-            var fileStatus = data.status;
-            var button = $('<button type="button" id="btnExportDistrictIndexFile" class="button" />');
+            var fileStatus = data.status,
+                button;
+            if (_options.type == 'index') {
+                button = $('<button type="button" id="btnExportDistrictIndexFile" class="button" />');
+            }
+            else {
+                button = $('<button type="button" id="btnExportDistrictShapeFile" class="button" />');
+            };
+            
+
             
             // If the file is ready, add a button/link to download
             if (fileStatus == 'done') {
@@ -117,7 +127,7 @@ districtfile = function(options) {
                     else {
                         _options.target.empty();
                         var link = $('<a href="' + _options.fetchUrl + '?type=' + _options.type + '" />');
-                        button.text(gettext('Download')).button();
+                        button.text(gettext('Download '+_options.display)).button();
                         $(link).append(button);
                         _options.target.append(link);    
                     }
@@ -130,7 +140,7 @@ districtfile = function(options) {
                 if (_visiblyUpdate) {
                     if (_options.menu_icon == null) {
                         _options.target.empty();
-                        button.text(gettext('Request File')).button();
+                        button.text(gettext('Request '+_options.display)).button();
                         button.click(function(){
                             _autoDownload = true;
                             $.post(_options.fetchUrl + '?type=' + _options.type, indicatePending());

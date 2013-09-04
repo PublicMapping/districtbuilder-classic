@@ -773,13 +773,18 @@ class DistrictShapeFile():
                     else:
                         # this dict item is a scalar or another dict
                         sub = etree.SubElement(elem, key)
-                        dict2elem(sub,d[key])
+                        if isinstance(d[key], basestring):
+                            try:
+                                d[key] = d[key].encode('ascii', 'replace')
+                            except:
+                                pass
+                            dict2elem(sub,d[key])
             else:
                 # the element passed is no longer a dict, it's a scalar value
-                elem._setText(str(d))
+                elem._setText(str(d).encode('ascii', 'replace'))
 
             return elem
-                
+
 
         elem = objectify.Element('metadata')
         elem = dict2elem(elem, meta)
