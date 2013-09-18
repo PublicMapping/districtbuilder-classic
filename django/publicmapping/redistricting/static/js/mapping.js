@@ -1749,7 +1749,7 @@ function mapinit(srs,maxExtent) {
                     for (var demo = 0; demo < DEMOGRAPHICS.length; demo++) {
                         if (e.features[feat].data.subject_id == DEMOGRAPHICS[demo].id) {
                             var text = DEMOGRAPHICS[demo].text;
-                            text = text.startsWith('% ') ? text.substr(2) : text;
+                            text = DB.util.startsWith(text, '% ') ? text.substr(2) : text;
                             ctics.push({ lbl: text, val:parseFloat(e.features[feat].data.number) });
                         }
                     }
