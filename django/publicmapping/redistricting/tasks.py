@@ -587,7 +587,7 @@ class DistrictShapeFile():
         # get the map server URL for the GetCapabilities doc
         ms_url = settings.MAP_SERVER
         if ms_url == '':
-            ms_url = site.domain
+            ms_url = 'localhost'
         ms_url = 'http://%s/geoserver/ows?service=wms&version=1.1.1&request=GetCapabilities' % ms_url
 
         stream = urllib2.urlopen(ms_url)
