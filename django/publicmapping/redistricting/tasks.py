@@ -566,55 +566,6 @@ class DistrictShapeFile():
     """
 
     @staticmethod
-    def contact_from_getcapabilities(site):
-        """
-        Retrieve contact information for metadata from the contact data in geoserver.
-
-        Returns a tuple of information with:
-            contact_person
-            contact_organization
-            contact_position
-            address_type
-            address
-            city
-            state
-            postal
-            country
-            voice_phone
-            fax_phone
-            email
-        """
-        # get the map server URL for the GetCapabilities doc
-        ms_url = settings.MAP_SERVER
-        if ms_url == '':
-            ms_url = 'localhost'
-        ms_url = 'http://%s/geoserver/ows?service=wms&version=1.1.1&request=GetCapabilities' % ms_url
-
-        stream = urllib2.urlopen(ms_url)
-        tree = etree.parse(stream)
-        stream.close()
-
-        contact = tree.xpath('/WMT_MS_Capabilities/Service/ContactInformation')[0]
-
-        parsed_contact = (
-            contact.xpath('ContactPersonPrimary/ContactPerson')[0].text,
-            contact.xpath('ContactPersonPrimary/ContactOrganization')[0].text,
-            contact.xpath('ContactPosition')[0].text,
-            contact.xpath('ContactAddress/AddressType')[0].text,
-            contact.xpath('ContactAddress/Address')[0].text,
-            contact.xpath('ContactAddress/City')[0].text,
-            contact.xpath('ContactAddress/StateOrProvince')[0].text,
-            contact.xpath('ContactAddress/PostCode')[0].text,
-            contact.xpath('ContactAddress/Country')[0].text,
-            contact.xpath('ContactVoiceTelephone')[0].text,
-            contact.xpath('ContactFacsimileTelephone')[0].text,
-            contact.xpath('ContactElectronicMailAddress')[0].text,
-        )
-
-        return tuple(map(lambda x:x if x is not None else '', parsed_contact))
-        
-
-    @staticmethod
     def generate_metadata(plan, districts):
         """
         Generate a base chunk of metadata based on the spatial data in the plan and districts.
@@ -644,8 +595,6 @@ class DistrictShapeFile():
             e = Envelope( (-180.0,-90.0,180.0,90.0,) )
 
         site = Site.objects.get_current()
-
-        contact = DistrictShapeFile.contact_from_getcapabilities(site)
 
         dt_now = datetime.now()
         # All references to FGDC below refer to the FGDC-STD-001 June 1998 metadata
@@ -723,24 +672,6 @@ class DistrictShapeFile():
             }, 
             'metainfo':{ # FGDC 7
                 'metd': dt_now.date().isoformat(), # FGDC 7.1
-                'metc': { # FGDC 7.4
-                    'cntinfo': {
-                        'cntperp': contact[0],
-                        'cntorgp': contact[1],
-                        'cntpos': contact[2],
-                        'cntaddr':{
-                            'addrtype': contact[3],
-                            'address': contact[4],
-                            'city': contact[5],
-                            'state': contact[6],
-                            'postal': contact[7],
-                            'country': contact[8]
-                        },
-                        'cntvoice': contact[9],
-                        'cntfax': contact[10],
-                        'cntemail': contact[11]
-                    }
-                },
                 'metstdn': 'FGDC Content Standards for Digital Geospatial Metadata',
                 'metstdv': 'FGDC-STD-001 June 1998'
             }
