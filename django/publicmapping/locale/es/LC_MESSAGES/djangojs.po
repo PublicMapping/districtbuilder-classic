@@ -503,7 +503,7 @@ msgstr ""
 
 #: redistricting/static/js/mapping.js:2989
 msgid "Please select a name for the %(bml)s"
-msgstr ""
+msgstr "Por favor seleccione un nombre para el %(bml)s"
 
 #: redistricting/static/js/mapping.js:3005
 msgid "Cancel"
