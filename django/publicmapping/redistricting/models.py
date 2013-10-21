@@ -1811,7 +1811,7 @@ class Plan(models.Model):
         unassigned_district = self.district_set.filter(district_id=0, version__lte=version).order_by('-version')[0]
         unassigned_geom = unassigned_district.geom
         if not unassigned_geom or unassigned_geom.empty:
-            return False, 'There are no unassigned units that can be fixed.'
+            return False, _('There are no unassigned units that can be fixed.')
 
         # Get the unlocked districts in this plan with geometries
         districts = self.get_districts_at_version(version, include_geom=False)
@@ -1833,7 +1833,7 @@ class Plan(models.Model):
         num_districts = len(self.get_districts_at_version(version, include_geom=False)) - 1
         not_all_districts_assigned = num_districts < self.legislative_body.max_districts
         if not_all_districts_assigned and not to_add:
-            return False, 'All districts need to be assigned before fixing can occur. Currently: ' + str(num_districts)
+            return False, _('All districts need to be assigned before fixing can occur. Currently: ') + str(num_districts)
 
         # Only check for adjacent geounits if all districts are assigned
         if not not_all_districts_assigned:
@@ -1850,7 +1850,7 @@ class Plan(models.Model):
             min_pct = settings.FIX_UNASSIGNED_MIN_PERCENT / 100.0
             below_min_pct = pct_assigned < min_pct
             if below_min_pct and not to_add:
-                return False, 'The percentage of assigned units is: ' + str(int(pct_assigned * 100)) + '. Fixing unassigned requires a minimum percentage of: ' + str(settings.FIX_UNASSIGNED_MIN_PERCENT)
+                return False, _('The percentage of assigned units is: ') + str(int(pct_assigned * 100)) + '. ' + _('Fixing unassigned requires a minimum percentage of: ') + str(settings.FIX_UNASSIGNED_MIN_PERCENT)
     
             if not below_min_pct:
                 # Get the unassigned geounits from the ids
@@ -1914,13 +1914,13 @@ class Plan(models.Model):
 
             # Return status message
             num_fixed = len(to_add)
-            text = 'Number of units fixed: ' + str(num_fixed)
+            text = _('Number of units fixed: ') + str(num_fixed)
             num_remaining = num_unassigned - num_fixed
             if (num_remaining > 0):
-                text += ', Number of units remaining: ' + str(num_remaining)
+                text += ', ' + _('Number of units remaining: ') + str(num_remaining)
             return True, text
 
-        return False, 'No unassigned units could be fixed. Ensure the appropriate districts are not locked.'
+        return False, _('No unassigned units could be fixed. Ensure the appropriate districts are not locked.')
 
     @transaction.commit_manually
     def combine_districts(self, target, components, version=None):

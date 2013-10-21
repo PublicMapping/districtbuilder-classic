@@ -308,10 +308,9 @@ msgstr "Transparencia del Mapa"
 
 #: redistricting/static/js/mapping.js:456
 msgid "Please wait. Fixing unassigned blocks. This may take a couple minutes."
-msgstr ""
+msgstr "Por favor, espere. La fijación de los bloques no asignados. Esto puede tomar un par de minutos."
 
-#: redistricting/static/js/mapping.js:459
-#, fuzzy
+#: redistricting/static/js/mapping.js:462
 msgid "Fixing Unassigned"
 msgstr "Sin Asignar"
 
@@ -330,8 +329,7 @@ msgstr "Éxito!"
 msgid "Error"
 msgstr "Error"
 
-#: redistricting/static/js/mapping.js:488
-#, fuzzy
+#: redistricting/static/js/mapping.js:491
 msgid "Error encountered while fixing unassigned"
 msgstr "Error al recuperar informe de separaciones: "
 
