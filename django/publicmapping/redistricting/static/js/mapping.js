@@ -1375,7 +1375,7 @@ function mapinit(srs,maxExtent) {
             hover: false,
             onSelect: (function(){
                 var showTip = function(tipFeature, pixel) {
-                    $(districtIdDiv.firstChild).text(tipFeature.attributes.name);
+                    $(districtIdDiv.firstChild).text(tipFeature.attributes.label);
 
                     var leftOffset = $(districtIdDiv).width() + 15;
                     var topOffset = $(districtIdDiv).height() + 15;
