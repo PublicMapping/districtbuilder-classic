@@ -2938,3 +2938,25 @@ msgstr "Cambiar mi contraseña"
 
 #~ msgid "Tools"
 #~ msgstr "Herramientas"
+
+# for "Fix Unassigned" messages
+msgid "There are no unassigned units that can be fixed."
+msgstr "No hay unidades no asignadas que pueden resolverse."
+
+msgid "All districts need to be assigned before fixing can occur. Currently: "
+msgstr "Todos los distritos deben ser asignados antes de que ocurra la fijación. Actualmente: "
+
+msgid "The percentage of assigned units is: "
+msgstr "El porcentaje de unidades asignadas es: "
+
+msgid "Fixing unassigned requires a minimum percentage of: "
+msgstr "La fijación no asignado requiere un porcentaje mínimo de: "
+
+msgid "Number of units fixed: "
+msgstr "Número de unidades fijas: "
+
+msgid "Number of units remaining: "
+msgstr "Número de unidades restantes: "
+
+msgid "No unassigned units could be fixed. Ensure the appropriate districts are not locked."
+msgstr "No hay unidades no asignadas podrían ser fijos. Asegúrese de que los distritos apropiados no están bloqueados."
