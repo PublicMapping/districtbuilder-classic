@@ -3023,6 +3023,7 @@ function mapinit(srs,maxExtent) {
             var buttons = [
                 {
                     label: gettext('OK'),
+                    text: gettext('OK'),
                     click: function() { 
                         var did, dname;
                         var dinfo = $('#newdistrictname').val().split(';');
@@ -3034,6 +3035,7 @@ function mapinit(srs,maxExtent) {
                     }
                 },{
                     label: gettext('Cancel'),
+                    text: gettext('Cancel'),
                     click: function() { 
                         $(this).dialog("close"); 
                         $('#newdistrictdialog').remove(); 
