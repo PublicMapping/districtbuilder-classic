@@ -382,15 +382,20 @@ $(function() {
         });    
     
     $('#saveplaninfo').bind('planSaved', function(event, time) {
-        var local = getLocalTimeFromIsoformat(time);
-        var hour = local.hours % 12;
-        if (hour === 0) { hour = 12; }
+        // there isn't a good, standard way to localize dates in javascript.
+        // here, we need to show either dd/yy or yy/dd depending on the desired format.
+        // as a simple workaround, inspect the date format set by the django localization
+        // framework: if the first element is the date, set it first, else use the month.
+        var local = getLocalTimeFromIsoformat(time),
+            isDateFirst = DB.util.startsWith(get_format('SHORT_DATE_FORMAT'), 'd'),
+            dateParts = local.day.split('/');
+        
         var i18nParams = {
-            day: local.day,
-            hour: hour,
+            day: isDateFirst ? (dateParts[1] + '/' + dateParts[0]) : (dateParts[0] + '/' + dateParts[1]),
+            hour: (local.hours % 12) || 12,
             minute: ((local.minutes < 10) ? ('0' + local.minutes) : local.minutes)
         };
-
+        
         $('#saveplaninfo').text(printFormat(gettext('Last Saved on %(day)s at %(hour)s:%(minute)s'), i18nParams));
     });
 

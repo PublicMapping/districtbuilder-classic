@@ -338,7 +338,7 @@ chooseplan = function(options) {
                 {name:'fields.owner', label:gettext('Author'), search:true, width: '110', fixed: true, sortable:true},
                 {name:'fields.description', label:gettext('Description'), hidden:true, search:true},
                 {name:'fields.is_shared', label:gettext('Shared'), sortable:true, search:false, width:'60', fixed: true, align: 'center', formatter:'sharedImageFormatter'},
-                {name:'fields.edited', label:gettext('Last Edited'), sortable:true, search:false, width:'130', fixed: true, align: 'center', formatter:'tzAwareDateFormatter', formatoptions: { srcformat: 'UniversalSortableDateTime', newformat:'m/d/Y g:i A'}},
+                {name:'fields.edited', label:gettext('Last Edited'), sortable:true, search:false, width:'130', fixed: true, align: 'center', formatter:'tzAwareDateFormatter', formatoptions: { srcformat: 'UniversalSortableDateTime', newformat: get_format('SHORT_DATE_FORMAT') + ' g:i A'}},
                 {name:'fields.delete', label:gettext('Delete'), formatter: 'deleteFormatter', width:'60', fixed: true, align:'center'},
                 {name:'fields.can_edit', label:gettext('Edit'), search:false, hidden: true},
                 {name:'fields.districtCount', label:gettext('# Districts'), search:false, sortable:true, hidden:true},
