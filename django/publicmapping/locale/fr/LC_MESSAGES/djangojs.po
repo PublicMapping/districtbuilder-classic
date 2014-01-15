@@ -308,6 +308,8 @@ msgstr "Transparence de la Carte"
 #: redistricting/static/js/mapping.js:456
 msgid "Please wait. Fixing unassigned blocks. This may take a couple minutes."
 msgstr ""
+"Merci de patienter. Correction des blocs non assignés. "
+"Ceci peut prendre quelques minutes."
 
 #: redistricting/static/js/mapping.js:459
 msgid "Fixing Unassigned"
@@ -330,12 +332,12 @@ msgstr "Erreur"
 
 #: redistricting/static/js/mapping.js:485
 msgid "Error encountered while fixing unassigned"
-msgstr ""
+msgstr "Erreur rencontrée lors de la correction des non assignés"
 "Une erreur s'est produite lors de la récupération du rapport des divisions: "
 
 #: redistricting/static/js/mapping.js:501
 msgid "No reference layer selected."
-msgstr ""
+msgstr "Aucune couche de référence sélectionnée."
 
 #: redistricting/static/js/mapping.js:502
 #: redistricting/static/js/splitsreport.js:109
@@ -351,15 +353,15 @@ msgstr "Veuillez patienter. Récupération du rapport des divisions."
 
 #: redistricting/static/js/mapping.js:519
 msgid "Finding Splits"
-msgstr ""
+msgstr "Recherche des Divisions"
 
 #: redistricting/static/js/mapping.js:534
 msgid "This plan contains no splits."
-msgstr ""
+msgstr "Ce plan ne contient aucune division."
 
 #: redistricting/static/js/mapping.js:535
 msgid "No Splits Found"
-msgstr ""
+msgstr "Divisions Non Trouvée"
 
 #: redistricting/static/js/mapping.js:539
 #: redistricting/static/js/mapping.js:546
@@ -455,11 +457,11 @@ msgstr "Aucun"
 
 #: redistricting/static/js/mapping.js:2620
 msgid "Boundary"
-msgstr ""
+msgstr "Limite"
 
 #: redistricting/static/js/mapping.js:2626
 msgid "Noncontiguous"
-msgstr ""
+msgstr "Non contigu"
 
 #: redistricting/static/js/mapping.js:2628
 msgid "Contiguous"
@@ -471,47 +473,47 @@ msgstr "Compacité"
 
 #: redistricting/static/js/mapping.js:2636
 msgid "Average"
-msgstr ""
+msgstr "Moyenne"
 
 #: redistricting/static/js/mapping.js:2638
 msgid "Hardly Compact"
-msgstr ""
+msgstr "A Peine Compacte"
 
 #: redistricting/static/js/mapping.js:2644
 msgid "Far Over Target"
-msgstr ""
+msgstr "Bien au dessus de l'Objectif"
 
 #: redistricting/static/js/mapping.js:2646
 msgid "Over Target"
-msgstr ""
+msgstr "Dépasse l'Objectif"
 
 #: redistricting/static/js/mapping.js:2648
 msgid "Within Target"
-msgstr ""
+msgstr "Dans l'Objectif"
 
 #: redistricting/static/js/mapping.js:2650
 msgid "Under Target"
-msgstr ""
+msgstr "Sous l'Objectif"
 
 #: redistricting/static/js/mapping.js:2652
 msgid "Far Under Target"
-msgstr ""
+msgstr "Bien en dessous de l'Objectif"
 
 #: redistricting/static/js/mapping.js:2978
 msgid "Please select a name for the %(bml)s"
-msgstr ""
+msgstr "Veuillez choisir un nom pour le %(bml)s"
 
 #: redistricting/static/js/mapping.js:2991
 msgid "Cancel"
-msgstr ""
+msgstr "Annuler"
 
 #: redistricting/static/js/mapping.js:3008
 msgid "Community Label"
-msgstr ""
+msgstr "Libellé de la Communauté"
 
 #: redistricting/static/js/mapping.js:3009
 msgid "Community Type"
-msgstr ""
+msgstr "Type de Communauté"
 
 #: redistricting/static/js/multimember.js:59
 msgid "Set Multi-Member Districts"

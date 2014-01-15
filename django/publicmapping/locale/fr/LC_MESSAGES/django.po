@@ -106,14 +106,12 @@ msgid "Could not store uploaded Subject template."
 msgstr "Impossible de stocker le modèle de l'objet téléchargé"
 
 #: redistricting/forms.py:111
-#, fuzzy
 msgid "The uploaded file is missing subject data."
-msgstr "Le fichier téléchargé contient un nom d'objet non valide."
+msgstr "Le fichier téléchargé ne contient pas de donnée sujet."
 
 #: redistricting/forms.py:118
-#, fuzzy
 msgid "The new subject name could not be determined."
-msgstr "Le nom de l'objet contient des caractères invalides."
+msgstr "Le nouveau nom du sujet n'a pas pû être déterminé."
 
 #: redistricting/forms.py:136
 msgid "Uploaded file cannot be found."
@@ -224,20 +222,18 @@ msgid "Error creating calculator report."
 msgstr "Erreur durant la création du rapport de la calculatrice."
 
 #: redistricting/tasks.py:1367
-#, fuzzy
 msgid "There are missing columns in the uploaded Subject file"
 msgstr ""
-"Il y a un nombre correct de géounits dans l'objet du fichier téléchargé, "
+"Il y'a des colonnes manquantes dans le fichier Sujet envoyé"
 
 #: redistricting/tasks.py:1396
-#, fuzzy
 msgid "There are an incorrect number of columns in the uploaded Subject file"
 msgstr ""
-"Il y a un nombre incorrect de géounits dans l'objet du fichier téléchargé. "
+"Il y'a un nombre de colonnes incorrecte dans le fichier Sujet envoyé"
 
 #: redistricting/tasks.py:1402
 msgid "Invalid data detected in the uploaded Subject file"
-msgstr ""
+msgstr "Donnée invalide détectée dans le fichier Sujet envoyé"
 
 #: redistricting/tasks.py:1419
 msgid ""
@@ -272,7 +268,7 @@ msgstr ""
 
 #: redistricting/tasks.py:1650
 msgid "Not able to create task for update_vacant_characteristics."
-msgstr ""
+msgstr "Impossible de créer une tache pour update_vacant_characteristics."
 
 #: redistricting/tasks.py:1713
 msgid "Reset computed characteristics, renesting foundation geographies..."
@@ -764,9 +760,9 @@ msgid "Map Editing"
 msgstr "Édition de Cartes"
 
 #: redistricting/templates/editplan.html:45
-#, fuzzy, python-format
+#, python-format
 msgid "%(district_label)s Tools"
-msgstr "Nouveau %(district_label)s"
+msgstr "Outils %(district_label)s"
 
 #: redistricting/templates/editplan.html:58
 #: redistricting/templates/editplan.html:119
@@ -883,9 +879,9 @@ msgstr ""
 "déverrouiller."
 
 #: redistricting/templates/editplan.html:124
-#, fuzzy, python-format
+#, python-format
 msgid "Lock<br />%(district_label)s"
-msgstr "Ancre<br/>%(district_label)s"
+msgstr "Verrouiller<br/>%(district_label)s"
 
 #: redistricting/templates/editplan.html:126
 #, python-format
@@ -893,9 +889,9 @@ msgid "Click on a %(body_member_long_label)s to see its ID."
 msgstr "Cliquez sur une %(body_member_long_label)s pour voir son ID."
 
 #: redistricting/templates/editplan.html:127
-#, fuzzy, python-format
+#, python-format
 msgid "%(district_label)s<br />Info"
-msgstr "Nouveau %(district_label)s"
+msgstr "%(district_label)s<br />Info"
 
 #: redistricting/templates/editplan.html:129
 #, python-format
@@ -903,9 +899,9 @@ msgid "Unassign all the units in a %(body_member_long_label)s"
 msgstr "Désattribuez toutes les unités dans une %(body_member_long_label)s"
 
 #: redistricting/templates/editplan.html:130
-#, fuzzy, python-format
+#, python-format
 msgid "Unassign<br/>%(district_label)s"
-msgstr "Ancre<br/>%(district_label)s"
+msgstr "Dé-assigner<br/>%(district_label)s"
 
 #: redistricting/templates/editplan.html:132
 #, python-format
@@ -1570,14 +1566,14 @@ msgid "Map Tools"
 msgstr "Outils de la carte"
 
 #: redistricting/templates/viewplan.html:467
-#, fuzzy, python-format
+#, python-format
 msgid "Click on a %(district_label)s to see its ID."
-msgstr "Cliquez sur une circonscription pour voir son ID."
+msgstr "Cliquez sur un(e) %(district_label)s pour voir son ID."
 
 #: redistricting/templates/viewplan.html:468
-#, fuzzy, python-format
+#, python-format
 msgid "%(district_label)s Info"
-msgstr "Nouveau %(district_label)s"
+msgstr "Info %(district_label)s"
 
 #: redistricting/templates/viewplan.html:504
 msgid "Edit Stats"
@@ -1762,9 +1758,8 @@ msgstr ""
 "                  "
 
 #: redistricting/templates/viewplan.html:884
-#, fuzzy
 msgid "Community Map Name:"
-msgstr "Carte de la communauté"
+msgstr "Nom de la carte communauté:"
 
 #: redistricting/templates/viewplan.html:897
 msgid "Please select a plan"
@@ -2460,10 +2455,11 @@ msgstr ""
 "La date d'entrée en vigueur de la présente politique était le 2 Mai 2011."
 
 #: templates/index.html:332
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "We've designed the software to run on %(firefox_link)s - a free web browser"
-msgstr "Nous avons conçu le logiciel pour fonctionner sur"
+msgstr "Nous avons conçu le logiciel pour fonctionner sur %(firefox_link)s "
+"- un navigateur web libre"
 
 #: templates/language_chooser.html:33
 msgid "Language"
