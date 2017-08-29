@@ -1,7 +1,7 @@
 Gunicorn==19.7.1
 Django==1.4.22
-celery==3.0.15
-django-celery==3.0.11
+celery==3.1.23
+django-celery==3.2.1
 django-staticfiles==1.2.1
 django-tagging==0.3.1
 django-sld==1.0.7
