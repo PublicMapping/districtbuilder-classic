@@ -1,0 +1,19 @@
+version: "3"
+services:
+  # database:
+  #   image: quay.io/azavea/postgis:2.2-postgres9.5-slim
+  #   environment:
+  #     - POSTGRES_DB=district_builder
+  #     - POSTGRES_USER=district_builder
+  #     - POSTGRES_PASSWORD=district_builder
+
+  # redis:
+  #   image: redis:2-alpine
+
+  django:
+    build: .
+    ports:
+      - "8080:8080"
+    command:
+      - "publicmapping/manage.py"
+      - "run_gunicorn"
