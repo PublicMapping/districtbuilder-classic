@@ -10,13 +10,10 @@ ENV PG_VERSION 9.4+165+deb8u2
 
 RUN echo 'deb http://apt.postgresql.org/pub/repos/apt/ jessie-pgdg main' ${PG_MAJOR} > /etc/apt/sources.list.d/pgdg.list
 
-RUN set -ex \
-    && deps=" \
-       gdal-bin \
-       gettext \
-       postgresql-client=${PG_VERSION} \
-    " \
-    && apt-get update && apt-get install -y ${deps} --no-install-recommends \
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        gdal-bin \
+        gettext \
+        postgresql-client=${PG_VERSION} \
     && rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt /usr/src/app/
