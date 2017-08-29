@@ -1,4 +1,5 @@
 Gunicorn==19.7.1
+psycopg2==2.7.3
 Django==1.4.22
 celery==3.1.23
 django-celery==3.2.1
