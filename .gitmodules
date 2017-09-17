@@ -1,0 +1,3 @@
+[submodule "GeoServer-Docker"]
+	path = GeoServer-Docker
+	url = https://github.com/thinkWhere/GeoServer-Docker

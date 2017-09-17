@@ -25,7 +25,7 @@ Author:
 """
 
 from celery.task import task
-from celery.task.http import HttpDispatchTask
+from celery.task.http import HttpDispatch
 from codecs import open
 from django.core import management
 from django.contrib.comments.models import Comment
@@ -997,9 +997,9 @@ class PlanReport:
 
         logger.debug('Firing web worker task.')
 
-        dispatcher = HttpDispatchTask()
+        dispatcher = HttpDispatch()
 
-        # Callbacks do not fire for HttpDispatchTask -- why not?
+        # Callbacks do not fire for HttpDispatch -- why not?
         #
         #def failure(self, exc, task_id, args, kwargs, einfo=None):
         #    self.log.get_default_logger().info('  CALLBACK: Failure!')

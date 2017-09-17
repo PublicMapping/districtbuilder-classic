@@ -1,19 +1,22 @@
-version: "3"
-services:
-  # database:
-  #   image: quay.io/azavea/postgis:2.2-postgres9.5-slim
-  #   environment:
-  #     - POSTGRES_DB=district_builder
-  #     - POSTGRES_USER=district_builder
-  #     - POSTGRES_PASSWORD=district_builder
+postgres:
+  image: mdillon/postgis:9.6-alpine
+  environment:
+   - POSTGRES_USER=postgres
+   - POSTGRES_PASSWORD=postgres
 
-  # redis:
-  #   image: redis:2-alpine
+geoserver:
+  image: thinkwhere/geoserver
 
-  django:
-    build: .
-    ports:
-      - "8080:8080"
-    command:
-      - "publicmapping/manage.py"
-      - "run_gunicorn"
+redis:
+  image: redis:3-alpine
+
+django:
+  build: .
+  links:
+    - postgres
+    - redis
+    - geoserver
+  ports:
+    - 8080:8080
+  command:
+    - /projects/PublicMapping/DistrictBuilder/start.sh

@@ -1,6 +1,6 @@
 Gunicorn==19.7.1
 psycopg2==2.7.3
-Django==1.4.22
+Django==1.5.12
 celery==3.1.23
 django-celery==3.2.1
 django-staticfiles==1.2.1
@@ -12,7 +12,7 @@ django-compressor==1.2
 python-sld==1.0.9
 numpy==1.6.2
 scipy==0.11.0
-Pillow==1.7.8
+Pillow==2.3.0
 PySAL==1.5.0
 git+git://github.com/PublicMapping/modestmaps-py.git@db-mod_1.4
 git+git://github.com/PublicMapping/django-rosetta.git@db-mod_2.0
