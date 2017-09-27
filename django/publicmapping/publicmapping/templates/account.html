@@ -31,7 +31,7 @@
             </tr>
             <tr>
                 <td class="fname">{% trans "Password Hint" %} *</td>
-                <td><input id="passwordhint" name="passwordhint" class="field" maxlength="30" 
+                <td><input id="passwordhint" name="passwordhint" class="field" maxlength="30"
                 {% if is_registered %}
                     value="{{ userinfo.password_hint }}"
                 {% endif %}/></td>
@@ -80,7 +80,7 @@
 
             </tr>
             {% endif %}
-            <input type="hidden" id="userid" name="userid" 
+            <input type="hidden" id="userid" name="userid"
             {% if is_registered %}
                 value="{{ userinfo.id }}"
             {% else %}

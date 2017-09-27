@@ -21,7 +21,7 @@
 
    Purpose:
        This file is a template for uploading new or modified Subject data via
-       the administrative interface. This template is used prior to the 
+       the administrative interface. This template is used prior to the
        change_form template with an empty Subject model.
 
    Author: David Zwarg, Andrew Jennings, Kenny Shepard
@@ -38,7 +38,7 @@
 {{ media }}
 {% if is_processing %}
 <script type="text/javascript" src="/static-media/jquery/jquery-1.6.2.min.js"></script>
-<script type="text/javascript" src="{% url django.views.i18n.javascript_catalog %}"></script>    
+<script type="text/javascript" src="{% url django.views.i18n.javascript_catalog %}"></script>
 <script type="text/javascript">
 $(function(){
     var statusInterval = 0;
@@ -117,8 +117,8 @@ $(function(){
 {% block breadcrumbs %}{% if not is_popup %}
 <div class="breadcrumbs">
      <a href="../../../">{% trans "Home" %}</a> &rsaquo;
-     <a href="../../">{{ app_label|capfirst|escape }}</a> &rsaquo; 
-     {% if has_change_permission %}<a href="../">{{ opts.verbose_name_plural|capfirst }}</a>{% else %}{{ opts.verbose_name_plural|capfirst }}{% endif %} &rsaquo; 
+     <a href="../../">{{ app_label|capfirst|escape }}</a> &rsaquo;
+     {% if has_change_permission %}<a href="../">{{ opts.verbose_name_plural|capfirst }}</a>{% else %}{{ opts.verbose_name_plural|capfirst }}{% endif %} &rsaquo;
      {% if add %}{% trans "Add" %} {{ opts.verbose_name }}{% else %}{{ original|truncatewords:"18" }}{% endif %}
 </div>
 {% endif %}{% endblock %}

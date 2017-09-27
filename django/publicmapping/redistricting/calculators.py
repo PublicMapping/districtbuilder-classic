@@ -31,7 +31,6 @@ Author:
 from math import sqrt, pi
 from django.contrib.gis.geos import Point, LineString
 from django.contrib.humanize.templatetags.humanize import intcomma
-from django.utils import simplejson as json
 from django.utils.translation import ugettext as _
 from django.template import Template, Context
 from decimal import Decimal
@@ -41,6 +40,7 @@ import random
 from django.db.models import Q
 import operator
 import itertools
+import json
 import redis
 from django.conf import settings
 from redisutils import key_gen

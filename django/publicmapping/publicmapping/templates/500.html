@@ -19,9 +19,9 @@
 
    Purpose:
        This file is a server error template served up by django for
-       requests that cause http 404 errors.
+       requests that cause http 500 errors.
 
-   Author: 
+   Author:
         Andrew Jennings, David Zwarg, Kenny Shepard
 
 {% endcomment %}
@@ -33,6 +33,6 @@
     </head>
     <body>
         <h1>{% trans "Oops" %}!</h1>
-        <p>{% trans "Sometimes bad things happen. I regret you were not able to find what you were looking for." %}</p>
+        <p>{% trans "Sometimes bad things happen. I regret any inconvenience this 500 error has caused you." %}</p>
     </body>
 </html>

@@ -36,9 +36,9 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
 from django.shortcuts import render_to_response
 from django.template import loader, Context, RequestContext
-from django.utils import simplejson as json
 from hashlib import sha1
 from django.utils.translation import ugettext as _, get_language
+import json
 
 # for proxy
 import urllib2
@@ -57,10 +57,10 @@ def index(request):
     index template contains a login button, a register
     button, and an anonymous button, all of which interact
     with django's authentication system.
-    
+
     Parameters:
         request -- An HttpRequest
-    
+
     Returns:
         An HTML welcome page.
     """
@@ -88,9 +88,9 @@ def index(request):
 def userregister(request):
     """
     A registration form endpoint for registering and logging in.
-    
-    This view will permit a user to register if their username is unique, 
-    their password is not empty, and an email address is provided. 
+
+    This view will permit a user to register if their username is unique,
+    their password is not empty, and an email address is provided.
     This view returns JSON, with a 'success' property if registration or
     login was successful.
 
@@ -99,10 +99,10 @@ def userregister(request):
 
     If registration was unsuccessful, the JSON also contains
     a 'message' property, describing why the registration failed.
-    
+
     Parameters:
         request -- An HttpRequest, with the form submitted parameters.
-        
+
     Returns:
         A JSON object indicating if registration/login was successful.
     """
@@ -180,7 +180,7 @@ def userupdate(request):
     id = request.POST.get('userid', None)
 
     status = { 'success':False, 'message':'Unspecified error.' }
-    
+
     if username == 'anonymous':
         status['message'] = 'Cannot update anonymous account information.'
     else:
@@ -212,15 +212,15 @@ def userupdate(request):
 
 def userlogout(request):
     """
-    Log out a client from the application. 
-    
-    This funtion uses django's authentication system to clear the session, 
-    etc. The view will redirect the user to the index page after logging 
+    Log out a client from the application.
+
+    This funtion uses django's authentication system to clear the session,
+    etc. The view will redirect the user to the index page after logging
     out.
-    
+
     Parameters:
         request -- An HttpRequest
-        
+
     Returns:
         An HttpResponseRedirect to the root url.
     """
@@ -235,16 +235,16 @@ def userlogout(request):
 def emailpassword(user):
     """
     Send a user an email with a new, auto-generated password.
-    
+
     We cannot decrypt the current password stored with the user record,
     so create a new one, and send it to the user.
-    
+
     This method is used within the forgotpassword form endpoint, but not
     as a user facing view.
-    
+
     Parameters:
         user -- The django user whose password will be changed.
-        
+
     Returns:
         True if the user was modified and notified successfully.
     """
@@ -266,17 +266,17 @@ def emailpassword(user):
 
     send_mail(_('Your Password Reset Request'), template.render(context), settings.EMAIL_HOST_USER, [user.email], fail_silently=False)
     return True
-    
+
 @cache_control(no_cache=True)
 def forgotpassword(request):
     """
     A form endpoint to provide a facility for retrieving a forgotten
     password. If someone has forgotten their password, this form will email
     them a replacement password.
-    
+
     Parameters:
         request -- An HttpRequest
-        
+
     Returns:
         A JSON object with a password hint or a message indicating that an
         email was sent with their new password.
@@ -312,14 +312,14 @@ def forgotpassword(request):
 def proxy(request):
     """
     A proxy for all requests to the map server.
-    
+
     This proxy is required for WFS requests and queries, since geoserver
     is on a different port, and browser javascript is restricted to
     same origin policies.
-    
+
     Parameters:
         request -- An HttpRequest, with an URL parameter.
-        
+
     Returns:
         The content of the URL.
     """
@@ -330,7 +330,7 @@ def proxy(request):
 
     if request.method == 'POST':
         rsp = urllib2.urlopen( urllib2.Request(
-            url, 
+            url,
             request.raw_post_data,
             {'Content-Type': request.META['CONTENT_TYPE'] }
         ))

@@ -2,8 +2,8 @@
 """
 Set up DistrictBuilder.
 
-This management command will examine the main configuration file for 
-correctness, import geographic levels, create spatial views, create 
+This management command will examine the main configuration file for
+correctness, import geographic levels, create spatial views, create
 geoserver layers, and construct a default plan.
 
 This file is part of The Public Mapping Project
@@ -24,7 +24,7 @@ License:
     See the License for the specific language governing permissions and
     limitations under the License.
 
-Author: 
+Author:
     Andrew Jennings, David Zwarg
 """
 
@@ -54,7 +54,7 @@ def main():
             help="Generate the database schema", default=False,
             action='store_true')
     parser.add_option('-g', '--geolevel', dest="geolevels",
-            help="Import the geography from the Nth GeoLevel.", 
+            help="Import the geography from the Nth GeoLevel.",
             action="append", type="int")
     parser.add_option('-V', '--views', dest="views",
             help="Create database views based on all geographies.",
@@ -77,7 +77,7 @@ def main():
     parser.add_option('-a', '--adjacency', dest="adjacency",
             help="Load adjacency data", default=False, action='store_true')
     parser.add_option('-b', '--bard', dest="bard",
-            help="Create a BARD map based on the imported spatial data.", 
+            help="Create a BARD map based on the imported spatial data.",
             default=False, action='store_true'),
     parser.add_option('-B', '--bardtemplates', dest="bard_templates",
             help="Create the BARD reporting templates.",
@@ -129,41 +129,17 @@ ERROR:
         sys.exit(1)
 
     os.environ['DJANGO_SETTINGS_MODULE'] = 'publicmapping.settings'
-    
+
     sys.path += ['.', '..']
 
+    import django
     from django.core import management
+    django.setup()
 
     if allops or options.database:
-        management.call_command('syncdb', verbosity=options.verbosity, interactive=False)
+        management.call_command('makemigrations', verbosity=options.verbosity, interactive=False)
+        management.call_command('migrate', verbosity=options.verbosity, interactive=False)
 
-    if allops:
-        database = True
-        geolevels = []
-        views = True
-        geoserver = True
-        templates = True
-        nesting = []
-        static = True
-        languages = True
-        bard = False
-        bard_templates = False
-        adjacency = False
-    else:
-        database = options.database
-        geolevels = options.geolevels
-        views = options.views
-        geoserver = options.geoserver
-        templates = options.templates
-        nesting = options.nesting
-        static = options.static
-        languages = options.languages
-        bard = options.bard
-        bard_templates = options.bard_templates
-        adjacency = options.adjacency
-
-    management.call_command('setup', config=args[1], verbosity=options.verbosity, database=database, geolevels=geolevels, views=views, geoserver=geoserver, templates=templates, nesting=nesting, static=static, languages=languages, bard=bard, bard_templates=bard_templates, force=options.force, adjacency=adjacency)
-    
     # Success! Exit-code 0
     sys.exit(0)
 

@@ -1,4 +1,4 @@
-{% extends "admin/auth/user/change_password.orig.html" %}
+{% extends "admin/login.orig.html" %}
 
 {% comment %}
 
@@ -20,34 +20,29 @@
    https://github.com/PublicMapping/
 
    Purpose:
-       This file is a template for the administrative password change interface.
+       This file is a template for the administrative interface.
 
-       This template changes the password submission process to submit hashed
-       passwords through the admin interface.
+       This template changes the title of the application and some copy
+       text to customize the text in the administrative section.
 
    Author: David Zwarg, Andrew Jennings
 
 {% endcomment %}
 
 {% block extrahead %}
-    <script type="text/javascript" src="/static-media/admin/js/jquery.min.js"></script>
-    <script type="text/javascript" src="{% url django.views.i18n.javascript_catalog %}"></script>        
+    <!-- extrahead (login) -->
+    <script type="text/javascript" src="/static-media/jquery/jquery-1.6.2.min.js"></script>
+    <script type="text/javascript" src="{% url django.views.i18n.javascript_catalog %}"></script>
     <script type="text/javascript" src="/static-media/js/sha1.js"></script>
     <script type="text/javascript">
     $(function(){
-        var pws = $('input[type="password"]');
-        $.each( pws, function(idx, item){
-            var myitem = $(item);
-            
-            myitem.attr('name',null);
-            myitem.after('<input type="hidden" name="password' + (idx+1) + '"/>');
-        });
-        $('input.default').click(function(){
-            $.each( pws, function(idx, item){
-                var myitem = $(item),
-                    encpw = $('input[name="password'+(idx+1)+'"]');
-                encpw.val( Sha1.hash(myitem.val()) );
-            });
+        var pw = $('#id_password');
+        pw.attr('name',null);
+        pw.after('<input type="hidden" name="password"/>');
+
+        $('input[type="submit"]').click(function(){
+            var encpw = $('input[name="password"]');
+            encpw.val( Sha1.hash(pw.val()) );
             return true;
         });
     });
