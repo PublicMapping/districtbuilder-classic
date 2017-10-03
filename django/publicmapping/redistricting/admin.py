@@ -34,7 +34,7 @@ from tasks import *
 from django import forms
 from django.http import HttpResponse
 from django.contrib.gis import admin
-from django.shortcuts import render_to_response
+from django.shortcuts import render
 from django.utils.encoding import force_unicode
 from django.contrib.admin import helpers
 from django.utils.translation import ugettext_lazy, ugettext as _
@@ -300,7 +300,7 @@ class SubjectAdmin(admin.ModelAdmin):
         }
 
         # Display the confirmation page
-        return render_to_response("admin/%s/%s/delete_selected_confirmation.html" % (app_label, opts.object_name.lower()), 
+        return render("admin/%s/%s/delete_selected_confirmation.html" % (app_label, opts.object_name.lower()), 
             context, context_instance=template.RequestContext(request))
 
     # Customize the label of the delete_selected_subject action to look like the normal delete label
@@ -322,7 +322,7 @@ class SubjectAdmin(admin.ModelAdmin):
             'geounits': geolevel.geounit_set.all().order_by('portable_id').values_list('portable_id',flat=True)
         }
 
-        resp = render_to_response("admin/%s/%s/add_template.csv" % (app_label, opts.object_name.lower()), 
+        resp = render("admin/%s/%s/add_template.csv" % (app_label, opts.object_name.lower()), 
             dictionary=context, mimetype='text/plain')
         resp['Content-Disposition'] = 'attachement; filename=new_subject.csv'
         return resp
@@ -381,7 +381,7 @@ class SubjectAdmin(admin.ModelAdmin):
             'is_processing': is_processing
         }
 
-        resp = render_to_response('admin/redistricting/subject/upload_form.html', context, context_instance=template.RequestContext(request))
+        resp = render('admin/redistricting/subject/upload_form.html', context, context_instance=template.RequestContext(request))
         return resp
 
     def upload_status_view(modeladmin, request, form_url='', extra_context=None, task_uuid=''):

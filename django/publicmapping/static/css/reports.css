@@ -1,0 +1,90 @@
+/*
+   Copyright 2010 Micah Altman, Michael McDonald
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software 
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+
+   This file is part of The Public Mapping Project
+   https://github.com/PublicMapping/
+
+   Purpose:
+       This stylesheet defines all the styles used for reports
+       in The Public Mapping Project django web application.
+
+   Author: 
+        Brian Jacobs, Andrew Jennings, David Zwarg, Kenny Shepard
+*/
+.report_panel_title { font-weight: bold; font-size: 1.2em; }
+.report_function { border-top: 2px solid #ddd; margin-bottom: 15px; }
+.report_function_wrap {margin-bottom: 30px}
+.report_score_cell { font-size: 0.9em; }
+.report_score_cell.header { font-weight: bold; text-align: center; }
+.report_score_cell.footer { font-weight: bold; }
+
+.left { text-align: left; }
+.right { text-align: right; }
+.center { text-align: center; }
+.true { color: #090; }
+.false { color: #900; }
+
+/*
+.report_panel {
+    max-width: 500px;
+    margin: 10px;
+    padding: 12px 12px 15px;
+    border: 1px solid #ccc;
+    background: #FBFBF3;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+    -moz-box-shadow: 0 0 13px -5px #666666;
+    -webkit-box-shadow: 0 0 13px -5px #666666;
+    box-shadow: 0 0 13px -5px #666666;
+}
+*/
+.report_panel {
+    max-width: 960px;
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+.report_function_title {
+  font-size:16px;
+  font-weight: bold;
+  color: #3E3E3E;
+  margin: 5px 5px 5px 0;
+}
+
+.report_panel table{
+  border-collapse: collapse;
+  color: #555555;
+  font-size: 11px;
+  border: 1px solid #ccc;
+  width: 100%;
+}
+
+.report_panel .ui-widget-content .ui-th-ltr {
+  font-weight: bold;
+}
+ 
+.report_panel table th{
+    background: #ECF6F5;
+    font-weight:bold;
+    font-size: 12px;
+}
+
+.report_panel table td, .report_panel table th {
+    padding: 4px 7px;
+    border: 1px solid #ccc;
+    line-height: 14px;
+}
+
+.report_panel table tr { background: #fafafa; }

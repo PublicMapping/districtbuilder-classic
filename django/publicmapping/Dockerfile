@@ -29,5 +29,6 @@ WORKDIR /usr/src/app
 RUN cp config/config.dist.xml config/config.xml \
     && python setup.py ./config/config.xsd ./config/config.xml -v2 -d
 
-ENTRYPOINT ["python"]
-CMD ["django/publicmapping/manage.py"]
+EXPOSE 8000
+
+ENTRYPOINT ["gunicorn"]

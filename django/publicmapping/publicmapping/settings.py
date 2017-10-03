@@ -40,11 +40,13 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     # 3rd party
     'django_comments',
+    'gunicorn',
     'polib',
     'rosetta',
     'tagging',
 
     # local
+    'publicmapping',
     'redistricting',
     'reporting'
 ]
@@ -86,10 +88,10 @@ WSGI_APPLICATION = 'publicmapping.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': 'districtbuilder',
-        'USER': 'districtbuilder',
-        'PASSWORD': 'districtbuilder',
-        'HOST': 'localhost',
+        'NAME': 'district_builder',
+        'USER': 'district_builder',
+        'PASSWORD': 'district_builder',
+        'HOST': 'postgres.internal.districtbuilder.com',
         'PORT': '5432'
     }
 }
@@ -132,6 +134,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = '/usr/src/app/static/'
 
 # LEGACY SETTINGS
 
@@ -156,19 +159,14 @@ EMAIL_HOST_USER = ''
 EMAIL_HOST_PASSWORD = ''
 EMAIL_SUBJECT_PREFIX = 'None '
 
-MEDIA_ROOT = '/projects/PublicMapping/DistrictBuilder/django/publicmapping/site-media/'
+MEDIA_ROOT = '/usr/src/app/site-media/'
 
-STATIC_ROOT = '/projects/PublicMapping/DistrictBuilder/django/publicmapping/static-media/'
-
-TEMPLATE_DIRS = (
-  '/projects/PublicMapping/DistrictBuilder/django/publicmapping/templates',
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder'
 )
 
 SLD_ROOT = '/projects/PublicMapping/DistrictBuilder/sld/'
-
-STATICFILES_DIRS = (
-  '/projects/PublicMapping/DistrictBuilder/django/publicmapping/static/',
-)
 
 CONCURRENT_SESSIONS = 5
 SESSION_TIMEOUT = 15
@@ -187,3 +185,5 @@ MAX_UNDOS_DURING_EDIT = 0
 MAX_UNDOS_AFTER_EDIT = 0
 
 LEADERBOARD_MAX_RANKED = 10
+
+SITE_ID = 2

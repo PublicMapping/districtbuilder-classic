@@ -136,10 +136,6 @@ ERROR:
     from django.core import management
     django.setup()
 
-    if allops or options.database:
-        management.call_command('makemigrations', verbosity=options.verbosity, interactive=False)
-        management.call_command('migrate', verbosity=options.verbosity, interactive=False)
-
     # Success! Exit-code 0
     sys.exit(0)
 

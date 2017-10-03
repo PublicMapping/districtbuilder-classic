@@ -54,12 +54,12 @@ div#static_header {
   padding: 35px 0 20px;
   margin: 0 0 20px;
   height: 86px;
-  background: url(/static-media/images/divider.png) 0 100% repeat-x;
+  background: url(/static/images/divider.png) 0 100% repeat-x;
 }  
 div#app_header {
   padding: 0;
   height: 43px; 
-  background: #7FAAAA url(/static-media/images/bg-app-header.png) 0 0 repeat-x;
+  background: #7FAAAA url(/static/images/bg-app-header.png) 0 0 repeat-x;
   background-color: rgba(233,233,210, .35);
   box-shadow: 0 0 7px rgba(0,0,0,.6);
   -moz-box-shadow: 0 0 7px rgba(0,0,0,.6);
@@ -97,7 +97,7 @@ div#site_nav li {
   list-style: none; 
   float:left;
   height: 43px;
-  background: url(/static-media/images/divider-vert.png) 100% 0 repeat-y; 
+  background: url(/static/images/divider-vert.png) 100% 0 repeat-y; 
 }
 
 #language_menu_target,

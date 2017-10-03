@@ -27,8 +27,7 @@
         Andrew Jennings, David Zwarg, Kenny Shepard
 
 {% endcomment %}
-{% load i18n %}
-{% load compress %}
+{% load i18n static %}
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="{{ language_code }}">
 <head>
@@ -38,16 +37,14 @@
     <meta name="copyright" content="&copy; 2010 Micah Altman, Michael McDonald"/>
     <meta property="og:title" content="DistrictBuilder: Web-based Open Source Software for Collaborative Redistricting" />
     <meta property="og:description" content="Draw your own redistricting plan by visiting the DistrictBuilder website." />
-    <meta property="og:image" content="http://{{ site.domain }}/static-media/images/db_sprite.png"/>
+    <meta property="og:image" content="{% static 'images/db_sprite.png' %}"/>
 
     <title>{% trans "Welcome to DistrictBuilder" %}</title>
-    <link rel="shortcut icon" href="/static-media/images/favicon.ico" />
-    {% compress css %}
-    <link rel="stylesheet" type="text/css" href="/static-media/css/reset.css"/>
-    <link rel="stylesheet" type="text/css" href="/static-media/jquery/themes/custom-theme/jquery-ui.custom.css"/>
-    <link rel="stylesheet" type="text/css" href="/static-media/css/core.css"/>
-    <link rel="stylesheet" type="text/css" href="/static-media/css/visuals.css"/>
-    {% endcompress %}
+    <link rel="shortcut icon" href="{% static 'images/favicon.ico' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/reset.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'jquery/themes/custom-theme/jquery-ui.custom.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/core.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/visuals.css' %}" />
     {% comment %}
 
     Load Google Analytics Script if the ga_account has been set
@@ -80,7 +77,7 @@
 
    <div id="static_header">
       <div id="logo">
-               <!--<img src="/static-media/images/title-static.png" />-->
+               <!--<img src="{% static 'images/title-static.png" />-->
 	       <span style="font-size:250%; font-family:arial,sans-serif; font-weight:bold; color:white">
                  {% trans "DistrictBuilder" %}
                </span>
@@ -170,11 +167,12 @@
 
           <h4>{% trans "To Draw Your Own Maps..." %}</h4>
 
-		<button  onclick="$('#register').dialog('open');" id="sign_up" />{% trans "Sign Up" %}</button>
+          <button  onclick="$('#register').dialog('open');" id="sign_up" />{% trans "Sign Up" %}</button>
 
           <h4>{% trans "To View Other Users' Maps..." %}</h4>
 
-            <form id="anonymousForm" action="/accounts/register/" method="post">
+          <form id="anonymousForm" action="/accounts/register/" method="post">
+              {% csrf_token %}
               <button id="doAnonymous" id="enter_as_a_guest" />{% trans "Enter as a guest" %}</button>
 
             </form>
@@ -191,6 +189,7 @@
     {% include "account.html" %}
     <div id="forgotpass">
         <form id="forgotForm" action="/accounts/forgot/" method="POST">
+            {% csrf_token %}
             <div id="forgotprompt">
                 <div id="username_hint">{% trans "Get A Hint" %}</div>
                 <div>
@@ -308,7 +307,7 @@
       {% endcomment %}
       <div class="attribution">
         <!-- Keep this on one line to avoid an underscore in Chrome -->
-        <a target="_blank" href="http://www.districtbuilder.org"><img alt="{% trans "Powered By DistrictBuilder" %}" src="/static-media/images/db_sprite.png"></a>
+        <a target="_blank" href="http://www.districtbuilder.org"><img alt="{% trans "Powered By DistrictBuilder" %}" src="{% static 'images/db_sprite.png' %}"></a>
         <br>
         <span id="poweredbytext">
           {% trans "A project of" %}
@@ -331,14 +330,13 @@
     </div>
 
     </div>
-    <script type="text/javascript" src="/static-media/jquery/jquery-1.6.2.min.js"></script>
-    <script type="text/javascript" src="{% url django.views.i18n.javascript_catalog %}"></script>
-    <script type="text/javascript" src="/static-media/jquery/jquery-ui-1.8.16.custom.min.js"></script>
-    <script type="text/javascript" src="/static-media/jquery/external/jquery.bgiframe-2.1.1.js"></script>
-    <script type="text/javascript" src="/static-media/jquery/external/jquery.tools.tooltip.slide.min.js"></script>
-    <script type="text/javascript" src="/static-media/js/ui.js"></script>
-    <script type="text/javascript" src="/static-media/js/register.js"></script>
-    <script type="text/javascript" src="/static-media/js/sha1.js"></script>
+    <script type="text/javascript" src="{% static 'jquery/jquery-1.6.2.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'jquery/jquery-ui-1.8.16.custom.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'jquery/external/jquery.bgiframe-2.1.1.js' %}"></script>
+    <script type="text/javascript" src="{% static 'jquery/external/jquery.tools.tooltip.slide.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/ui.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/register.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/sha1.js' %}"></script>
     <script type="text/javascript">
       $('button#login').click(function(event){
           var un = $('#username'),

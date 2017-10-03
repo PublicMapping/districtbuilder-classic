@@ -30,7 +30,6 @@
 {% endcomment %}
 {% load redistricting_extras %}
 {% load i18n %}
-{% load compress %}
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="{{ language_code }}">
   <head>
@@ -45,7 +44,6 @@
     <link rel="alternate" type="application/atom+xml" title="{% trans "Updated Plans from DistrictBuilder" %}" href="{% url publicmapping.redistricting.views.plan_feed %}"/>
     <link rel="alternate" type="application/atom+xml" title="{% trans "Recently Shared Plans from DistrictBuilder" %}" href="{% url publicmapping.redistricting.views.share_feed %}"/>
     <link rel="shortcut icon" href="/static-media/images/favicon.ico" />   
-    {% compress css %}
     <link rel="stylesheet" type="text/css" href="/static-media/css/reset.css"/>
     <link rel="stylesheet" type="text/css" href="/static-media/jqGrid/css/ui.jqgrid.css"/>
     <link rel="stylesheet" type="text/css" href="/static-media/jquery/themes/custom-theme/jquery-ui.custom.css"/>
@@ -55,14 +53,12 @@
         <link rel="stylesheet" type="text/css" href="/static-media/css/ie7.css"/>
         <![endif]-->
     <link rel="stylesheet" type="text/css" href="/static-media/css/visuals.css"/>   
-    {% endcompress %}
     <script type="text/javascript" src="/static-media/openlayers/OpenLayers.js"></script>
     {% if "arc" in basemaps %}
     <script type="text/javascript" src="/static-media/openlayers/ArcGISCache.js"></script>
     {% endif %}
 
     <script type="text/javascript" src="{% url django.views.i18n.javascript_catalog %}"></script>    
-    {% compress js %}
     {% comment %}
 
     Load external javascript libraries.
@@ -71,9 +67,7 @@
     <script type="text/javascript" src="/static-media/jquery/jquery-1.6.2.min.js"></script>
     <script type="text/javascript" src="/static-media/jquery/jquery-ui-1.8.16.custom.min.js"></script>
     <script type="text/javascript" src="/static-media/jquery/external/jquery.tools.tooltip.slide.min.js"></script>
-    {% endcompress %}
     <script type="text/javascript" src="/static-media/jqGrid/js/i18n/grid.locale-{{ language_code }}.js"></script>
-    {% compress js %}
     <script type="text/javascript" src="/static-media/jqGrid/js/jquery.jqGrid.min.js"></script>
     <script type="text/javascript" src="/static-media/jqGrid/plugins/grid.postext.js"></script>
     <script type="text/javascript" src="/static-media/js/sprintf.js"></script>
@@ -98,7 +92,6 @@
     <script type="text/javascript" src="/static-media/js/layerchooser.js"></script>
     <script type="text/javascript" src="/static-media/js/print.js"></script>
     <script type="text/javascript" src="/static-media/js/multimember.js"></script>
-    {% endcompress %}
 
     {% if "bing" in basemaps %}
     <script src="http://ecn.dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=6.2&mkt=en-us"></script> 

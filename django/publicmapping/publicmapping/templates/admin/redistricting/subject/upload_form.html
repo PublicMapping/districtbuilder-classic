@@ -28,7 +28,7 @@
 
 {% endcomment %}
 
-{% load i18n admin_modify adminmedia %}
+{% load i18n admin_modify static %}
 
 {% block title %}{% trans "Upload Subject template" %}{% endblock %}
 
@@ -98,7 +98,7 @@ $(function(){
 {% endif %}
 {% endblock %}
 
-{% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% admin_media_prefix %}css/forms.css" />
+{% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% static 'admin/css/forms.css' %}" />
 <style type="text/css">
     .loading {
         background: url("/static-media/images/chooser-loading.gif") no-repeat scroll 0 0 transparent;

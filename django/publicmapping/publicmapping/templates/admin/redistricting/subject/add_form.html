@@ -28,7 +28,7 @@
 
 {% endcomment %}
 
-{% load i18n admin_modify adminmedia %}
+{% load i18n admin_modify %}
 
 {% block title %}{% trans "Download Subject template" %}{% endblock %}
 
@@ -38,7 +38,7 @@
 {{ media }}
 {% endblock %}
 
-{% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% admin_media_prefix %}css/forms.css" />{% endblock %}
+{% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% static 'admin/css/forms.css' %}" />{% endblock %}
 
 {% block coltype %}{% if ordered_objects %}colMS{% else %}colM{% endif %}{% endblock %}
 

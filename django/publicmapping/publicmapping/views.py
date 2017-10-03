@@ -34,16 +34,17 @@ from django.contrib.sites.models import Site
 from django.views.decorators.cache import cache_control
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
-from django.shortcuts import render_to_response
+from django.shortcuts import render
 from django.template import loader, Context, RequestContext
 from hashlib import sha1
 from django.utils.translation import ugettext as _, get_language
 import json
 
 # for proxy
-import urllib2
 import cgi
-import sys, os
+import os
+import sys
+import urllib2
 
 # for password reminders
 from random import choice
@@ -73,7 +74,7 @@ def index(request):
     if 'avail' in request.session:
         avail = request.session['avail']
 
-    return render_to_response('index.html', {
+    return HttpResponse(render(request, 'index.html', {
         'is_registered':False,
         'opensessions':count,
         'sessionavail':avail,
@@ -82,7 +83,7 @@ def index(request):
         'user': request.user,
         'site': Site.objects.get_current(),
         'language_code': get_language(),
-    }, context_instance=RequestContext(request))
+    }))
 
 
 def userregister(request):
@@ -122,18 +123,18 @@ def userregister(request):
             name_exists = User.objects.filter(username__exact=username)
             if name_exists:
                 status['message'] ='name exists'
-                return HttpResponse(json.dumps(status), mimetype='application/json')
+                return HttpResponse(json.dumps(status))
 
             email_exists = email != '' and User.objects.filter(email__exact = email)
             if email_exists:
                 status['message'] ='email exists'
-                return HttpResponse(json.dumps(status), mimetype='application/json')
+                return HttpResponse(json.dumps(status))
 
             try:
                 User.objects.create_user(username, email, password)
             except Exception as error:
                 status['message'] = 'Sorry, we weren\'t able to create your account.'
-                return HttpResponse(json.dumps(status), mimetype='application/json')
+                return HttpResponse(json.dumps(status))
 
             # authenticate the user, and add additional registration info
             user = authenticate(username=username, password=password)
@@ -151,10 +152,11 @@ def userregister(request):
 
         status['success'] = True
         status['redirect'] = '/districtmapping/plan/0/view/'
-        return HttpResponse(json.dumps(status), mimetype='application/json')
+        return HttpResponse(json.dumps(status))
     else:
         status['message'] = 'Username cannot be empty.'
-        return HttpResponse(json.dumps(status), mimetype='application/json')
+        return HttpResponse(json.dumps(status))
+
 
 def userupdate(request):
     """
@@ -208,7 +210,7 @@ def userupdate(request):
         except:
             status['message'] = 'No user for that account.'
 
-    return HttpResponse(json.dumps(status), mimetype='application/json')
+    return HttpResponse(json.dumps(status))
 
 def userlogout(request):
     """
@@ -305,7 +307,7 @@ def forgotpassword(request):
         status['field'] = 'both'
         status['message'] = 'Missing username or email.'
 
-    return HttpResponse(json.dumps(status), mimetype='application/json')
+    return HttpResponse(json.dumps(status))
 
 @login_required
 @cache_control(no_cache=True)
@@ -350,13 +352,13 @@ def proxy(request):
 @csrf_exempt
 def session(request):
     status = { 'success': False, 'message': 'Unspecified error.' }
-    user = request.REQUEST['username']
+    user = request.user
 
     try:
         user = User.objects.get(username=user)
     except:
         status['message'] = 'No user found.'
-        return HttpResponse(json.dumps(status), mimetype='application/json')
+        return HttpResponse(json.dumps(status))
 
     sessions = Session.objects.all()
     count = 0
@@ -368,4 +370,4 @@ def session(request):
 
     status['success'] = True
     status['message'] = 'Deleted %d sessions.' % count
-    return HttpResponse(json.dumps(status), mimetype='application/json')
+    return HttpResponse(json.dumps(status))

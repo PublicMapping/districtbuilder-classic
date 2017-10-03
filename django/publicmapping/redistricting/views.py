@@ -31,7 +31,7 @@ from django.http import *
 from django.core import serializers
 from django.core.exceptions import ValidationError, SuspiciousOperation, ObjectDoesNotExist
 from django.db import IntegrityError, connection, transaction
-from django.shortcuts import render_to_response
+from django.shortcuts import render
 from django.core.urlresolvers import reverse
 from django_comments.models import Comment
 from django_comments.forms import CommentForm
@@ -583,7 +583,7 @@ def viewplan(request, planid):
         for p in Plan.objects.filter(owner=request.user):
             p.purge_beyond_nth_step(settings.MAX_UNDOS_AFTER_EDIT)
 
-    return render_to_response('viewplan.html', commonplan(request, planid))
+    return render('viewplan.html', commonplan(request, planid))
 
 
 @user_passes_test(using_unique_session)
@@ -614,7 +614,7 @@ def editplan(request, planid):
     if settings.MAX_UNDOS_AFTER_EDIT > 0:
         plan.purge_beyond_nth_step(settings.MAX_UNDOS_AFTER_EDIT)
 
-    return render_to_response('editplan.html', cfg)
+    return render('editplan.html', cfg)
 
 @user_passes_test(using_unique_session)
 def printplan(request, planid):
@@ -816,14 +816,14 @@ def uploadfile(request):
     index_file = request.FILES.get('indexFile', False)
     if not index_file:
         status['upload_status'] = False
-        return render_to_response('viewplan.html', status)
+        return render('viewplan.html', status)
     else:
         filename = index_file.name
 
     if index_file.size > settings.MAX_UPLOAD_SIZE:
         logger.error('File size exceeds allowable size.')
         status['upload_status'] = False
-        return render_to_response('viewplan.html', status)
+        return render('viewplan.html', status)
 
     if not filename.endswith(('.csv','.zip')):
         logger.error('Uploaded file must be ".csv" or ".zip".')
@@ -847,12 +847,12 @@ def uploadfile(request):
             logger.error('Could not save uploaded file')
             logger.error('Reason: %s', ex)
             status['upload_status'] = False
-            return render_to_response('viewplan.html', status)
+            return render('viewplan.html', status)
 
         # Put in a celery task to create the plan and email user on completion
         DistrictIndexFile.index2plan.delay(request.POST['txtNewName'], request.POST['legislativeBody'], filename, owner = request.user, template = False, purge = True, email = request.POST['userEmail'], language=translation.get_language())
 
-    return render_to_response('viewplan.html', status)
+    return render('viewplan.html', status)
 
 def generate_report_hash(qdict):
     """
