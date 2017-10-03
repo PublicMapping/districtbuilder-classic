@@ -1,8 +1,8 @@
 """
 Set up DistrictBuilder.
 
-This management command will examine the main configuration file for 
-correctness, import geographic levels, create spatial views, create 
+This management command will examine the main configuration file for
+correctness, import geographic levels, create spatial views, create
 geoserver layers, and construct a default plan.
 
 This file is part of The Public Mapping Project
@@ -23,19 +23,21 @@ License:
     See the License for the specific language governing permissions and
     limitations under the License.
 
-Author: 
+Author:
     Andrew Jennings, David Zwarg, Kenny Shepard
 """
+
+import json
 
 from decimal import Decimal
 from django.contrib.gis.gdal import *
 from django.contrib.gis.geos import *
 from django.contrib.gis.db.models import Sum, Union
 from django.contrib.auth.models import User
+from django.core.cache import caches
 from django.core.management import call_command
 from django.core.management.base import BaseCommand
 from django.conf import settings
-from django.utils import simplejson as json
 from django.utils import translation
 from django.utils.translation import ugettext as _, activate
 from optparse import make_option
@@ -48,7 +50,6 @@ from redistricting.tasks import *
 from redistricting.config import *
 import traceback, logging
 
-import redis
 from redisutils import key_gen
 from django.db.models import Q
 import subprocess
@@ -111,7 +112,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         """
-        Perform the command. 
+        Perform the command.
         """
         self.setup_logging(int(options.get('verbosity')))
 
@@ -205,7 +206,7 @@ file and try again.
             all_ok = False
             logger.info('ERROR importing geolevels.')
             logger.debug(traceback.format_exc())
-         
+
 
         # Do this once after processing the geolevels
         config.import_contiguity_overrides()
@@ -241,7 +242,7 @@ file and try again.
                 logger.info('ERROR creating templates.')
                 logger.debug(traceback.format_exc())
                 all_ok = False
-       
+
         if options.get("static"):
             call_command('collectstatic', interactive=False, verbosity=options.get('verbosity'))
             call_command('compress', interactive=False, verbosity=options.get('verbosity'), force=True)
@@ -251,7 +252,7 @@ file and try again.
 
         if options.get("adjacency"):
             self.import_adjacency(store.data)
-            
+
         if options.get("bard_templates"):
             try:
                 self.create_report_templates(store.data)
@@ -259,7 +260,7 @@ file and try again.
                 logger.info('ERROR creating BARD template files.')
                 logger.debug(traceback.format_exc())
                 all_ok = False
-    
+
         if options.get("bard"):
             all_ok = all_ok * self.build_bardmap(store.data)
 
@@ -267,7 +268,7 @@ file and try again.
         # means that  an error occurred - the opposite of the meaning of all_ok's bool
         sys.exit(not all_ok)
 
-    
+
     def import_geolevel(self, store, geolevel):
         """
         Import the geography at a geolevel.
@@ -410,7 +411,7 @@ ERROR:
             progress = 0.0
             logger.debug('0% .. ')
             for i,feat in enumerate(lyr):
-                
+
                 if (float(i) / len(lyr)) > (progress + 0.1):
                     progress += 0.1
                     logger.debug('%2.0f%% .. ', progress * 100)
@@ -427,7 +428,7 @@ ERROR:
                             if f(feat) == True:
                                 levels.append(Geolevel.objects.get(name='%s_%s' % (region, level.name)))
                 prefetch = Geounit.objects.filter(
-                    Q(name=get_shape_name(shapefile, feat)), 
+                    Q(name=get_shape_name(shapefile, feat)),
                     Q(geolevel__in=levels),
                     Q(portable_id=get_shape_portable(shapefile, feat)),
                     Q(tree_code=get_shape_tree(shapefile, feat))
@@ -469,9 +470,9 @@ ERROR:
                             center = intersection.centroid
                             first_poly = first_poly_extent = min_x = max_x = my_y = centerline = intersection = None
 
-                        g = Geounit(geom = my_geom, 
-                            name = get_shape_name(shapefile, feat), 
-                            simple = simple, 
+                        g = Geounit(geom = my_geom,
+                            name = get_shape_name(shapefile, feat),
+                            simple = simple,
                             center = center,
                             portable_id = get_shape_portable(shapefile, feat),
                             tree_code = get_shape_tree(shapefile, feat)
@@ -564,7 +565,7 @@ ERROR:
         """
         Given a Regions node, create a dictionary of functions that can
         be used to filter a feature from a shapefile into the correct
-        region.  The dictionary keys are region ids from the config, the 
+        region.  The dictionary keys are region ids from the config, the
         values are lists of functions which return true when applied to
         a feature that should be in the region
         """
@@ -659,10 +660,7 @@ ERROR:
         adjacencies = config.xpath('//DistrictBuilder/Adjacencies/*')
 
         # Instantiate redis connection with settings from XML config
-        redis_config = config.xpath('//DistrictBuilder/Project/KeyValueStore')[0]
-        redis_connection = redis.StrictRedis(host=redis_config.get('host'),
-                                             port=int(redis_config.get('port')))
-        
+        cache = caches['default']
 
         # Read and load data into redis #
         data_dict = {}
@@ -680,18 +678,18 @@ ERROR:
                 region_sum += float(row[2])
                 if c % 10000 == 0:
                     # Upload 10,000 at a time, otherwise redis complains
-                    redis_connection.mset(data_dict)
+                    cache.set_many(data_dict)
                     data_dict = {}
                 key = key_gen(**{'geounit1': row[0], 'geounit2': row[1]})
                 data_dict[key] = row[2]
 
             # Need to send left over data < 10000 to redis
-            redis_connection.mset(data_dict)
+            cache.set_many(data_dict)
 
             # Cache region totals in redis
             region_cost = region_sum/float(c)
             key = key_gen(**{'region': region})
-            redis_connection.set(key, region_cost)
+            cache.set(key, region_cost)
 
         logger.info('Finished processing files and loading data into key value store')
 
@@ -710,8 +708,8 @@ ERROR:
         xml = parse(f)
         transform = XSLT(xml)
 
-        # For each legislative body, create the reporting step HTML 
-        # template. If there is no config for a body, the XSLT transform 
+        # For each legislative body, create the reporting step HTML
+        # template. If there is no config for a body, the XSLT transform
         # should create a "Sorry, no reports" template
         bodies = config.xpath('//DistrictBuilder/LegislativeBodies/LegislativeBody')
         for body in bodies:
@@ -726,7 +724,7 @@ ERROR:
 
             # Pass the body's identifier in as a parameter
             xslt_param = XSLT.strparam(body_id)
-            result = transform(config, legislativebody = xslt_param) 
+            result = transform(config, legislativebody = xslt_param)
 
             f = open(template_path, 'w')
             f.write(str(result))

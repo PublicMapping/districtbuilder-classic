@@ -2510,6 +2510,7 @@ def district_info(request, planid, district_id):
     else:
         plan = plan[0]
 
+
         version = plan.version
         if 'version' in request.REQUEST:
             try:

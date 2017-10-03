@@ -24,13 +24,14 @@ License:
     See the License for the specific language governing permissions and
     limitations under the License.
 
-Author: 
+Author:
     Andrew Jennings, David Zwarg, Kenny Shepard
 """
 
 from math import sqrt, pi
 from django.contrib.gis.geos import Point, LineString
 from django.contrib.humanize.templatetags.humanize import intcomma
+from django.core.cache import caches
 from django.utils.translation import ugettext as _
 from django.template import Template, Context
 from decimal import Decimal
@@ -41,14 +42,13 @@ from django.db.models import Q
 import operator
 import itertools
 import json
-import redis
 from django.conf import settings
 from redisutils import key_gen
 redis_settings = settings.KEY_VALUE_STORE
 
 class CalculatorBase(object):
     """
-    The base class for all calculators. CalculatorBase defines the result 
+    The base class for all calculators. CalculatorBase defines the result
     object and a couple default rendering options for HTML and JSON.
     """
 
@@ -80,7 +80,7 @@ class CalculatorBase(object):
     def sortkey(self):
         """
         Generate a key used to sort this calculator relative to all other
-        calculators. The default sorting method sorts by the value of 
+        calculators. The default sorting method sorts by the value of
         the result.
 
         @return: The value of the result.
@@ -111,7 +111,7 @@ class CalculatorBase(object):
 
     empty_html_result = '<span>%s</span>' % _('n/a')
     """
-    In case of an empty result, return a span with the properly 
+    In case of an empty result, return a span with the properly
     localized version of 'n/a'
     """
 
@@ -119,7 +119,7 @@ class CalculatorBase(object):
         """
         Generate a basic JSON representation of the result.
 
-        The base calculator generates an simple Javascript object that 
+        The base calculator generates an simple Javascript object that
         contains a single property, named "result".
 
         @return: A JSON string with a single object that contains the
@@ -135,7 +135,7 @@ class CalculatorBase(object):
     def template(self, template, context=None):
         """
         Generate a representation of the score using the django
-        templating system and the calculator's result. Required 
+        templating system and the calculator's result. Required
         for localizing number formats.
 
         @param template: A string that may use django template tags
@@ -170,16 +170,16 @@ class CalculatorBase(object):
         Get the value of an argument if it is a literal or a subject.
 
         This method is used anytime a calculator needs to get the value of
-        a named argument. The type of the argument is determined from the 
+        a named argument. The type of the argument is determined from the
         tuple in the argument dictionary, and either the literal value or
         the retrieved ComputedCharacteristic is returned. This only searches
         for the ComputedCharacteristic in the set attached to the district.
 
-        If no district is provided, no subject argument value is ever 
+        If no district is provided, no subject argument value is ever
         returned.
 
         @param argument: The name of the argument passed to the calculator.
-        @param district: An optional district, used to fetch related 
+        @param district: An optional district, used to fetch related
             ComputedCharacteristics.
 
         @return: The value of the subject or literal argument.
@@ -202,7 +202,7 @@ class CalculatorBase(object):
                     # No problem, it may be a string
                     pass
         elif argtype == 'subject' and not district is None:
-            # This method is more fault tolerant than _set.get, since it 
+            # This method is more fault tolerant than _set.get, since it
             # won't throw an exception if the item doesn't exist.
             add_subject = True
             if argval.startswith('-'):
@@ -217,27 +217,27 @@ class CalculatorBase(object):
 class Schwartzberg(CalculatorBase):
     """
     Calculator for the Schwartzberg measure of compactness.
-        
-    The Schwartzberg measure of compactness measures the perimeter of 
-    the district to the circumference of the circle whose area is 
+
+    The Schwartzberg measure of compactness measures the perimeter of
+    the district to the circumference of the circle whose area is
     equal to the area of the district. The algorithm here computes the
-    inverse Schwartberg compactness measure, suitable for display as a 
-    percentage, with a higher percentage indicating a more compact 
+    inverse Schwartberg compactness measure, suitable for display as a
+    percentage, with a higher percentage indicating a more compact
     district.
 
     This calculator will calculate either the compactness score of a
-    single district, or it will average the compactness scores of all 
+    single district, or it will average the compactness scores of all
     districts in a plan.
     """
     def compute(self, **kwargs):
         """
         Calculate the Schwartzberg measure of compactness.
 
-        @keyword district: A L{District} whose compactness should be 
+        @keyword district: A L{District} whose compactness should be
             computed.
-        @keyword plan: A L{Plan} whose district compactnesses should be 
+        @keyword plan: A L{Plan} whose district compactnesses should be
             averaged.
-        @keyword version: Optional. The version of the plan, defaults to 
+        @keyword version: Optional. The version of the plan, defaults to
             the most recent version.
         """
         districts = []
@@ -265,7 +265,7 @@ class Schwartzberg(CalculatorBase):
 
             if district.geom.length == 0:
                 continue
-        
+
             r = sqrt(district.geom.area / pi)
             circumference = 2 * pi * r
             compactness += circumference / district.geom.length
@@ -304,11 +304,11 @@ class Roeck(CalculatorBase):
         """
         Calculate the Roeck measure of compactness.
 
-        @keyword district: A L{District} whose compactness should be 
+        @keyword district: A L{District} whose compactness should be
             computed.
-        @keyword plan: A L{Plan} whose district compactnesses should be 
+        @keyword plan: A L{Plan} whose district compactnesses should be
             averaged.
-        @keyword version: Optional. The version of the plan, defaults to 
+        @keyword version: Optional. The version of the plan, defaults to
             the most recent version.
         """
         random.seed()
@@ -462,7 +462,7 @@ class Roeck(CalculatorBase):
         def isperpendicular(self, pt1, pt2, pt3):
             """
             Test a set of points to see if they are perpendicular.
-            Points are deemed perpendicular if they describe two 
+            Points are deemed perpendicular if they describe two
             different lines that are parallel to the X and Y axes.
 
             @param pt1: The first point to test.
@@ -470,7 +470,7 @@ class Roeck(CalculatorBase):
             @param pt3: The third point to test.
 
             @return: A boolean flag indicating if the points describe
-            a set of perpendicular lines that are parallel with the 
+            a set of perpendicular lines that are parallel with the
             X and Y axes.
             """
             dy1 = pt2.coords[1] - pt1.coords[1]
@@ -490,7 +490,7 @@ class Roeck(CalculatorBase):
                 return True
 
             return False
-                
+
 
         def contains(self, pt):
             """
@@ -506,7 +506,7 @@ class Roeck(CalculatorBase):
 
     def minidisk(self, points):
         """
-        A recursive minimum enclosing disk algorithm. Based on E. Welzl, 
+        A recursive minimum enclosing disk algorithm. Based on E. Welzl,
         "Smallest enclosing disks (balls and ellipsoids)", 1991.
 
         This code borrows some patterns from the applet source here:
@@ -546,7 +546,7 @@ class Roeck(CalculatorBase):
         else:
             self.rec+=1
             disk = self.b_minidisk(points, npts - 1, boundary, nbnd)
-            
+
             if not disk.contains(points[npts-1]):
                 boundary[nbnd] = points[npts - 1]
 
@@ -585,11 +585,11 @@ class PolsbyPopper(CalculatorBase):
         """
         Calculate the Polsby-Popper measure of compactness.
 
-        @keyword district: A L{District} whose compactness should be 
+        @keyword district: A L{District} whose compactness should be
             computed.
-        @keyword plan: A L{Plan} whose district compactnesses should be 
+        @keyword plan: A L{Plan} whose district compactnesses should be
             averaged.
-        @keyword version: Optional. The version of the plan, defaults to 
+        @keyword version: Optional. The version of the plan, defaults to
             the most recent version.
         """
         districts = []
@@ -642,7 +642,7 @@ class LengthWidthCompactness(CalculatorBase):
     """
     Calculator for the Length/Width measure of compactness.
 
-    The Length/Width measure of campactness measures the length of the 
+    The Length/Width measure of campactness measures the length of the
     district's bounding box, and divides it by the width of the district's
     bounding box.
 
@@ -654,11 +654,11 @@ class LengthWidthCompactness(CalculatorBase):
         """
         Calculate the Length/Width measure of compactness.
 
-        @keyword district: A L{District} whose compactness should be 
+        @keyword district: A L{District} whose compactness should be
             computed.
-        @keyword plan: A L{Plan} whose district compactnesses should be 
+        @keyword plan: A L{Plan} whose district compactnesses should be
             averaged.
-        @keyword version: Optional. The version of the plan, defaults to 
+        @keyword version: Optional. The version of the plan, defaults to
             the most recent version.
         """
         districts = []
@@ -688,7 +688,7 @@ class LengthWidthCompactness(CalculatorBase):
             lw = (bbox[3] - bbox[1]) / (bbox[2] - bbox[0])
             if lw > 1:
                 lw = 1 / lw
-            
+
             compactness += lw
             num += 1
 
@@ -715,7 +715,7 @@ class SumValues(CalculatorBase):
 
     For plans, this calculator will sum up a series of arguments across
     all districts. If a literal value is included in a plan calculation,
-    that literal value is combined with the subject value for each 
+    that literal value is combined with the subject value for each
     district.
 
     For lists of numbers, this calculator will return the sum of the list.
@@ -735,9 +735,9 @@ class SumValues(CalculatorBase):
 
         @keyword district: A L{District} whose values should be summed.
         @keyword plan: A L{Plan} whose district values should be summed.
-        @keyword version: Optional. The version of the plan, defaults to 
+        @keyword version: Optional. The version of the plan, defaults to
             the most recent version.
-        @keyword list: A list of values to sum, when summing a set of 
+        @keyword list: A list of values to sum, when summing a set of
             ScoreArguments.
         """
         districts = []
@@ -754,7 +754,7 @@ class SumValues(CalculatorBase):
             return
         else:
             return
-        
+
         sumvals = 0
 
         for district in districts:
@@ -796,18 +796,18 @@ class Percent(CalculatorBase):
 
     When passed a plan, the percentage calculator accumulates all the
     numerator values and denominator values for all districts in the plan.
-    After the numerator and denominator values have been accumulated, 
+    After the numerator and denominator values have been accumulated,
     it computes the percentage of those totals.
     """
     def compute(self, **kwargs):
         """
         Calculate a percentage.
 
-        @keyword district: A L{District} whose percentage should be 
+        @keyword district: A L{District} whose percentage should be
             calculated.
-        @keyword plan: A L{Plan} whose set of districts should be 
+        @keyword plan: A L{Plan} whose set of districts should be
             calculated.
-        @keyword version: Optional. The version of the plan, defaults to 
+        @keyword version: Optional. The version of the plan, defaults to
             the most recent version.
         """
         district = None
@@ -844,7 +844,7 @@ class Percent(CalculatorBase):
 
         if num is None or den is None or den == 0:
             return
-    
+
         try:
             self.result = { 'value': num / den }
         except:
@@ -853,7 +853,7 @@ class Percent(CalculatorBase):
                 self.result = { 'value': 0 }
             else:
                 self.result = { 'value': num / den['value'] }
-            
+
 
     def html(self):
         """
@@ -864,7 +864,7 @@ class Percent(CalculatorBase):
         """
         if not self.result is None and 'value' in self.result:
             return self.percentage()
-            
+
         return self.empty_html_result
 
 
@@ -876,8 +876,8 @@ class Threshold(CalculatorBase):
     result of this calculator is 1 or 0, to facilitate the combination of
     scores. One example may be where the number of districts that exceed a
     threshold are required.
-    
-    If the value computed is less than or equal to the threshold, the 
+
+    If the value computed is less than or equal to the threshold, the
     result value will be zero (0).
 
     If the value computed is greater than the threshold, the result value
@@ -890,11 +890,11 @@ class Threshold(CalculatorBase):
         """
         Calculate and determine if a value exceeds a threshold.
 
-        @keyword district: A L{District} whose threshold should be 
+        @keyword district: A L{District} whose threshold should be
             calculated.
-        @keyword plan: A L{Plan} whose set of districts should be 
+        @keyword plan: A L{Plan} whose set of districts should be
             thresholded.
-        @keyword version: Optional. The version of the plan, defaults to 
+        @keyword version: Optional. The version of the plan, defaults to
             the most recent version.
         """
         districts = []
@@ -930,15 +930,15 @@ class Range(CalculatorBase):
 
     This calculator accepts three arguments: "value", "min", and "max". The
     result of this calculator is 1 or 0, to facilitate the combination of
-    scores. One example may be where the number of districts that fall 
+    scores. One example may be where the number of districts that fall
     within a range are required.
 
     This calculator accepts an optional argument: 'apply_num_members'.
     If this is set to '1' (True), the calculator will consider the number
     of members assigned to each district when performing calculations.
     This should only be used with population subjects.
-    
-    If the value computed is greater than or equal to min and less than 
+
+    If the value computed is greater than or equal to min and less than
     or equal to max, the result value will be zero (1).
 
     If the value computed is less than min or greater than max, the result
@@ -953,11 +953,11 @@ class Range(CalculatorBase):
         """
         Calculate and determine if a value lies within a range.
 
-        @keyword district: A L{District} whose argument should be 
+        @keyword district: A L{District} whose argument should be
             evaluated.
-        @keyword plan: A L{Plan} whose set of districts should be 
+        @keyword plan: A L{Plan} whose set of districts should be
             evaluated.
-        @keyword version: Optional. The version of the plan, defaults to 
+        @keyword version: Optional. The version of the plan, defaults to
             the most recent version.
         """
         districts = None
@@ -980,15 +980,15 @@ class Range(CalculatorBase):
         else:
             apply_num_members = False
 
-        for district in districts:            
+        for district in districts:
             if district.district_id == 0:
                 continue
 
             val = self.get_value('value',district)
-                
+
             if apply_num_members and district.num_members > 1:
                 val = float(val) / district.num_members
-            
+
             minval = self.get_value('min',district)
             maxval = self.get_value('max',district)
 
@@ -1006,20 +1006,20 @@ class Contiguity(CalculatorBase):
     Calculate the contiguity of a district.
 
     This calculator accepts two optional arguments: 'allow_single_point',
-    and 'target'. If 'allow_single_point' is set to '1' (True), the 
-    calculator will consider a district containing muliple polygons 
-    contiguous if the polygons are connected to each other by a minimum of 
-    one point. By default, this is set to '0' (False), and a district is 
-    only considered to be congiguous if it is comprised of a single 
+    and 'target'. If 'allow_single_point' is set to '1' (True), the
+    calculator will consider a district containing muliple polygons
+    contiguous if the polygons are connected to each other by a minimum of
+    one point. By default, this is set to '0' (False), and a district is
+    only considered to be congiguous if it is comprised of a single
     polygon.
 
     If 'target' is set, the calculator will format the result to include
     the target value in parenthesis after the calculated value.
 
-    'ContiguityOverride' objects that are applicable to the district will 
-    be applied to allow for special cases where non-physical contiguity 
+    'ContiguityOverride' objects that are applicable to the district will
+    be applied to allow for special cases where non-physical contiguity
     isn't possible.
-    
+
     If the district is contiguous, the result value will be zero (0).
 
     If the district is discontiguous, the result value will be one (1).
@@ -1032,11 +1032,11 @@ class Contiguity(CalculatorBase):
         """
         Determine if a district is contiguous.
 
-        @keyword district: A L{District} whose contiguity should be 
+        @keyword district: A L{District} whose contiguity should be
             evaluated.
-        @keyword plan: A L{Plan} whose set of districts should be 
+        @keyword plan: A L{Plan} whose set of districts should be
             evaluated for contiguity.
-        @keyword version: Optional. The version of the plan, defaults to 
+        @keyword version: Optional. The version of the plan, defaults to
             the most recent version.
         """
         districts = []
@@ -1075,7 +1075,7 @@ class Contiguity(CalculatorBase):
                 if len(district.geom) == 0:
                     count += 1
                     continue
-                    
+
                 # obtain the contiguity overrides that need to be applied
                 overrides = district.get_contiguity_overrides()
 
@@ -1088,7 +1088,7 @@ class Contiguity(CalculatorBase):
                     union = district.geom[0]
                     remaining = district.geom[1:]
                     contiguous = True
-    
+
                     while (len(remaining) > 0):
                         if len(district.geom) == 0:
                             continue
@@ -1111,11 +1111,11 @@ class Contiguity(CalculatorBase):
                                 remaining.remove(geom)
                                 union = geom.union(union)
                                 match_in_pass = True
-                                    
+
                         if not match_in_pass:
                             contiguous = False
                             break
-    
+
                     if contiguous:
                         count += 1
 
@@ -1161,9 +1161,9 @@ class AllContiguous(CalculatorBase):
         """
         Compute the contiguity of all the districts in the plan.
 
-        @keyword plan: A L{Plan} whose set of districts should be 
+        @keyword plan: A L{Plan} whose set of districts should be
             evaluated for contiguity.
-        @keyword version: Optional. The version of the plan, defaults to 
+        @keyword version: Optional. The version of the plan, defaults to
             the most recent version.
         """
         if not 'plan' in kwargs:
@@ -1193,9 +1193,9 @@ class NonContiguous(CalculatorBase):
         """
         Compute the number of districts in a plan that are non-contiguous.
 
-        @keyword plan: A L{Plan} whose set of districts should be 
+        @keyword plan: A L{Plan} whose set of districts should be
             evaluated for contiguity.
-        @keyword version: Optional. The version of the plan, defaults to 
+        @keyword version: Optional. The version of the plan, defaults to
             the most recent version.
         """
         if not 'plan' in kwargs:
@@ -1220,17 +1220,17 @@ class NonContiguous(CalculatorBase):
 
 class Interval(CalculatorBase):
     """
-    Used to determine whether a value falls in an interval determined by 
+    Used to determine whether a value falls in an interval determined by
     a central target value and bounds determined to be a percentage of
     that target value.  With bound values of .10 and .20 and a target of 10,
     the intervals would be:
-         [-infinity, 8), [8, 9), [9, 11), [11, 12), [12, infinity) 
-    
+         [-infinity, 8), [8, 9), [9, 11), [11, 12), [12, infinity)
+
     Given a district, this calculator will return the 0-based index of the
-    interval in which the district's value lies - Using the above example, 
+    interval in which the district's value lies - Using the above example,
     a district with a value of 8.5 would have a result of 1.
 
-    Given a plan, this calculator will return the number of districts that 
+    Given a plan, this calculator will return the number of districts that
     fall in the interval including the target
     """
     def compute(self, **kwargs):
@@ -1238,9 +1238,9 @@ class Interval(CalculatorBase):
         Determine the interval to which a district's value belongs.
 
         @keyword district: A L{District} whose interval should be computed.
-        @keyword plan: A L{Plan} whose set of districts should be 
+        @keyword plan: A L{Plan} whose set of districts should be
             evaluated for their intervals.
-        @keyword version: Optional. The version of the plan, defaults to 
+        @keyword version: Optional. The version of the plan, defaults to
             the most recent version.
         """
         districts = []
@@ -1261,10 +1261,10 @@ class Interval(CalculatorBase):
                 bound = Decimal(str(self.get_value('bound%d' % argnum)))
                 bounds.append(target + (target * bound))
                 bounds.append(target - (target * bound))
-                
+
                 argnum += 1
             bounds.sort()
-        
+
             # Check which interval our subject's value is in
             for district in districts:
                 value = self.get_value('subject', district)
@@ -1272,18 +1272,18 @@ class Interval(CalculatorBase):
                     return
                 if apply_num_members and district.num_members > 1:
                     value = value / district.num_members
-                
+
                 for idx, bound in enumerate(bounds):
                     if value < bound:
-                        self.result = { 
-                            'index': idx, 
-                            'value': value, 
+                        self.result = {
+                            'index': idx,
+                            'value': value,
                             'subject': self.arg_dict['subject'][1]
                         }
                         return
                 self.result = {
-                    'index': len(bounds), 
-                    'value': value, 
+                    'index': len(bounds),
+                    'value': value,
                     'subject': self.arg_dict['subject'][1]
                 }
                 return
@@ -1311,7 +1311,7 @@ class Interval(CalculatorBase):
 
                 if apply_num_members and district.num_members > 1:
                     value = float(value) / district.num_members
-                
+
                 if value != None and value >= min_bound and value < max_bound:
                     count += 1
 
@@ -1321,7 +1321,7 @@ class Interval(CalculatorBase):
 
     def html(self):
         """
-        Returns an HTML representation of the Interval, using a css class 
+        Returns an HTML representation of the Interval, using a css class
         called interval_X, with X being the interval index.
 
         An empty value will have a class of no_interval.
@@ -1349,12 +1349,12 @@ class Equivalence(CalculatorBase):
     to a target.
 
     This calculator examines every district in a plan, and generates a
-    score which is the difference between the district with the maximum 
+    score which is the difference between the district with the maximum
     value and the district with the minimum value.
 
     This calculator requires one argument: 'value', which is the name
     of a subject.
-    
+
     This calculator accepts an optional argument: 'apply_num_members'.
     If this is set to '1' (True), the calculator will consider the number
     of members assigned to each district when performing calculations.
@@ -1364,9 +1364,9 @@ class Equivalence(CalculatorBase):
         """
         Generate an equivalence score.
 
-        @keyword plan: A L{Plan} whose set of districts should be 
+        @keyword plan: A L{Plan} whose set of districts should be
             evaluated for their equivalence.
-        @keyword version: Optional. The version of the plan, defaults to 
+        @keyword version: Optional. The version of the plan, defaults to
             the most recent version.
         """
         if 'district' in kwargs or not 'plan' in kwargs:
@@ -1392,7 +1392,7 @@ class Equivalence(CalculatorBase):
             tmpval = self.get_value('value',district)
             if apply_num_members and district.num_members > 1:
                 tmpval = float(tmpval) / district.num_members
-            
+
             if not tmpval is None:
                 min_d = min(float(tmpval), min_d)
                 max_d = max(float(tmpval), max_d)
@@ -1408,7 +1408,7 @@ class Equivalence(CalculatorBase):
         """
         if not self.result is None and 'value' in self.result:
             return self.template('{{ result.value|floatformat:0 }}')
-        
+
         return _('n/a')
 
 
@@ -1418,11 +1418,11 @@ class RepresentationalFairness(CalculatorBase):
     is absolute value of the number of districts where the partisan
     index for a one party is above 50% minus the number of districts
     where the partisan index for the other party is above 50%
-    
-    The Democratic Partisan Index is the number of democratic 
-    votes divided by the combined number of democratic and republican 
-    votes. The Republican Partisan Index is the number of republican 
-    votes divided by the combined number of democratic and republican 
+
+    The Democratic Partisan Index is the number of democratic
+    votes divided by the combined number of democratic and republican
+    votes. The Republican Partisan Index is the number of republican
+    votes divided by the combined number of democratic and republican
     votes.
 
     This calculator requires two arguments: 'democratic' and 'republican'
@@ -1430,16 +1430,16 @@ class RepresentationalFairness(CalculatorBase):
     When passed a plan, this calculator will compute the
     representational fairness for all districts in the plan.
     The result is a tuple with - the first item is the differential
-    and the second item is the party toward which the plan's 
+    and the second item is the party toward which the plan's
     districts are biased
     """
     def compute(self, **kwargs):
         """
         Compute the representational fairness.
 
-        @keyword plan: A L{Plan} whose set of districts should be 
+        @keyword plan: A L{Plan} whose set of districts should be
             evaluated for representational fairness.
-        @keyword version: Optional. The version of the plan, defaults to 
+        @keyword version: Optional. The version of the plan, defaults to
             the most recent version.
         """
         if 'plan' in kwargs:
@@ -1478,7 +1478,7 @@ class RepresentationalFairness(CalculatorBase):
         """
         Display the results in HTML format. Since the results for this
         calculator are in tuple format for sorting purposes, it's important
-        to display a human readable score that explains which party the 
+        to display a human readable score that explains which party the
         plan is biased toward.
 
         @return: An HTML SPAN element similar to the form: "<span>Democrat 5</span>" or "<span>Balanced</span>".
@@ -1490,7 +1490,7 @@ class RepresentationalFairness(CalculatorBase):
                 return '<span>%s</span>' % _('Balanced')
             else:
                 return '<span>%s&nbsp;%d</span>' % (party, sort)
-        
+
         return '<span>%s</span>' % _('n/a')
 
     def json(self):
@@ -1510,7 +1510,7 @@ class RepresentationalFairness(CalculatorBase):
 
     def sortkey(self):
         """
-        How should this calculator be compared to others like it? 
+        How should this calculator be compared to others like it?
         Sort by the absolute value of the result (farther from zero
         is a worse score).
 
@@ -1530,7 +1530,7 @@ class Competitiveness(CalculatorBase):
     """
     Compute the plan's Competitiveness.
 
-    Competitiveness is defined here as the number of districts that 
+    Competitiveness is defined here as the number of districts that
     have a partisan index (democratic or republican) that falls within
     a desired range of .5 (by default).
 
@@ -1543,9 +1543,9 @@ class Competitiveness(CalculatorBase):
         """
         Compute the competitiveness.
 
-        @keyword plan: A L{Plan} whose set of districts should be 
+        @keyword plan: A L{Plan} whose set of districts should be
             evaluated for competitiveness.
-        @keyword version: Optional. The version of the plan, defaults to 
+        @keyword version: Optional. The version of the plan, defaults to
             the most recent version.
         """
         if not 'plan' in kwargs:
@@ -1562,7 +1562,7 @@ class Competitiveness(CalculatorBase):
             low = .45
             high = .55
 
-        
+
         fair = 0
         for district in districts:
             if district.district_id == 0:
@@ -1604,7 +1604,7 @@ class CountDistricts(CalculatorBase):
         """
         Compute the number of districts in a plan.
 
-        @keyword plan: A L{Plan} whose set of districts should be verified 
+        @keyword plan: A L{Plan} whose set of districts should be verified
             against the target.
         @keyword version: Optional. The version of the plan, defaults to
             the most recent version.
@@ -1627,7 +1627,7 @@ class CountDistricts(CalculatorBase):
 class AllBlocksAssigned(CalculatorBase):
     """
     Determine if all the blocks in the state are assigned to a district.
-    
+
     This calculator works on plans only.
 
     This calculator has an optional argument of 'threshold', which is used
@@ -1638,9 +1638,9 @@ class AllBlocksAssigned(CalculatorBase):
         Determine if all the blocks in the plan are assigned to a district.
 
         @keyword plan: A L{Plan} whose blocks are evaluated for assignment.
-        @keyword version: Optional. The version of the plan, defaults to 
+        @keyword version: Optional. The version of the plan, defaults to
             the most recent version.
-        @keyword threshold: Optional. The amount of simplification used 
+        @keyword threshold: Optional. The amount of simplification used
             during buffering optimization.
         """
         if not 'plan' in kwargs:
@@ -1663,10 +1663,10 @@ class Equipopulation(CalculatorBase):
     population. This merely wraps a Range calculator, but looks for the
     number of districts outside the range.
 
-    This calculator takes either a "target" or a "validation" parameter.  
-    If given a target, it will return a string that's showable in a plan 
+    This calculator takes either a "target" or a "validation" parameter.
+    If given a target, it will return a string that's showable in a plan
     summary.  If given a validation number, it will return a boolean result
-    representing whether the given plan has reached that number of 
+    representing whether the given plan has reached that number of
     majority-minority districts as configured.
 
     This calculator only operates on Plans.
@@ -1676,13 +1676,13 @@ class Equipopulation(CalculatorBase):
         Determine if all the districts in a plan fall within a target
         range.
 
-        @keyword plan: A L{Plan} whose set of districts should be 
+        @keyword plan: A L{Plan} whose set of districts should be
             evaluated for equipopulation.
-        @keyword version: Optional. The version of the plan, defaults to 
+        @keyword version: Optional. The version of the plan, defaults to
             the most recent version.
         @keyword target: Optional. The target number of districts to report
             in the HTML output.
-        @keyword validation: Optional. Change the output of the calculator 
+        @keyword validation: Optional. Change the output of the calculator
             to a boolean measure for plan validity.
         """
         if not 'plan' in kwargs:
@@ -1703,7 +1703,7 @@ class Equipopulation(CalculatorBase):
             if validation != None:
                 # ALL PLANS include 1 district named "Unassigned", which
                 # should never be at the target.
-        
+
                 self.result = { 'value': inrange.result['value'] == (len(districts) - 1) }
             elif target != None:
                 self.result = { 'value':_('%(value)d (of %(target)s)') % {'value': inrange.result['value'], 'target': target} }
@@ -1718,8 +1718,8 @@ class MajorityMinority(CalculatorBase):
     Determine if at least one district in a plan has a majority of minority
     population.
 
-    This calculator accepts 'population', 'count', 'threshold' arguments, 
-    and any number of 'minorityN' arguments, where N is a number starting 
+    This calculator accepts 'population', 'count', 'threshold' arguments,
+    and any number of 'minorityN' arguments, where N is a number starting
     at 1 and incrementing by 1. If there are gaps in the sequence, only the
     first continuous set of 'minorityN' parameters will be used.
 
@@ -1729,30 +1729,30 @@ class MajorityMinority(CalculatorBase):
     must be majority/minority in order for a plan to pass. The 'threshold'
     argument defines the threshold at which a majority is determined.
 
-    This calculator takes either a 'target' or a 'validation' parameter.  
-    If given a target, it will return a string that's showable in a plan 
+    This calculator takes either a 'target' or a 'validation' parameter.
+    If given a target, it will return a string that's showable in a plan
     summary.  If given a validation number, it will return a boolean result
-    representing whether the given plan has reached that number of 
+    representing whether the given plan has reached that number of
     majority-minority districts as configured.
 
     This calculator works on plans only.
     """
     def compute(self, **kwargs):
         """
-        Determine if the requisite number of districts in a plan have a 
-        majority of minority population. 
+        Determine if the requisite number of districts in a plan have a
+        majority of minority population.
 
-        @keyword plan: A L{Plan} whose set of districts should be 
+        @keyword plan: A L{Plan} whose set of districts should be
             evaluated for majority minority compliance.
         @keyword version: Optional. The version of the plan, defaults to
             the most recent version.
         @keyword population: The primary population subject.
-        @keyword minorityN: The minorty population subjects. Numbering 
+        @keyword minorityN: The minorty population subjects. Numbering
             starts at 1, and must be continuous.
-        @keyword threshold: Optional. The ratio of all minorityN 
-            populations to the population subject when 'majority' is 
+        @keyword threshold: Optional. The ratio of all minorityN
+            populations to the population subject when 'majority' is
             achieved. Defaults to 0.5.
-        @keyword target: Optional. The number of districts required to be 
+        @keyword target: Optional. The number of districts required to be
             valid.
         @keyword validation: Optional. Change the output of the calculator
             to a boolean measure for plan validity.
@@ -1785,7 +1785,7 @@ class MajorityMinority(CalculatorBase):
 
                 if minor is None:
                     continue
-                    
+
                 num = float(minor)
 
                 try:
@@ -1831,7 +1831,7 @@ class MultiMember(CalculatorBase):
 
         @keyword plan: A L{Plan} whose districts should be evaluated for
             multi-member compliance.
-        @keyword version: Optional. The version of the plan, defaults to 
+        @keyword version: Optional. The version of the plan, defaults to
             the most recent version.
         """
         self.result = { 'value': False }
@@ -1851,7 +1851,7 @@ class MultiMember(CalculatorBase):
             max_multi_dists = legbod.max_multi_districts
             min_plan_mems = legbod.min_plan_members
             max_plan_mems = legbod.max_plan_members
-            
+
             total_members = 0
             total_multi_dists = 0
 
@@ -1874,7 +1874,7 @@ class MultiMember(CalculatorBase):
             # Check number of districts per plan
             if (total_members < min_plan_mems) or (total_members > max_plan_mems):
                 return
-        
+
         self.result = { 'value': True }
 
 
@@ -1885,10 +1885,10 @@ class Average(CalculatorBase):
     This calculator will add up all arguments passed into it, and return
     the mathematical mean of their values.
 
-    For a district, this calculator will average a set of scores for 
+    For a district, this calculator will average a set of scores for
     each district.
 
-    For a plan, this calculator will average a set of district scores 
+    For a plan, this calculator will average a set of district scores
     across the entire plan.
 
     Each argument should be assigned the argument name "valueN", where N
@@ -1900,11 +1900,11 @@ class Average(CalculatorBase):
         Calculate the average of a series of values.
 
         @keyword list: A list of values to average.
-        @keyword district: Optional. A L{District} to get the subject 
+        @keyword district: Optional. A L{District} to get the subject
             values from. If this is not specified, 'plan' must be provided.
-        @keyword plan: Optional. A L{Plan} to get the subject values from. 
+        @keyword plan: Optional. A L{Plan} to get the subject values from.
             If this is not specified, 'district' must be provided.
-        @keyword version: Optional. The version of the plan, defaults to 
+        @keyword version: Optional. The version of the plan, defaults to
             the most recent version.
         """
         districts = []
@@ -1953,7 +1953,7 @@ class Average(CalculatorBase):
             if count == 0:
                 self.result = None
                 return
-            
+
             self.result = { 'value': total / count }
 
     def html(self):
@@ -1976,7 +1976,7 @@ class Comments(CalculatorBase):
     """
     Calculate the comments and types associated with a district.
 
-    Not really a calculator, but this occupies a ScorePanel. This 
+    Not really a calculator, but this occupies a ScorePanel. This
     calculator just gets the related comments and tags for districts
     in a plan, to enable a ScorePanel to render them.
 
@@ -1995,7 +1995,7 @@ class Comments(CalculatorBase):
         """
         if not 'district' in kwargs:
             return
-        
+
         district = kwargs['district']
 
         typetags = filter(lambda tag:tag.name[:4]=='type', district.tags)
@@ -2019,10 +2019,10 @@ class CommunityTypeCounter(CalculatorBase):
     For districts, this calculator will count the number of distinct
     community types that intersect the district.
 
-    This calculator, in addition to requiring a "districts" argument, 
+    This calculator, in addition to requiring a "districts" argument,
     requires a "community_map_id" argument, which is the primary key
     of the community map (L{Plan}) that is being compared to the district,
-    and a "version" argument indicating the version number of the 
+    and a "version" argument indicating the version number of the
     community map.
 
     This calculator will only operate on a district.
@@ -2034,7 +2034,7 @@ class CommunityTypeCounter(CalculatorBase):
         @keyword district: The L{District} to compare against the community
             map.
         @keyword community_map_id: The ID of the community map.
-        @keyword version: Optional. The version of the community map. 
+        @keyword version: Optional. The version of the community map.
             Defaults to the latest version of the community map.
         """
         if 'district' in kwargs:
@@ -2060,8 +2060,8 @@ class CommunityTypeCompatible(CalculatorBase):
     compatible. A type-compatible community map contains the same community
     types in across all districts.
 
-    This calculator requires a "community_map_id" argument, which is the 
-    primary key of the community map (L{Plan}) that is being compared to 
+    This calculator requires a "community_map_id" argument, which is the
+    primary key of the community map (L{Plan}) that is being compared to
     the L{Plan} and a "version" argument indicating the version number of
     the community map.
 
@@ -2078,7 +2078,7 @@ class CommunityTypeCompatible(CalculatorBase):
         @keyword community_map_id: The ID of the community map.
         @keyword plan_version: Optional, The version of the plan.
             Defaults to the latest version of the plan.
-        @keyword community_version: Optional. The version of the community 
+        @keyword community_version: Optional. The version of the community
             map.  Defaults to the latest version of the community map.
         @keyword type: The community type to check for compatibility.
         """
@@ -2136,24 +2136,24 @@ class SplitCounter(CalculatorBase):
     This calculator also accepts an optional "inverse" value. If this
     is set to 1 (true), the inverse calculation will take place:
     the bottom layer will be treated as the top layer and vice versa.
-    
+
     This calculator also accepts an optional "only_total" value. If this
     is set to 1 (true), only the total number of splits will be returned.
-    
+
     A "version" argument may be supplied to compare a given version of
-    the plan in the keyword args to the plan/geolevel given in the 
+    the plan in the keyword args to the plan/geolevel given in the
     boundary_id.
     """
     def compute(self, **kwargs):
         """
         Calculate splits between a plan and a target layer.
 
-        @keyword plan: A L{Plan} whose districts will be analyzed for 
+        @keyword plan: A L{Plan} whose districts will be analyzed for
             splits.
-        @keyword version: Optional. The version of the plan, defaults to 
+        @keyword version: Optional. The version of the plan, defaults to
             the most recent version.
         @keyword boundary_id: The layer type and ID to compare for splits.
-        @keyword inverse: A flag to indicate if the splits should be 
+        @keyword inverse: A flag to indicate if the splits should be
             compared forward or backward.
         @keyword only_total: A flag to indicate if only the total number
             of splits should be returned.
@@ -2177,7 +2177,7 @@ class SplitCounter(CalculatorBase):
         # Check if we only need to return the total in the html
         only_total = (self.get_value('only_total') == 1)
         splits = plan.compute_splits(target, version=version, inverse=inverse)
-        
+
         self.result = {
             'value': len(splits['splits']) if only_total else splits,
             'only_total': only_total
@@ -2185,7 +2185,7 @@ class SplitCounter(CalculatorBase):
 
     def html(self):
         """
-        Generate an HTML representation of the split report. This is 
+        Generate an HTML representation of the split report. This is
         represented as an HTML fragment containing a TABLE element with
         the splits listed in the cells.
 
@@ -2198,7 +2198,7 @@ class SplitCounter(CalculatorBase):
             # If 'only_total' is set, only return the total number of splits
             if self.result['only_total']:
                 return '<span>%d</span>' % r
-        
+
             total_split_districts = len(set(i[0] for i in r['splits']))
 
             if r['is_geolevel']:
@@ -2226,7 +2226,7 @@ class DistrictSplitCounter(CalculatorBase):
     """
     This calculator determines how many times a district splits a given geolevel.
 
-    This calculator accepts a "geolevel_id" argument, which is the id of 
+    This calculator accepts a "geolevel_id" argument, which is the id of
     the geolevel in which to perform the split comparison.
     """
     def compute(self, **kwargs):
@@ -2245,13 +2245,13 @@ class DistrictSplitCounter(CalculatorBase):
 
         geolevel_id = self.get_value('geolevel_id')
         num_splits = district.count_splits(geolevel_id)
-        
+
         self.result = { 'value': num_splits }
 
 class ConvexHullRatio(CalculatorBase):
     """
     Calculate the ratio of the area of a district to the area of its convex hull.
-    
+
     This calculator will either calculate a single district's convex hull ratio,
     or the average convex hull ratio of all districts.
     """
@@ -2259,11 +2259,11 @@ class ConvexHullRatio(CalculatorBase):
         """
         Calculate the convex hull ratio of a district or a plan.
 
-        @keyword district: A L{District} whose convex hull ratio should be 
+        @keyword district: A L{District} whose convex hull ratio should be
             computed.
-        @keyword plan: A L{Plan} whose district convex hull ratios should be 
+        @keyword plan: A L{Plan} whose district convex hull ratios should be
             averaged.
-        @keyword version: Optional. The version of the plan, defaults to 
+        @keyword version: Optional. The version of the plan, defaults to
             the most recent version.
         """
         districts = []
@@ -2279,7 +2279,7 @@ class ConvexHullRatio(CalculatorBase):
 
         else:
             return
-            
+
         num = 0
         ratios = 0.0
         for district in districts:
@@ -2312,8 +2312,8 @@ class Adjacency(CalculatorBase):
 
     def _district_calculator(self, district):
         def sum_query(query):
-            return sum(map(lambda x: float(x) if x else 0, self.r.mget(query)))
-        
+            return sum(map(lambda x: float(x) if x else 0, self.cache.get_many(query)))
+
         geounit_ids = [geo[1] for geo in district.get_base_geounits()]
         geounit_ids.sort()
         geounit_id_combos = itertools.combinations(geounit_ids, 2)
@@ -2325,7 +2325,7 @@ class Adjacency(CalculatorBase):
             if count % 10000 == 0 and count > 0:
                 total += sum_query(redis_query)
                 redis_query = []
-            
+
             redis_query.append(key_gen(**{'geounit1': ids[0], 'geounit2': ids[1]}))
 
         total += sum_query(redis_query)
@@ -2348,7 +2348,7 @@ class Adjacency(CalculatorBase):
 
         @keyword plan: A L{Plan} whose total cost ratio should be calculated
 
-        @keyword version: Optional. The version of the plan, defaults to 
+        @keyword version: Optional. The version of the plan, defaults to
         the most recent version.
 
         @keyword host: Optional. The host to connect to redis, defaults to value in settings.
@@ -2361,8 +2361,8 @@ class Adjacency(CalculatorBase):
         redis_host = kwargs.get('host', redis_settings['HOST'])
         redis_port = int(kwargs.get('port', redis_settings['PORT']))
         redis_db = int(kwargs.get('db', redis_settings['DB']))
-        self.r = redis.StrictRedis(host=redis_host, port=redis_port, db=redis_db)
-        
+        self.cache = caches['calculations']
+
         districts = []
         if 'district' in kwargs:
             districts = [kwargs['district']]
@@ -2390,7 +2390,7 @@ class Adjacency(CalculatorBase):
             region = districts[0].plan.legislative_body.region.name
 
             region_key = key_gen(**{'region': region})
-            region_score = float(self.r.get(region_key))
+            region_score = float(self.cache.get(region_key))
             num_districts = len(district_scores)
 
             for district in district_scores:
@@ -2413,4 +2413,4 @@ class Adjacency(CalculatorBase):
             return t.render(c)
         else:
             return _('n/a')
-        
+

@@ -5,6 +5,7 @@ psycopg2==2.7.3
 celery==3.0.15
 kombu==3.0.37
 django-celery==3.0.11
+django-redis==4.8.0
 django-rosetta==0.7.13
 django-staticfiles==1.2.1
 django-tagging==0.4.5
@@ -20,5 +21,4 @@ PySAL==1.5.0
 xhtml2pdf==0.0.6
 html5lib==1.0b8
 git+git://github.com/PublicMapping/modestmaps-py.git@db-mod_1.4
-redis==2.7.6
 lxml==3.8.0
