@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     # 3rd party
     'django_comments',
+    'django_extensions',
     'gunicorn',
     'polib',
     'rosetta',

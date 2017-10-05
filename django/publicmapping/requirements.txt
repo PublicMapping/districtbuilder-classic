@@ -1,4 +1,5 @@
 Gunicorn==19.7.1
+ipython==5.5.0
 gevent==1.2.2
 Django==1.11.5
 psycopg2==2.7.3
@@ -11,6 +12,7 @@ django-staticfiles==1.2.1
 django-tagging==0.4.5
 django-sld==1.0.7
 django-contrib-comments==1.8.0
+django-extensions==1.9.1
 polib==1.0.8
 inflect==0.2.3
 python-sld==1.0.9
