@@ -1,0 +1,43 @@
+#!/bin/bash
+set -e
+
+if [[ -n "${RF_DEBUG}" ]]; then
+    set -x
+fi
+
+DIR="$(dirname "$0")"
+
+
+function usage() {
+
+    echo -n \
+"Usage: $(basename "$0")
+Setup external project dependencies.
+"
+}
+
+
+function build_containers() {
+    docker-compose build
+}
+
+
+function do_migrations() {
+    ./scripts/console django "./manage.py migrate"
+}
+
+
+if [ "${BASH_SOURCE[0]}" = "${0}" ]
+then
+    if [ "${1:-}" = "--help" ]
+    then
+        usage
+    else
+        echo "Building containers"
+        build_containers
+
+        echo "Running migrations"
+        do_migrations
+    fi
+    exit
+fi

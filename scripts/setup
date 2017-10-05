@@ -22,6 +22,6 @@ then
         # Ensure that a directory exists to house AWS profiles.
         mkdir -p "${HOME}/.aws"
 
-        docker-compose -f docker-compose.yml build
+        vagrant up --provision
     fi
 fi

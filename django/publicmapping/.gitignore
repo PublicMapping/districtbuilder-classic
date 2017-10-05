@@ -1,2 +1,6 @@
 settings.py
 static-media
+
+static/admin/
+static/jqGrid/
+static/openlayers/
