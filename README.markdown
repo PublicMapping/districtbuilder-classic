@@ -7,7 +7,19 @@ DistrictBuilder
 Installation
 ------------
 
-Installation instructions are available at docs/INSTALL.
+### Requirements
+
+Vagrant 1.8.1
+VirtualBox 4.3
+Ansible 2.2
+
+### tl;dr
+
+```bash
+$ ./scripts/setup
+$ vagrant ssh
+$ ./scripts/update
+```
 
 
 Support
