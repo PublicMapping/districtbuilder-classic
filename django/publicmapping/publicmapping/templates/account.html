@@ -1,0 +1,101 @@
+{% load i18n %}
+{% if is_registered %}
+<div id="register" title="{% trans "Account Information" %}">
+    <form id="registerForm" action="/accounts/update/" method="post">
+{% else %}
+<div id="register" title="{% trans "Sign Up For An Account" %}">
+    <form id="registerForm" action="/accounts/register/" method="post">
+{% endif %}
+        <table id="registerTable">
+            <tr>
+                <td colspan="2"><span id="usernameinstructions"
+                class="recommended">{% trans "Please choose a username between 6 and 30 characters. Include at least one letter. Do not leave leading or trailing spaces." %}</span></td>
+            </tr>
+            <tr>
+                <td class="fname">{% trans "User Name" %} *</td>
+                <td><input id="newusername" name="newusername" class="field" maxlength="30"
+                {% if is_registered %}
+                    disabled="true" value="{{ userinfo.username }}"
+                {% endif %}/></td>
+            </tr>
+            <tr>
+                <td colspan="2"><span id="passwordinstructions" class="recommended">{% trans "Please use a password of 8 or more characters. Include a number, a capital letter and a lower-case letter." %}</span></td>
+            </tr>
+            <tr>
+                <td class="fname">{% trans "Password" %}{% if not is_registered %} *{% endif %}</td>
+                <td><input id="newpassword1" name="newpassword1" type="password" class="field" maxlength="128" /></td>
+            </tr>
+            <tr>
+                <td class="fname">{% trans "Confirm Password" %}{% if not is_registered %} *{% endif %}</td>
+                <td><input id="newpassword2" name="newpassword2" type="password" class="field" maxlength="128" /></td>
+            </tr>
+            <tr>
+                <td class="fname">{% trans "Password Hint" %} *</td>
+                <td><input id="passwordhint" name="passwordhint" class="field" maxlength="30"
+                {% if is_registered %}
+                    value="{{ userinfo.password_hint }}"
+                {% endif %}/></td>
+            </tr>
+            <tr>
+                <td colspan="2"><span class="recommended">{% trans "An email address is recommended to recover a forgotten password" %}</span></td>
+            </tr>
+            <tr>
+                <td class="fname">{% trans "Email Address" %}</td>
+                <td><input id="email" name="email" class="field" maxlength="75"
+                {% if is_registered %}
+                    value="{{ userinfo.email }}"
+                {% endif %}/><br/>
+		<div id="dupemail"><span class="recommended">{% trans "Sorry, that email address is already registered. Please use a different email address." %}</span></div></td>
+            </tr>
+            <tr>
+                <td class="fname">{% trans "First Name" %}</td>
+                <td><input id="firstname" name="firstname" class="field" maxlength="30"
+                {% if is_registered %}
+                    value="{{ userinfo.firstname }}"
+                {% endif %}/></td>
+            </tr>
+            <tr>
+                <td class="fname">{% trans "Last Name" %}</td>
+                <td><input id="lastname" name="lastname" class="field" maxlength="30"
+                {% if is_registered %}
+                    value="{{ userinfo.lastname }}"
+                {% endif %}/></td>
+            </tr>
+            <tr>
+                <td class="fname">{% trans "Organization" %}</td>
+                <td><input id="organization" name="organization" class="field" maxlength="30"
+                {% if is_registered %}
+                    value="{{ userinfo.organization }}"
+                {% endif %}/></td>
+            </tr>
+            {% if not is_registered %}
+            <tr id="agreerow">
+                <td></td>
+                <td>
+                    <input id="agree" name="agree" type="checkbox"/>
+                    <label id="agreelabel" for="agree">
+                        {% blocktrans %}I have read the <a href="#">Terms of Use</a>{% endblocktrans %}
+                    </label>
+                </td>
+
+            </tr>
+            {% endif %}
+            <input type="hidden" id="userid" name="userid"
+            {% if is_registered %}
+                value="{{ userinfo.id }}"
+            {% else %}
+                value=""
+            {% endif %}/>
+        </table>
+        <div id="signUpButton">
+            {% if is_registered %}
+            <button id="doRegister">{% trans "Update" %}</button>
+            {% else %}
+            <button id="doRegister">{% trans "Sign Up" %}</button>
+            {% endif %}
+        </div>
+        <div id="requiredNote">
+            * {% trans "Indicates required field" %}
+        </div>
+    </form>
+</div>

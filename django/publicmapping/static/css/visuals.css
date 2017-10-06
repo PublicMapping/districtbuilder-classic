@@ -27,8 +27,8 @@
 
 /*body bg*/
 
-body#static {  background: url(/static-media/images/bg-body-home.png) 0 0 repeat-x;}
-body#app {  background: url(/static-media/images/bg-app.png) 0 0 repeat;}
+body#static {  background: url(/static/images/bg-body-home.png) 0 0 repeat-x;}
+body#app {  background: url(/static/images/bg-app.png) 0 0 repeat;}
 
 /*homepage*/
 
@@ -85,7 +85,7 @@ div#news h3 {
 
 #static button {
     background-color: #39A787;
-    background-image: url(/static-media/images/bg-button-lg.png);
+    background-image: url(/static/images/bg-button-lg.png);
     background-position: center center;
     background-repeat: repeat-x;
     font-size: 11px;
@@ -123,7 +123,7 @@ div#news h3 {
   background-color: #3a80a0;
 }
 div#user {
-  background: url(/static-media/images/bg-home-panel.png) 0 0 repeat-x;
+  background: url(/static/images/bg-home-panel.png) 0 0 repeat-x;
   margin-left: 330px;
   height: 253px;
   -moz-border-radius: 5px;
@@ -153,7 +153,7 @@ div#user a {
 div#login {
   float: left;
   width: 240px;
-  background: url(/static-media/images/divider-vert.png) 100% 0 repeat-y;
+  background: url(/static/images/divider-vert.png) 100% 0 repeat-y;
   padding: 0 20px;
   height: 100%;
 }
@@ -336,7 +336,7 @@ div#logoffdlg p {
 div#footer {
     clear: both;
     margin: 20px 0 0 0;
-    background: url(/static-media/images/divider.png) 0 0 repeat-x;
+    background: url(/static/images/divider.png) 0 0 repeat-x;
     padding: 20px 0 15px 0;
 }
 
@@ -421,7 +421,7 @@ div#start_mapping_help {
     
 /* plan toolbars*/    
 div#toolbar_plans {
-  background: transparent url(/static-media/images/bg-app.png) 0 0 repeat;
+  background: transparent url(/static/images/bg-app.png) 0 0 repeat;
   }
   
 div#toolsets .ui-button.ui-state-hover {}

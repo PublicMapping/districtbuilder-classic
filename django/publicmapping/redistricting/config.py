@@ -35,7 +35,7 @@ from django.contrib.sessions.models import Session
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext as _
 from models import *
-from rosetta import polib
+import polib
 from djsld import generator
 import sld
 

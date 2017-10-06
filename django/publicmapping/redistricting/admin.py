@@ -34,7 +34,7 @@ from tasks import *
 from django import forms
 from django.http import HttpResponse
 from django.contrib.gis import admin
-from django.shortcuts import render_to_response
+from django.shortcuts import render
 from django.utils.encoding import force_unicode
 from django.contrib.admin import helpers
 from django.utils.translation import ugettext_lazy, ugettext as _
@@ -42,7 +42,7 @@ from django.core.exceptions import PermissionDenied
 from django import template
 from django.conf import settings
 import inflect
-from django.utils.functional import update_wrapper
+from functools import update_wrapper
 
 class ComputedCharacteristicAdmin(admin.ModelAdmin):
     """
@@ -205,7 +205,7 @@ class SubjectAdmin(admin.ModelAdmin):
     # Use a custom object deletion mechanism
     actions = ['delete_selected_subject']
 
-    def get_urls(modeladmin):
+    def get_urls(self):
         """
         Get the URLs for the auto-discovered admin pages. The Subject admin pages
         support a GET url for a subject template, an upload endpoint, and an upload/uuid/status
@@ -213,29 +213,29 @@ class SubjectAdmin(admin.ModelAdmin):
         """
 
         # This is django wrapper nastiness inherited from the default admin get_url method
-        from django.conf.urls.defaults import patterns, url
+        from django.conf.urls import url
         def wrap(view):
             def wrapper(*args, **kwargs):
-                return modeladmin.admin_site.admin_view(view)(*args, **kwargs)
+                return self.admin_site.admin_view(view)(*args, **kwargs)
             return update_wrapper(wrapper, view)
 
-        info = modeladmin.model._meta.app_label, modeladmin.model._meta.module_name
+        info = self.model._meta.app_label, self.model._meta.model_name
 
         # Add patterns special to subject uploading
-        urlpatterns = patterns('',
+        urlpatterns = [
             # subject/template GETs a csv template
             url(r'^template/$',
-                wrap(modeladmin.template_view),
+                wrap(self.template_view),
                 name='%s_%s_add' % info),
             # subject/upload/ POSTs a user-edited csv template
             url(r'^upload/$',
-                wrap(modeladmin.upload_view),
+                wrap(self.upload_view),
                 name='%s_%s_upload' % info),
             # subject/upload/<uuid>/status GETs the status of a celery task
             url(r'^upload/(?P<task_uuid>.+)/status/$',
-                wrap(modeladmin.upload_status_view),
+                wrap(self.upload_status_view),
                 name='%s_%s_status' % info),
-        ) + super(SubjectAdmin, modeladmin).get_urls()
+        ] + super(SubjectAdmin, self).get_urls()
 
         return urlpatterns
 
@@ -300,7 +300,7 @@ class SubjectAdmin(admin.ModelAdmin):
         }
 
         # Display the confirmation page
-        return render_to_response("admin/%s/%s/delete_selected_confirmation.html" % (app_label, opts.object_name.lower()), 
+        return render("admin/%s/%s/delete_selected_confirmation.html" % (app_label, opts.object_name.lower()), 
             context, context_instance=template.RequestContext(request))
 
     # Customize the label of the delete_selected_subject action to look like the normal delete label
@@ -322,7 +322,7 @@ class SubjectAdmin(admin.ModelAdmin):
             'geounits': geolevel.geounit_set.all().order_by('portable_id').values_list('portable_id',flat=True)
         }
 
-        resp = render_to_response("admin/%s/%s/add_template.csv" % (app_label, opts.object_name.lower()), 
+        resp = render("admin/%s/%s/add_template.csv" % (app_label, opts.object_name.lower()), 
             dictionary=context, mimetype='text/plain')
         resp['Content-Disposition'] = 'attachement; filename=new_subject.csv'
         return resp
@@ -381,7 +381,7 @@ class SubjectAdmin(admin.ModelAdmin):
             'is_processing': is_processing
         }
 
-        resp = render_to_response('admin/redistricting/subject/upload_form.html', context, context_instance=template.RequestContext(request))
+        resp = render('admin/redistricting/subject/upload_form.html', context, context_instance=template.RequestContext(request))
         return resp
 
     def upload_status_view(modeladmin, request, form_url='', extra_context=None, task_uuid=''):

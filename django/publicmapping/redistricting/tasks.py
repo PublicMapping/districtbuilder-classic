@@ -28,7 +28,7 @@ from celery.task import task
 from celery.task.http import HttpDispatchTask
 from codecs import open
 from django.core import management
-from django.contrib.comments.models import Comment
+from django_comments.models import Comment
 from django.contrib.sessions.models import Session
 from django.contrib.sites.models import Site
 from django.core.mail import send_mail, mail_admins, EmailMessage
@@ -1284,7 +1284,7 @@ def validate_plan(plan_id):
 
 
 @task
-@transaction.commit_manually
+@transaction.atomic
 def verify_count(upload_id, localstore, language):
     """
     Initialize the verification process by counting the number of geounits
@@ -1466,7 +1466,7 @@ def verify_preload(upload_id, language=None):
 
 
 @task
-@transaction.commit_manually
+@transaction.atomic
 def copy_to_characteristics(upload_id, language=None):
     """
     Continue the verification process by copying the holding records for

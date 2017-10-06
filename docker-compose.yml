@@ -1,0 +1,38 @@
+version: "3.3"
+services:
+  postgres:
+    image: quay.io/azavea/postgis:2.2-postgres9.5-slim
+    environment:
+      - POSTGRES_DB=district_builder
+      - POSTGRES_USER=district_builder
+      - POSTGRES_PASSWORD=district_builder
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready", "-U", "district_builder"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+
+  redis:
+    image: redis:3.2-alpine
+
+  django:
+    build:
+      context: ./django/publicmapping
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+    volumes:
+      - ./django/publicmapping/:/usr/src/app/
+    command:
+      - "--workers=2"
+      - "--timeout=60"
+      - "--bind=0.0.0.0:8080"
+      - "--reload"
+      - "--log-level=debug"
+      - "--access-logfile=-"
+      - "--error-logfile=-"
+      - "-kgevent"
+      - "publicmapping.wsgi"
+    links:
+      - postgres:postgres.internal.districtbuilder.com
+      - redis:redis.internal.districtbuilder.com

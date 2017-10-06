@@ -1,0 +1,87 @@
+{% extends "admin/base_site.html" %}
+
+{% comment %}
+
+   Copyright 2010-2011 Micah Altman, Michael McDonald
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+
+   This file is part of The Public Mapping Project
+   https://github.com/PublicMapping/
+
+   Purpose:
+       This file is a template for delete confirmation in the Subject
+       administrative interface. The delete confirmation step has a warning
+       and disclaimer about the ramifications of deleting a Subject
+       in a running and deployed application.
+
+   Author: David Zwarg, Andrew Jennings, Kenny Shepard
+
+{% endcomment %}
+
+{% load i18n %}
+
+{% block title %}{% if warned %}{% trans "Are you sure?" %}{% else %}{% trans "WARNING" %}{% endif %}{% endblock %}
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+     <a href="../../">{% trans "Home" %}</a> &rsaquo;
+     <a href="../">{{ app_label|capfirst }}</a> &rsaquo;
+     <a href="./">{{ opts.verbose_name_plural|capfirst }}</a> &rsaquo;
+     {% trans "Delete multiple objects" %}
+</div>
+{% endblock %}
+
+{% block content_title %}<h1>{% if warned %}{% trans "Are you sure?" %}{% else %}{% trans "WARNING" %}{% endif %}</h1>{% endblock %}
+{% block content %}
+  {% if warned %}
+    <p>{% blocktrans %}Are you sure you want to delete the selected {{ object_name }} objects? All of the following objects and their related items will be deleted:{% endblocktrans %}</p>
+    <ul>
+    {% for deletable_object in deletable_objects %}
+        <li>{{ deletable_object }}</li>
+        <ul>
+        <li>{{ deletable_object.characteristic_set.count }} {% trans "characteristics" %}</li>
+        <li>{{ deletable_object.computedcharacteristic_set.count }} {% trans "computed characteristics" %}</li>
+        <li>{{ deletable_object.subject_set.count }} {% trans "related subject(s)" %}</li>
+        </ul>
+    {% endfor %}
+    </ul>
+    <form action="" method="post">{% csrf_token %}
+    <div>
+    {% for obj in queryset %}
+    <input type="hidden" name="{{ action_checkbox_name }}" value="{{ obj.pk }}" />
+    {% endfor %}
+    <input type="hidden" name="action" value="delete_selected_subject" />
+    <input type="hidden" name="post" value="yes" />
+    <input type="submit" value="{% trans "Yes, I'm sure" %}" />
+    </div>
+    </form>
+  {% else %}
+    <p>{% blocktrans %}Deleting the selected {{ object_name }} objects must be done with great care! Please carefully read the following notice regarding the removal of {{ object_name }} objects:{% endblocktrans %}</p>
+    <ul>
+        <li>{% blocktrans %}Deleting a {{ object_name }} is irreversible.{% endblocktrans %}</li>
+        <li>{% blocktrans %}Deleting a {{ object_name }} must <em>NOT</em> occur when regular users are editing plans.{% endblocktrans %}</li>
+        <li>{% blocktrans %}All references to the {{ object_name }} in the application configuration must be removed.{% endblocktrans %}</li>
+        <li>{% blocktrans %}The process of deleting a {{ object_name }} takes a significant amount of time, and may not be interrupted once it has been started.{% endblocktrans %}</li>
+    </ul>
+    <form action="" method="post">{% csrf_token %}
+    <div>
+    {% for obj in queryset %}
+    <input type="hidden" name="{{ action_checkbox_name }}" value="{{ obj.pk }}" />
+    {% endfor %}
+    <input type="hidden" name="action" value="delete_selected_subject" />
+    <input type="checkbox" id="warned" name="warned" />&nbsp;<label for="warned">{% blocktrans %}I understand that the deletion of a {{ object_name }} is an irreversible operation.{% endblocktrans %}</label><br/>
+    <input type="submit" value="{% trans "Continue" %}" />
+    </div>
+    </form>
+  {% endif %}
+{% endblock %}

@@ -1,7 +1,7 @@
 """
 Define the models used by the redistricting app.
 
-The classes in redistricting.models define the data models used in the 
+The classes in redistricting.models define the data models used in the
 application. Each class relates to one table in the database; foreign key
 fields may define a second, intermediate table to map the records to one
 another.
@@ -24,7 +24,7 @@ License:
     See the License for the specific language governing permissions and
     limitations under the License.
 
-Author: 
+Author:
     Andrew Jennings, David Zwarg, Kenny Shepard
 """
 
@@ -39,20 +39,21 @@ from django.db.models.signals import pre_save, post_save, m2m_changed
 from django.db import connection, transaction
 from django.forms import ModelForm
 from django.conf import settings
-from django.utils import simplejson as json
 from django.utils import translation
 from django.utils.translation import ugettext as _
 from django.template.loader import render_to_string
-from django.contrib.comments.models import Comment
+from django_comments.models import Comment
 from django.contrib.contenttypes.models import ContentType
 from django.template.defaultfilters import title
 from redistricting.calculators import Schwartzberg, Contiguity, SumValues
 from tagging.models import TaggedItem, Tag
+from tagging.registry import register
 from datetime import datetime
 from copy import copy
+import json
 from decimal import *
 from operator import attrgetter
-from rosetta import polib
+import polib
 from traceback import format_exc
 import os, sys, cPickle, types, tagging, re, logging
 
@@ -131,7 +132,7 @@ class Subject(BaseModel):
     A Subject classifies theC haracteristics of a Geounit. Or, each Geounit
     has one Characteristic per Subject.
 
-    If you think about it in GIS terms: 
+    If you think about it in GIS terms:
         a Geounit is a Feature,
         a Subject is an Attribute on a Geounit, and
         a Characteristic is a Data Value for a Subject.
@@ -172,7 +173,7 @@ class Subject(BaseModel):
 
     def __unicode__(self):
         """
-        Represent the Subject as a unicode string. This is the Subject's 
+        Represent the Subject as a unicode string. This is the Subject's
         display name.
         """
         return self.get_label()
@@ -261,7 +262,7 @@ class Region(BaseModel):
 
     # The name of this region
     name = models.CharField(max_length=256)
-    
+
     # The sorting order for this region relative to other regions
     sort_key = models.PositiveIntegerField(default=0)
 
@@ -294,7 +295,7 @@ class LegislativeBody(BaseModel):
 
     # Whether or not districts of this legislative body are allowed multi-members
     multi_members_allowed = models.BooleanField(default=False)
-    
+
     # The format to be used for displaying a map label of a multi-member district.
     # This format string will be passed to python's 'format' function with the named
     # arguments: 'label' (district label) and 'num_members' (number of representatives)
@@ -304,19 +305,19 @@ class LegislativeBody(BaseModel):
 
     # The minimimum number of multi-member districts allowed in a plan.
     min_multi_districts = models.PositiveIntegerField(default=0)
-    
+
     # The maximum number of multi-member districts allowed in a plan.
     max_multi_districts = models.PositiveIntegerField(default=0)
-    
+
     # The minimimum number of members allowed in a multi-member district.
     min_multi_district_members = models.PositiveIntegerField(default=0)
-    
+
     # The maximimum number of members allowed in a multi-member district.
     max_multi_district_members = models.PositiveIntegerField(default=0)
 
     # The minimumum total number of members allowed in a plan.
     min_plan_members = models.PositiveIntegerField(default=0)
-    
+
     # The maximumum total number of members allowed in a plan.
     max_plan_members = models.PositiveIntegerField(default=0)
 
@@ -330,11 +331,11 @@ class LegislativeBody(BaseModel):
     region = models.ForeignKey(Region)
 
     def get_members_label(self):
-        """  
+        """
         Get the label for this legislative body's members.
         """
         msgid = u'%s members' % self.name
-        try: 
+        try:
             lang = translation.get_language()
             return I18N_CACHE[lang].find(msgid).msgstr
         except Exception, ex:
@@ -406,7 +407,7 @@ class LegislativeBody(BaseModel):
         Compares this legislative body to a second legislative body, and
         determines the nesting order (which one is above or below). This
         assumes the relationship can be determined from max_districts.
-        
+
         Parameters:
             legislative_body -- The LegislativeBody in which to perform the comparison
 
@@ -417,7 +418,7 @@ class LegislativeBody(BaseModel):
 
     def __unicode__(self):
         """
-        Represent the LegislativeBody as a unicode string. This is the 
+        Represent the LegislativeBody as a unicode string. This is the
         LegislativeBody's name.
         """
         return self.name
@@ -454,7 +455,7 @@ class Geolevel(BaseModel):
     """
     A geographic classification for Geounits.
 
-    For example, a Geolevel is the concept of 'Counties', where each 
+    For example, a Geolevel is the concept of 'Counties', where each
     Geounit is an instance of a county.  There are many Geounits at a
     Geolevel.
     """
@@ -462,7 +463,7 @@ class Geolevel(BaseModel):
     # The name of the geolevel
     name = models.CharField(max_length = 50)
 
-    # Each geolevel has a maximum and a minimum zoom level at which 
+    # Each geolevel has a maximum and a minimum zoom level at which
     # features on the map can be selected and added to districts
 
     # The minimum zoom level
@@ -488,7 +489,7 @@ class Geolevel(BaseModel):
 
     def __unicode__(self):
         """
-        Represent the Geolevel as a unicode string. This is the Geolevel's 
+        Represent the Geolevel as a unicode string. This is the Geolevel's
         name.
         """
         return self.get_label()
@@ -521,7 +522,7 @@ class Geolevel(BaseModel):
             if (float(i) / unitqset.count()) > (progress + 0.1):
                 progress += 0.1
                 logger.info('%2.0f%% .. ', (progress * 100))
-                
+
             geo,num = geounit.aggregate(parent, subject, spatial)
 
             geomods += geo
@@ -533,7 +534,7 @@ class Geolevel(BaseModel):
         logger.debug("Geounits modified: (geometry: %d, data values: %d)", geomods, nummods)
 
         return True
-        
+
 
 
 class LegislativeLevel(models.Model):
@@ -620,24 +621,24 @@ class Geounit(models.Model):
     @staticmethod
     def get_mixed_geounits(geounit_ids, legislative_body, geolevel, boundary, inside):
         """
-        Spatially search for the largest Geounits inside or outside a 
+        Spatially search for the largest Geounits inside or outside a
         boundary.
 
         Search for Geounits in a multipass search. The searching method
         gets Geounits inside a boundary at a Geolevel, then determines
         if there is a geographic remainder, then repeats the search at
-        a smaller Geolevel inside the specified LegislativeBody, until 
+        a smaller Geolevel inside the specified LegislativeBody, until
         the base Geolevel is reached.
 
         Parameters:
             geounit_ids -- A list of Geounit IDs. Please note that these
                 must be strings, not integers.
-            legislative_body -- The LegislativeBody that contains this 
+            legislative_body -- The LegislativeBody that contains this
                 geolevel.
             geolevel -- The ID of the Geolevel that contains geounit_ids
             boundary -- The GEOSGeometry that defines the edge of the
                 spatial search area.
-            inside -- True or False to search inside or outside of the 
+            inside -- True or False to search inside or outside of the
                 boundary, respectively.
 
         Returns:
@@ -647,7 +648,7 @@ class Geounit(models.Model):
         if not boundary and inside:
             # there are 0 geounits inside a non-existant boundary
             return []
-            
+
         # Make sure the geolevel is a number
         geolevel = int(geolevel)
         levels = legislative_body.get_geolevels()
@@ -665,7 +666,7 @@ class Geounit(models.Model):
                 # Get the area defined by the union of the geounits
                 selection = safe_union(Geounit.objects.filter(guFilter))
                 selection = enforce_multi(selection,collapse=True)
-               
+
                 # Begin crafting the query to get the id and geom
                 q_ids = Q(id__in=geounit_ids)
                 # create a boundary if one doesn't exist
@@ -698,7 +699,7 @@ class Geounit(models.Model):
                 if level == base_geolevel:
                     return units
 
-            # only query geolevels below (smaller in size, after the 
+            # only query geolevels below (smaller in size, after the
             # primary search geolevel) the geolevel parameter
             elif searching:
                 # union the selected geometries
@@ -717,7 +718,7 @@ class Geounit(models.Model):
                     intersects = selection.difference(union)
 
                 if inside:
-                    # the remainder geometry is the intersection of the 
+                    # the remainder geometry is the intersection of the
                     # district and the difference of the selected geounits
                     # and the current extent
                     try:
@@ -727,9 +728,9 @@ class Geounit(models.Model):
                         logger.debug('Reason:', ex)
                         remainder = empty_geom(boundary.srid)
                 else:
-                    # the remainder geometry is the geounit selection 
-                    # differenced with the boundary (leaving the 
-                    # selection that lies outside the boundary) 
+                    # the remainder geometry is the geounit selection
+                    # differenced with the boundary (leaving the
+                    # selection that lies outside the boundary)
                     # differenced with the intersection (the selection
                     # outside the boundary and outside the accumulated
                     # geometry)
@@ -751,7 +752,7 @@ class Geounit(models.Model):
 
                 remainder = enforce_multi(remainder)
 
-                # Check if the remainder is empty -- it may have been 
+                # Check if the remainder is empty -- it may have been
                 # converted, or errored out above, in which case we just
                 # have to move on.
                 if not remainder.empty:
@@ -769,7 +770,7 @@ class Geounit(models.Model):
 
     def __unicode__(self):
         """
-        Represent the Geounit as a unicode string. This is the Geounit's 
+        Represent the Geounit as a unicode string. This is the Geounit's
         name.
         """
         return self.name
@@ -792,7 +793,7 @@ class Geounit(models.Model):
         num = 0
 
         parentunits = Geounit.objects.filter(
-            tree_code__startswith=self.tree_code, 
+            tree_code__startswith=self.tree_code,
             geolevel__in=[parent])
 
         parentunits.update(child=self)
@@ -807,7 +808,7 @@ class Geounit(models.Model):
         if spatial:
             difference = newgeo.difference(self.geom).area
             if difference != 0:
-                # if there is any difference in the area, then assume that 
+                # if there is any difference in the area, then assume that
                 # this aggregate is an inaccurate aggregate of it's parents
 
                 # aggregate geometry
@@ -874,7 +875,7 @@ class Characteristic(models.Model):
     A data value for a Geounit's Subject.
 
     A Characteristic is the numerical data value measured for a Geounit for
-    a specific Subject. For example, this could be 1,200 for the Total 
+    a specific Subject. For example, this could be 1,200 for the Total
     Population of Ada County.
     """
 
@@ -884,14 +885,14 @@ class Characteristic(models.Model):
     geounit = models.ForeignKey(Geounit)
     # The value as a raw decimal number
     number = models.DecimalField(max_digits=12,decimal_places=4)
-    # The value as a percentage of the value for this geounit of the subject given as 
+    # The value as a percentage of the value for this geounit of the subject given as
     # the percentage_denominator (if any)
     percentage = models.DecimalField(max_digits=12,decimal_places=8, null=True, blank=True)
 
     def __unicode__(self):
         """
-        Represent the Characteristic as a unicode string. The 
-        Characteristic string is in the form of "Subject for Geounit: 
+        Represent the Characteristic as a unicode string. The
+        Characteristic string is in the form of "Subject for Geounit:
         Number"
         """
         return u'%s for %s: %s' % (self.subject, self.geounit, self.number)
@@ -911,7 +912,7 @@ class Plan(models.Model):
 
     A Plan is created by a user to represent multiple Districts. A Plan
     may be a template (created by admins, copyable by all users), or shared
-    (created by users, copyable by all users).  In addition, Plans are 
+    (created by users, copyable by all users).  In addition, Plans are
     versioned; the Plan version is the most recent version of all Districts
     that are a part of this Plan.
     """
@@ -930,7 +931,7 @@ class Plan(models.Model):
 
     # The processing state of this plan (see ProcessingState Enum)
     processing_state = models.IntegerField(choices=ProcessingState.choices(), default=ProcessingState.UNKNOWN)
-    
+
     # Is this plan considered a valid plan based on validation criteria?
     is_valid = models.BooleanField(default=False)
 
@@ -979,22 +980,22 @@ class Plan(models.Model):
             return False
 
         return self.legislative_body.is_community
-    
+
     def get_nth_previous_version(self, steps):
         """
         Get the version of this plan N steps away.
 
         Since editing a plan in its history purges higher versions of the
         districts in the plan, the version numbers become discontinuous.
-        In order to support purging with these discontinuous version 
+        In order to support purging with these discontinuous version
         numbers, this method assists in finding the valid version number
         of the plan that is so many steps behind the current plan.
 
-        This problem does not occur when purging higher numbered versions 
+        This problem does not occur when purging higher numbered versions
         from a plan.
 
         Parameters:
-            steps -- The number of 'undo' steps away from the current 
+            steps -- The number of 'undo' steps away from the current
                      plan's version.
 
         Returns:
@@ -1039,7 +1040,7 @@ class Plan(models.Model):
 
                 # Filter on all previous versions
                 q2 = Q(version__lt=d.version)
-               
+
                 # Accumulate the criteria
                 allQ = allQ | (q1 & q2)
 
@@ -1062,14 +1063,14 @@ class Plan(models.Model):
         # delete all districts at once
         deleteme.delete()
 
-        
+
     def purge_beyond_nth_step(self, steps):
         """
         Purge portions of this plan's history that
         are beyond N undo steps away.
 
         Parameters:
-            steps -- The number of 'undo' steps away from the current 
+            steps -- The number of 'undo' steps away from the current
                      plan's version.
         """
         if (steps >= 0):
@@ -1087,7 +1088,7 @@ class Plan(models.Model):
             district -- The district to modify
             num_members -- The new number of representatives for the district
         """
-                
+
         # Clone the district to a new version, with new num_members
         district_copy = copy(district)
         district_copy.version = self.version
@@ -1097,16 +1098,16 @@ class Plan(models.Model):
 
         # Clone the characteristics, comments and tags to this new version
         district_copy.clone_relations_from(district)
-                
-    @transaction.commit_on_success
+
+    @transaction.atomic
     def add_geounits(self, districtinfo, geounit_ids, geolevel, version, keep_old_versions=False):
         """
-        Add Geounits to a District. When geounits are added to one 
-        District, they are also removed from whichever district they're 
-        currently in. 
+        Add Geounits to a District. When geounits are added to one
+        District, they are also removed from whichever district they're
+        currently in.
 
-        NOTE: All calls to 'simplify' use the spatial units -- the map 
-        units in web mercator are meters, so simplify(tolerance=100.0) 
+        NOTE: All calls to 'simplify' use the spatial units -- the map
+        units in web mercator are meters, so simplify(tolerance=100.0)
         simplifies geometries to 100 meters between points (-ish).
 
         Parameters:
@@ -1121,7 +1122,7 @@ class Plan(models.Model):
             keep_old_versions -- Optional. If true, no older versions are purged.
 
         Returns:
-            Either 1) the number of Districts changed if adding geounits 
+            Either 1) the number of Districts changed if adding geounits
             to a district that already exists; 2) the name of the district
             created with the passed geounits.
         """
@@ -1138,7 +1139,7 @@ class Plan(models.Model):
 
         # fix the version so that it is definitely an integer
         version = int(version)
-        
+
         # incremental is the geometry that is changing
         incremental = safe_union(Geounit.objects.filter(id__in=geounit_ids))
 
@@ -1182,7 +1183,7 @@ class Plan(models.Model):
                     district_copy.id = None
                     district_copy.save()
 
-                    # Clone the characteristics, comments, and tags to this 
+                    # Clone the characteristics, comments, and tags to this
                     # new version
                     district_copy.clone_relations_from(district)
 
@@ -1201,7 +1202,7 @@ class Plan(models.Model):
             # Difference the district with the selection
             # This may throw a GEOSException, in which case this function
             # will not complete successfully, and all changes will be
-            # rolled back, thanks to the decorator commit_on_success
+            # rolled back, thanks to the decorator atomic
             try:
                 geom = district.geom.difference(incremental)
             except GEOSException, ex:
@@ -1231,7 +1232,7 @@ class Plan(models.Model):
             target = District(short_label=districtshort, long_label=districtlong, plan=self, district_id=districtid, version=self.version, geom=MultiPolygon([]))
             target.save()
             new_target = True
-                
+
         # If there are locked districts: augment the district boundary with the
         # boundary of the locked area, because get_mixed_geounits is getting
         # the geounits that lie outside of the provided geometry, but
@@ -1257,7 +1258,7 @@ class Plan(models.Model):
             # target geometry
             # This may throw a GEOSException, in which case this function
             # will not complete successfully, and all changes will be
-            # rolled back, thanks to the decorator commit_on_success
+            # rolled back, thanks to the decorator atomic
             try:
                 union = target.geom.union(incremental)
                 target.geom = enforce_multi(union)
@@ -1304,7 +1305,7 @@ class Plan(models.Model):
         """
         A convenience method to get the "biggest" geolevel that could
         be used in this plan.  Helpful for get_mixed_geounits
-        
+
         Returns:
             The geolevel in this plan with the minimum zoom level
         """
@@ -1317,7 +1318,7 @@ class Plan(models.Model):
         return geolevel
 
     def paste_districts(self, districts, version=None):
-        """ 
+        """
         Add the districts with the given plan into the plan
         Parameters
             districts -- A list of districts to add to
@@ -1325,14 +1326,14 @@ class Plan(models.Model):
             version -- The plan version that requested the
                 change.  Upon success, the plan will be one
                 version greater.
-        
+
         Returns:
             A list of the ids of the new, pasted districts
         """
-    
+
         if version == None:
             version = self.version
-        # Check to see if we have enough room to add these districts 
+        # Check to see if we have enough room to add these districts
         # without going over MAX_DISTRICTS for the legislative_body
         current_districts = self.get_districts_at_version(version, include_geom=False)
         allowed_districts = self.legislative_body.max_districts + 1
@@ -1375,7 +1376,7 @@ class Plan(models.Model):
         Returns:
             The id of the created district
         """
-        
+
         # Get the old districts from before this one is pasted
         if version == None:
             version = self.version
@@ -1401,8 +1402,8 @@ class Plan(models.Model):
         newshort = '' if slot == None else self.legislative_body.get_short_label() % {'district_id':slot}
         newlong = '' if slot == None else self.legislative_body.get_label() % {'district_id':slot}
         pasted = District(short_label = newshort, long_label = newlong,
-                plan = self,district_id = slot, geom = district.geom, 
-                simple = district.simple, version = new_version, 
+                plan = self,district_id = slot, geom = district.geom,
+                simple = district.simple, version = new_version,
                 num_members = district.num_members)
         pasted.save();
         if newshort  == '':
@@ -1410,7 +1411,7 @@ class Plan(models.Model):
             pasted.long_label = self.legislative_body.get_label() % {'district_id':pasted.district_id}
             pasted.save();
         pasted.clone_relations_from(district)
-        
+
         # For the remaning districts in the plan,
         for existing in others:
             edited_districts.append(existing)
@@ -1455,7 +1456,7 @@ class Plan(models.Model):
                     new_district.version = new_version
                     new_district.simplify()
                     new_district.save()
-                    
+
                     # If we've edited the district, pop it on the new_district list
                     edited_districts.pop()
                     edited_districts.append(new_district)
@@ -1464,7 +1465,7 @@ class Plan(models.Model):
                     geounit_ids = map(str, geounit_ids)
 
                     geounits = Geounit.get_mixed_geounits(geounit_ids, self.legislative_body, biggest_geolevel.id, intersection, True)
-                    
+
                     # Don't save Characteristics for this version if it's an empty district
                     if new_district.geom.empty:
                         new_district.computedcharacteristic_set.all().delete()
@@ -1475,10 +1476,10 @@ class Plan(models.Model):
     def get_wfs_districts(self,version,subject_id,extents,geolevel, district_ids=None):
         """
         Get the districts in this plan as a GeoJSON WFS response.
-        
-        This method behaves much like a WFS service, returning the GeoJSON 
+
+        This method behaves much like a WFS service, returning the GeoJSON
         for each district. This manual view exists because the limitations
-        of filtering and the complexity of the version query -- it is 
+        of filtering and the complexity of the version query -- it is
         impossible to use the WFS layer in Geoserver automatically.
 
         Parameters:
@@ -1494,7 +1495,7 @@ class Plan(models.Model):
         # If explicitly asked for no district ids, return no features
         if district_ids == []:
             return []
-       
+
         qset = self.get_district_ids_at_version(version)
 
         bounds = Polygon.from_bbox(extents)
@@ -1547,7 +1548,7 @@ class Plan(models.Model):
                 format = self.legislative_body.multi_district_label_format
                 label = format.format(name=label, num_members=district.num_members)
 
-            features_dict = { 
+            features_dict = {
                 'id': district.id,
                 'properties': {
                     'district_id': district.district_id,
@@ -1627,7 +1628,7 @@ class Plan(models.Model):
             owner - The system user that will own this plan.
 
         Returns:
-            A new plan, owned by owner, with one district named 
+            A new plan, owned by owner, with one district named
             "Unassigned".
         """
 
@@ -1650,8 +1651,8 @@ class Plan(models.Model):
 
     def get_base_geounits_in_geom(self, geom, threshold=100, simplified=False):
         """
-        Get a list of the geounit ids of the geounits that comprise 
-        this geometry at the base level.  
+        Get a list of the geounit ids of the geounits that comprise
+        this geometry at the base level.
 
         Parameters:
             threshold - distance threshold used for buffer in/out optimization
@@ -1659,7 +1660,7 @@ class Plan(models.Model):
 
         Returns:
             A list of tuples containing Geounit IDs and portable ids
-            that lie within this geometry. 
+            that lie within this geometry.
         """
 
         if not geom:
@@ -1693,15 +1694,15 @@ class Plan(models.Model):
 
     def get_base_geounits(self, threshold=100):
         """
-        Get a list of the geounit ids of the geounits that comprise 
-        this plan at the base level.  
+        Get a list of the geounit ids of the geounits that comprise
+        this plan at the base level.
 
         Parameters:
             threshold - distance threshold used for buffer in/out optimization
 
         Returns:
             A list of tuples containing Geounit IDs, portable ids,
-            district ids, and num_members that lie within this Plan. 
+            district ids, and num_members that lie within this Plan.
         """
 
         # Collect the geounits for each district in this plan
@@ -1712,12 +1713,12 @@ class Plan(models.Model):
                 districtunits = district.get_base_geounits(threshold)
                 # Add extra district data to the tuples
                 geounits.extend([(gid, pid, district.district_id, district.num_members) for (gid, pid) in districtunits])
-        
+
         return geounits
 
     def get_assigned_geounits(self, threshold=100, version=None):
         """
-        Get a list of the geounit ids of the geounits that comprise 
+        Get a list of the geounit ids of the geounits that comprise
         this plan at the base level. This is different than
         get_base_geounits, because it doesn't return district ids
         along with the geounit ids, and should therefore be more performant.
@@ -1728,7 +1729,7 @@ class Plan(models.Model):
 
         Returns:
             A list of tuples containing Geounit IDs and portable ids
-            that lie within this Plan. 
+            that lie within this Plan.
         """
 
         if version == None:
@@ -1743,13 +1744,13 @@ class Plan(models.Model):
         for district in self.get_districts_at_version(version,include_geom=True):
             if district.district_id > 0:
                 geounits.extend(district.get_base_geounits(threshold))
-        
+
         return geounits
 
     def get_unassigned_geounits(self, threshold=100, version=None):
         """
         Get a list of the geounit ids of the geounits that do not belong to
-        any district of this plan at the base level. 
+        any district of this plan at the base level.
 
         Parameters:
             threshold - distance threshold used for buffer in/out optimization
@@ -1757,7 +1758,7 @@ class Plan(models.Model):
 
         Returns:
             A list of tuples containing Geounit IDs and portable ids
-            that do not belong to any districts within this Plan. 
+            that do not belong to any districts within this Plan.
         """
 
         # The unassigned district contains all the unassigned items.
@@ -1842,7 +1843,7 @@ class Plan(models.Model):
             unassigned = [t[0] for t in unassigned]
             num_unassigned = len(unassigned)
             unassigned = list(set(unassigned) - set(to_add.keys()))
-    
+
             # Check that the percentage of assigned base geounits meets the requirements
             num_total_units = geolevel.geounit_set.count()
             pct_unassigned = 1.0 * num_unassigned / num_total_units
@@ -1851,11 +1852,11 @@ class Plan(models.Model):
             below_min_pct = pct_assigned < min_pct
             if below_min_pct and not to_add:
                 return False, _('The percentage of assigned units is: ') + str(int(pct_assigned * 100)) + '. ' + _('Fixing unassigned requires a minimum percentage of: ') + str(settings.FIX_UNASSIGNED_MIN_PERCENT)
-    
+
             if not below_min_pct:
                 # Get the unassigned geounits from the ids
                 unassigned = list(Geounit.objects.filter(pk__in=unassigned))
-    
+
                 # Remove any unassigned geounits that aren't on the edge
                 temp = []
                 for poly in unassigned_geom:
@@ -1864,17 +1865,17 @@ class Plan(models.Model):
                         if not g in temp and g.geom.intersects(unassigned_geom):
                             temp.append(g)
                 unassigned = temp
-                
+
                 # Set up calculator/storage for comparator values (most likely population)
                 calculator = SumValues()
                 calculator.arg_dict['value1'] = ('subject', settings.FIX_UNASSIGNED_COMPARATOR_SUBJECT)
-        
+
                 # Test each unassigned geounit with each unlocked district to see if it should be assigned
                 for district in districts:
                     # Calculate the comparator value for the district
                     calculator.compute(district=district)
                     dist_val = calculator.result['value']
-        
+
                     # Check if geounits are touching the district
                     for poly in district.geom:
                         exterior = Polygon(poly.exterior_ring)
@@ -1900,7 +1901,7 @@ class Plan(models.Model):
             for did, units in district_units.items():
                 self.add_geounits(did, [str(p) for p in units], geolevel.id, version, True)
                 version = self.version
-                
+
             # Fix versions so a single undo can undo the entire set of fixes
             num_adds = len(district_units.items())
             if num_adds > 1:
@@ -1922,7 +1923,7 @@ class Plan(models.Model):
 
         return False, _('No unassigned units could be fixed. Ensure the appropriate districts are not locked.')
 
-    @transaction.commit_manually
+    @transaction.atomic
     def combine_districts(self, target, components, version=None):
         """
         Given a target district, add the components and combine
@@ -1932,11 +1933,11 @@ class Plan(models.Model):
             target - A district within this plan
             components - A list of districts within this plan
                 to combine with the target
-            
+
         Returns:
             Whether the operation was successful
         """
-        # Check to be sure they're all in the same version and don't 
+        # Check to be sure they're all in the same version and don't
         # overlap - that should never happen
         if version == None:
             version = self.version
@@ -1949,7 +1950,7 @@ class Plan(models.Model):
         district_version = self.get_districts_at_version(version)
         version_keys = set(map(lambda d: d.id, district_version))
         if not district_keys.issubset(version_keys):
-            raise Exception('Attempted to combine districts not in the same plan or version') 
+            raise Exception('Attempted to combine districts not in the same plan or version')
         if target.is_locked:
             raise Exception('You cannot combine with a locked district')
 
@@ -1999,7 +2000,7 @@ class Plan(models.Model):
 
     def get_district_info(self, version=None):
         """
-        Get a set of tuples for each district in this plan. This will 
+        Get a set of tuples for each district in this plan. This will
         generate a list of tuples sorted by the 'district_id' field that
         contains the district name, and the number of members in the
         district.
@@ -2028,7 +2029,7 @@ class Plan(models.Model):
 
             below_id -- The id of the layer that is 'below' the above plan hierarchically.
                         The id is in the form of either 'plan.XXX' or 'geolevel.XXX'
-                          
+
             above_version -- Required only if the above_id is a Plan
 
             below_version -- Required only if the below_id is a Plan
@@ -2052,8 +2053,8 @@ class Plan(models.Model):
 
         Returns:
             An array of relationships, given as tuples, where the first item is the id of
-            the district in the above layer of the relationship, the second 
-            item is the id of the district in the below layer of the relationship, 
+            the district in the above layer of the relationship, the second
+            item is the id of the district in the below layer of the relationship,
             the third item is the name associated with the first, and
             the fourth item is the name associated with the second.
         """
@@ -2085,8 +2086,8 @@ class Plan(models.Model):
         version_join = """
 JOIN (
     SELECT max(version) as version, district_id FROM redistricting_district
-    WHERE plan_id = %d 
-    AND version <= %d 
+    WHERE plan_id = %d
+    AND version <= %d
     GROUP BY district_id
 ) AS lmt
 """
@@ -2117,7 +2118,7 @@ CROSS JOIN (
         # Two Plans
         if is_above_plan and is_below_plan:
             query = "%s %s %s %s %s %s %s %s" % (select, below_join, on_lmt, above_cross, plan_where, below_and, relate, order)
-         
+
         # Plan above, Geolevel below
         elif is_above_plan and not is_below_plan:
             query = "%s %s %s %s %s %s" % (select, above_cross, geolevel_below_join, geolevel_where, relate, order)
@@ -2143,7 +2144,7 @@ CROSS JOIN (
                           plan should most likely have a larger number of districts. A split occurs
                           when a district in this plan crosses the boundary of a district
                           in the other plan.
-                          
+
             version -- Optional; if specified, splits will be calculated using
                        districts in the specified version of the plan. If
                        omitted, the most recent plan version will be used.
@@ -2156,18 +2157,18 @@ CROSS JOIN (
             inverse -- Optional; if specified, performs the inverse split operation
 
             de_9im -- Dimensionally extended nine-intersection model string. Optional, by
-                      default this is set to a standard intersection.            
+                      default this is set to a standard intersection.
 
         Returns:
             An array of relationships, given as tuples, where the first item is the id of
-            the district in the above layer of the relationship, the second 
-            item is the id of the district in the below layer of the relationship, 
+            the district in the above layer of the relationship, the second
+            item is the id of the district in the below layer of the relationship,
             the third item is the name associated with the first, and
             the fourth item is the name associated with the second.
         """
         if not other_plan:
             raise Exception('Other plan must be specified for use in finding relationships.')
-        
+
         version = version if not version is None else self.version
         other_version = other_version if not other_version is None else other_plan.version
 
@@ -2176,7 +2177,7 @@ CROSS JOIN (
 
         bottom_id = 'plan.%d' % self.id if inverse else 'plan.%d' % other_plan.id
         bottom_version = version if inverse else other_version
-        
+
         return Plan.find_relationships(top_id, bottom_id, top_version, bottom_version, de_9im)
 
     def find_plan_splits(self, other_plan, version=None, other_version=None, inverse=False):
@@ -2207,7 +2208,7 @@ CROSS JOIN (
             geolevelid -- The geolevel that is 'below' this plan hierarchically.
                           A split occurs when a district in this plan crosses the
                           boundary of a geounit in the geolevel.
-                          
+
             version -- Optional; if specified, splits will be calculated using
                        districts in the specified version of the plan. If
                        omitted, the most recent plan version will be used.
@@ -2215,26 +2216,26 @@ CROSS JOIN (
             inverse -- Optional; if specified, performs the inverse split operation
 
             de_9im -- Dimensionally extended nine-intersection model string. Optional, by
-                      default this is set to a standard intersection.            
+                      default this is set to a standard intersection.
 
         Returns:
             An array of relationships, given as tuples, where the first item is the id of
-            the district in the above layer of the relationship, the second 
-            item is the portable_id of the geounit in the below layer of the relationship, 
+            the district in the above layer of the relationship, the second
+            item is the portable_id of the geounit in the below layer of the relationship,
             the third item is the name associated with the first, and
             the fourth item is the name associated with the second.
         """
         if not geolevelid:
             raise Exception('geolevelid must be specified for use in finding splits.')
-        
+
         version = version if not version is None else self.version
 
         top_id = 'geolevel.%d' % geolevelid if inverse else 'plan.%d' % self.id
         top_version = None if inverse else version
-        
+
         bottom_id = 'plan.%d' % self.id if inverse else 'geolevel.%d' % geolevelid
         bottom_version = version if inverse else None
-        
+
         return Plan.find_relationships(top_id, bottom_id, top_version, bottom_version, de_9im)
 
     def find_geolevel_splits(self, geolevelid, version=None, inverse=False):
@@ -2262,7 +2263,7 @@ CROSS JOIN (
         Given a plan, return a dictionary with community types, keyed on district_id
         """
         community_types = {}
-        
+
         for d in self.get_districts_at_version(version):
             typetags = filter(lambda tag:tag.name[:4]=='type', d.tags)
             if typetags:
@@ -2329,7 +2330,7 @@ CROSS JOIN (
             results['other_name'] = other_plan.name
             if self.is_community():
                 results['is_community'] = True
-                
+
             results['splits'] = self.find_plan_splits(other_plan, version=version, inverse=inverse)
             if extended is True:
                 results['interiors'] = self.find_plan_components(other_plan, version=version, inverse=inverse)
@@ -2363,12 +2364,12 @@ CROSS JOIN (
 
         # Get dictionaries on which we can regroup
         results['named_splits'] = [{'geo': x, 'interior': y, 'split': z} for x, y, z in results['named_splits']]
-        return results 
+        return results
 
     def get_community_type_info(self, target, version=None, inverse=None, include_counts=True):
         """
         Given a Plan, return the community type tables used in the split report.
-        If the Plan on the "bottom" of the split report request is not a community map, 
+        If the Plan on the "bottom" of the split report request is not a community map,
         this method will return None
         """
         # We only return this for the community on the "bottom" layer
@@ -2430,7 +2431,7 @@ CROSS JOIN (
 
     def get_friendly_name(self):
         """
-        Get an os-friendly name. This removes wildcards, path separators, and 
+        Get an os-friendly name. This removes wildcards, path separators, and
         line terminators from the plan name.
         """
         cleanRE = re.compile('\W+')
@@ -2450,7 +2451,7 @@ CROSS JOIN (
     def reaggregate(self):
         """
         Reaggregate all computed characteristics for each district in this plan.
-        
+
         @return: An integer count of the number of districts reaggregated
         """
         # Set the reaggregating flag
@@ -2460,10 +2461,10 @@ CROSS JOIN (
         try:
             # Find the geolevel relevant to this plan that has the largest geounits
             geolevel = self.get_largest_geolevel()
-    
+
             # Get all of the geounit_ids for that geolevel
             geounit_ids = map(str, Geounit.objects.filter(geolevel=geolevel).values_list('id', flat=True))
-    
+
             # Cycle through each district and update the statistics
             updated = 0
             for d in self.district_set.all():
@@ -2474,7 +2475,7 @@ CROSS JOIN (
             # Reaggregation successful, unset the reaggregating flag
             self.processing_state = ProcessingState.READY
             self.save()
-        
+
         except Exception as ex:
             logger.info('Unable to fully reaggreagate %d', self.id)
             logger.debug('Reason:', ex)
@@ -2497,13 +2498,13 @@ class PlanForm(ModelForm):
 
         # This form's model is a Plan
         model=Plan
-    
+        exclude = ['id']
 
 class District(models.Model):
     """
     A collection of Geounits, aggregated together.
 
-    A District is a part of a Plan, and is composed of many Geounits. 
+    A District is a part of a Plan, and is composed of many Geounits.
     Districts have geometry, simplified geometry, and pre-computed data
     values for Characteristics.
     """
@@ -2547,7 +2548,7 @@ class District(models.Model):
 
     # This is a geographic model, so use the geomanager for objects
     objects = models.GeoManager()
-    
+
     def sortKey(self):
         """
         Sort districts by name, with numbered districts first.
@@ -2570,11 +2571,11 @@ class District(models.Model):
             pass
         if name.isdigit():
             return '%03d' % int(name)
-        return name 
+        return name
 
     def sortVer(self):
         """
-        Sort a list of districts first by district_id, then by 
+        Sort a list of districts first by district_id, then by
         version number.
 
         Returns:
@@ -2585,7 +2586,7 @@ class District(models.Model):
     def is_latest_version(self):
         """
         Determine if this district is the latest version of the district
-        stored. If a district is not assigned to a plan, it is always 
+        stored. If a district is not assigned to a plan, it is always
         considered the latest version.
         """
         if self.plan:
@@ -2598,7 +2599,7 @@ class District(models.Model):
     @property
     def is_unassigned(self):
         """
-        Convenience property for readability (or a change in the district_id of 
+        Convenience property for readability (or a change in the district_id of
         Unassigned)
         """
         return self.district_id == 0
@@ -2609,14 +2610,14 @@ class District(models.Model):
         Returns a translated long district label
         """
         # a district label ends with the district id, and potentially other things,
-        # such as a multi-member district suffix. in order to translate it, we need 
+        # such as a multi-member district suffix. in order to translate it, we need
         # to translate just the first part of the string.
         a, b, c = self.long_label.partition(' ')
         return '%s%s%s' % (_(a), b, c)
 
     def __unicode__(self):
         """
-        Represent the District as a unicode string. This is the District's 
+        Represent the District as a unicode string. This is the District's
         name.
         """
         return self.short_label
@@ -2678,7 +2679,7 @@ class District(models.Model):
     def reset_stats(self):
         """
         Reset the statistics to zero for this district. This method walks
-        through all available subjects, and sets the computed 
+        through all available subjects, and sets the computed
         characteristic for this district to zero.
 
         Returns:
@@ -2708,10 +2709,10 @@ class District(models.Model):
 
     def clone_relations_from(self, origin):
         """
-        Copy the computed characteristics, comments, and tags from one 
+        Copy the computed characteristics, comments, and tags from one
         district to another.
 
-        Cloning District Characteristics, Comments and Tags are required when 
+        Cloning District Characteristics, Comments and Tags are required when
         cloning, copying, or instantiating a template district.
 
         Parameters:
@@ -2739,10 +2740,10 @@ class District(models.Model):
 
     def get_base_geounits(self, threshold=100):
         """
-        Get a list of the geounit ids of the geounits that comprise 
-        this district at the base level.  
-        
-        We'll check this by seeing whether the centroid of each geounits 
+        Get a list of the geounit ids of the geounits that comprise
+        this district at the base level.
+
+        We'll check this by seeing whether the centroid of each geounits
         fits within the simplified geometry of this district.
 
         Parameters:
@@ -2750,7 +2751,7 @@ class District(models.Model):
 
         Returns:
             A list of tuples containing Geounit IDs, portable ids, and num_members
-            that lie within this District. 
+            that lie within this District.
         """
         return self.plan.get_base_geounits_in_geom(self.geom, threshold);
 
@@ -2767,10 +2768,10 @@ class District(models.Model):
         filter = Q(override_geounit__geom__within=self.geom)
         filter = filter & Q(connect_to_geounit__geom__within=self.geom)
         return list(ContiguityOverride.objects.filter(filter))
-    
+
     def simplify(self, attempts_allowed=5, attempt_step=.80):
         """
-        Simplify the geometry into a geometry collection in the simple 
+        Simplify the geometry into a geometry collection in the simple
         field.
 
         Parameters:
@@ -2823,21 +2824,21 @@ class District(models.Model):
             else:
                 simples.append( self.geom )
 
-            index +=1 
+            index +=1
         self.simple = GeometryCollection(tuple(simples),srid=self.geom.srid)
         self.save()
 
     def count_community_type_union(self, community_map_id, version=None):
         """
         Count the number of distinct types of communities in the provided
-        community map. Only the community types of the communities that 
+        community map. Only the community types of the communities that
         intersect this district are counted.
-        
-        @param community_map_id: A L{Plan} ID linked to the 
+
+        @param community_map_id: A L{Plan} ID linked to the
             community-mapping L{LegislativeBody}.
-        @param version: The version of the community_map to examine. 
+        @param version: The version of the community_map to examine.
             Defaults to the current plan version.
-        @return: An integer count of the number of distinct community 
+        @return: An integer count of the number of distinct community
             types intersecting this district.
         """
         return len(self.get_community_type_union(community_map_id, version=version))
@@ -2878,7 +2879,7 @@ class District(models.Model):
         @param geounit_ids: Optional set of geounits to filter on. If this is
             not provided, it will be calculatated by using all geounits
             in the largest geolevel of the plan.
-        @return: True if reaggregation was successfull, False otherwise. 
+        @return: True if reaggregation was successfull, False otherwise.
         """
 
         # Find the geolevel relevant to this plan that has the largest geounits
@@ -2887,11 +2888,11 @@ class District(models.Model):
         # If not specified, get all of the geounit_ids for that geolevel
         if geounit_ids is None:
             geounit_ids = map(str, Geounit.objects.filter(geolevel=geolevel).values_list('id', flat=True))
-        
+
         try:
             body = self.plan.legislative_body
             geounits = Geounit.get_mixed_geounits(geounit_ids, body, geolevel.id, self.geom, True)
-        
+
             # Grab all the computedcharacteristics for the district and reaggregate
             for cc in self.computedcharacteristic_set.order_by('-subject__percentage_denominator'):
                 cs = Characteristic.objects.filter(subject=cc.subject, geounit__in=geounits)
@@ -2925,10 +2926,6 @@ class District(models.Model):
         cursor = connection.cursor()
         cursor.execute(query)
         return cursor.fetchone()[0]
-        
-
-# Enable tagging of districts by registering them with the tagging module
-tagging.register(District)
 
 
 class ComputedCharacteristic(models.Model):
@@ -2937,7 +2934,7 @@ class ComputedCharacteristic(models.Model):
     for Districts.
 
     ComputedCharacteristics represent the sum of the Characteristic values
-    for all Geounits in a District. There will be one 
+    for all Geounits in a District. There will be one
     ComputedCharacteristic per District per Subject.
     """
 
@@ -2996,7 +2993,7 @@ def update_profile(sender, **kwargs):
 def set_district_id(sender, **kwargs):
     """
     Incremented the district_id (NOT the primary key id) when a district
-    is saved. The district_id is unique to the plan/version.  The 
+    is saved. The district_id is unique to the plan/version.  The
     district_id may already be set, but this method ensures that it is set
     when saved.
     """
@@ -3026,7 +3023,7 @@ def update_plan_edited_time(sender, **kwargs):
 
 def create_unassigned_district(sender, **kwargs):
     """
-    When a new plan is saved, all geounits must be inserted into the 
+    When a new plan is saved, all geounits must be inserted into the
     Unassigned districts.
     """
     plan = kwargs['instance']
@@ -3055,7 +3052,7 @@ def create_unassigned_district(sender, **kwargs):
 
         unassigned.delta_stats(geounits, True)
 
-        
+
 # Connect the post_save signal from a User object to the update_profile
 # helper method
 post_save.connect(update_profile, sender=User, dispatch_uid="publicmapping.redistricting.User")
@@ -3063,16 +3060,16 @@ post_save.connect(update_profile, sender=User, dispatch_uid="publicmapping.redis
 pre_save.connect(set_district_id, sender=District)
 # Connect the post_save signal to the update_plan_edited_time helper method
 post_save.connect(update_plan_edited_time, sender=District)
-# Connect the post_save signal from a Plan object to the 
-# create_unassigned_district helper method (don't remove the dispatch_uid or 
+# Connect the post_save signal from a Plan object to the
+# create_unassigned_district helper method (don't remove the dispatch_uid or
 # this signal is sent twice)
 post_save.connect(create_unassigned_district, sender=Plan, dispatch_uid="publicmapping.redistricting.Plan")
 
 def can_edit(user, plan):
     """
     Can a user edit a plan?
-    
-    In order to edit a plan, Users must own it or be a staff member.  
+
+    In order to edit a plan, Users must own it or be a staff member.
     Templates cannot be edited, only copied.
 
     Parameters:
@@ -3105,8 +3102,8 @@ def can_copy(user, plan):
     """
     Can a user copy a plan?
 
-    In order to copy a plan, the user must be the owner, or a staff 
-    member to copy a plan they own.  Any registered user can copy a 
+    In order to copy a plan, the user must be the owner, or a staff
+    member to copy a plan they own.  Any registered user can copy a
     template.
 
     Parameters:
@@ -3140,7 +3137,7 @@ def enforce_multi(geom, collapse=False):
 
     Parameters:
         geom -- The geometry to check/enforce.
-        collapse -- A flag indicating that this method should collapse 
+        collapse -- A flag indicating that this method should collapse
                     the resulting multipolygon via cascaded_union. With
                     this flag, the method still returns a multipolygon.
     Returns:
@@ -3211,10 +3208,10 @@ class ScoreFunction(BaseModel):
     # Whether or not this score function is for a plan
     is_planscore = models.BooleanField(default=False)
 
-    # Whether a user can select this function for use in a 
+    # Whether a user can select this function for use in a
     # statistics set, per legislative levelqq
     selectable_bodies = models.ManyToManyField(LegislativeBody)
-    
+
     class Meta:
         """
         Additional information about the Subject model.
@@ -3240,7 +3237,7 @@ class ScoreFunction(BaseModel):
         module = ".".join(parts[:-1])
         m = __import__( module )
         for comp in parts[1:]:
-            m = getattr(m, comp)            
+            m = getattr(m, comp)
         return m()
 
     def score(self, districts_or_plans, format='raw', version=None, score_arguments=None):
@@ -3249,8 +3246,8 @@ class ScoreFunction(BaseModel):
 
         Parameters:
             districts_or_plans -- Either a single district, a single plan,
-                a list of districts, or a list of plans. Whether or not 
-                this deals with districts or plans must be in sync with 
+                a list of districts, or a list of plans. Whether or not
+                this deals with districts or plans must be in sync with
                 the value of is_planscore.
             format -- One of 'raw', 'html', or 'json'.
                 Determines how the results should be returned.
@@ -3258,9 +3255,9 @@ class ScoreFunction(BaseModel):
                 linked through the database
 
         Returns:
-            A score for each district or plan contained within 
-            districts_or_plans. If districts_or_plans is a single 
-            district or plan, a single result will be returned. If it 
+            A score for each district or plan contained within
+            districts_or_plans. If districts_or_plans is a single
+            district or plan, a single result will be returned. If it
             is a list, a list of results in the same order as
             districts_or_plans will be returned.
         """
@@ -3286,9 +3283,9 @@ class ScoreFunction(BaseModel):
                 else:
                     score_fn = ScoreFunction.objects.get(name=arg.value)
 
-                    # If this is a plan score and the argument is a 
-                    # district score, extract the districts from the 
-                    # plan, score each individually, # and pass into the 
+                    # If this is a plan score and the argument is a
+                    # district score, extract the districts from the
+                    # plan, score each individually, # and pass into the
                     # score function as a list
                     if not (self.is_planscore and not score_fn.is_planscore):
                         calc.arg_dict[arg.argument] = ('literal', score_fn.score(dp, format=format, version=version))
@@ -3320,7 +3317,7 @@ class ScoreFunction(BaseModel):
 
     def __unicode__(self):
         """
-        Get a unicode representation of this object. This is the 
+        Get a unicode representation of this object. This is the
         ScoreFunction's name.
         """
         return self.get_label()
@@ -3390,23 +3387,23 @@ class ScoreDisplay(BaseModel):
             return self.get_short_label()
 
     def copy_from(self, display=None, functions=[], owner=None, title=None):
-        """ 
+        """
         Given a scoredisplay and a list of functions, this method
         will copy the display and assign the copy to the new owner
-        
+
         Parameters:
-            display -- a ScoreDisplay to copy - the current 
-               Demographics display 
+            display -- a ScoreDisplay to copy - the current
+               Demographics display
             functions -- a list of ScoreFunctions or the primary
                 keys of ScoreFunctions to replace in the display's
                 first "district" ScorePanel
             owner -- the owner of the new ScoreDisplay - only set if we're not copying self
             title -- the title of the new scorefunction - only set if we're not copying self
-        
+
         Returns:
             The new ScoreDisplay
         """
-        
+
         if display == None:
             return
 
@@ -3447,7 +3444,7 @@ class ScoreDisplay(BaseModel):
                 return self
             for function in functions:
                 if isinstance(function, types.IntType):
-                    function = ScoreFunction.objects.get(pk=function) 
+                    function = ScoreFunction.objects.get(pk=function)
                 if isinstance(function, types.StringTypes):
                     function = ScoreFunction.objects.get(pk=int(function))
                 if type(function) == ScoreFunction:
@@ -3475,8 +3472,8 @@ class ScoreDisplay(BaseModel):
             dorp -- A list of districts, plan, or list of plans.
             context -- Optional object that can be used for advanced rendering
             components -- Optional list of tuples that can be used to recompose
-                the elements of a ScoreDisplay at runtime.  Each tuple should 
-                consist of a ScorePanel at index 0, followed by any number of 
+                the elements of a ScoreDisplay at runtime.  Each tuple should
+                consist of a ScorePanel at index 0, followed by any number of
                 ScoreFunctions tuples - a ScoreFunction followed by its arguments.
             version -- Optional; the version of the plan or district to render.
             function_ids -- Optional list of ScoreFunction ids in which to restrict rendering
@@ -3538,7 +3535,7 @@ class ScorePanel(BaseModel):
 
     # Where this panel belongs within a score display
     position = models.PositiveIntegerField(default=0)
-  
+
     # The filename of the template to be used for formatting this panel
     template = models.CharField(max_length=500)
 
@@ -3565,7 +3562,7 @@ class ScorePanel(BaseModel):
         """
         Generate the scores for all the functions attached to this panel,
         and render them in the template.
-        
+
         Only plan type panels are affected by the sorting order.
 
         Parameters:
@@ -3618,7 +3615,7 @@ class ScorePanel(BaseModel):
 
             for plan in plans:
                 plan_version = version if version is not None else plan.version
-                
+
                 if function_override:
                     functions = map(lambda f: f[0], components)
                 else:
@@ -3628,7 +3625,7 @@ class ScorePanel(BaseModel):
                     # Don't process this function if it isn't in the inclusion list
                     if function_ids and not function.id in function_ids:
                         continue
-                    
+
                     if function_override:
                         if len(function) > 1:
                             arguments = function[1:]
@@ -3678,7 +3675,7 @@ class ScorePanel(BaseModel):
 
                 if function_override:
                     district_functions = reduce(lambda c: not c[0].is_planscore, components)
-                    
+
 
                 else:
                     district_functions = self.score_functions.filter(is_planscore=False)
@@ -3748,7 +3745,7 @@ class ValidationCriteria(BaseModel):
 
 class ComputedDistrictScore(models.Model):
     """
-    A score generated by a score function for a district that can be 
+    A score generated by a score function for a district that can be
     saved for later.
 
     These computed scores do not store the version number, since each
@@ -3947,7 +3944,7 @@ class ContiguityOverride(models.Model):
         return '%s / %s' % (self.override_geounit.portable_id, self.connect_to_geounit.portable_id)
 
 
-@transaction.commit_manually
+@transaction.atomic
 def configure_views():
     """
     Create the spatial views for all the regions, geolevels and subjects.
@@ -3958,7 +3955,7 @@ def configure_views():
     in the database at this point.
     """
     cursor = connection.cursor()
-    
+
     sql = "CREATE OR REPLACE VIEW identify_geounit AS SELECT rg.id, rg.name, rgg.geolevel_id, rg.geom, rc.number, rc.percentage, rc.subject_id FROM redistricting_geounit rg JOIN redistricting_geounit_geolevel rgg ON rg.id = rgg.geounit_id JOIN redistricting_characteristic rc ON rg.id = rc.geounit_id;"
     cursor.execute(sql)
 
@@ -3992,7 +3989,7 @@ def configure_views():
             logger.error(format_exc())
 
         logger.debug('Created simple_%s view ...', geolevel.name)
-        
+
         for subject in Subject.objects.all():
             sql = "CREATE OR REPLACE VIEW %s AS SELECT rg.id, rg.name, rgg.geolevel_id, rg.geom, rc.number, rc.percentage FROM redistricting_geounit rg JOIN redistricting_geounit_geolevel rgg ON rg.id = rgg.geounit_id JOIN redistricting_characteristic rc ON rg.id = rc.geounit_id WHERE rc.subject_id = %%(subject_id)s AND rgg.geolevel_id = %%(geolevel_id)s;" % get_featuretype_name(geolevel.name, subject.name)
             cursor.execute(sql, {'subject_id':subject.id, 'geolevel_id':geolevel.id})
@@ -4019,3 +4016,8 @@ def get_featuretype_name(geolevel_name, subject_name=None):
         return 'demo_%s_none' % geolevel_name
     else:
         return 'demo_%s_%s' % (geolevel_name, subject_name)
+
+
+# Enable tagging of districts by registering them with the tagging module
+register(District)
+

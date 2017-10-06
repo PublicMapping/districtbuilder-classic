@@ -6,21 +6,21 @@ https://github.com/PublicMapping/
 
 License:
     Copyright 2010-2012 Micah Altman, Michael McDonald
- 
+
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
     You may obtain a copy of the License at
- 
+
         http://www.apache.org/licenses/LICENSE-2.0
- 
+
     Unless required by applicable law or agreed to in writing, software
     distributed under the License is distributed on an "AS IS" BASIS,
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
- 
-Author: 
-    Andrew Jennings, David Zwarg 
+
+Author:
+    Andrew Jennings, David Zwarg
 """
 
 import os, traceback, random, logging
@@ -65,9 +65,9 @@ class StoredConfig:
         Validate the provided data file for correctness against the provided
         schema file.
 
-        @return: A flag indicating if the data validates against the schema. 
+        @return: A flag indicating if the data validates against the schema.
         """
-         
+
         # clear any previous xml errors
         clear_error_log()
         if self.schemafile is not None:
@@ -122,7 +122,7 @@ class StoredConfig:
     def merge_settings(self, settings):
         """
         Take the default settings from the input file, and write a django settings file.
-        The django settings file receives database connection settings, etc from the 
+        The django settings file receives database connection settings, etc from the
         DistrictBuilder configuration file.
 
         @param settings: The name of the settings file that should be merged. Currently
@@ -276,7 +276,7 @@ class StoredConfig:
                 output.write("\nCONVEX_CHOROPLETH = True\n")
             else:
                 output.write("\nCONVEX_CHOROPLETH = False\n")
-            
+
             cfg = self.data.xpath('//Mailer')[0]
             output.write("\nEMAIL_HOST = '%s'\n" % cfg.get('server'))
             output.write("EMAIL_PORT = %d\n" % int(cfg.get('port')))
@@ -332,7 +332,7 @@ class StoredConfig:
                         output.write("BARD_SERVER = '%s'\n" % server)
                     else:
                         output.write("BARD_SERVER = 'http://localhost/reporting'\n")
-                    
+
             cfg = self.data.xpath('//GoogleAnalytics')
             if len(cfg) > 0:
                 cfg = cfg[0]
@@ -377,7 +377,7 @@ class StoredConfig:
                 cfg = cfg[0]
                 maxranked = cfg.get('maxranked') or 10
             output.write("\nLEADERBOARD_MAX_RANKED = %d\n" % int(maxranked))
-       
+
             output.close()
 
             return True
@@ -409,7 +409,7 @@ class StoredConfig:
 
             output.close()
 
-            os.rename(output.name, '../reporting/settings.py')
+            os.rename(output.name, './reporting/settings.py')
 
             return (True, [],)
         except Exception, ex:
@@ -439,7 +439,7 @@ class StoredConfig:
             return None
 
         return nodes[0]
-       
+
 
     def filter_nodes(self, node_filter, parent=None):
         """
@@ -460,8 +460,8 @@ class StoredConfig:
 
     def get_admin(self):
         """
-        Get the administrative user configuration node. 
-        
+        Get the administrative user configuration node.
+
         Administrative configuration reference: U{https://github.com/PublicMapping/DistrictBuilder/wiki/Configuration#wiki-admin}
 
         @returns: The administrative configuration node.
@@ -623,7 +623,7 @@ class StoredConfig:
     def filter_subjects(self):
         """
         Get all the subject configurations from the XML data.
-    
+
         Subject configuration reference: U{https://github.com/PublicMapping/DistrictBuilder/wiki/Configuration#wiki-subject}
 
         @returns: A list of all the Subject nodes.
@@ -747,7 +747,7 @@ class StoredConfig:
         """
         Does the configuration contain any scoring nodes?
 
-        @returns: A boolean flag indicating if the configuration 
+        @returns: A boolean flag indicating if the configuration
             contains a Scoring node.
         """
         return not self.get_node('//Scoring') is None
@@ -756,7 +756,7 @@ class StoredConfig:
         """
         Does the configuration contain any validation nodes?
 
-        @returns: A boolean flag indicating if the configuration 
+        @returns: A boolean flag indicating if the configuration
             contains a Validation node.
         """
         return not self.get_node('//Validation') is None
@@ -765,7 +765,7 @@ class StoredConfig:
         """
         Does the configuration contain any contiguity override nodes?
 
-        @returns: A boolean flag indicating if the configuration 
+        @returns: A boolean flag indicating if the configuration
             contains a ContiguityOverrides node.
         """
         return not self.get_node('//ContiguityOverrides') is None

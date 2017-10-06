@@ -1,0 +1,13 @@
+- hosts: all
+  become: True
+
+  pre_tasks:
+    - name: Update APT cache
+      apt: update_cache=yes cache_valid_time=3600
+
+  roles:
+    - { role: "azavea.ntp" }
+    - { role: "district-builder.environment" }
+    - { role: "azavea.python-security" }
+    - { role: "district-builder.docker" }
+    - { role: "district-builder.shellcheck" }

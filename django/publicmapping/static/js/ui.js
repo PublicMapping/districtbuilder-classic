@@ -20,7 +20,7 @@
        This script file contains utility funtions that are used throughout
        the user interface for button and dialogs and tooltips.
 
-   Author: 
+   Author:
         Andrew Jennings, David Zwarg, Kenny Shepard
 */
 
@@ -39,12 +39,12 @@ function loadButtons() {
  * "divtip", "titletip", as well as the stats legend.
  */
 function loadTooltips() {
-    $(".divtip").tooltip({ 
+    $(".divtip").tooltip({
         position: 'bottom left',
         offset: [8,10],
         delay: 200,
         predelay: 50,
-        opacity: .8,      
+        opacity: .8,
         onBeforeShow:  function() {
             // ensure proper DOM placement
             this.getTip().appendTo('body');
@@ -53,14 +53,14 @@ function loadTooltips() {
             // restore original DOM placement
             this.getTip().appendTo(this.getTrigger());
         }
-    });    
-  
+    });
+
     $(".titletip[title]").tooltip({
         position: 'bottom right',
         delay: 250,
         predelay: 600,
         opacity: .8
-    });    
+    });
 
     $('.evaluate .disabled').attr('title', gettext('Coming Soon...'));
 
@@ -78,7 +78,7 @@ function loadTooltips() {
         // Open this tip on click only, don't close it via tooltip methods
         events: {
             widget: 'click, none',
-            tooltip: 'none'                    
+            tooltip: 'none'
         },
         onBeforeShow:  function() {
             // ensure proper DOM placement
@@ -100,7 +100,7 @@ function loadTooltips() {
             // restore original DOM placement
             this.getTip().appendTo(this.getTrigger());
         }
-    });  
+    });
 }
 
 // Given a UTC time in ISO format, translate to browser local time
@@ -140,12 +140,12 @@ $(function() {
         $.ajax({
             type: 'GET',
             url: '/districtmapping/getleaderboard/',
-            data: { owner_filter: owner, legislative_body: ($('#legSelectorLeaderboards').val() || 1) }, 
+            data: { owner_filter: owner, legislative_body: ($('#legSelectorLeaderboards').val() || 1) },
             success: function(html) {
                 var panels = $('<div class="leaderboard_panels"></div>');
                 container.append(panels);
 
-                // insert the score panels HTML or a message stating that the 
+                // insert the score panels HTML or a message stating that the
                 // leaderboards are not yet filled
                 if (html !== '') {
                     panels.html(html);
@@ -158,12 +158,12 @@ $(function() {
                 outstandingRequests -= 1;
                 if (outstandingRequests === 0) {
                     // create the tooltips
-                    $(".leaderboard.divtip").tooltip({ 
+                    $(".leaderboard.divtip").tooltip({
                         position: 'bottom right',
                         offset: [8,10],
                         delay: 200,
                         predelay: 50,
-                        opacity: .8,      
+                        opacity: .8,
                         onBeforeShow:  function() {
                             // ensure proper DOM placement
                             this.getTip().appendTo('body');
@@ -185,7 +185,7 @@ $(function() {
             }
         });
     };
-        
+
     // clears out any previous leaderboard elements, and constructs a new one
     var updateLeaderboard = function() {
         $("#topranked_content").remove();
@@ -199,14 +199,14 @@ $(function() {
             $("#myranked_content").remove();
             var myrankedDiv = $("#leaderboard_myranked").html('<div id="myranked_content"></div>');
             outstandingRequests += 1;
-            
+
             setTimeout( function(){
                 constructLeaderboardSection(myrankedDiv, "mine");
             }, 500);
         }
 
         // show waiting dialog
-        $('#waiting').dialog('open');        
+        $('#waiting').dialog('open');
     };
 
     // connect the 'Verify and Submit Plan' button
@@ -239,10 +239,10 @@ $(function() {
         button.html(gettext('Update Leaderboards<br/>with Working Plan'));
         button.button();
         $('#updateLeaderboardsContainer').append(button);
-                    
+
         // add handling for updating leaderboard with current plan
         button.click(function() {
-            $('#waiting').dialog('open');                                    
+            $('#waiting').dialog('open');
             $.ajax({
                 url: '/districtmapping/plan/' + PLAN_ID + '/score/',
                 type: 'POST',
@@ -259,7 +259,7 @@ $(function() {
                 },
                 error: function() {
                     $('#waiting').dialog('close');
-                    
+
                     $('<div />').attr('title', gettext('Error'))
                         .text(gettext('Server error. Please try again later')).dialog({autoOpen:true});
                 }
@@ -285,7 +285,7 @@ $(function() {
     $('#legSelectorLeaderboards').change( function() {
         updateLeaderboard();
     });
-        
+
     // jQuery-UI tab layout
     $('#steps').tabs({
         select: function(e, ui) {
@@ -318,14 +318,14 @@ $(function() {
 
     $('#map_menu').tabs();
     $('#toolsets').tabs();
-   
-    // jQuery Tools tooltips   
+
+    // jQuery Tools tooltips
     loadTooltips();
-    
-    // jQuery-UI buttons   
+
+    // jQuery-UI buttons
     loadButtons();
-    
-    
+
+
     // stats dropdown button
     $('.menu_toggle')
         .button({
@@ -355,10 +355,10 @@ $(function() {
                     $storedPanel.slideUp(200,function(){sizeCB(show);});
                     $('#map_settings_content, #legend_toggle').addClass('collapse', 400);
                 });
-            }  
+            }
         });
-     
-     
+
+
      //stats picker menu slider activation
      $('#map_menu_header select').change(function() {
          if ( $(".map_menu_content:visible'").length === 0) {
@@ -366,7 +366,7 @@ $(function() {
              $storedPanel.slideDown(200);
          }
      });
-    
+
     // map editing buttons
     $('.toolset button, #history_tools button, #open_statistics_editor, #plan_export_container button')
         .button({
@@ -379,8 +379,8 @@ $(function() {
                     $(this).addClass('toggle');
                 }
             }
-        });    
-    
+        });
+
     $('#saveplaninfo').bind('planSaved', function(event, time) {
         // there isn't a good, standard way to localize dates in javascript.
         // here, we need to show either dd/yy or yy/dd depending on the desired format.
@@ -389,13 +389,13 @@ $(function() {
         var local = getLocalTimeFromIsoformat(time),
             isDateFirst = DB.util.startsWith(get_format('SHORT_DATE_FORMAT'), 'd'),
             dateParts = local.day.split('/');
-        
+
         var i18nParams = {
             day: isDateFirst ? (dateParts[1] + '/' + dateParts[0]) : (dateParts[0] + '/' + dateParts[1]),
             hour: (local.hours % 12) || 12,
             minute: ((local.minutes < 10) ? ('0' + local.minutes) : local.minutes)
         };
-        
+
         $('#saveplaninfo').text(printFormat(gettext('Last Saved on %(day)s at %(hour)s:%(minute)s'), i18nParams));
     });
 
@@ -434,7 +434,7 @@ $(function() {
         );
         menuDiv.slideUp(0);
     };
-    
+
     toggleMenu('#plan_export_button', '#plan_export_menu');
 
     // Set up the language chooser
@@ -443,7 +443,7 @@ $(function() {
         $('#language_form #language').val($(this).attr('id'));
         $('#language_form').submit();
     });
-    
+
     $('#map_settings').click(function(){
         var toggle = $(this);
         var panel = $('#map_settings_content');
@@ -457,7 +457,7 @@ $(function() {
             panel.slideDown(240);
         }
     });
-    
+
     $('#map_type_settings').click(function(){
         var toggle = $(this);
         var panel = $('#map_type_content');
@@ -471,41 +471,41 @@ $(function() {
             panel.slideDown(240);
         }
     });
-    
+
     // report category parents toggling
     $('#reportdescription .master input').click( function() {
         $this = $(this);
         var id = $this.attr('id');
         var category = id.substring(0, id.indexOf('_'));
         var checked = $this.is(':checked');
-        $('#reportdescription .' + category + ' input').prop('checked', $this.is(':checked'));     
+        $('#reportdescription .' + category + ' input').prop('checked', $this.is(':checked'));
     });
     $('#reportdescription .reportVar input').click( function() {
         $this = $(this).closest('span');
         var id = $this.attr('id');
         var categories = $this.attr('class');
-        var category = categories.split(' ')[0]; 
+        var category = categories.split(' ')[0];
         if ($this.find('input').is(':checked') == false) {
-            $('#' + category + '_master').prop('checked', false);     
+            $('#' + category + '_master').prop('checked', false);
         }
     });
 
     /* The Save and Share button.  */
-    $('#btnSaveAndShare').click( function() { 
+    $('#btnSaveAndShare').click( function() {
         // Helper function to get name for shared plan
         var getData = function() {
             var name = $('#txtPlanName').val().trim();
             if (name == '') { return false; }
-            return { name: name, shared: true }; 
+            return { name: name, shared: true };
         };
         // The dialog to display while contacting the server.  Shouldn't be closable
         var $waitPublishing = $('<div />').attr('title', gettext('Please Wait')).text(gettext('Publishing with the server'));
-        $waitPublishing.dialog({ 
+        $waitPublishing.dialog({
             modal: true,
-            autoOpen: true, 
-            escapeOnClose: false, 
-            resizable:false, 
-            open: function(event, ui) { $(".ui-dialog-titlebar-close", $(this).parent()).hide(); } 
+            autoOpen: true,
+            escapeOnClose: false,
+            resizable:false,
+            open: function(event, ui) { $(".ui-dialog-titlebar-close", $(this).parent()).hide(); }
         });
         var data = getData();
         if (!data) {
@@ -525,7 +525,7 @@ $(function() {
                         $('<div />').attr('title', gettext('Oops!')).html(data.message).dialog({autoOpen:true});
                     }
                     else if (textStatus == 'success') {
-                        var link = window.location.protocol + '//' + window.location.host + '/districtmapping/plan/' + data[0].pk + '/view/' 
+                        var link = window.location.protocol + '//' + window.location.host + '/districtmapping/plan/' + data[0].pk + '/view/'
                         $('#sharedPermalink').html('<a href="' + link + '">' + link + '</a>');
                         // insert correct link for social network
                         //$('.twitter-tweet a').attr('data-url', link);

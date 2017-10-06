@@ -1,0 +1,4 @@
+---
+
+shellcheck_version: "0.3.*"
+docker_compose_version: "1.16.*"

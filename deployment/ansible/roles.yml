@@ -1,0 +1,14 @@
+- src: azavea.pip
+  version: 1.0.0
+
+- src: azavea.docker
+  version: 4.0.0
+
+- src: azavea.unzip
+  version: 0.1.2
+
+- src: azavea.ntp
+  version: 0.1.1
+
+- src: azavea.python-security
+  version: 0.1.0 
