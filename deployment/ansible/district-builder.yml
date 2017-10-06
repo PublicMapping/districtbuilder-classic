@@ -7,7 +7,6 @@
 
   roles:
     - { role: "azavea.ntp" }
-    - { role: "district-builder.environment" }
     - { role: "azavea.python-security" }
     - { role: "district-builder.docker" }
     - { role: "district-builder.shellcheck" }
