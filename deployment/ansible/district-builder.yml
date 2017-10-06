@@ -10,5 +10,4 @@
     - { role: "district-builder.environment" }
     - { role: "azavea.python-security" }
     - { role: "district-builder.docker" }
-    - { role: "district-builder.aws-cli" }
     - { role: "district-builder.shellcheck" }

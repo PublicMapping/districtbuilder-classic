@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-if [[ -n "${RF_DEBUG}" ]]; then
+if [[ -n "${DB_DEBUG}" ]]; then
     set -x
 fi
 
