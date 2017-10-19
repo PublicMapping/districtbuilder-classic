@@ -41,6 +41,8 @@ services:
   geoserver:
     build:
       context: ./geoserver
+    volumes:
+      - ./geoserver/data_dir/:/data
     ports:
       - "9091:8080"
     links:
