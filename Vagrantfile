@@ -22,6 +22,7 @@ Vagrant.configure(2) do |config|
 
   # Gunicorn
   config.vm.network :forwarded_port, guest: 8080, host: 8080
+  config.vm.network :forwarded_port, guest: 9091, host: 9091
 
   # Django debug server
   config.vm.network :forwarded_port, guest: 8081, host: 8081

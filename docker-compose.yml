@@ -36,3 +36,14 @@ services:
     links:
       - postgres:postgres.internal.districtbuilder.com
       - redis:redis.internal.districtbuilder.com
+      - geoserver:geoserver.internal.districtbuilder.com
+
+  geoserver:
+    build:
+      context: ./geoserver
+    volumes:
+      - ./geoserver/data_dir/:/data
+    ports:
+      - "9091:8080"
+    links:
+      - postgres:postgres.internal.districtbuilder.com

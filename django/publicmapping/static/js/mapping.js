@@ -137,7 +137,7 @@ function init() {
 
     // default map_server is on same host unless otherwise specified 
     if (MAP_SERVER === "") {
-        MAP_SERVER = window.location.host;
+      MAP_SERVER = "localhost:9091";
     }
 
     // default map_server protocol is the same as the request unless 
