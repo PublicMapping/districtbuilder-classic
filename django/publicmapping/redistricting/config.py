@@ -22,7 +22,7 @@ License:
     See the License for the specific language governing permissions and
     limitations under the License.
 
-Author: 
+Author:
     Andrew Jennings, David Zwarg, Kenny Shepard
 """
 
@@ -43,7 +43,7 @@ logger = logging.getLogger(__name__)
 
 def check_and_update(a_model, unique_id_field='name', overwrite=False, **kwargs):
     """
-    Check whether an object exists with the given name in the database. If the 
+    Check whether an object exists with the given name in the database. If the
     object exists and "overwrite" is True, overwrite the object.  If "overwrite"
     is false, don't overwrite.  If the object doesn't exist, it is always created.
 
@@ -51,8 +51,8 @@ def check_and_update(a_model, unique_id_field='name', overwrite=False, **kwargs)
     @param unique_id_field: The field name that is unique.
     @keyword overwrite: Should the new object be overwritten?
     @returns: tuple - the object in the DB after any changes are made,
-        whether the object had to be created, 
-        whether the given attributes were consistent with what was in the database, 
+        whether the object had to be created,
+        whether the given attributes were consistent with what was in the database,
         a message to return indicating any changes.
     """
     name = kwargs[unique_id_field]
@@ -136,7 +136,11 @@ class ConfigImporter:
         Save all modified po files.
         """
         for locale in self.poutils:
-            self.poutils[locale].save()
+            # TODO: these are coming from somewhere in the setup process.
+            # It's not clear where, but there are too many. Remove this
+            # check and the ENABLED_LANGUAGES setting when that's resolved.
+            if locale in settings.ENABLED_LANGUAGES:
+                self.poutils[locale].save()
 
     def import_superuser(self, force):
         """
@@ -320,7 +324,7 @@ class ConfigImporter:
                 'is_displayed': subj.get('displayed')=='true',
                 'sort_key': subj.get('sortkey')
             }
-                
+
             obj, created, changed, message = check_and_update(Subject, overwrite=force, **attributes)
 
             for locale in [l[0] for l in settings.LANGUAGES]:
@@ -389,9 +393,9 @@ class ConfigImporter:
                 'sort_key': geolevel.get('sort_key'),
                 'tolerance': geolevel.get('tolerance')
             }
-            
+
             glvl, created, changed, message = check_and_update(Geolevel, overwrite=force, **attributes)
-    
+
             for locale in [l[0] for l in settings.LANGUAGES]:
                 po = self.poutils[locale]
                 po.add_or_update(
@@ -478,7 +482,7 @@ class ConfigImporter:
             lbodies = self.store.filter_regional_legislative_bodies(region)
             for lbody in lbodies:
                 legislative_body = LegislativeBody.objects.get(name=lbody.get('ref')[:256])
-                
+
                 # Add a mapping for the subjects in this GL/LB combo.
                 sconfig = self.store.get_legislative_body_default_subject(lbody)
                 if not sconfig.get('aliasfor') is None:
@@ -496,7 +500,7 @@ class ConfigImporter:
                     obj, created = LegislativeLevel.objects.get_or_create(
                         legislative_body=body,
                         geolevel=geolevel,
-                        subject=subject, 
+                        subject=subject,
                         parent=parent)
 
                     if created:
@@ -523,7 +527,7 @@ class ConfigImporter:
         result = True
         if not self.store.has_scoring():
             logger.debug('Scoring not configured')
-        
+
         admin = User.objects.filter(is_superuser=True)
         if admin.count() == 0:
             logger.debug('There was no superuser installed; ScoreDisplays need to be assigned ownership to a superuser.')
@@ -534,7 +538,7 @@ class ConfigImporter:
         # Import score displays.
         for sd in self.store.filter_scoredisplays():
             lb = LegislativeBody.objects.get(name=sd.get('legislativebodyref'))
-             
+
             sd_obj, created = ScoreDisplay.objects.get_or_create(
                 name=sd.get('id')[:50],
                 title=sd.get('title')[:50],
@@ -580,7 +584,7 @@ class ConfigImporter:
                 is_ascending = sp.get('is_ascending')
                 if is_ascending is None:
                     is_ascending = True
-                
+
                 ascending = sp.get('is_ascending')
                 sp_obj, created = ScorePanel.objects.get_or_create(
                     type=pnltype,
@@ -588,7 +592,7 @@ class ConfigImporter:
                     name=name,
                     template=template,
                     cssclass=cssclass,
-                    is_ascending=(ascending is None or ascending=='true'), 
+                    is_ascending=(ascending is None or ascending=='true'),
                 )
 
                 if created:
@@ -786,8 +790,8 @@ class ConfigImporter:
                     logger.info('subject ScoreArgument "%s" value UPDATED', name)
                 else:
                     logger.info('Didn\'t change ScoreArgument %s; attribute(s) "value" differ(s) from database configuration.\n\tWARNING: Sync your config file to your app configuration or use the -f switch with setup to force changes', name)
-                    
-        
+
+
         # Import score arguments for this score function
         for scorearg in self.store.filter_function_score_arguments(node):
             argfn = self.store.get_score_function(scorearg.get('ref'))
@@ -829,7 +833,7 @@ class ConfigImporter:
         """
         # Remove previous contiguity overrides
         ContiguityOverride.objects.all().delete()
-            
+
         if not self.store.has_contiguity_overrides():
             logger.debug('ContiguityOverrides not configured')
 
@@ -848,8 +852,8 @@ class ConfigImporter:
             connect_to_geounit = temp[0]
 
             co_obj, created = ContiguityOverride.objects.get_or_create(
-                override_geounit=override_geounit, 
-                connect_to_geounit=connect_to_geounit 
+                override_geounit=override_geounit,
+                connect_to_geounit=connect_to_geounit
                 )
 
             if created:
@@ -905,13 +909,13 @@ class SpatialUtils:
             raise Exception()
 
         if self.host == '':
-            self.host = 'localhost'
+            self.host = 'geoserver.internal.districtbuilder.com'
 
         auth = 'Basic %s' % base64.b64encode(user_pass)
         self.headers = {
                 'default': {
-                'Authorization': auth, 
-                'Content-Type': 'application/json', 
+                'Authorization': auth,
+                'Content-Type': 'application/json',
                 'Accepts':'application/json'
             },
             'sld': {
@@ -926,13 +930,13 @@ class SpatialUtils:
         """
         Remove any configured items in geoserver for the namespace.
 
-        This configuration step prevents conflicts in geowebcache 
-        when the datastore and featuretype is reconfigured without 
+        This configuration step prevents conflicts in geowebcache
+        when the datastore and featuretype is reconfigured without
         discarding the old featuretype.
 
         @returns: A flag indicating if the configuration was purged successfully.
         """
-        # get the workspace 
+        # get the workspace
         ws_cfg = self._read_config('/geoserver/rest/workspaces/%s.json' % self.ns, 'Could not get workspace %s.' % self.ns)
         if ws_cfg is None:
             logger.debug("%s configuration could not be fetched.", self.ns)
@@ -956,7 +960,7 @@ class SpatialUtils:
             logger.debug("Data store '%s' feature type configuration could not be fetched.", wsds_cfg['dataStores']['dataStore'][0]['name'])
             return False
 
-        if not 'featureType' in fts_cfg['featureTypes']: 
+        if not 'featureType' in fts_cfg['featureTypes']:
             fts_cfg['featureTypes'] = { 'featureType':[] }
 
         for ft_cfg in fts_cfg['featureTypes']['featureType']:
@@ -1004,7 +1008,7 @@ class SpatialUtils:
     def configure_geoserver(self):
         """
         Configure all the components in Geoserver. This method configures the
-        geoserver workspace, datastore, feature types, and styles. All 
+        geoserver workspace, datastore, feature types, and styles. All
         configuration steps get processed through the REST config.
 
         @returns: A flag indicating if geoserver was configured correctly.
@@ -1022,12 +1026,12 @@ class SpatialUtils:
             logger.debug('Created namespace "%s"' % self.ns)
         else:
             logger.warn('Could not create Namespace')
-            return
+            return False
 
         # Create our DataStore
         if self.store is None:
             logger.warning('Geoserver cannot be fully configured without a stored config.')
-            return
+            return False
 
         dbconfig = self.store.get_database()
 
@@ -1054,7 +1058,7 @@ class SpatialUtils:
             logger.debug('Created datastore "%s"' % data_store_name)
         else:
             logger.warn('Could not create Datastore')
-            return
+            return False
 
         # Create the feature types and their styles
 
@@ -1067,7 +1071,7 @@ class SpatialUtils:
             if geolevel.legislativelevel_set.all().count() == 0:
                 # Skip 'abstract' geolevels if regions are configured
                 continue
-            
+
             if self.create_featuretype('simple_%s' % geolevel.name):
                 logger.debug('Created "simple_%s" feature type' % geolevel.name)
             else:
@@ -1078,7 +1082,7 @@ class SpatialUtils:
             else:
                 logger.warn('Colud not create "simple_district_%s" feature type' % geolevel.name)
 
-            all_subjects = Subject.objects.all().order_by('sort_key') 
+            all_subjects = Subject.objects.all().order_by('sort_key')
             if all_subjects.count() > 0:
                 subject = all_subjects[0]
 
@@ -1140,7 +1144,7 @@ class SpatialUtils:
                     logger.debug('Assigned style for "%s"' % featuretype_name)
                 else:
                     logger.warn('Could not assign style for "%s"' % featuretype_name)
-            
+
             for subject in all_subjects:
                 featuretype_name = get_featuretype_name(geolevel.name, subject.name)
 
@@ -1170,7 +1174,7 @@ class SpatialUtils:
                     logger.debug('Assigned "%s" style' % featuretype_name)
                 else:
                     logger.warn('Could not assign "%s" style' % featuretype_name)
-            
+
         # map all the legislative body / geolevels combos
         ngeolevels_map = []
         for lbody in LegislativeBody.objects.all():
@@ -1206,11 +1210,11 @@ class SpatialUtils:
                 interval_bnd2 = float(interval.xpath('Argument[@name="bound2"]')[0].get('value'))
 
                 intervals = [
-                    (interval_avg + interval_avg * interval_bnd2, None, 
+                    (interval_avg + interval_avg * interval_bnd2, None,
                         _('Far Over Target'), {'fill':'#ebb95e', 'fill-opacity':'0.3'}),
-                    (interval_avg + interval_avg * interval_bnd1, interval_avg + interval_avg * interval_bnd2, 
+                    (interval_avg + interval_avg * interval_bnd1, interval_avg + interval_avg * interval_bnd2,
                         _('Over Target'), {'fill':'#ead3a7', 'fill-opacity':'0.3'}),
-                    (interval_avg - interval_avg * interval_bnd1, interval_avg + interval_avg * interval_bnd1, 
+                    (interval_avg - interval_avg * interval_bnd1, interval_avg + interval_avg * interval_bnd1,
                         _('Meets Target'), {'fill':'#eeeeee', 'fill-opacity':'0.1'}),
                     (interval_avg - interval_avg * interval_bnd2, interval_avg - interval_avg * interval_bnd1,
                         _('Under Target'), {'fill':'#a2d5d0', 'fill-opacity':'0.3'}),
@@ -1273,7 +1277,7 @@ class SpatialUtils:
         return self._check_spatial_resource(feature_type_url, feature_type_name, feature_type_obj)
 
     def _check_spatial_resource(self, url, name, dictionary, update=False):
-        """ 
+        """
         This method will check geoserver for the existence of an object.
         It will create the object if it doesn't exist.
 
@@ -1288,7 +1292,7 @@ class SpatialUtils:
             if update:
                 if not self._rest_config( 'PUT', url, data=json.dumps(dictionary)):
                     return False
-                
+
         else:
             if not self._rest_config( 'POST', url, data=json.dumps(dictionary)):
                 return False
@@ -1431,7 +1435,7 @@ class SpatialUtils:
             us_title = subject.get_short_label()
         else:
             us_title = layername
-            
+
         qset = qset.annotate(Avg('characteristic__number'))
 
         doc = generator.as_quantiles(qset, 'characteristic__number__avg', nclasses, propertyname='number',
@@ -1452,16 +1456,16 @@ class SpatialUtils:
             # remove any fill if subject is missing
             fill = doc._node.xpath('//sld:Fill', namespaces=doc._nsmap)[0]
             fill.getparent().remove(fill)
-        
+
             if layername:
                 # set the name of the layer
                 name = doc._node.xpath('//sld:Name', namespaces=doc._nsmap)[0]
                 name.text = layername
-        
+
                 # set the title of the user style
                 name = doc._node.xpath('//sld:UserStyle/sld:Title', namespaces=doc._nsmap)[0]
                 name.text = geolevel.get_long_description()
-        
+
                 # set the title of the rule
                 name = doc._node.xpath('//sld:Rule/sld:Title', namespaces=doc._nsmap)[0]
                 name.text = _('Boundary')
@@ -1491,7 +1495,7 @@ class SpatialUtils:
         @returns: True if the named style was configured properly
         """
         # Configure the named style
-        return self._rest_config( 'PUT', '/geoserver/rest/styles/%s:%s' % (self.ns, featuretype,), 
+        return self._rest_config( 'PUT', '/geoserver/rest/styles/%s:%s' % (self.ns, featuretype,),
             data=sld_content, headers=self.headers['sld'])
 
 
@@ -1515,7 +1519,7 @@ class SpatialUtils:
 
         if self._rest_config( 'PUT', '/geoserver/rest/layers/%s:%s' % (self.ns, featuretype,), data=json.dumps(layer)):
             return True
-        
+
         return False
 
 
@@ -1559,7 +1563,7 @@ class SpatialUtils:
             # If this geolevel doesn't exist in this region, try the next region
             if llevel is None:
                 continue
-       
+
             # Get the parent node
             parent = llevel.getparent()
             while parent.getparent() is not None and parent.getparent().tag != 'GeoLevels':
@@ -1606,13 +1610,16 @@ class PoUtils:
                 'Report-Msgid-Bugs-To': 'districtbuilder-dev@googlegroups.com',
                 'POT-Creation-Date': now.strftime('%Y-%m-%d %H:%M%z'),
                 'PO-Revision-Date': now.strftime('%Y-%m-%d %H:%M%z'),
-                'Last-Translator': '%s <%s>' % (settings.ADMINS[0][0], settings.ADMINS[0][1]),
-                'Language-Team': '%s <%s>' % (settings.ADMINS[0][0], settings.ADMINS[0][1]),
                 'Language': locale,
                 'MIME-Version': '1.0',
                 'Content-Type': 'text/plain; charset=UTF-8',
                 'Content-Transfer-Encoding': '8bit'
             }
+            if settings.ADMINS:
+                self.pofile.metadata.update({
+                    'Last-Translator': '%s <%s>' % (settings.ADMINS[0][0], settings.ADMINS[0][1]),
+                    'Language-Team': '%s <%s>' % (settings.ADMINS[0][0], settings.ADMINS[0][1]),
+                })
 
     def add_or_update(self, msgid='', msgstr='', occurs=[]):
         """

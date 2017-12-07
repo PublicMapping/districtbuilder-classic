@@ -2,7 +2,7 @@
 # Copyright (C) 2012
 # This file is distributed under the same license as the DistrictBuilder package.
 # David Zwarg <dzwarg@azavea.com>, 2012.
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
@@ -12,11 +12,10 @@ msgstr ""
 "PO-Revision-Date: 2012-10-02 20:58+0000\n"
 "Last-Translator: David Zwarg <dzwarg@azavea.com>\n"
 "Language-Team: Azavea <info@azavea.com>\n"
-"Language: English\n"
+"Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: en\n"
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:10
 msgid "congress short label"
@@ -32,7 +31,7 @@ msgstr "Congressional"
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:10
 msgid "congress members"
-msgstr "districts"
+msgstr "Districts"
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:16
 msgid "community short label"
@@ -48,7 +47,7 @@ msgstr "Community Map"
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:16
 msgid "community members"
-msgstr "communities"
+msgstr "Communities"
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:853
 msgid "congress_leader_all short label"
@@ -85,8 +84,8 @@ msgstr "Equal Population"
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:443
 msgid "plan_equivalence long description"
 msgstr ""
-"The Equipopulation score is the difference between the district with "
-"the highest population and the district with the lowest population."
+"The Equipopulation score is the difference between the district with the "
+"highest population and the district with the lowest population."
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:688
 msgid "panel_compact_all short label"
@@ -111,10 +110,9 @@ msgstr "Average Compactness"
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:505
 msgid "plan_schwartzberg long description"
 msgstr ""
-"The competition is using the 'Inverse Schwartzberg' compactness "
-"measure. This measure is a ratio of the circumference of the circle "
-"whose area is equal to the area of the district to the perimeter of "
-"the district."
+"The competition is using the 'Inverse Schwartzberg' compactness measure. "
+"This measure is a ratio of the circumference of the circle whose area is "
+"equal to the area of the district to the perimeter of the district."
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:860
 msgid "congress_leader_mine short label"
@@ -199,8 +197,7 @@ msgstr "Target Pop. (727,366)"
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:373
 msgid "a_congress_plan_equipopulation_summary long description"
 msgstr ""
-"The population of each Congressional district must be 727,366 +/- "
-"0.5%."
+"The population of each Congressional district must be 727,366 +/- 0.5%."
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:291
 msgid "b_plan_congress_noncontiguous short label"
@@ -537,8 +534,7 @@ msgstr "Count Districts"
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:342
 msgid "a_congress_plan_count_districts long description"
 msgstr ""
-"The number of districts in a Congressional redistricting plan must be "
-"11."
+"The number of districts in a Congressional redistricting plan must be 11."
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:363
 msgid "a_congress_plan_equipopulation_validation short label"
@@ -551,8 +547,7 @@ msgstr "Target Pop. (727,366)"
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:363
 msgid "a_congress_plan_equipopulation_validation long description"
 msgstr ""
-"The population of each Congressional district must be 727,366 +/- "
-"0.5%."
+"The population of each Congressional district must be 727,366 +/- 0.5%."
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:423
 msgid "plan_all_blocks_assigned short label"
@@ -577,12 +572,12 @@ msgstr "All Contiguous"
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:429
 msgid "plan_all_contiguous long description"
 msgstr ""
-"Contiguity means that every part of a district must be reachable from "
-"every other part without crossing the district's borders. All "
-"districts within a plan must be contiguous. Water contiguity is "
-"permitted given Virginia's extensive coastal region. 'Point "
-"contiguity' or 'touch-point contiguity' where two sections of a "
-"district are connected at a single point is not permitted."
+"Contiguity means that every part of a district must be reachable from every "
+"other part without crossing the district's borders. All districts within a "
+"plan must be contiguous. Water contiguity is permitted given Virginia's "
+"extensive coastal region. 'Point contiguity' or 'touch-point contiguity' "
+"where two sections of a district are connected at a single point is not "
+"permitted."
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:969
 msgid "congress-equipop short label"
@@ -596,8 +591,8 @@ msgstr "Equipopulation - Congress"
 msgid "congress-equipop long description"
 msgstr ""
 "<p>Your plan does not meet the competition criteria for "
-"Equipopulation:</p><p>The population of each Congressional district "
-"must be 727,366 +/- 0.5%.</p>"
+"Equipopulation:</p><p>The population of each Congressional district must be "
+"727,366 +/- 0.5%.</p>"
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:973
 msgid "congress-contiguous short label"
@@ -611,12 +606,11 @@ msgstr "AllContiguous - Congress"
 msgid "congress-contiguous long description"
 msgstr ""
 "<p>Your plan does not meet the competition criteria for "
-"Contiguity</p><p>Every part of a district must be reachable from every"
-" other part without crossing the district's borders. All districts "
-"within a plan must be contiguous. Water contiguity is permitted given "
-"Virginia's extensive coastal region. 'Point contiguity' or 'touch-"
-"point contiguity' where two sections of a district are connected at a "
-"single point is not permitted.</p>"
+"Contiguity</p><p>Every part of a district must be reachable from every other"
+" part without crossing the district's borders. All districts within a plan "
+"must be contiguous. Water contiguity is permitted given Virginia's extensive"
+" coastal region. 'Point contiguity' or 'touch-point contiguity' where two "
+"sections of a district are connected at a single point is not permitted.</p>"
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:979
 msgid "congress-district-count short label"
@@ -857,3 +851,1338 @@ msgstr "municipality"
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:28
 msgid "mx_municipio long description"
 msgstr "Municipality"
+
+#: /usr/src/app/config/config.xml:27
+msgid "va short label"
+msgstr "va"
+
+#: /usr/src/app/config/config.xml:27
+msgid "va label"
+msgstr "Virginia"
+
+#: /usr/src/app/config/config.xml:27
+msgid "va long description"
+msgstr "The Commonwealth of Virginia"
+
+#: /usr/src/app/config/config.xml:45
+msgid "dc short label"
+msgstr "dc"
+
+#: /usr/src/app/config/config.xml:45
+msgid "dc label"
+msgstr "DC Metro"
+
+#: /usr/src/app/config/config.xml:45
+msgid "dc long description"
+msgstr "The District of Columbia Metropolitan Area"
+
+#: /usr/src/app/config/config.xml:12
+msgid "house short label"
+msgstr "%(district_id)s"
+
+#: /usr/src/app/config/config.xml:12
+msgid "house label"
+msgstr "District %(district_id)s"
+
+#: /usr/src/app/config/config.xml:12
+msgid "house long description"
+msgstr "State House"
+
+#: /usr/src/app/config/config.xml:12
+msgid "house members"
+msgstr "Districts"
+
+#: /usr/src/app/config/config.xml:14
+msgid "senate short label"
+msgstr "%(district_id)s"
+
+#: /usr/src/app/config/config.xml:14
+msgid "senate label"
+msgstr "District %(district_id)s"
+
+#: /usr/src/app/config/config.xml:14
+msgid "senate long description"
+msgstr "State Senate"
+
+#: /usr/src/app/config/config.xml:14
+msgid "senate members"
+msgstr "Districts"
+
+#: /usr/src/app/config/config.xml:18
+msgid "dc_area_council short label"
+msgstr "%(district_id)s"
+
+#: /usr/src/app/config/config.xml:18
+msgid "dc_area_council label"
+msgstr "District %(district_id)s"
+
+#: /usr/src/app/config/config.xml:18
+msgid "dc_area_council long description"
+msgstr "DC Planning Council"
+
+#: /usr/src/app/config/config.xml:18
+msgid "dc_area_council members"
+msgstr "Districts"
+
+#: /usr/src/app/config/config.xml:20
+msgid "dc_community short label"
+msgstr "%(district_id)s"
+
+#: /usr/src/app/config/config.xml:20
+msgid "dc_community label"
+msgstr "Community %(district_id)s"
+
+#: /usr/src/app/config/config.xml:20
+msgid "dc_community long description"
+msgstr "DC Community Map"
+
+#: /usr/src/app/config/config.xml:20
+msgid "dc_community members"
+msgstr "Communities"
+
+#: /usr/src/app/config/config.xml:77
+msgid "govdem short label"
+msgstr "% Dem Gov. '09, Two-Party"
+
+#: /usr/src/app/config/config.xml:77
+msgid "govdem label"
+msgstr "Democratic Voters, Governor '09"
+
+#: /usr/src/app/config/config.xml:77
+msgid "govdem long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:80
+msgid "vapblk short label"
+msgstr "Black VAP"
+
+#: /usr/src/app/config/config.xml:80
+msgid "vapblk label"
+msgstr "Voting Age Population - African-American"
+
+#: /usr/src/app/config/config.xml:80
+msgid "vapblk long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:83
+msgid "vaphisp short label"
+msgstr "Hisp. VAP"
+
+#: /usr/src/app/config/config.xml:83
+msgid "vaphisp label"
+msgstr "Voting Age Population - Hispanic/Latino"
+
+#: /usr/src/app/config/config.xml:83
+msgid "vaphisp long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:85
+msgid "pophisp short label"
+msgstr "Hispanic"
+
+#: /usr/src/app/config/config.xml:85
+msgid "pophisp label"
+msgstr "Hispanic or Latino"
+
+#: /usr/src/app/config/config.xml:85
+msgid "pophisp long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:87
+msgid "popasn short label"
+msgstr "As Amer"
+
+#: /usr/src/app/config/config.xml:87
+msgid "popasn label"
+msgstr "Asian-American"
+
+#: /usr/src/app/config/config.xml:87
+msgid "popasn long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:89
+msgid "popnam short label"
+msgstr "Nat Amer"
+
+#: /usr/src/app/config/config.xml:89
+msgid "popnam label"
+msgstr "Native American"
+
+#: /usr/src/app/config/config.xml:89
+msgid "popnam long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:91
+msgid "poppild short label"
+msgstr "Pac Isldr"
+
+#: /usr/src/app/config/config.xml:91
+msgid "poppild label"
+msgstr "Pacific Islander"
+
+#: /usr/src/app/config/config.xml:91
+msgid "poppild long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:93
+msgid "vap short label"
+msgstr "Voters"
+
+#: /usr/src/app/config/config.xml:93
+msgid "vap label"
+msgstr "Voting Age Population"
+
+#: /usr/src/app/config/config.xml:93
+msgid "vap long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:96
+msgid "vapwnh short label"
+msgstr "Wht Votng Age"
+
+#: /usr/src/app/config/config.xml:96
+msgid "vapwnh label"
+msgstr "Voting Age Population - White"
+
+#: /usr/src/app/config/config.xml:96
+msgid "vapwnh long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:98
+msgid "popblk short label"
+msgstr "Black"
+
+#: /usr/src/app/config/config.xml:98
+msgid "popblk label"
+msgstr "African-American"
+
+#: /usr/src/app/config/config.xml:98
+msgid "popblk long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:100
+msgid "popwnh short label"
+msgstr "White"
+
+#: /usr/src/app/config/config.xml:100
+msgid "popwnh label"
+msgstr "Total White Non-Hispanic"
+
+#: /usr/src/app/config/config.xml:100
+msgid "popwnh long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:103
+msgid "vapasn short label"
+msgstr "As Am Votng Age"
+
+#: /usr/src/app/config/config.xml:103
+msgid "vapasn label"
+msgstr "Voting Age Population - Asian-American"
+
+#: /usr/src/app/config/config.xml:103
+msgid "vapasn long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:106
+msgid "vapnam short label"
+msgstr "Nat Amer Votng Age"
+
+#: /usr/src/app/config/config.xml:106
+msgid "vapnam label"
+msgstr "Voting Age Population - Native American"
+
+#: /usr/src/app/config/config.xml:106
+msgid "vapnam long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:109
+msgid "vappild short label"
+msgstr "Pac Isldr Votng Age"
+
+#: /usr/src/app/config/config.xml:109
+msgid "vappild label"
+msgstr "Voting Age Population - Pacific Islander"
+
+#: /usr/src/app/config/config.xml:109
+msgid "vappild long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:111
+msgid "presdem short label"
+msgstr "Democrat 08"
+
+#: /usr/src/app/config/config.xml:111
+msgid "presdem label"
+msgstr "Democratic Voters"
+
+#: /usr/src/app/config/config.xml:111
+msgid "presdem long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:113
+msgid "presrep short label"
+msgstr "Republican 08"
+
+#: /usr/src/app/config/config.xml:113
+msgid "presrep label"
+msgstr "Republican Voters"
+
+#: /usr/src/app/config/config.xml:113
+msgid "presrep long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:115
+msgid "poptot short label"
+msgstr "Total Pop."
+
+#: /usr/src/app/config/config.xml:115
+msgid "poptot label"
+msgstr "Total Population"
+
+#: /usr/src/app/config/config.xml:115
+msgid "poptot long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:117
+msgid "presoth short label"
+msgstr "Other 08"
+
+#: /usr/src/app/config/config.xml:117
+msgid "presoth label"
+msgstr "Other Voters"
+
+#: /usr/src/app/config/config.xml:117
+msgid "presoth long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:119
+msgid "govrep short label"
+msgstr "Republican 09"
+
+#: /usr/src/app/config/config.xml:119
+msgid "govrep label"
+msgstr "Republican Voters, Governor '09"
+
+#: /usr/src/app/config/config.xml:119
+msgid "govrep long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:121
+msgid "govoth short label"
+msgstr "Other Cand 09"
+
+#: /usr/src/app/config/config.xml:121
+msgid "govoth label"
+msgstr "Sum All Other Candidates, Governor '09"
+
+#: /usr/src/app/config/config.xml:121
+msgid "govoth long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:123
+msgid "govtot short label"
+msgstr "Governor"
+
+#: /usr/src/app/config/config.xml:123
+msgid "govtot label"
+msgstr "Total Voter, Governor '09"
+
+#: /usr/src/app/config/config.xml:123
+msgid "govtot long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:1006
+msgid "block short label"
+msgstr "block"
+
+#: /usr/src/app/config/config.xml:1006
+msgid "block label"
+msgstr "block"
+
+#: /usr/src/app/config/config.xml:1006
+msgid "block long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:1067
+msgid "vtd short label"
+msgstr "vtd"
+
+#: /usr/src/app/config/config.xml:1067
+msgid "vtd label"
+msgstr "vtd"
+
+#: /usr/src/app/config/config.xml:1067
+msgid "vtd long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:1121
+msgid "county short label"
+msgstr "county"
+
+#: /usr/src/app/config/config.xml:1121
+msgid "county label"
+msgstr "county"
+
+#: /usr/src/app/config/config.xml:1121
+msgid "county long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:37
+msgid "va_block short label"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:37
+msgid "va_block label"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:37
+msgid "va_block long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:38
+msgid "va_vtd short label"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:38
+msgid "va_vtd label"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:38
+msgid "va_vtd long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:39
+msgid "va_county short label"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:39
+msgid "va_county label"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:39
+msgid "va_county long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:62
+msgid "dc_block short label"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:62
+msgid "dc_block label"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:62
+msgid "dc_block long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:63
+msgid "dc_vtd short label"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:63
+msgid "dc_vtd label"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:63
+msgid "dc_vtd long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:654
+msgid "panel_competitive_all short label"
+msgstr "Competitiveness"
+
+#: /usr/src/app/config/config.xml:654
+msgid "panel_competitive_all label"
+msgstr "Competitiveness"
+
+#: /usr/src/app/config/config.xml:654
+msgid "panel_competitive_all long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:392
+msgid "plan_competitiveness short label"
+msgstr "Competitiveness"
+
+#: /usr/src/app/config/config.xml:392
+msgid "plan_competitiveness label"
+msgstr "Competitiveness"
+
+#: /usr/src/app/config/config.xml:392
+msgid "plan_competitiveness long description"
+msgstr ""
+"Each plan's overall political competitiveness is determined by averaging "
+"each district.s 'partisan differential'.  The partisan differential of each "
+"district is calculated by subtracting the Democratic 'partisan index' from "
+"the Republican 'partisan index'.<br/><br/>'Heavily' competitive districts "
+"are districts with partisan differentials of less than or equal to 5%. "
+"'Generally' competitive districts are districts with partisan differentials "
+"of greater than 5% but less than 10%."
+
+#: /usr/src/app/config/config.xml:662
+msgid "panel_rf_all short label"
+msgstr "Representational Fairness"
+
+#: /usr/src/app/config/config.xml:662
+msgid "panel_rf_all label"
+msgstr "Representational Fairness"
+
+#: /usr/src/app/config/config.xml:662
+msgid "panel_rf_all long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:453
+msgid "plan_repfairness short label"
+msgstr "Representational Fairness"
+
+#: /usr/src/app/config/config.xml:453
+msgid "plan_repfairness label"
+msgstr "Representational Fairness"
+
+#: /usr/src/app/config/config.xml:453
+msgid "plan_repfairness long description"
+msgstr ""
+"Representational fairness is increased when the percentage of districts a "
+"party would likely win (based upon the 'partisan index' used to determine "
+"Competitiveness) closely mirrors that party.s percentage of the statewide "
+"vote."
+
+#: /usr/src/app/config/config.xml:666
+msgid "panel_rf_mine short label"
+msgstr "Representational Fairness"
+
+#: /usr/src/app/config/config.xml:666
+msgid "panel_rf_mine label"
+msgstr "Representational Fairness"
+
+#: /usr/src/app/config/config.xml:666
+msgid "panel_rf_mine long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:824
+msgid "house_leader_all short label"
+msgstr "State House Leaderboard - All"
+
+#: /usr/src/app/config/config.xml:824
+msgid "house_leader_all label"
+msgstr "State House Leaderboard - All"
+
+#: /usr/src/app/config/config.xml:824
+msgid "house_leader_all long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:831
+msgid "house_leader_mine short label"
+msgstr "State House Leaderboard - Mine"
+
+#: /usr/src/app/config/config.xml:831
+msgid "house_leader_mine label"
+msgstr "State House Leaderboard - Mine"
+
+#: /usr/src/app/config/config.xml:831
+msgid "house_leader_mine long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:838
+msgid "senate_leader_all short label"
+msgstr "State Senate Leaderboard - All"
+
+#: /usr/src/app/config/config.xml:838
+msgid "senate_leader_all label"
+msgstr "State Senate Leaderboard - All"
+
+#: /usr/src/app/config/config.xml:838
+msgid "senate_leader_all long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:845
+msgid "senate_leader_mine short label"
+msgstr "State Senate Leaderboard - Mine"
+
+#: /usr/src/app/config/config.xml:845
+msgid "senate_leader_mine label"
+msgstr "State Senate Leaderboard - Mine"
+
+#: /usr/src/app/config/config.xml:845
+msgid "senate_leader_mine long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:407
+msgid "plan_majority_minority_blk_congress short label"
+msgstr "Black VAP Majority (>50%)"
+
+#: /usr/src/app/config/config.xml:407
+msgid "plan_majority_minority_blk_congress label"
+msgstr "Black VAP Majority (>50%)"
+
+#: /usr/src/app/config/config.xml:407
+msgid "plan_majority_minority_blk_congress long description"
+msgstr ""
+"Compliance with the Voting Rights Act will be assumed if maps include a "
+"minority-majority district in any area where a minority group is (as "
+"described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) 'sufficiently "
+"large and geographically compact to constitute a majority in a single-member"
+" district'."
+
+#: /usr/src/app/config/config.xml:434
+msgid "plan_majority_minority_hisp short label"
+msgstr "Hisp. VAP Majority (>50%)"
+
+#: /usr/src/app/config/config.xml:434
+msgid "plan_majority_minority_hisp label"
+msgstr "Hisp. VAP Majority (>50%)"
+
+#: /usr/src/app/config/config.xml:434
+msgid "plan_majority_minority_hisp long description"
+msgstr ""
+"Compliance with the Voting Rights Act will be assumed if maps include a "
+"minority-majority district in any area where a minority group is (as "
+"described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) 'sufficiently "
+"large and geographically compact to constitute a majority in a single-member"
+" district'."
+
+#: /usr/src/app/config/config.xml:467
+msgid "partisan_index short label"
+msgstr "Partisan Index"
+
+#: /usr/src/app/config/config.xml:467
+msgid "partisan_index label"
+msgstr "Partisan Index"
+
+#: /usr/src/app/config/config.xml:467
+msgid "partisan_index long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:136
+msgid "district_blkvap_percent short label"
+msgstr "Black VAP"
+
+#: /usr/src/app/config/config.xml:136
+msgid "district_blkvap_percent label"
+msgstr "Black VAP"
+
+#: /usr/src/app/config/config.xml:136
+msgid "district_blkvap_percent long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:152
+msgid "district_hispvap_percent short label"
+msgstr "His. VAP"
+
+#: /usr/src/app/config/config.xml:152
+msgid "district_hispvap_percent label"
+msgstr "His. VAP"
+
+#: /usr/src/app/config/config.xml:152
+msgid "district_hispvap_percent long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:863
+msgid "house_sidebar_basic short label"
+msgstr "Basic Information"
+
+#: /usr/src/app/config/config.xml:863
+msgid "house_sidebar_basic label"
+msgstr "Basic Information"
+
+#: /usr/src/app/config/config.xml:863
+msgid "house_sidebar_basic long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:680
+msgid "house_panel_summary short label"
+msgstr "Plan Summary"
+
+#: /usr/src/app/config/config.xml:680
+msgid "house_panel_summary label"
+msgstr "Plan Summary"
+
+#: /usr/src/app/config/config.xml:680
+msgid "house_panel_summary long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:350
+msgid "a_house_plan_equipopulation_summary short label"
+msgstr "Target Pop. (80,010)"
+
+#: /usr/src/app/config/config.xml:350
+msgid "a_house_plan_equipopulation_summary label"
+msgstr "Target Pop. (80,010)"
+
+#: /usr/src/app/config/config.xml:350
+msgid "a_house_plan_equipopulation_summary long description"
+msgstr ""
+"The population of each House of Delegates district must be 80,010 +/- 5%."
+
+#: /usr/src/app/config/config.xml:251
+msgid "b_plan_house_noncontiguous short label"
+msgstr "Contiguous"
+
+#: /usr/src/app/config/config.xml:251
+msgid "b_plan_house_noncontiguous label"
+msgstr "Contiguous"
+
+#: /usr/src/app/config/config.xml:251
+msgid "b_plan_house_noncontiguous long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:416
+msgid "plan_majority_minority_blk_house short label"
+msgstr "Black VAP Majority (>50%)"
+
+#: /usr/src/app/config/config.xml:416
+msgid "plan_majority_minority_blk_house label"
+msgstr "Black VAP Majority (>50%)"
+
+#: /usr/src/app/config/config.xml:416
+msgid "plan_majority_minority_blk_house long description"
+msgstr ""
+"Compliance with the Voting Rights Act will be assumed if maps include a "
+"minority-majority district in any area where a minority group is (as "
+"described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) 'sufficiently "
+"large and geographically compact to constitute a majority in a single-member"
+" district'."
+
+#: /usr/src/app/config/config.xml:714
+msgid "house_panel_info short label"
+msgstr "Basic Information"
+
+#: /usr/src/app/config/config.xml:714
+msgid "house_panel_info label"
+msgstr "Basic Information"
+
+#: /usr/src/app/config/config.xml:714
+msgid "house_panel_info long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:276
+msgid "a_house_population short label"
+msgstr "Tot Pop"
+
+#: /usr/src/app/config/config.xml:276
+msgid "a_house_population label"
+msgstr "Tot Pop"
+
+#: /usr/src/app/config/config.xml:276
+msgid "a_house_population long description"
+msgstr "Population interval calculator for house."
+
+#: /usr/src/app/config/config.xml:868
+msgid "house_sidebar_demo short label"
+msgstr "Demographics"
+
+#: /usr/src/app/config/config.xml:868
+msgid "house_sidebar_demo label"
+msgstr "Demographics"
+
+#: /usr/src/app/config/config.xml:868
+msgid "house_sidebar_demo long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:746
+msgid "house_panel_demo short label"
+msgstr "Demographics"
+
+#: /usr/src/app/config/config.xml:746
+msgid "house_panel_demo label"
+msgstr "Demographics"
+
+#: /usr/src/app/config/config.xml:746
+msgid "house_panel_demo long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:873
+msgid "senate_sidebar_basic short label"
+msgstr "Basic Information"
+
+#: /usr/src/app/config/config.xml:873
+msgid "senate_sidebar_basic label"
+msgstr "Basic Information"
+
+#: /usr/src/app/config/config.xml:873
+msgid "senate_sidebar_basic long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:688
+msgid "senate_panel_summary short label"
+msgstr "Plan Summary"
+
+#: /usr/src/app/config/config.xml:688
+msgid "senate_panel_summary label"
+msgstr "Plan Summary"
+
+#: /usr/src/app/config/config.xml:688
+msgid "senate_panel_summary long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:370
+msgid "a_senate_plan_equipopulation_summary short label"
+msgstr "Target Pop. (200,026)"
+
+#: /usr/src/app/config/config.xml:370
+msgid "a_senate_plan_equipopulation_summary label"
+msgstr "Target Pop. (200,026)"
+
+#: /usr/src/app/config/config.xml:370
+msgid "a_senate_plan_equipopulation_summary long description"
+msgstr "The population of each State Senate district must be 200,026 +/- 5%."
+
+#: /usr/src/app/config/config.xml:257
+msgid "b_plan_senate_noncontiguous short label"
+msgstr "Contiguous"
+
+#: /usr/src/app/config/config.xml:257
+msgid "b_plan_senate_noncontiguous label"
+msgstr "Contiguous"
+
+#: /usr/src/app/config/config.xml:257
+msgid "b_plan_senate_noncontiguous long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:425
+msgid "plan_majority_minority_blk_senate short label"
+msgstr "Black VAP Majority (>50%)"
+
+#: /usr/src/app/config/config.xml:425
+msgid "plan_majority_minority_blk_senate label"
+msgstr "Black VAP Majority (>50%)"
+
+#: /usr/src/app/config/config.xml:425
+msgid "plan_majority_minority_blk_senate long description"
+msgstr ""
+"Compliance with the Voting Rights Act will be assumed if maps include a "
+"minority-majority district in any area where a minority group is (as "
+"described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) 'sufficiently "
+"large and geographically compact to constitute a majority in a single-member"
+" district'."
+
+#: /usr/src/app/config/config.xml:722
+msgid "senate_panel_info short label"
+msgstr "Basic Information"
+
+#: /usr/src/app/config/config.xml:722
+msgid "senate_panel_info label"
+msgstr "Basic Information"
+
+#: /usr/src/app/config/config.xml:722
+msgid "senate_panel_info long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:287
+msgid "a_senate_population short label"
+msgstr "Tot Pop"
+
+#: /usr/src/app/config/config.xml:287
+msgid "a_senate_population label"
+msgstr "Tot Pop"
+
+#: /usr/src/app/config/config.xml:287
+msgid "a_senate_population long description"
+msgstr "Population interval calculator for senate."
+
+#: /usr/src/app/config/config.xml:878
+msgid "senate_sidebar_demo short label"
+msgstr "Demographics"
+
+#: /usr/src/app/config/config.xml:878
+msgid "senate_sidebar_demo label"
+msgstr "Demographics"
+
+#: /usr/src/app/config/config.xml:878
+msgid "senate_sidebar_demo long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:754
+msgid "senate_panel_demo short label"
+msgstr "Demographics"
+
+#: /usr/src/app/config/config.xml:754
+msgid "senate_panel_demo label"
+msgstr "Demographics"
+
+#: /usr/src/app/config/config.xml:754
+msgid "senate_panel_demo long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:487
+msgid "district_poptot short label"
+msgstr "Total Population"
+
+#: /usr/src/app/config/config.xml:487
+msgid "district_poptot label"
+msgstr "Total Population"
+
+#: /usr/src/app/config/config.xml:487
+msgid "district_poptot long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:477
+msgid "district_vap short label"
+msgstr "Voting Age Pop."
+
+#: /usr/src/app/config/config.xml:477
+msgid "district_vap label"
+msgstr "Voting Age Pop."
+
+#: /usr/src/app/config/config.xml:477
+msgid "district_vap long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:529
+msgid "report_score_vap short label"
+msgstr "Voting Age Population"
+
+#: /usr/src/app/config/config.xml:529
+msgid "report_score_vap label"
+msgstr "Voting Age Population"
+
+#: /usr/src/app/config/config.xml:529
+msgid "report_score_vap long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:538
+msgid "report_score_vapblk short label"
+msgstr "VAP African-American"
+
+#: /usr/src/app/config/config.xml:538
+msgid "report_score_vapblk label"
+msgstr "VAP African-American"
+
+#: /usr/src/app/config/config.xml:538
+msgid "report_score_vapblk long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:547
+msgid "report_score_vaphisp short label"
+msgstr "VAP Hispanic/Latino"
+
+#: /usr/src/app/config/config.xml:547
+msgid "report_score_vaphisp label"
+msgstr "VAP Hispanic/Latino"
+
+#: /usr/src/app/config/config.xml:547
+msgid "report_score_vaphisp long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:781
+msgid "report_panel_majmin short label"
+msgstr "Majority Minority Districts"
+
+#: /usr/src/app/config/config.xml:781
+msgid "report_panel_majmin label"
+msgstr "Majority Minority Districts"
+
+#: /usr/src/app/config/config.xml:781
+msgid "report_panel_majmin long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:557
+msgid "report_score_majmin_blk short label"
+msgstr "VAP African-American"
+
+#: /usr/src/app/config/config.xml:557
+msgid "report_score_majmin_blk label"
+msgstr "VAP African-American"
+
+#: /usr/src/app/config/config.xml:557
+msgid "report_score_majmin_blk long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:567
+msgid "report_score_majmin_hisp short label"
+msgstr "VAP Hispanic/Latino"
+
+#: /usr/src/app/config/config.xml:567
+msgid "report_score_majmin_hisp label"
+msgstr "VAP Hispanic/Latino"
+
+#: /usr/src/app/config/config.xml:567
+msgid "report_score_majmin_hisp long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:796
+msgid "report_panel_party short label"
+msgstr "Party-Controlled Districts"
+
+#: /usr/src/app/config/config.xml:796
+msgid "report_panel_party label"
+msgstr "Party-Controlled Districts"
+
+#: /usr/src/app/config/config.xml:796
+msgid "report_panel_party long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:606
+msgid "report_score_party_dem short label"
+msgstr "Democratic"
+
+#: /usr/src/app/config/config.xml:606
+msgid "report_score_party_dem label"
+msgstr "Democratic"
+
+#: /usr/src/app/config/config.xml:606
+msgid "report_score_party_dem long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:616
+msgid "report_score_party_rep short label"
+msgstr "Republican"
+
+#: /usr/src/app/config/config.xml:616
+msgid "report_score_party_rep label"
+msgstr "Republican"
+
+#: /usr/src/app/config/config.xml:616
+msgid "report_score_party_rep long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:904
+msgid "senate_reports short label"
+msgstr "State Senate Reports"
+
+#: /usr/src/app/config/config.xml:904
+msgid "senate_reports label"
+msgstr "State Senate Reports"
+
+#: /usr/src/app/config/config.xml:904
+msgid "senate_reports long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:913
+msgid "house_reports short label"
+msgstr "State House Reports"
+
+#: /usr/src/app/config/config.xml:913
+msgid "house_reports label"
+msgstr "State House Reports"
+
+#: /usr/src/app/config/config.xml:913
+msgid "house_reports long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:146
+msgid "district_blkvap_thresh short label"
+msgstr "Black VAP Threshold"
+
+#: /usr/src/app/config/config.xml:146
+msgid "district_blkvap_thresh label"
+msgstr "Black VAP Threshold"
+
+#: /usr/src/app/config/config.xml:146
+msgid "district_blkvap_thresh long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:162
+msgid "district_hispvap_thresh short label"
+msgstr "His. VAP Threshold"
+
+#: /usr/src/app/config/config.xml:162
+msgid "district_hispvap_thresh label"
+msgstr "His. VAP Threshold"
+
+#: /usr/src/app/config/config.xml:162
+msgid "district_hispvap_thresh long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:172
+msgid "district_mintot short label"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:172
+msgid "district_mintot label"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:172
+msgid "district_mintot long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:177
+msgid "district_majmin short label"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:177
+msgid "district_majmin label"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:177
+msgid "district_majmin long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:196
+msgid "district_convexhullratio short label"
+msgstr "Convex Hull Ratio"
+
+#: /usr/src/app/config/config.xml:196
+msgid "district_convexhullratio label"
+msgstr "Convex Hull Ratio"
+
+#: /usr/src/app/config/config.xml:196
+msgid "district_convexhullratio long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:213
+msgid "plan_count_majmin short label"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:213
+msgid "plan_count_majmin label"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:213
+msgid "plan_count_majmin long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:218
+msgid "plan_blkvap_thresh short label"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:218
+msgid "plan_blkvap_thresh label"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:218
+msgid "plan_blkvap_thresh long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:223
+msgid "plan_hispvap_thresh short label"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:223
+msgid "plan_hispvap_thresh label"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:223
+msgid "plan_hispvap_thresh long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:232
+msgid "plan_major_minor short label"
+msgstr "Majority-Minority"
+
+#: /usr/src/app/config/config.xml:232
+msgid "plan_major_minor label"
+msgstr "Majority-Minority"
+
+#: /usr/src/app/config/config.xml:232
+msgid "plan_major_minor long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:306
+msgid "a_house_plan_count_districts short label"
+msgstr "Count Districts"
+
+#: /usr/src/app/config/config.xml:306
+msgid "a_house_plan_count_districts label"
+msgstr "Count Districts"
+
+#: /usr/src/app/config/config.xml:306
+msgid "a_house_plan_count_districts long description"
+msgstr ""
+"The number of districts in a House of Delegates redistricting plan must be "
+"100."
+
+#: /usr/src/app/config/config.xml:313
+msgid "a_senate_plan_count_districts short label"
+msgstr "Count Districts"
+
+#: /usr/src/app/config/config.xml:313
+msgid "a_senate_plan_count_districts label"
+msgstr "Count Districts"
+
+#: /usr/src/app/config/config.xml:313
+msgid "a_senate_plan_count_districts long description"
+msgstr ""
+"The number of districts in a State Senate redistricting plan must be 100."
+
+#: /usr/src/app/config/config.xml:340
+msgid "a_house_plan_equipopulation_validation short label"
+msgstr "Target Pop. (80,010)"
+
+#: /usr/src/app/config/config.xml:340
+msgid "a_house_plan_equipopulation_validation label"
+msgstr "Target Pop. (80,010)"
+
+#: /usr/src/app/config/config.xml:340
+msgid "a_house_plan_equipopulation_validation long description"
+msgstr ""
+"The population of each House of Delegates district must be 80,010 +/- 5%."
+
+#: /usr/src/app/config/config.xml:360
+msgid "a_senate_plan_equipopulation_validation short label"
+msgstr "Target Pop. (200,026)"
+
+#: /usr/src/app/config/config.xml:360
+msgid "a_senate_plan_equipopulation_validation label"
+msgstr "Target Pop. (200,026)"
+
+#: /usr/src/app/config/config.xml:360
+msgid "a_senate_plan_equipopulation_validation long description"
+msgstr "The population of each State Senate district must be 200,026 +/- 5%."
+
+#: /usr/src/app/config/config.xml:443
+msgid "plan_majority_minority short label"
+msgstr "Majority Minority District"
+
+#: /usr/src/app/config/config.xml:443
+msgid "plan_majority_minority label"
+msgstr "Majority Minority District"
+
+#: /usr/src/app/config/config.xml:443
+msgid "plan_majority_minority long description"
+msgstr ""
+"Compliance with the Voting Rights Act will be assumed if maps include a "
+"minority-majority district in any area where a minority group is (as "
+"described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) 'sufficiently "
+"large and geographically compact to constitute a majority in a single-member"
+" district'."
+
+#: /usr/src/app/config/config.xml:933
+msgid "congress-major-minor short label"
+msgstr "MajorityMinority - Congress"
+
+#: /usr/src/app/config/config.xml:933
+msgid "congress-major-minor label"
+msgstr "MajorityMinority - Congress"
+
+#: /usr/src/app/config/config.xml:933
+msgid "congress-major-minor long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:945
+msgid "house-equipop short label"
+msgstr "Equipopulation - House"
+
+#: /usr/src/app/config/config.xml:945
+msgid "house-equipop label"
+msgstr "Equipopulation - House"
+
+#: /usr/src/app/config/config.xml:945
+msgid "house-equipop long description"
+msgstr ""
+"<p>Your plan does not meet the competition criteria for "
+"Equipopulation:</p><p>The population of each House of Delegates district "
+"must be 80,010 +/- 5%.</p>"
+
+#: /usr/src/app/config/config.xml:949
+msgid "house-contiguous short label"
+msgstr "AllContiguous - House"
+
+#: /usr/src/app/config/config.xml:949
+msgid "house-contiguous label"
+msgstr "AllContiguous - House"
+
+#: /usr/src/app/config/config.xml:949
+msgid "house-contiguous long description"
+msgstr ""
+"<p>Your plan does not meet the competition criteria for "
+"Contiguity</p><p>Every part of a district must be reachable from every other"
+" part without crossing the district's borders. All districts within a plan "
+"must be contiguous. Water contiguity is permitted given Virginia's extensive"
+" coastal region. 'Point contiguity' or 'touch-point contiguity' where two "
+"sections of a district are connected at a single point is not permitted.</p>"
+
+#: /usr/src/app/config/config.xml:952
+msgid "house-major-minor short label"
+msgstr "MajorityMinority - House"
+
+#: /usr/src/app/config/config.xml:952
+msgid "house-major-minor label"
+msgstr "MajorityMinority - House"
+
+#: /usr/src/app/config/config.xml:952
+msgid "house-major-minor long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:955
+msgid "house-district-count short label"
+msgstr "CountDistricts - House"
+
+#: /usr/src/app/config/config.xml:955
+msgid "house-district-count label"
+msgstr "CountDistricts - House"
+
+#: /usr/src/app/config/config.xml:955
+msgid "house-district-count long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:958
+msgid "house-assigned short label"
+msgstr "AllBlocksAssigned - House"
+
+#: /usr/src/app/config/config.xml:958
+msgid "house-assigned label"
+msgstr "AllBlocksAssigned - House"
+
+#: /usr/src/app/config/config.xml:958
+msgid "house-assigned long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:964
+msgid "senate-equipop short label"
+msgstr "Equipopulation - Senate"
+
+#: /usr/src/app/config/config.xml:964
+msgid "senate-equipop label"
+msgstr "Equipopulation - Senate"
+
+#: /usr/src/app/config/config.xml:964
+msgid "senate-equipop long description"
+msgstr ""
+"<p>Your plan does not meet the competition criteria for "
+"Equipopulation:</p><p>The population of each House of Delegates district "
+"must be 200,026 +/- 5%.</p>"
+
+#: /usr/src/app/config/config.xml:968
+msgid "senate-contiguous short label"
+msgstr "AllContiguous - Senate"
+
+#: /usr/src/app/config/config.xml:968
+msgid "senate-contiguous label"
+msgstr "AllContiguous - Senate"
+
+#: /usr/src/app/config/config.xml:968
+msgid "senate-contiguous long description"
+msgstr ""
+"<p>Your plan does not meet the competition criteria for "
+"Contiguity</p><p>Every part of a district must be reachable from every other"
+" part without crossing the district's borders. All districts within a plan "
+"must be contiguous. Water contiguity is permitted given Virginia's extensive"
+" coastal region. 'Point contiguity' or 'touch-point contiguity' where two "
+"sections of a district are connected at a single point is not permitted.</p>"
+
+#: /usr/src/app/config/config.xml:971
+msgid "senate-major-minor short label"
+msgstr "MajorityMinority - Senate"
+
+#: /usr/src/app/config/config.xml:971
+msgid "senate-major-minor label"
+msgstr "MajorityMinority - Senate"
+
+#: /usr/src/app/config/config.xml:971
+msgid "senate-major-minor long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:974
+msgid "senate-district-count short label"
+msgstr "CountDistricts - Senate"
+
+#: /usr/src/app/config/config.xml:974
+msgid "senate-district-count label"
+msgstr "CountDistricts - Senate"
+
+#: /usr/src/app/config/config.xml:974
+msgid "senate-district-count long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:977
+msgid "senate-assigned short label"
+msgstr "AllBlocksAssigned - Senate"
+
+#: /usr/src/app/config/config.xml:977
+msgid "senate-assigned label"
+msgstr "AllBlocksAssigned - Senate"
+
+#: /usr/src/app/config/config.xml:977
+msgid "senate-assigned long description"
+msgstr ""

@@ -1018,7 +1018,7 @@
           
           -->
 
-          <Shapefile path="/projects/PublicMapping/local/data/tl_2010_51_block10_3785_join.shp">
+          <Shapefile path="/data/tl_2010_51_block10_3785_join.shp">
               <Fields>
                   <!-- 
 
@@ -1079,7 +1079,7 @@
           
           -->
           <Files>
-              <Geography path="/projects/PublicMapping/local/data/tl_2010_51_vtd10_3785.shp">
+              <Geography path="/data/tl_2010_51_vtd10_3785.shp">
                   <!-- 
 
                   Each Field item defines a field in the shapefile that
@@ -1133,7 +1133,7 @@
           
           -->
           <Files>
-              <Geography path="/projects/PublicMapping/local/data/tl_2010_51_county10_3785.shp">
+              <Geography path="/data/tl_2010_51_county10_3785.shp">
                   <!-- 
 
                   Each Field item defines a field in the shapefile that
@@ -1185,19 +1185,19 @@
             unit of geography, and 2) the district it belongs to.
             
             -->
-            <Blockfile path="/projects/PublicMapping/local/data/cd111_index.csv" />
+            <Blockfile path="/data/cd111_index.csv" />
         </Template>
         
         <Template name="State House">
             <LegislativeBody ref="house"/>
             
-            <Blockfile path="/projects/PublicMapping/local/data/sldl10_index.csv" />
+            <Blockfile path="/data/sldl10_index.csv" />
         </Template>
 
         <Template name="State Senate">
             <LegislativeBody ref="senate"/>
 
-            <Blockfile path="/projects/PublicMapping/local/data/sldu10_index.csv" />
+            <Blockfile path="/data/sldu10_index.csv" />
         </Template>
     </Templates>
     
@@ -1324,7 +1324,7 @@
             <BardConfigs>
                 <BardConfig 
                     id="tenpercent"
-                    shape="/projects/PublicMapping/local/data/vablock_bard_save.Rdata" 
+                    shape="/data/vablock_bard_save.Rdata" 
                     temp="/projects/PublicMapping/local/reports"
                     transform="/projects/PublicMapping/DistrictBuilder/docs/bard_template.xslt">
                     <PopVars>
@@ -1357,7 +1357,7 @@
                 </BardConfig>
                 <BardConfig 
                     id="fivepercent"
-                    shape="/projects/PublicMapping/local/data/vablock_bard_save.Rdata" 
+                    shape="/data/vablock_bard_save.Rdata" 
                     temp="/projects/PublicMapping/local/reports"
                     transform="/projects/PublicMapping/DistrictBuilder/docs/bard_template.xslt">
                     <PopVars>

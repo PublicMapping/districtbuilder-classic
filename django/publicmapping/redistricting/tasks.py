@@ -1308,7 +1308,6 @@ def verify_count(upload_id, localstore, language):
     upload = SubjectUpload.objects.get(id=upload_id)
     upload.subject_name = reader.fieldnames[1][0:50]
     upload.save()
-    transaction.commit()
 
     logger.debug('Created new SubjectUpload transaction record for "%s".', upload.subject_name)
 
@@ -1332,12 +1331,10 @@ def verify_count(upload_id, localstore, language):
         msg = _('There are an incorrect number of columns in the uploaded '
             'Subject file')
 
-        transaction.rollback()
         return {'task_id':None, 'success':False, 'messages':[msg]}
     except Exception, ex:
         msg = _('Invalid data detected in the uploaded Subject file')
 
-        transaction.rollback()
         return {'task_id':None, 'success':False, 'messages':[msg]}
 
     nlines = upload.subjectstage_set.all().count()
@@ -1368,7 +1365,6 @@ def verify_count(upload_id, localstore, language):
 
         # since the transaction was never committed after all the inserts, this nullifies
         # all the insert statements, so there should be no quarantine to clean up
-        transaction.rollback()
 
         logger.debug(msg)
 
@@ -1383,7 +1379,6 @@ def verify_count(upload_id, localstore, language):
 
         status = {'task_id':task, 'success':True, 'messages':[_('Verifying consistency of uploaded geounits ...')]}
 
-    transaction.commit()
 
     # reset language to default
     if not prev_lang is None:
@@ -1496,7 +1491,7 @@ def copy_to_characteristics(upload_id, language=None):
 
     # create a subject to hold these new values
     new_sort_key = Subject.objects.all().aggregate(Max('sort_key'))['sort_key__max'] + 1
-     
+
     # To create a clean name, replace all non-word characters with an
     # underscore
     clean_name = re.sub(r"\W", "_", upload.subject_name).lower()[:50]
@@ -1532,12 +1527,11 @@ def copy_to_characteristics(upload_id, language=None):
                 po.save()
             except:
                 logger.error("Couldn't write catalog entries for %s" % locale)
-           
+
     logger.debug('Using %ssubject "%s" for new Characteristic values.', 'new ' if created else '', the_subject.name)
 
     upload.subject_name = clean_name
     upload.save()
-    transaction.commit()
 
     args = []
     for geo_char in geo_quar:
@@ -1565,26 +1559,18 @@ def copy_to_characteristics(upload_id, language=None):
     )
 
     # Insert or update all the records into the characteristic table
-    try:
-        cursor = connection.cursor()
-        cursor.executemany(sql, tuple(args))
+    cursor = connection.cursor()
+    cursor.executemany(sql, tuple(args))
 
-        transaction.commit()
-        logger.debug('Loaded new Characteristic values for subject "%s"', the_subject.name)
-
-
-    except:
-        transaction.rollback()
+    logger.debug('Loaded new Characteristic values for subject "%s"', the_subject.name)
 
     try:
         task = update_vacant_characteristics.delay(upload_id, created, language=language).task_id
 
         status = {'task_id':task, 'success':True, 'messages':[_('Created characteristics, resetting computed characteristics...')]}
-        transaction.commit()
 
     except:
         status = {'task_id':task, 'success':False, 'messages':[_('Not able to create task for update_vacant_characteristics.')]}
-        transaction.rollback()
     # reset the translation to default
     if not prev_lang is None:
         activate(prev_lang)

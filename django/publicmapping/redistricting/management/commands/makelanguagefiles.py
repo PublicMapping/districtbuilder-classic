@@ -36,12 +36,12 @@ class Command(BaseCommand):
     """
     args = None
     help = 'Create and compile language message files'
-    option_list = BaseCommand.option_list + (
-        make_option('-t', '--templates', dest="templates", action="store_true", help="Create template message files.", default=False),
-        make_option('-j', '--javascript', dest="javascript", action="store_true", help="Create javascript message files.", default=False),
-        make_option('-c', '--compile', dest="compile", action="store_true", help="Compile message files.", default=False),
-        make_option('-l', '--locale', dest='locale', default=None, action='store', help='Specify a locale.'),
-    )
+
+    def add_arguments(self, parser):
+        parser.add_argument('-t', '--templates', dest="templates", action="store_true", help="Create template message files.", default=False),
+        parser.add_argument('-j', '--javascript', dest="javascript", action="store_true", help="Create javascript message files.", default=False),
+        parser.add_argument('-c', '--compile', dest="compile", action="store_true", help="Compile message files.", default=False),
+        parser.add_argument('-l', '--locale', dest='locale', default=None, action='store', help='Specify a locale.')
 
     def handle(self, *args, **options):
         """
@@ -52,25 +52,27 @@ class Command(BaseCommand):
 
         # Use the specified locale, or if none are provided, use all defined in settings
         locale = options.get("locale")
-        locales = [locale] if locale else [l[0] for l in settings.LANGUAGES]
-        
+        locales = [locale] if locale else [
+            [l[0]] for l in settings.LANGUAGES if l[0] in settings.ENABLED_LANGUAGES
+        ]
+
         # Make messages for each available locale
         for locale in locales:
             # Make messages for templates (.html, .txt, .email)
             if everything or options.get("templates"):
-                management.call_command('makemessages', 
-                    locale=locale, 
-                    extensions=['html','txt','email'], 
+                management.call_command('makemessages',
+                    locale=locale,
+                    extensions=['html','txt','email'],
                     interactive=False,
                     verbosity=options.get('verbosity'),
                     ignore_patterns=[ 'static-media/jquery/*.*']
                 )
-        
+
             # Make messages for javascript
             if everything or options.get("javascript"):
-                management.call_command('makemessages', 
-                    locale=locale, 
-                    domain='djangojs', 
+                management.call_command('makemessages',
+                    locale=locale,
+                    domain='djangojs',
                     interactive=False,
                     verbosity=options.get('verbosity'),
                     ignore_patterns=[ 'static-media*' ]
@@ -78,7 +80,7 @@ class Command(BaseCommand):
 
             # Compile message file
             if everything or options.get("compile"):
-                management.call_command('compilemessages', 
+                management.call_command('compilemessages',
                     locale=locale,
                     interactive=False,
                     verbosity=options.get('verbosity')

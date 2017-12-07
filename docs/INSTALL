@@ -145,14 +145,14 @@ as reports and downloads) and cron jobs.
     password authentication is allowed before user ident authentication
      
  7. Download the datafile to /projects/PublicMapping/data, and unzip into
-    the import directory: /projects/PublicMapping/local/data/:
+    the import directory: /data/:
 
     > sudo mkdir /projects/PublicMapping/data
     > cd /projects/PublicMapping/data
     > sudo wget --no-check-certificate -O VA_data.zip \
           https://s3.amazonaws.com/districtbuilderdata/VA_data.zip
-    > sudo mkdir /projects/PublicMapping/local/data
-    > cd /projects/PublicMapping/local/data
+    > sudo mkdir /data
+    > cd /data
     > sudo unzip /projects/PublicMapping/data/VA_data.zip
 
     *Note* that if you are loading spatial data for a coverage other than

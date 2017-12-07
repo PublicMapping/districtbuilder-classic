@@ -1192,12 +1192,10 @@ def add_districts_to_plan(request, planid):
     # Everything checks out, let's paste those districts
     try:
         results = plan.paste_districts(districts, version=version)
-        transaction.commit()
         status['success'] = True
         status['message'] = _('Merged %(num_merged_districts)d districts') % {'num_merged_districts': len(results)}
         status['version'] = plan.version
     except Exception as ex:
-        transaction.rollback()
         status['message'] = str(ex)
         status['exception'] = traceback.format_exc()
 
@@ -1264,14 +1262,12 @@ def assign_district_members(request, planid):
                 plan.update_num_members(district, count)
                 changed += 1
 
-        transaction.commit()
         status['success'] = True
         status['version'] = plan.version
         status['modified'] = changed
         status['message'] = _('Modified members for %(num_districts)d '
             'districts') % {'num_districts': changed}
     except Exception, ex:
-        transaction.rollback()
         status['message'] = str(ex)
         status['exception'] = traceback.format_exc()
         logger.warn('Could not assign district members')

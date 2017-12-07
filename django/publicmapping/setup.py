@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 """
 Set up DistrictBuilder.
 
@@ -50,9 +50,6 @@ def main():
     """
     usage = "usage: %prog [options] SCHEMA CONFIG"
     parser = OptionParser(usage=usage)
-    parser.add_option('-d', '--database', dest="database",
-            help="Generate the database schema", default=False,
-            action='store_true')
     parser.add_option('-g', '--geolevel', dest="geolevels",
             help="Import the geography from the Nth GeoLevel.",
             action="append", type="int")
@@ -76,12 +73,6 @@ def main():
             action='store_true', default=False),
     parser.add_option('-a', '--adjacency', dest="adjacency",
             help="Load adjacency data", default=False, action='store_true')
-    parser.add_option('-b', '--bard', dest="bard",
-            help="Create a BARD map based on the imported spatial data.",
-            default=False, action='store_true'),
-    parser.add_option('-B', '--bardtemplates', dest="bard_templates",
-            help="Create the BARD reporting templates.",
-            action='store_true', default=False),
     parser.add_option('-v', '--verbosity', dest="verbosity",
             help="Verbosity level; 0=minimal output, 1=normal output, 2=all output",
             default=1, type="int")
@@ -91,7 +82,16 @@ def main():
 
     (options, args) = parser.parse_args()
 
-    allops = (not options.database) and (not options.geolevels) and (not options.views) and (not options.geoserver) and (not options.templates) and (not options.nesting) and (not options.bard) and (not options.static) and (not options.languages) and (not options.bard_templates) and (not options.adjacency)
+    allops = not any([
+        options.geolevels,
+        options.views,
+        options.geoserver,
+        options.templates,
+        options.nesting,
+        options.static,
+        options.languages,
+        options.adjacency
+    ])
 
     setup_logging(options.verbosity)
 
@@ -135,6 +135,21 @@ ERROR:
     import django
     from django.core import management
     django.setup()
+
+    management.call_command(
+        'setup',
+        args[1], # config path
+        verbosity=options.verbosity,
+        geolevels=options.geolevels,
+        views=options.views,
+        geoserver=options.geoserver,
+        templates=options.templates,
+        nesting=options.nesting,
+        static=options.static,
+        languages=options.languages,
+        force=options.force,
+        adjacency=options.adjacency
+    )
 
     # Success! Exit-code 0
     sys.exit(0)

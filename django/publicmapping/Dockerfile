@@ -4,14 +4,14 @@ RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
 COPY requirements.txt /usr/src/app/
-RUN apt-get update && apt-get install -y git gcc
+RUN apt-get update && apt-get install -y \
+    git gcc wget unzip
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . /usr/src/app
 
 WORKDIR /usr/src/app
 
-RUN cp config/config.dist.xml config/config.xml \
-    && python setup.py ./config/config.xsd ./config/config.xml -v2 -d
+RUN cp config/config.dist.xml config/config.xml
 
 ENTRYPOINT ["/usr/local/bin/gunicorn"]

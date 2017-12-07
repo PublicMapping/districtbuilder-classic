@@ -7,10 +7,10 @@ msgstr ""
 "PO-Revision-Date: 2012-01-14 01:47+0000\n"
 "Last-Translator: admin <dzwarg+admin@azavea.com>\n"
 "Language-Team: admin <dzwarg+admin@azavea.com>\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: fr\n"
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:10
 msgid "congress short label"
@@ -134,27 +134,27 @@ msgstr "Communities"
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:63
 msgid "dc_vtd short label"
-msgstr "VTD"
+msgstr ""
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:63
 msgid "dc_vtd label"
-msgstr "VTD"
+msgstr ""
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:63
 msgid "dc_vtd long description"
-msgstr "Voter Tabulation Districts"
+msgstr ""
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:62
 msgid "dc_block short label"
-msgstr "block"
+msgstr ""
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:62
 msgid "dc_block label"
-msgstr "Block"
+msgstr ""
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:62
 msgid "dc_block long description"
-msgstr "Census Blocks"
+msgstr ""
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:1142
 msgid "county short label"
@@ -162,47 +162,47 @@ msgstr "county"
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:1142
 msgid "county label"
-msgstr "County"
+msgstr "county"
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:1142
 msgid "county long description"
-msgstr "Counties"
+msgstr ""
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:37
 msgid "va_block short label"
-msgstr "block"
+msgstr ""
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:37
 msgid "va_block label"
-msgstr "Block"
+msgstr ""
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:37
 msgid "va_block long description"
-msgstr "Census Blocks"
+msgstr ""
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:38
 msgid "va_vtd short label"
-msgstr "vtd"
+msgstr ""
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:38
 msgid "va_vtd label"
-msgstr "VTD"
+msgstr ""
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:38
 msgid "va_vtd long description"
-msgstr "Voter Tabulation Districts"
+msgstr ""
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:39
 msgid "va_county short label"
-msgstr "county"
+msgstr ""
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:39
 msgid "va_county label"
-msgstr "County"
+msgstr ""
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:39
 msgid "va_county long description"
-msgstr "Counties"
+msgstr ""
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:1088
 msgid "vtd short label"
@@ -210,11 +210,11 @@ msgstr "vtd"
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:1088
 msgid "vtd label"
-msgstr "VTD"
+msgstr "vtd"
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:1088
 msgid "vtd long description"
-msgstr "Voter Tabulation Districts"
+msgstr ""
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:1027
 msgid "block short label"
@@ -222,11 +222,11 @@ msgstr "block"
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:1027
 msgid "block label"
-msgstr "Block"
+msgstr "block"
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:1027
 msgid "block long description"
-msgstr "Census Blocks"
+msgstr ""
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:853
 msgid "congress_leader_all short label"
@@ -494,8 +494,7 @@ msgstr "Count Districts"
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:342
 msgid "a_congress_plan_count_districts long description"
 msgstr ""
-"The number of districts in a Congressional redistricting plan must be "
-"11."
+"The number of districts in a Congressional redistricting plan must be 11."
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:373
 msgid "a_congress_plan_equipopulation_summary short label"
@@ -508,8 +507,7 @@ msgstr "Target Pop. (727,366)"
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:373
 msgid "a_congress_plan_equipopulation_summary long description"
 msgstr ""
-"The population of each Congressional district must be 727,366 +/- "
-"0.5%."
+"The population of each Congressional district must be 727,366 +/- 0.5%."
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:363
 msgid "a_congress_plan_equipopulation_validation short label"
@@ -522,8 +520,7 @@ msgstr "Target Pop. (727,366)"
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:363
 msgid "a_congress_plan_equipopulation_validation long description"
 msgstr ""
-"The population of each Congressional district must be 727,366 +/- "
-"0.5%."
+"The population of each Congressional district must be 727,366 +/- 0.5%."
 
 msgid "a_dc_area_council_plan_equipopulation_summary short label"
 msgstr "Pop. cible (292843)"
@@ -533,8 +530,8 @@ msgstr "Pop. cible (292843)"
 
 msgid "a_dc_area_council_plan_equipopulation_summary long description"
 msgstr ""
-"La population de chaque circonscription du Sénat de l'État doit être "
-"292843 +/-5 %."
+"La population de chaque circonscription du Sénat de l'État doit être 292843 "
+"+/-5 %."
 
 msgid "a_dc_area_council_plan_equipopulation_validation short label"
 msgstr "Pop. cible (292843)"
@@ -544,8 +541,8 @@ msgstr "Pop. cible (292843)"
 
 msgid "a_dc_area_council_plan_equipopulation_validation long description"
 msgstr ""
-"La population de chaque circonscription du Sénat de l'État doit être "
-"292843 +/-5 %."
+"La population de chaque circonscription du Sénat de l'État doit être 292843 "
+"+/-5 %."
 
 msgid "a_dc_area_council_population short label"
 msgstr "Pop tot"
@@ -567,8 +564,8 @@ msgstr "Count Districts"
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:349
 msgid "a_house_plan_count_districts long description"
 msgstr ""
-"The number of districts in a House of Delegates redistricting plan "
-"must be 100."
+"The number of districts in a House of Delegates redistricting plan must be "
+"100."
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:393
 msgid "a_house_plan_equipopulation_summary short label"
@@ -581,8 +578,7 @@ msgstr "Target Pop. (80,010)"
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:393
 msgid "a_house_plan_equipopulation_summary long description"
 msgstr ""
-"The population of each House of Delegates district must be 80,010 +/- "
-"5%."
+"The population of each House of Delegates district must be 80,010 +/- 5%."
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:383
 msgid "a_house_plan_equipopulation_validation short label"
@@ -595,8 +591,7 @@ msgstr "Target Pop. (80,010)"
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:383
 msgid "a_house_plan_equipopulation_validation long description"
 msgstr ""
-"The population of each House of Delegates district must be 80,010 +/- "
-"5%."
+"The population of each House of Delegates district must be 80,010 +/- 5%."
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:321
 msgid "a_house_population short label"
@@ -621,8 +616,7 @@ msgstr "Count Districts"
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:356
 msgid "a_senate_plan_count_districts long description"
 msgstr ""
-"The number of districts in a State Senate redistricting plan must be "
-"100."
+"The number of districts in a State Senate redistricting plan must be 100."
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:413
 msgid "a_senate_plan_equipopulation_summary short label"
@@ -920,12 +914,12 @@ msgstr "All Contiguous"
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:429
 msgid "plan_all_contiguous long description"
 msgstr ""
-"Contiguity means that every part of a district must be reachable from "
-"every other part without crossing the district's borders. All "
-"districts within a plan must be contiguous. Water contiguity is "
-"permitted given Virginia's extensive coastal region. 'Point "
-"contiguity' or 'touch-point contiguity' where two sections of a "
-"district are connected at a single point is not permitted."
+"Contiguity means that every part of a district must be reachable from every "
+"other part without crossing the district's borders. All districts within a "
+"plan must be contiguous. Water contiguity is permitted given Virginia's "
+"extensive coastal region. 'Point contiguity' or 'touch-point contiguity' "
+"where two sections of a district are connected at a single point is not "
+"permitted."
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:243
 msgid "plan_all_equipop short label"
@@ -962,14 +956,13 @@ msgstr "Competitiveness"
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:435
 msgid "plan_competitiveness long description"
 msgstr ""
-"Each plan's overall political competitiveness is determined by "
-"averaging each district.s 'partisan differential'.  The partisan "
-"differential of each district is calculated by subtracting the "
-"Democratic 'partisan index' from the Republican 'partisan "
-"index'.<br/><br/>'Heavily' competitive districts are districts with "
-"partisan differentials of less than or equal to 5%. 'Generally' "
-"competitive districts are districts with partisan differentials of "
-"greater than 5% but less than 10%."
+"Each plan's overall political competitiveness is determined by averaging "
+"each district.s 'partisan differential'.  The partisan differential of each "
+"district is calculated by subtracting the Democratic 'partisan index' from "
+"the Republican 'partisan index'.<br/><br/>'Heavily' competitive districts "
+"are districts with partisan differentials of less than or equal to 5%. "
+"'Generally' competitive districts are districts with partisan differentials "
+"of greater than 5% but less than 10%."
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:285
 msgid "plan_contiguous short label"
@@ -1006,8 +999,8 @@ msgstr "Equal Population"
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:443
 msgid "plan_equivalence long description"
 msgstr ""
-"The Equipopulation score is the difference between the district with "
-"the highest population and the district with the lowest population."
+"The Equipopulation score is the difference between the district with the "
+"highest population and the district with the lowest population."
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:260
 msgid "plan_hispvap_thresh short label"
@@ -1032,11 +1025,11 @@ msgstr "Majority Minority District"
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:486
 msgid "plan_majority_minority long description"
 msgstr ""
-"Compliance with the Voting Rights Act will be assumed if maps include "
-"a minority-majority district in any area where a minority group is (as"
-" described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) "
-"'sufficiently large and geographically compact to constitute a "
-"majority in a single-member district'."
+"Compliance with the Voting Rights Act will be assumed if maps include a "
+"minority-majority district in any area where a minority group is (as "
+"described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) 'sufficiently "
+"large and geographically compact to constitute a majority in a single-member"
+" district'."
 
 msgid "plan_majority_minority_blk short label"
 msgstr "Majorité de VAP noire (>50%)"
@@ -1047,11 +1040,10 @@ msgstr "Majorité de VAP noire (>50%)"
 msgid "plan_majority_minority_blk long description"
 msgstr ""
 "Le respect de la Loi des droits de vote sera supposé si les cartes "
-"comprennent une circonscription de minorité-majorité dans toutes zones"
-" où un groupe minoritaire est (comme décrit dans Thornburg V. Gingles,"
-" 478 U.S. 30, 49 (1986)) 'suffisamment grand et géographiquement "
-"compact pour constituer une majorité dans une circonscription "
-"uninominale'."
+"comprennent une circonscription de minorité-majorité dans toutes zones où un"
+" groupe minoritaire est (comme décrit dans Thornburg V. Gingles, 478 U.S. "
+"30, 49 (1986)) 'suffisamment grand et géographiquement compact pour "
+"constituer une majorité dans une circonscription uninominale'."
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:450
 msgid "plan_majority_minority_blk_congress short label"
@@ -1064,11 +1056,11 @@ msgstr "Black VAP Majority (>50%)"
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:450
 msgid "plan_majority_minority_blk_congress long description"
 msgstr ""
-"Compliance with the Voting Rights Act will be assumed if maps include "
-"a minority-majority district in any area where a minority group is (as"
-" described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) "
-"'sufficiently large and geographically compact to constitute a "
-"majority in a single-member district'."
+"Compliance with the Voting Rights Act will be assumed if maps include a "
+"minority-majority district in any area where a minority group is (as "
+"described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) 'sufficiently "
+"large and geographically compact to constitute a majority in a single-member"
+" district'."
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:459
 msgid "plan_majority_minority_blk_house short label"
@@ -1081,11 +1073,11 @@ msgstr "Black VAP Majority (>50%)"
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:459
 msgid "plan_majority_minority_blk_house long description"
 msgstr ""
-"Compliance with the Voting Rights Act will be assumed if maps include "
-"a minority-majority district in any area where a minority group is (as"
-" described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) "
-"'sufficiently large and geographically compact to constitute a "
-"majority in a single-member district'."
+"Compliance with the Voting Rights Act will be assumed if maps include a "
+"minority-majority district in any area where a minority group is (as "
+"described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) 'sufficiently "
+"large and geographically compact to constitute a majority in a single-member"
+" district'."
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:468
 msgid "plan_majority_minority_blk_senate short label"
@@ -1098,11 +1090,11 @@ msgstr "Black VAP Majority (>50%)"
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:468
 msgid "plan_majority_minority_blk_senate long description"
 msgstr ""
-"Compliance with the Voting Rights Act will be assumed if maps include "
-"a minority-majority district in any area where a minority group is (as"
-" described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) "
-"'sufficiently large and geographically compact to constitute a "
-"majority in a single-member district'."
+"Compliance with the Voting Rights Act will be assumed if maps include a "
+"minority-majority district in any area where a minority group is (as "
+"described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) 'sufficiently "
+"large and geographically compact to constitute a majority in a single-member"
+" district'."
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:477
 msgid "plan_majority_minority_hisp short label"
@@ -1115,11 +1107,11 @@ msgstr "Hisp. VAP Majority (>50%)"
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:477
 msgid "plan_majority_minority_hisp long description"
 msgstr ""
-"Compliance with the Voting Rights Act will be assumed if maps include "
-"a minority-majority district in any area where a minority group is (as"
-" described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) "
-"'sufficiently large and geographically compact to constitute a "
-"majority in a single-member district'."
+"Compliance with the Voting Rights Act will be assumed if maps include a "
+"minority-majority district in any area where a minority group is (as "
+"described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) 'sufficiently "
+"large and geographically compact to constitute a majority in a single-member"
+" district'."
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:278
 msgid "plan_major_minor short label"
@@ -1156,10 +1148,10 @@ msgstr "Representational Fairness"
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:496
 msgid "plan_repfairness long description"
 msgstr ""
-"Representational fairness is increased when the percentage of "
-"districts a party would likely win (based upon the 'partisan index' "
-"used to determine Competitiveness) closely mirrors that party.s "
-"percentage of the statewide vote."
+"Representational fairness is increased when the percentage of districts a "
+"party would likely win (based upon the 'partisan index' used to determine "
+"Competitiveness) closely mirrors that party.s percentage of the statewide "
+"vote."
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:505
 msgid "plan_schwartzberg short label"
@@ -1172,10 +1164,9 @@ msgstr "Average Compactness"
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:505
 msgid "plan_schwartzberg long description"
 msgstr ""
-"The competition is using the 'Inverse Schwartzberg' compactness "
-"measure. This measure is a ratio of the circumference of the circle "
-"whose area is equal to the area of the district to the perimeter of "
-"the district."
+"The competition is using the 'Inverse Schwartzberg' compactness measure. "
+"This measure is a ratio of the circumference of the circle whose area is "
+"equal to the area of the district to the perimeter of the district."
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:239
 msgid "plan_sum_equipop short label"
@@ -1951,14 +1942,13 @@ msgstr "Tous contigus - Chambre"
 msgid "house_contiguity long description"
 msgstr ""
 "<p>Votre plan ne respecte pas les critères de concurrence de "
-"Contiguïté</p><p>Chaque partie d'une circonscription doit être "
-"accessible depuis toutes les autres parties sans quitter les "
-"frontières de la circonscription. Toutes les circonscriptions au sein "
-"d'un plan doivent être contiguës. La contiguïté de l'eau est  "
-"autorisée compte tenu de la vaste région côtière de la Virginie. "
-"'Point de contiguïté' ou 'point de contact de contiguïté' où deux "
-"sections d'une circonscription sont connectées à un seul point n'est "
-"pas autorisé.</p>"
+"Contiguïté</p><p>Chaque partie d'une circonscription doit être accessible "
+"depuis toutes les autres parties sans quitter les frontières de la "
+"circonscription. Toutes les circonscriptions au sein d'un plan doivent être "
+"contiguës. La contiguïté de l'eau est  autorisée compte tenu de la vaste "
+"région côtière de la Virginie. 'Point de contiguïté' ou 'point de contact de"
+" contiguïté' où deux sections d'une circonscription sont connectées à un "
+"seul point n'est pas autorisé.</p>"
 
 msgid "house_majority_minority short label"
 msgstr "MajoritéMinorité - Chambre"
@@ -2013,9 +2003,9 @@ msgstr "Population-égale  - Congrès"
 
 msgid "congress_equipop long description"
 msgstr ""
-"<p> votre plan ne respecte pas les critères de concurrence d'égalité "
-"de la population:</p><p>La population de chaque circonscription du "
-"Congrès doit être 727366 +/-0,5%.</p>"
+"<p> votre plan ne respecte pas les critères de concurrence d'égalité de la "
+"population:</p><p>La population de chaque circonscription du Congrès doit "
+"être 727366 +/-0,5%.</p>"
 
 msgid "congress_contiguity short label"
 msgstr "Tous contigus - Congrès"
@@ -2026,14 +2016,13 @@ msgstr "Tous contigus - Congrès"
 msgid "congress_contiguity long description"
 msgstr ""
 "<p>Votre plan ne respecte pas les critères de concurrence de "
-"Contiguïté</p><p>Chaque partie d'une circonscription doit être "
-"accessible depuis toutes les autres parties sans quitter les "
-"frontières de la circonscription. Toutes les circonscriptions au sein "
-"d'un plan doivent être contiguës. La contiguïté de l'eau est  "
-"autorisée compte tenu de la vaste région côtière de la Virginie. "
-"'Point de contiguïté' ou 'point de contact de contiguïté' où deux "
-"sections d'une circonscription sont connectées à un seul point n'est "
-"pas autorisé.</p>"
+"Contiguïté</p><p>Chaque partie d'une circonscription doit être accessible "
+"depuis toutes les autres parties sans quitter les frontières de la "
+"circonscription. Toutes les circonscriptions au sein d'un plan doivent être "
+"contiguës. La contiguïté de l'eau est  autorisée compte tenu de la vaste "
+"région côtière de la Virginie. 'Point de contiguïté' ou 'point de contact de"
+" contiguïté' où deux sections d'une circonscription sont connectées à un "
+"seul point n'est pas autorisé.</p>"
 
 msgid "congress_majority_minority short label"
 msgstr "MajoritéMinorité - Congrès"
@@ -2070,9 +2059,9 @@ msgstr "Population-égale - Chambre"
 
 msgid "house_equipop long description"
 msgstr ""
-"<p> votre plan ne respecte pas les critères de concurrence d'égalité "
-"de la population:</p><p>La population de chaque circonscription de la "
-"Chambre des délégués doit être 80010 +/-5%.</p>"
+"<p> votre plan ne respecte pas les critères de concurrence d'égalité de la "
+"population:</p><p>La population de chaque circonscription de la Chambre des "
+"délégués doit être 80010 +/-5%.</p>"
 
 msgid "senate_equipop short label"
 msgstr "Population-égale - Sénat"
@@ -2082,9 +2071,9 @@ msgstr "Population-égale - Sénat"
 
 msgid "senate_equipop long description"
 msgstr ""
-"<p> votre plan ne respecte pas les critères de concurrence d'égalité "
-"de la population:</p><p>La population de chaque circonscription de la "
-"Chambre des délégués doit être 200026 +/-5%.</p>"
+"<p> votre plan ne respecte pas les critères de concurrence d'égalité de la "
+"population:</p><p>La population de chaque circonscription de la Chambre des "
+"délégués doit être 200026 +/-5%.</p>"
 
 msgid "senate_contiguity short label"
 msgstr "Tous contigus - Sénat"
@@ -2095,14 +2084,13 @@ msgstr "Tous contigus - Sénat"
 msgid "senate_contiguity long description"
 msgstr ""
 "<p>Votre plan ne respecte pas les critères de concurrence de "
-"Contiguïté</p><p>Chaque partie d'une circonscription doit être "
-"accessible depuis toutes les autres parties sans quitter les "
-"frontières de la circonscription. Toutes les circonscriptions au sein "
-"d'un plan doivent être contiguës. La contiguïté de l'eau est  "
-"autorisée compte tenu de la vaste région côtière de la Virginie. "
-"'Point de contiguïté' ou 'point de contact de contiguïté' où deux "
-"sections d'une circonscription sont connectées à un seul point n'est "
-"pas autorisé.</p>"
+"Contiguïté</p><p>Chaque partie d'une circonscription doit être accessible "
+"depuis toutes les autres parties sans quitter les frontières de la "
+"circonscription. Toutes les circonscriptions au sein d'un plan doivent être "
+"contiguës. La contiguïté de l'eau est  autorisée compte tenu de la vaste "
+"région côtière de la Virginie. 'Point de contiguïté' ou 'point de contact de"
+" contiguïté' où deux sections d'une circonscription sont connectées à un "
+"seul point n'est pas autorisé.</p>"
 
 msgid "senate_all_assigned short label"
 msgstr "Tous les blocs attribués - Sénat"
@@ -2278,8 +2266,8 @@ msgstr "Equipopulation - Congress"
 msgid "congress-equipop long description"
 msgstr ""
 "<p>Your plan does not meet the competition criteria for "
-"Equipopulation:</p><p>The population of each Congressional district "
-"must be 727,366 +/- 0.5%.</p>"
+"Equipopulation:</p><p>The population of each Congressional district must be "
+"727,366 +/- 0.5%.</p>"
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:973
 msgid "congress-contiguous short label"
@@ -2293,12 +2281,11 @@ msgstr "AllContiguous - Congress"
 msgid "congress-contiguous long description"
 msgstr ""
 "<p>Your plan does not meet the competition criteria for "
-"Contiguity</p><p>Every part of a district must be reachable from every"
-" other part without crossing the district's borders. All districts "
-"within a plan must be contiguous. Water contiguity is permitted given "
-"Virginia's extensive coastal region. 'Point contiguity' or 'touch-"
-"point contiguity' where two sections of a district are connected at a "
-"single point is not permitted.</p>"
+"Contiguity</p><p>Every part of a district must be reachable from every other"
+" part without crossing the district's borders. All districts within a plan "
+"must be contiguous. Water contiguity is permitted given Virginia's extensive"
+" coastal region. 'Point contiguity' or 'touch-point contiguity' where two "
+"sections of a district are connected at a single point is not permitted.</p>"
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:976
 msgid "congress-major-minor short label"
@@ -2348,8 +2335,8 @@ msgstr "Equipopulation - House"
 msgid "house-equipop long description"
 msgstr ""
 "<p>Your plan does not meet the competition criteria for "
-"Equipopulation:</p><p>The population of each House of Delegates "
-"district must be 80,010 +/- 5%.</p>"
+"Equipopulation:</p><p>The population of each House of Delegates district "
+"must be 80,010 +/- 5%.</p>"
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:992
 msgid "house-contiguous short label"
@@ -2363,12 +2350,11 @@ msgstr "AllContiguous - House"
 msgid "house-contiguous long description"
 msgstr ""
 "<p>Your plan does not meet the competition criteria for "
-"Contiguity</p><p>Every part of a district must be reachable from every"
-" other part without crossing the district's borders. All districts "
-"within a plan must be contiguous. Water contiguity is permitted given "
-"Virginia's extensive coastal region. 'Point contiguity' or 'touch-"
-"point contiguity' where two sections of a district are connected at a "
-"single point is not permitted.</p>"
+"Contiguity</p><p>Every part of a district must be reachable from every other"
+" part without crossing the district's borders. All districts within a plan "
+"must be contiguous. Water contiguity is permitted given Virginia's extensive"
+" coastal region. 'Point contiguity' or 'touch-point contiguity' where two "
+"sections of a district are connected at a single point is not permitted.</p>"
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:995
 msgid "house-major-minor short label"
@@ -2442,8 +2428,8 @@ msgstr "Equipopulation - Senate"
 msgid "senate-equipop long description"
 msgstr ""
 "<p>Your plan does not meet the competition criteria for "
-"Equipopulation:</p><p>The population of each House of Delegates "
-"district must be 200,026 +/- 5%.</p>"
+"Equipopulation:</p><p>The population of each House of Delegates district "
+"must be 200,026 +/- 5%.</p>"
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:1011
 msgid "senate-contiguous short label"
@@ -2457,12 +2443,11 @@ msgstr "AllContiguous - Senate"
 msgid "senate-contiguous long description"
 msgstr ""
 "<p>Your plan does not meet the competition criteria for "
-"Contiguity</p><p>Every part of a district must be reachable from every"
-" other part without crossing the district's borders. All districts "
-"within a plan must be contiguous. Water contiguity is permitted given "
-"Virginia's extensive coastal region. 'Point contiguity' or 'touch-"
-"point contiguity' where two sections of a district are connected at a "
-"single point is not permitted.</p>"
+"Contiguity</p><p>Every part of a district must be reachable from every other"
+" part without crossing the district's borders. All districts within a plan "
+"must be contiguous. Water contiguity is permitted given Virginia's extensive"
+" coastal region. 'Point contiguity' or 'touch-point contiguity' where two "
+"sections of a district are connected at a single point is not permitted.</p>"
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:1020
 msgid "senate-assigned short label"
@@ -2519,4 +2504,16 @@ msgstr "Community Mapping"
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:931
 msgid "community_sidebar_comments long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:196
+msgid "district_convexhullratio short label"
+msgstr "Convex Hull Ratio"
+
+#: /usr/src/app/config/config.xml:196
+msgid "district_convexhullratio label"
+msgstr "Convex Hull Ratio"
+
+#: /usr/src/app/config/config.xml:196
+msgid "district_convexhullratio long description"
 msgstr ""

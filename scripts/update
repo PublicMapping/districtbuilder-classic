@@ -19,11 +19,6 @@ function build_containers() {
 }
 
 
-function do_migrations() {
-    ./scripts/console django "./manage.py migrate"
-}
-
-
 if [ "${BASH_SOURCE[0]}" = "${0}" ]
 then
     if [ "${1:-}" = "--help" ]
@@ -32,9 +27,6 @@ then
     else
         echo "Building containers"
         build_containers
-
-        echo "Running migrations"
-        do_migrations
     fi
     exit
 fi

@@ -22,7 +22,7 @@ License:
     See the License for the specific language governing permissions and
     limitations under the License.
 
-Author: 
+Author:
     Andrew Jennings, David Zwarg
 """
 
@@ -38,7 +38,7 @@ logger = logging.getLogger(__name__)
 
 class Command(BaseCommand):
     """
-    This command migrates all database configured strings into a set of 
+    This command migrates all database configured strings into a set of
     message files in the 'xmlconfig' domain.
     """
     args = None
@@ -72,7 +72,7 @@ class Command(BaseCommand):
         # Use the specified locale, or if none are provided, use all defined in settings
         locale = options.get("locale")
         locales = [locale] if locale else [l[0] for l in settings.LANGUAGES]
-        
+
         # Make messages for each available locale
         for locale in locales:
             logger.info('Processing locale %(locale)s', {'locale':locale})

@@ -47,7 +47,7 @@ from xml.dom import minidom
 import redistricting
 from redistricting.models import *
 from redistricting.tasks import *
-from redistricting.config import *
+from redistricting.config import ConfigImporter
 import traceback, logging
 
 from redisutils import key_gen
@@ -55,6 +55,7 @@ from django.db.models import Q
 import subprocess
 
 logger = logging.getLogger()
+logger.addHandler(logging.StreamHandler())
 
 
 class Command(BaseCommand):
@@ -63,42 +64,35 @@ class Command(BaseCommand):
     """
     args = '<config>'
     help = 'Sets up DistrictBuilder based on the main XML configuration.'
-    option_list = BaseCommand.option_list + (
-        make_option('-c', '--config', dest="config",
-            help="Use configuration file CONFIG", metavar="CONFIG"),
-        make_option('-d', '--database', dest="database",
-            help="Generate the base data objects.", default=False,
-            action='store_true'),
-        make_option('-f', '--force', dest="force",
-            help="Force changes if config differs from database", default=False,
-            action='store_true'),
-        make_option('-g', '--geolevel', dest="geolevels",
-            action="append", help="Geolevels to import",
-            type='int'),
-        make_option('-n', '--nesting', dest="nesting",
-            action='append', help="Enforce nested geometries.",
-            type='int'),
-        make_option('-V', '--views', dest="views", default=False,
-            action="store_true", help="Create database views."),
-        make_option('-G', '--geoserver', dest="geoserver",
-            action="store_true", help="Create spatial layers in Geoserver.",
-            default=False),
-        make_option('-t', '--templates', dest="templates",
-            action="store_true", help="Create system templates based on district index files.", default=False),
-        make_option('-a', '--adjacency', dest="adjacency",
-                    help="Import adjacency data", default=False, action='store_true'),
-        make_option('-b', '--bard', dest="bard",
-            action='store_true', help="Create a BARD map based on the imported spatial data.", default=False),
-        make_option('-s', '--static', dest="static",
-            action='store_true', help="Collect and compress the static javascript and css files.", default=False),
-        make_option('-l', '--languages', dest="languages",
-            action='store_true', help="Create and compile a message file for each language defined.", default=False),
-        make_option('-B', '--bardtemplates', dest="bard_templates",
-            action='store_true', help="Create the BARD reporting templates.", default=False),
-    )
-
 
     force = False
+
+    def add_arguments(self, parser):
+        """Add arguments and options to the base command parser"""
+        parser.add_argument('config',
+            help="Use configuration file CONFIG", metavar="CONFIG"),
+        parser.add_argument('-f', '--force', dest="force",
+            help="Force changes if config differs from database", default=False,
+            action='store_true'),
+        parser.add_argument('-g', '--geolevel', dest="geolevels",
+            action="append", help="Geolevels to import",
+            type=int),
+        parser.add_argument('-n', '--nesting', dest="nesting",
+            action='append', help="Enforce nested geometries.",
+            type=int),
+        parser.add_argument('-V', '--views', dest="views", default=False,
+            action="store_true", help="Create database views."),
+        parser.add_argument('-G', '--geoserver', dest="geoserver",
+            action="store_true", help="Create spatial layers in Geoserver.",
+            default=False),
+        parser.add_argument('-t', '--templates', dest="templates",
+            action="store_true", help="Create system templates based on district index files.", default=False),
+        parser.add_argument('-a', '--adjacency', dest="adjacency",
+                    help="Import adjacency data", default=False, action='store_true'),
+        parser.add_argument('-s', '--static', dest="static",
+            action='store_true', help="Collect and compress the static javascript and css files.", default=False),
+        parser.add_argument('-l', '--languages', dest="languages",
+            action='store_true', help="Create and compile a message file for each language defined.", default=False)
 
     def setup_logging(self, verbosity):
         """
@@ -115,6 +109,7 @@ class Command(BaseCommand):
         Perform the command.
         """
         self.setup_logging(int(options.get('verbosity')))
+        force = options.get('force')
 
         translation.activate('en')
 
@@ -161,8 +156,6 @@ file and try again.
         if not success:
             sys.exit(1)
 
-        force = options.get('force')
-
         # When configuring, we want to keep track of any failures so we can
         # return the correct exit code.  Since False evaluates to a 0, we can
         # multiply values by all_ok so that a single False value means all_ok
@@ -191,13 +184,12 @@ file and try again.
                 geolevels = store.filter_geolevels()
 
                 for i,geolevel in enumerate(geolevels):
-                    if not optlevels is None:
-                        importme = len(optlevels) == 0
-                        importme = importme or (i in optlevels)
+                    if optlevels is not None:
+                        importme = len(optlevels) == 0 or (i in optlevels)
                         if importme:
                             self.import_geolevel(store, geolevel)
 
-                    if not nestlevels is None:
+                    if nestlevels is not None:
                         nestme = len(nestlevels) == 0
                         nestme = nestme or (i in nestlevels)
                         if nestme:
@@ -252,17 +244,6 @@ file and try again.
 
         if options.get("adjacency"):
             self.import_adjacency(store.data)
-
-        if options.get("bard_templates"):
-            try:
-                self.create_report_templates(store.data)
-            except:
-                logger.info('ERROR creating BARD template files.')
-                logger.debug(traceback.format_exc())
-                all_ok = False
-
-        if options.get("bard"):
-            all_ok = all_ok * self.build_bardmap(store.data)
 
         # For our return value, a 0 (False) means OK, any nonzero (i.e., True or 1)
         # means that  an error occurred - the opposite of the meaning of all_ok's bool
@@ -359,12 +340,14 @@ ERROR:
                     width = int(idpart.get('width'))
                     builtid = '%s%s' % (builtid, part.zfill(width))
             return builtid
+
         def get_shape_portable(shapefile, feature):
             field = shapefile.xpath('Fields/Field[@type="portable"]')[0]
             portable = feature.get(field.get('name'))
             if not (isinstance(portable, types.StringTypes)):
                 portable = '%d' % portable
             return portable
+
         def get_shape_name(shapefile, feature):
             field = shapefile.xpath('Fields/Field[@type="name"]')[0]
             strname = feature.get(field.get('name'))
@@ -536,7 +519,8 @@ ERROR:
             try:
                 value = Decimal(str(feat.get(attr))).quantize(Decimal('000000.0000', 'ROUND_DOWN'))
             except:
-                logger.info('No attribute "%s" on feature %d' , attr, feat.fid)
+
+                # logger.info('No attribute "%s" on feature %d' , attr, feat.fid)
                 continue
             percentage = '0000.00000000'
             if obj.percentage_denominator:
@@ -603,17 +587,17 @@ ERROR:
         Parameters:
             config - The XML configuration.
         """
-        admin = User.objects.filter(is_staff=True)
-        if admin.count() == 0:
+        admins = User.objects.filter(is_staff=True)
+        if admins.count() == 0:
             logger.info("Creating templates requires at least one admin user.")
             return
 
-        admin = admin[0]
+        admin = admins[0]
 
-        deflang = 'en'
+        default_language = 'en'
         try:
-            deflang = config.xpath('//Internationalization')[0].get('default')
-            activate(deflang)
+            default_language = config.xpath('//Internationalization')[0].get('default')
+            activate(default_language)
         except:
             pass
 
@@ -636,7 +620,7 @@ ERROR:
             fconfig = template.xpath('Blockfile')[0]
             path = fconfig.get('path')
 
-            DistrictIndexFile.index2plan( plan_name, legislative_body.id, path, owner=admin, template=True, purge=False, email=None, language=deflang)
+            DistrictIndexFile.index2plan( plan_name, legislative_body.id, path, owner=admin, template=True, purge=False, email=None, language=default_language)
 
             logger.debug('Created template plan "%s"', plan_name)
 
