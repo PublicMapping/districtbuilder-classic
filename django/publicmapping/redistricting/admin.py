@@ -1,7 +1,7 @@
 """
 Configure the appearance of the redistricting admin interface.
 
-The classes in redistricting.admin assist the Django framework's 
+The classes in redistricting.admin assist the Django framework's
 administrative interface in presenting the models. The classes contained
 within change the default behavior of the administrative to make maintenance
 of models easier.
@@ -24,7 +24,7 @@ License:
     See the License for the specific language governing permissions and
     limitations under the License.
 
-Author: 
+Author:
     Andrew Jennings, David Zwarg
 """
 
@@ -64,7 +64,7 @@ class CharacteristicAdmin(admin.ModelAdmin):
 
     # When displayed as a list, show these fields in columns.
     list_display = ('subject','geounit','number',)
-    
+
     # Don't try to lookup the relationships to geounits, just list their
     # IDs
     raw_id_fields = ('geounit',)
@@ -84,7 +84,7 @@ class GeounitAdmin(admin.OSMGeoAdmin):
     """
     Administrative setting for Geounits.
 
-    Geounits are the units of geography in the redistricting app. Each 
+    Geounits are the units of geography in the redistricting app. Each
     Geounit can have zero or more Characteristics, with one Characteristic
     per Subject.
 
@@ -261,7 +261,7 @@ class SubjectAdmin(admin.ModelAdmin):
     def delete_selected_subject(modeladmin, request, queryset):
         """
         This is invoked from the dropdown menu in the admin as a bulk action.
-        This overrides the 
+        This overrides the
         """
         opts = modeladmin.model._meta
         app_label = opts.app_label
@@ -272,7 +272,7 @@ class SubjectAdmin(admin.ModelAdmin):
         if not request.user.has_perm(modeladmin.opts.app_label + '.' + modeladmin.opts.get_delete_permission()):
             raise PermissionDenied
 
-        if request.POST.get('post'):
+        if request.REQUEST.get('post'):
             n = queryset.count()
             if n:
                 engine = inflect.engine()
@@ -281,7 +281,7 @@ class SubjectAdmin(admin.ModelAdmin):
                     modeladmin.log_deletion(request, obj, obj_display)
                 queryset.delete()
                 modeladmin.message_user(request, _('Successfully deleted %(count)d %(item)s') % {
-                    'count': n, 
+                    'count': n,
                     'item': engine.plural('subject', n)
                 })
             # Return None to display the change list page again.
@@ -300,7 +300,7 @@ class SubjectAdmin(admin.ModelAdmin):
         }
 
         # Display the confirmation page
-        return render("admin/%s/%s/delete_selected_confirmation.html" % (app_label, opts.object_name.lower()), 
+        return render("admin/%s/%s/delete_selected_confirmation.html" % (app_label, opts.object_name.lower()),
             context, context_instance=template.RequestContext(request))
 
     # Customize the label of the delete_selected_subject action to look like the normal delete label
@@ -322,8 +322,8 @@ class SubjectAdmin(admin.ModelAdmin):
             'geounits': geolevel.geounit_set.all().order_by('portable_id').values_list('portable_id',flat=True)
         }
 
-        resp = render("admin/%s/%s/add_template.csv" % (app_label, opts.object_name.lower()), 
-            dictionary=context, mimetype='text/plain')
+        resp = render("admin/%s/%s/add_template.csv" % (app_label, opts.object_name.lower()),
+            dictionary=context, content_type='text/plain')
         resp['Content-Disposition'] = 'attachement; filename=new_subject.csv'
         return resp
 
@@ -335,7 +335,7 @@ class SubjectAdmin(admin.ModelAdmin):
         opts = modeladmin.model._meta
         app_label = opts.app_label
         is_processing = False
-    
+
         if request.method == 'GET':
             form = SubjectUploadForm()
         else:
@@ -348,20 +348,20 @@ class SubjectAdmin(admin.ModelAdmin):
                 form = SubjectUploadForm(form.cleaned_data)
 
                 # do not validate this new form, as it replaces one that has already been validated.
-                form._errors = {} 
+                form._errors = {}
 
                 # Switch the form input types, as we're now processing the file in the background
                 form.fields['processing_file'].widget = forms.TextInput(attrs={'readOnly':True})
                 form.fields['subject_upload'].widget = forms.HiddenInput()
             else:
-                the_errors = form._errors
-                if 'subject_upload' in the_errors:
+                errors = form._errors
+                if 'subject_upload' in errors:
                     form = SubjectUploadForm()
-                    form._errors = the_errors
+                    form._errors = errors
                 else:
-                
+
                     form = SubjectUploadForm({'processing_file':form.ps_file, 'uploaded_file':form.ul_file, 'subject_name':form.temp_subject_name,'subject_upload':form.ul_file})
-                    form._errors = the_errors
+                    form._errors = errors
 
                     form.fields['uploaded_file'].widget = forms.TextInput(attrs={'readOnly':True})
                     form.fields['force_overwrite'].widget = forms.CheckboxInput()
@@ -402,7 +402,7 @@ class SubjectAdmin(admin.ModelAdmin):
             else:
                 response['message'] = str(task.result)
 
-        return HttpResponse(json.dumps(response), mimetype='application/json')
+        return HttpResponse(json.dumps(response), content_type='application/json')
 
 
 
@@ -465,7 +465,7 @@ class ValidationCriteriaAdmin(admin.ModelAdmin):
 # Register these classes with the admin interface.
 admin.site.register(Geounit, GeounitAdmin)
 admin.site.register(Region)
-admin.site.register(ComputedCharacteristic, ComputedCharacteristicAdmin) 
+admin.site.register(ComputedCharacteristic, ComputedCharacteristicAdmin)
 admin.site.register(Characteristic, CharacteristicAdmin)
 admin.site.register(Subject, SubjectAdmin)
 admin.site.register(Geolevel)

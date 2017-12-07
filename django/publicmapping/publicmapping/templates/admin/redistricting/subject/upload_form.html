@@ -6,7 +6,7 @@
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
+   You may obtain a copy of the License at'
 
        http://www.apache.org/licenses/LICENSE-2.0
 
@@ -37,8 +37,8 @@
 <script type="text/javascript" src="{{ jsi18nurl|default:"../../../jsi18n/" }}"></script>
 {{ media }}
 {% if is_processing %}
-<script type="text/javascript" src="/static-media/jquery/jquery-1.6.2.min.js"></script>
-<script type="text/javascript" src="{% url django.views.i18n.javascript_catalog %}"></script>
+<script type="text/javascript" src="{% static 'jquery/jquery-1.6.2.min.js' %}"></script>
+<script type="text/javascript" src="{% url 'javascript-catalog' %}"></script>
 <script type="text/javascript">
 $(function(){
     var statusInterval = 0;
@@ -101,7 +101,7 @@ $(function(){
 {% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% static 'admin/css/forms.css' %}" />
 <style type="text/css">
     .loading {
-        background: url("/static-media/images/chooser-loading.gif") no-repeat scroll 0 0 transparent;
+        background: url("/static/images/chooser-loading.gif") no-repeat scroll 0 0 transparent;
     }
     #upload_status_messages {
         padding-left: 65px;

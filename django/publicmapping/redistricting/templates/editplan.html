@@ -29,7 +29,7 @@
        Andrew Jennings, David Zwarg
 
 {% endcomment %}
-{% load i18n %}
+{% load i18n static %}
 
       {% block toolset_history %}
           <button id="history_undo" class="{% if not plan %}disabled{% else %}{% ifequal plan.version 0 %}disabled{% endifequal %}{% endif %}">{% trans "Undo" %}</button>
@@ -379,7 +379,7 @@
         </table>
         <div id="email_plan_required_note"> * {% trans "Indicates required field" %} </div>        
     </div>
-    <script type="text/javascript" src="/static-media/js/emailplan.js"></script>
+    <script type="text/javascript" src="{% static 'js/emailplan.js' %}"></script>
     <script type="text/javascript">
         $(function() {
             emailplan({

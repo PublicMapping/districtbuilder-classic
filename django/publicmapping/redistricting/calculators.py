@@ -1133,14 +1133,14 @@ class Contiguity(CalculatorBase):
         is represented as an image element or the string result wrapped
         in a SPAN element if the result is non-numeric.
 
-        @return: An HTML IMG element in the form of: '<img class="(yes|no)-contiguous" src="/static-media/images/icon-(check|warning).png">'
+        @return: An HTML IMG element in the form of: '<img class="(yes|no)-contiguous" src="/static/images/icon-(check|warning).png">'
         """
         if not self.result is None and 'value' in self.result:
             if type(self.result['value']) == int:
                 if self.result['value'] == 1:
-                    return '<img class="yes-contiguous" src="/static-media/images/icon-check.png">'
+                    return '<img class="yes-contiguous" src="/static/images/icon-check.png">'
                 else:
-                    return '<img class="no-contiguous" src="/static-media/images/icon-warning.png">'
+                    return '<img class="no-contiguous" src="/static/images/icon-warning.png">'
             else:
                 return CalculatorBase.html(self)
 

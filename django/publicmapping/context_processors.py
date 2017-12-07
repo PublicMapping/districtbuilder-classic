@@ -34,7 +34,7 @@ def banner_image(request):
 
     Users will need to set a BANNER_IMAGE variable in settings.py that 
     points to the URL path to the banner image.  The banner image 
-    defaults to '/static-media/images/banner-home.png'
+    defaults to '/static/images/banner-home.png'
 
     @param request: The HttpRequest
     """
@@ -42,6 +42,6 @@ def banner_image(request):
     if 'BANNER_IMAGE' in settings.__members__:
         context_dict['banner_image'] = settings.BANNER_IMAGE
     else:
-        context_dict['banner_image'] = '/static-media/images/banner-home.png'
+        context_dict['banner_image'] = '/static/images/banner-home.png'
 
     return context_dict;

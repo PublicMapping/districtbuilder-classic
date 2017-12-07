@@ -3185,19 +3185,19 @@ def safe_union(collection):
     """
     if isinstance(collection, GeoQuerySet):
         # collection is a GeoQuerySet
-        thegeom = collection.collect()
+        geom = collection.collect()
         if collection.count() == 0:
-            return thegeom
+            return geom
     elif isinstance(collection, GeometryCollection):
         # collection is a GeometryCollection
-        thegeom = collection
+        geom = collection
 
-    thegeom = thegeom.buffer(0)
+    geom = geom.buffer(0)
 
-    if thegeom.geom_type == 'MultiPolygon':
-        thegeom = thegeom.cascaded_union
+    if geom.geom_type == 'MultiPolygon':
+        geom = geom.cascaded_union
 
-    return thegeom
+    return geom
 
 class ScoreFunction(BaseModel):
     """

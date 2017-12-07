@@ -47,8 +47,8 @@ function load_dev_data() {
 
     echo "Loading shapefiles into database"
     docker-compose \
-        exec -T django ./manage.py setup config/config.xml -g0
-# TODO: performance is way too slow to import all three layers (-g2 is census blocks)
+        exec -T django ./manage.py setup config/config.xml -g1 -g2
+# TODO: performance is way too slow to import all three layers (-g0 is census blocks)
 #        exec -T django ./manage.py setup config/config.xml -g0 -g1 -g2
 
 }

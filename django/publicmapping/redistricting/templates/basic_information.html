@@ -35,7 +35,7 @@
 
 {% load humanize %}
 {% load redistricting_extras %}
-{% load i18n %}
+{% load i18n static %}
 <div class="info_table basic">
     {% if districtscores %}
     <table id="demographics_table">
@@ -80,8 +80,8 @@
         <div class="legend_item last">
             <h5>{% trans "Contiguity" %}</h5>
             <ul>
-                <li><img class="yes-contiguous" src="/static-media/images/icon-check.png"> {% trans "Contiguous" %}</li>
-                <li><img class="no-contiguous" src="/static-media/images/icon-warning.png"> {% trans "Non-contiguous" %}</li> 
+                <li><img class="yes-contiguous" src="{% static 'images/icon-check.png' %}"> {% trans "Contiguous" %}</li>
+                <li><img class="no-contiguous" src="{% static 'images/icon-warning.png' %}"> {% trans "Non-contiguous" %}</li> 
             </ul>
         </div>                    
     </div>
