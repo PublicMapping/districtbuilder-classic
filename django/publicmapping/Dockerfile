@@ -1,6 +1,7 @@
 FROM quay.io/azavea/django:1.11-python2.7-slim
 
 RUN mkdir -p /usr/src/app
+RUN mkdir -p /opt/sld
 WORKDIR /usr/src/app
 
 COPY requirements.txt /usr/src/app/

@@ -207,7 +207,7 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.AppDirectoriesFinder'
 )
 
-SLD_ROOT = '/projects/PublicMapping/DistrictBuilder/sld/'
+SLD_ROOT = '/opt/sld/'
 
 WEB_TEMP = '/tmp'
 

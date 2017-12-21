@@ -31,7 +31,14 @@ Author:
 from celery.task import task
 from django.core.exceptions import ValidationError
 from django.contrib.gis.db import models
-from django.contrib.gis.geos import MultiPolygon,Polygon,GEOSGeometry,GEOSException,GeometryCollection,Point
+from django.contrib.gis.geos import (
+    MultiPolygon,
+    Polygon,
+    GEOSGeometry,
+    GEOSException,
+    GeometryCollection,
+    Point
+)
 from django.contrib.gis.db.models.query import GeoQuerySet
 from django.contrib.auth.models import User
 from django.db.models import Sum, Max, Q, Count
@@ -797,7 +804,15 @@ class Geounit(models.Model):
             geolevel__in=[parent])
 
         parentunits.update(child=self)
-        newgeo = parentunits.unionagg()
+        unioned = [x.geom.unary_union for x in parentunits]
+        if any([x.geom_type == 'MultiPolygon' for x in unioned]):
+            multis = [x for x in unioned if x.geom_type == 'MultiPolygon']
+            singles = [x for x in unioned if x.geom_type != 'MultiPolygon']
+            newgeo = multis[0].union(MultiPolygon(singles).unary_union)
+            for other in multis[1:]:
+                newgeo = newgeo.union(other)
+        else:
+            newgeo = MultiPolygon(unioned).unary_union
 
         # reform the parent units as a list of IDs
         parentunits = list(parentunits.values_list('id',flat=True))
@@ -3045,7 +3060,9 @@ def create_unassigned_district(sender, **kwargs):
             all_geom = joined_shape
 
         if plan.district_set.count() > 0:
-            taken = plan.district_set.all().unionagg()
+            taken = MultiPolygon(
+                [x.geom.unary_union for x in plan.district_set.all()]
+            )
             unassigned.geom =  enforce_multi(all_geom.difference(taken))
             unassigned.simplify() # implicit save
             geounit_ids = map(str, biggest_geolevel.geounit_set.filter(geom__bboverlaps=unassigned.geom).values_list('id', flat=True))

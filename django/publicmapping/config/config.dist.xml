@@ -1219,7 +1219,10 @@
 
             The 'host' attribute is optional.
         -->
-        <Database name="YOUR-DATABASE-NAME" user="publicmapping" password="YOUR-DATABASE-PASSWORD" host="OPTIONAL"/>
+        <Database name="district_builder"
+                  user="district_builder"
+                  password="district_builder"
+                  host="postgres.internal.districtbuilder.com"/>
 
         <!--
            Key Value Store is required for the adjacency feature. 
@@ -1277,8 +1280,8 @@
             
             -->
             <MapServer hostname="" ns="pmp" nshref="https://github.com/PublicMapping/"
-                adminuser="GEOSERVER-ADMIN-USER" adminpass="GEOSERVER-ADMIN-PASS" maxfeatures="100" 
-                styles="/projects/PublicMapping/DistrictBuilder/sld" />
+                adminuser="admin" adminpass="geoserver" maxfeatures="100" 
+                styles="/opt/sld/" />
 
             <!-- 
             
