@@ -178,7 +178,7 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.AppDirectoriesFinder'
 )
 
-SLD_ROOT = '/projects/PublicMapping/DistrictBuilder/sld/'
+SLD_ROOT = '/opt/sld/'
 
 CONCURRENT_SESSIONS = 5
 SESSION_TIMEOUT = 15
