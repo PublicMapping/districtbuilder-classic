@@ -5,7 +5,7 @@
     <title>Updated Plans from DistrictBuilder</title>
  
     <subtitle>Plans with recent edits by the community, powered by DistrictBuilder</subtitle>
-    <link href="{% url publicmapping.redistricting.views.plan_feed %}"/>
+    <link href="{% url 'plan-feed' %}"/>
     <updated>{% now "c" %}</updated>
     <author>
         <name>Community Contributors to DistrictBuilder</name>
@@ -16,7 +16,7 @@
     {% for plan in plans %}
     <entry>
         <title>{{ plan.name }}</title>
-        <link href="{% url publicmapping.redistricting.views.viewplan planid=plan.id %}"/>
+        <link href="{% url 'publicmapping.redistricting.views.viewplan' planid=plan.id %}"/>
         <id>urn:uuid:1225c695-cfb8-4ebb-aaaa-80da344efa6a</id>
         <updated>{{ plan.edited|date:"c" }}</updated>
         <content type="html"><![CDATA[<img src="https://{{ mapserver }}/geoserver/wms?service=WMS&version=1.1.0&request=GetMap&layers={{ mapserver_ns }}:simple_district&styles=&bbox={{ extent|join:"," }}&width={{ width }}&height={{ height }}&srs=EPSG:3785&format=image/png&cql_filter=id%3d{{ plan.get_last_district_changed.id }}"/>]]>

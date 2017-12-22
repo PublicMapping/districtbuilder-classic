@@ -3154,9 +3154,9 @@ class ScoreRenderTestCase(BaseTestCase):
             template.close()
 
             markup = panel.render(districts)
-            expected = 'District 1:86.83%<img class="yes-contiguous" src="/static-media/images/icon-check.png">' + \
-                'District 2:86.83%<img class="yes-contiguous" src="/static-media/images/icon-check.png">' + \
-                'Unassigned:0.00%<img class="yes-contiguous" src="/static-media/images/icon-check.png">'
+            expected = 'District 1:86.83%<img class="yes-contiguous" src="/static/images/icon-check.png">' + \
+                'District 2:86.83%<img class="yes-contiguous" src="/static/images/icon-check.png">' + \
+                'Unassigned:0.00%<img class="yes-contiguous" src="/static/images/icon-check.png">'
             self.assertEqual(expected, markup, 'The markup for districts was incorrect. (e:"%s", a:"%s")' % (expected,markup))
 
             os.remove(tplfile)
@@ -3225,16 +3225,16 @@ class ScoreRenderTestCase(BaseTestCase):
         template.close()
 
         markup = display.render(self.plan)
-        expected = 'District 1:86.83%<img class="yes-contiguous" src="/static-media/images/icon-check.png">' + \
-            'District 2:86.83%<img class="yes-contiguous" src="/static-media/images/icon-check.png">' + \
-            'Unassigned:0.00%<img class="yes-contiguous" src="/static-media/images/icon-check.png">'
+        expected = 'District 1:86.83%<img class="yes-contiguous" src="/static/images/icon-check.png">' + \
+            'District 2:86.83%<img class="yes-contiguous" src="/static/images/icon-check.png">' + \
+            'Unassigned:0.00%<img class="yes-contiguous" src="/static/images/icon-check.png">'
         self.assertEqual(expected, markup, 'The markup was incorrect. (e:"%s", a:"%s")' % (expected, markup))
 
         markup = display.render(self.plan.get_districts_at_version(self.plan.version,include_geom=False))
 
-        expected = 'District 1:86.83%<img class="yes-contiguous" src="/static-media/images/icon-check.png">' + \
-            'District 2:86.83%<img class="yes-contiguous" src="/static-media/images/icon-check.png">' + \
-            'Unassigned:0.00%<img class="yes-contiguous" src="/static-media/images/icon-check.png">'
+        expected = 'District 1:86.83%<img class="yes-contiguous" src="/static/images/icon-check.png">' + \
+            'District 2:86.83%<img class="yes-contiguous" src="/static/images/icon-check.png">' + \
+            'Unassigned:0.00%<img class="yes-contiguous" src="/static/images/icon-check.png">'
         self.assertEqual(expected, markup, 'The markup was incorrect. (e:"%s", a:"%s")' % (expected, markup))
 
         os.remove(tplfile)

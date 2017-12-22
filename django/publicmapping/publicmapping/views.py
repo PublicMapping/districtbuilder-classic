@@ -31,6 +31,7 @@ from django.contrib.auth.models import User, AnonymousUser
 from django.contrib.sessions.models import Session
 from django.contrib.auth.decorators import login_required
 from django.contrib.sites.models import Site
+from django.db import transaction
 from django.views.decorators.cache import cache_control
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
@@ -86,6 +87,7 @@ def index(request):
     }))
 
 
+@transaction.atomic()
 def userregister(request):
     """
     A registration form endpoint for registering and logging in.
@@ -143,7 +145,7 @@ def userregister(request):
             user.last_name = lname
             user.save()
 
-            profile = user.get_profile()
+            profile = user.profile
             profile.organization = org
             profile.pass_hint = hint
             profile.save()
@@ -158,6 +160,7 @@ def userregister(request):
         return HttpResponse(json.dumps(status))
 
 
+@transaction.atomic()
 def userupdate(request):
     """
     Update a user's information.
@@ -200,7 +203,7 @@ def userupdate(request):
                     user.set_password(password1)
                 user.save()
 
-                profile = user.get_profile()
+                profile = user.profile
                 profile.pass_hint = hint
                 profile.organization = org
                 profile.save()
@@ -211,6 +214,7 @@ def userupdate(request):
             status['message'] = 'No user for that account.'
 
     return HttpResponse(json.dumps(status))
+
 
 def userlogout(request):
     """
@@ -229,10 +233,11 @@ def userlogout(request):
     key = request.session.session_key
     logout(request)
     Session.objects.filter(session_key = key).delete()
-    if 'next' in request.REQUEST:
-        return HttpResponseRedirect(request.REQUEST['next'])
+    if 'next' in request.GET:
+        return HttpResponseRedirect(request.GET['next'])
     else:
         return HttpResponseRedirect('/')
+
 
 def emailpassword(user):
     """
@@ -290,7 +295,7 @@ def forgotpassword(request):
             user = User.objects.get(username__exact=username)
             status['success'] = True
             status['mode'] = 'hinting'
-            status['hint'] = user.get_profile().pass_hint
+            status['hint'] = user.profile.pass_hint
         except:
             status['field'] = 'username'
             status['message'] = 'Invalid username. Please try again.'

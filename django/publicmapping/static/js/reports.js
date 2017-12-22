@@ -20,7 +20,7 @@
        This script file defines the behaviors for generating reports of
        Plans.
 
-   Author: 
+   Author:
         Andrew Jennings, David Zwarg
 */
 
@@ -60,7 +60,7 @@ reports = function(options) {
     _self.init = function() {
         _options.trigger.click( function() {
             submitReportRequestToServer();
-            _options.callback(); 
+            _options.callback();
         });
 
         if (_options.calculatorReports.length > 0) {
@@ -70,7 +70,7 @@ reports = function(options) {
     };
 
     var pollCount = 0;
-    
+
     /**
      * Create all of the checkboxes/label for calculator reports.
      * This is only called when calculator reports are enabled.
@@ -83,11 +83,11 @@ reports = function(options) {
             if ($('#' + optionsId).length === 0) {
                 $('#options').append($("<div />").prop('id', optionsId));
             }
-            
+
             var masterId = 'master_' + i;
             var statsGroupId = 'stats_group_'+ masterId;
             $('#' + optionsId).append($("<div class='stats-group' />").prop('id', statsGroupId));
-            
+
             $('#' + statsGroupId)
                 .append($("<span class='master' />")
                     .append($("<input type='checkbox' />").prop('id', masterId))
@@ -126,7 +126,7 @@ reports = function(options) {
                     $('#' + masterId).prop('checked', allChecked);
                 });
             });
-            
+
         });
     };
 
@@ -147,12 +147,12 @@ reports = function(options) {
         if (data.functionIds === "") {
             $('<div />').text(gettext('Please select one or more reports to be generated.')).dialog({
                 modal: true, autoOpen: true, title: 'Warning', resizable:false
-            });                
+            });
             return;
         }
-        
+
         var statusDiv = $('<div class="reportStatus" />');
-        statusDiv.append('<img class="reportLoading" src="/static-media/images/loading-large.gif" />');
+        statusDiv.append('<img class="reportLoading" src="/static/images/loading-large.gif" />');
         statusDiv.append($('<h1 id="genreport" />').text(gettext('Generating Report')));
         statusDiv.append($('<p />').text(gettext('You may use the rest of the application while the report is building.')));
         statusDiv.append($('<p />').text(gettext('A preview of your report will appear in this space when it is ready.')));
@@ -221,7 +221,7 @@ reports = function(options) {
      */
     var getCalculatorReportOptions = function() {
         var vals = [];
-        $('.reportVar').each( function() { 
+        $('.reportVar').each( function() {
             $this = $(this);
             if ($this.children('input:checked').length > 0) {
                 vals.push($this.children('input').val());
@@ -239,7 +239,7 @@ reports = function(options) {
     var getReportOptions = function() {
         var getConcatenated = function(cls) {
             var value = '';
-            $('.' + cls + '.reportVar').each( function() { 
+            $('.' + cls + '.reportVar').each( function() {
                 $this = $(this);
                 if ($this.children('input:checked').length > 0) {
                     value += $this.children('label').text();
@@ -265,7 +265,7 @@ reports = function(options) {
                 ratioVar += '||' + $('#' + name + 'Threshold').val();
                 ratioVar += '||' + getConcatenated(name);
                 ratioVar += '||' + $('label[for^=' + name + ']').text();
-                
+
                 _ratioVars.push(ratioVar);
             }
         });
@@ -277,7 +277,7 @@ reports = function(options) {
         _repCompactnessExtra = $('#repCompactnessExtra').is(':checked');
         _repSpatial = $('#repSpatial').is(':checked');
         _repSpatialExtra = $('#repSpatialExtra').is(':checked');
-        var data = { 
+        var data = {
             popVar: _popVar,
             popVarExtra: _popVarExtra,
             ratioVars: _ratioVars,
@@ -287,7 +287,7 @@ reports = function(options) {
             repSpatial: _repSpatial,
             repSpatialExtra: _repSpatialExtra
         };
-        
+
         return data;
     };
 
@@ -303,32 +303,32 @@ reports = function(options) {
     var loadPreviewContent = function(url) {
         if (typeof(_gaq) != 'undefined') { _gaq.push(['_trackEvent', 'Reports', 'RanReport']); }
         _options.previewContainer.load(url, function(){
-            
+
             var resultsAmt = _options.previewContainer.find(".report_panel").length;
             var $resultsPanels = _options.previewContainer.find(".report_panel");
-            
+
             //build tab structure from report response, necessary for jqueryUI
             var $tabNav = $('<ul/>', {id: 'stats-tab-nav'});
             var $tabNextButton = $('<input/>', {'type': 'radio', 'id': 'stats-tab-next'});
             var $tabNextLabel = $('<label/>', {'for': 'stats-tab-next', 'html': 'Next'});
             var $tabPrevButton = $('<input/>', {'type': 'radio', 'id': 'stats-tab-prev'});
             var $tabPrevLabel = $('<label/>', {'for': 'stats-tab-prev', 'html': 'Prev'});
-               
+
             var $tabNavButtons = $('<div/>', {'class': 'stats-nav-buttons'});
                 $tabNavButtons.append($tabPrevButton, $tabPrevLabel ,$tabNextButton, $tabNextLabel);
-                $tabNavButtons.buttonset(); 
-                    
+                $tabNavButtons.buttonset();
+
             $resultsPanels.each(function(){
                 var $tabNavItem = $('<a/>', {html: $(this).find('.report_panel_title').html(), href: '#'+ $(this).attr('id')});
                 $tabNav.append($('<li/>', {html: $tabNavItem }));
             });
-            
+
             //add nav buttons
             if (resultsAmt > 1) {
                 $(this).prepend($tabNavButtons);
-            }           
-        
-            //prepend tab nav 
+            }
+
+            //prepend tab nav
             _options.previewContainer.prepend($tabNav);
             //destroy previous tab init, check for existance for IE7
             if (_options.previewContainer.data('tabs') !== undefined) {
@@ -336,37 +336,37 @@ reports = function(options) {
             }
             //init tab scrip
             _options.previewContainer.tabs();
-            
+
             //nav button tab switching behaviors
-            $('#stats-tab-next').click(function() { 
-                var $tabs = _options.previewContainer.tabs(); 
-                var selected = $tabs.tabs('option', 'selected'); 
+            $('#stats-tab-next').click(function() {
+                var $tabs = _options.previewContainer.tabs();
+                var selected = $tabs.tabs('option', 'selected');
                 if (selected + 1 == resultsAmt) {
-                    $tabs.tabs('select', 0); 
+                    $tabs.tabs('select', 0);
                 } else {
-                    $tabs.tabs('select', selected + 1); 
+                    $tabs.tabs('select', selected + 1);
                 }
             });
-            $('#stats-tab-prev').click(function() { 
-                var $tabs = _options.previewContainer.tabs(); 
-                var selected = $tabs.tabs('option', 'selected'); 
+            $('#stats-tab-prev').click(function() {
+                var $tabs = _options.previewContainer.tabs();
+                var selected = $tabs.tabs('option', 'selected');
                 if (selected === 0) {
-                    $tabs.tabs('select', resultsAmt - 1); 
+                    $tabs.tabs('select', resultsAmt - 1);
                 } else {
-                    $tabs.tabs('select', selected - 1); 
+                    $tabs.tabs('select', selected - 1);
                 }
             });
-        }); 
+        });
 
         var link = window.location.protocol + '//' + window.location.host + url;
         var $btnOpenReport = $('<a href="' + link + '" target="report" />');
         $btnOpenReport.append($('<button id="btnOpenReport" />').
             text(gettext('Open Current Report in New Window')));
         $('#reportButtons #btnOpenReport').remove();
-        $('#reportButtons').append($btnOpenReport);  
+        $('#reportButtons').append($btnOpenReport);
         $('button', $btnOpenReport).button();
 
-        setTimeout(function() { 
+        setTimeout(function() {
             // do some formatting
             $('#reportPreview td.cellinside').each( function() {
                 $(this).text(addCommas($(this).text()));

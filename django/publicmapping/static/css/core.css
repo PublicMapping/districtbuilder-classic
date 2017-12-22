@@ -138,7 +138,7 @@ div#steps {
     top:0;
 }
 ul#steps_tabs {
-  background:url(/static-media/images/divider-vert.png) 0 0 repeat-y;
+  background:url(/static/images/divider-vert.png) 0 0 repeat-y;
   border:none;
   padding:0;
   float:left;
@@ -158,7 +158,7 @@ ul#steps_tabs li {
   border-bottom: 1px solid #5F8081 !important;
   border-top: 1px solid #5F8081 !important;
   background-color: transparent;
-  background-image: url(/static-media/images/bg-arrow-button.png);
+  background-image: url(/static/images/bg-arrow-button.png);
   background-position: top right;
   background-repeat:repeat-x;
  -moz-border-radius: 3px 0 3px 0;
@@ -172,12 +172,12 @@ ul#steps_tabs li a:focus {
  }
 
 ul#steps_tabs li.ui-state-default.ui-tabs-selected {
-  background-image: url(/static-media/images/bg-arrow-button-active.png);
+  background-image: url(/static/images/bg-arrow-button-active.png);
   padding-bottom:0;
 }
 
 ul#steps_tabs li.ui-state-default.ui-state-disabled {
-  background-image: url(/static-media/images/bg-arrow-button-disabled.png); 
+  background-image: url(/static/images/bg-arrow-button-disabled.png); 
   opacity: 1; 
   filter: Alpha(Opacity=100);
 }
@@ -247,7 +247,7 @@ div.toolbar .ui-tabs-nav { /*jquery ui tab override */
   border:none;
 }
 
-div.fulltab .toolbar {height: 50px; background: url(/static-media/images/bg-toolbar.png) repeat-x #1a1a1a}
+div.fulltab .toolbar {height: 50px; background: url(/static/images/bg-toolbar.png) repeat-x #1a1a1a}
 div.fulltab  .toolbar h1 {font-size: 21px; color: #fff; padding: 11px 0 0 15px;}
 
 
@@ -294,7 +294,7 @@ div#step_leaderboard {
 
 #leaderboard_nav li.ui-state-active {
   text-decoration:none;
-  background: url(/static-media/images/toolbar-nav-button-active.png) 0 0 no-repeat;
+  background: url(/static/images/toolbar-nav-button-active.png) 0 0 no-repeat;
   -moz-box-shadow: none;
   -webkit-box-shadow: none;
   box-shadow: none;
@@ -411,7 +411,7 @@ div.leaderboard_panels div.leg_selector_container {
 
 
 div.shadow_left {
-background:url(/static-media/images/map-shadow-left.png) no-repeat scroll 0 0 transparent;
+background:url(/static/images/map-shadow-left.png) no-repeat scroll 0 0 transparent;
 bottom:0;
 left:0;
 position:absolute;
@@ -421,7 +421,7 @@ z-index:900;
 }
 
 div.shadow_top {
-background:url(/static-media/images/map-shadow-top.png) repeat-x scroll 0 0 transparent;
+background:url(/static/images/map-shadow-top.png) repeat-x scroll 0 0 transparent;
 height:11px;
 left:11px;
 position:absolute;
@@ -496,7 +496,7 @@ div.tab_content h3#select_plan_title {
 /*plan tab */
 
 div.leg_selector_container {
-  background: url(/static-media/images/divider-horz.png) 0 100% repeat-x;
+  background: url(/static/images/divider-horz.png) 0 100% repeat-x;
   padding: 0 0 12px 0;
   margin: 0 0 12px 0;
 }
@@ -542,7 +542,7 @@ ul#plan_buttons li {
   font-weight:bold;
   padding:8px 0 8px 10px;
   position:relative;
-  background-image: url(/static-media/images/bg-button-lg.png);
+  background-image: url(/static/images/bg-button-lg.png);
   background-position: center center;
   background-repeat:  repeat-x;
   margin-left: 5px;
@@ -634,7 +634,7 @@ tr.ui-state-hover td {
 }
 
 .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
-background: #ececec url("/static-media/images/bg-button-lg.png") center top repeat-x;
+background: #ececec url("/static/images/bg-button-lg.png") center top repeat-x;
 color: #555;
 }
 
@@ -691,7 +691,7 @@ div#form_container {
   margin-bottom: 0px;
 }
 div#chooserFileDownloadTarget .loading {
-    background: url('/static-media/images/chooser-loading.gif') no-repeat left center;
+    background: url('/static/images/chooser-loading.gif') no-repeat left center;
     height:25px;
     width:70px;
 }
@@ -819,7 +819,7 @@ ul#TemplateTypeButtons li {
   padding:13px 0;
   text-align:center;
   position:relative;
-  background-image: url(/static-media/images/bg-button-lg.png);
+  background-image: url(/static/images/bg-button-lg.png);
   background-position: center center;
   background-repeat:  repeat-x;
   
@@ -888,7 +888,7 @@ div#control_header button#choose_layers_button.ui-state-default {
     background-color: #606060;
     margin:0;
     height: 87px;
-    background: url(/static-media/images/bg-button-xl.png) 0 0 repeat-x;
+    background: url(/static/images/bg-button-xl.png) 0 0 repeat-x;
     -moz-box-shadow: 2px 2px 2px rgba(0,0,0,.3);
     -webkit-box-shadow: 2px 2px 2px rgba(0,0,0,.3);
     box-shadow: 2px 2px 2px rgba(0,0,0,.3);
@@ -896,7 +896,7 @@ div#control_header button#choose_layers_button.ui-state-default {
 }
 
 div#control_header button#choose_layers_button .icon-layers {
-    background: url(/static-media/images/icon-map-layers.png) 3px 5px no-repeat;
+    background: url(/static/images/icon-map-layers.png) 3px 5px no-repeat;
     display: block;
     width: 61px;
     height: 49px;
@@ -943,12 +943,12 @@ div#toolbar_plans .planname, #currently_viewing {
 div#toolbar_plans .planname label{font-weight:bold;}
 
 div#toolbar_plans #saveplanbtn {
-  background: url(/static-media/images/icon-save.png) 0 0 no-repeat;
+  background: url(/static/images/icon-save.png) 0 0 no-repeat;
   padding-left:20px;
   
 }
 div#toolbar_plans #difplanbtn {
-  background: url(/static-media/images/icon-open.png) 0 0 no-repeat;
+  background: url(/static/images/icon-open.png) 0 0 no-repeat;
   padding-left:20px;
 }
 
@@ -998,7 +998,7 @@ div#map {
   background-color: #82AFB0;
   background-color: rgba(233, 233, 210, 0.35);
   *background-color: #82AFB0;
-  background-image: url(/static-media/images/bg-button-sm.png);
+  background-image: url(/static/images/bg-button-sm.png);
   background-position:0 0;
   background-repeat:repeat-x;
   text-shadow: 0 -1px rgba(0,0,0,.3);
@@ -1039,7 +1039,7 @@ div#control_header .button_group#control_assign_district {
   }
 div#control_header div.toolset {
   padding: 0;
-  background: url(/static-media/images/bg-header-panel.png) 0 0 repeat-x;
+  background: url(/static/images/bg-header-panel.png) 0 0 repeat-x;
   background-color: #82AFB0;
   background-color: rgba(233,233,210, .35);
   *background-color: #82AFB0;
@@ -1117,76 +1117,76 @@ font-size: 10px; padding-right: 4px;
 
 
 .navigate_map_tool  .ui-icon {
-  background-image: url(/static-media/images/icon-pan.png);
+  background-image: url(/static/images/icon-pan.png);
 }
 .identify_map_tool  .ui-icon {
-  background-image: url(/static-media/images/icon-identify.png);
+  background-image: url(/static/images/icon-identify.png);
 }
 #district_id_map_tool  .ui-icon {
-  background-image: url(/static-media/images/icon-district.png);
+  background-image: url(/static/images/icon-district.png);
 }
 #lock_district_map_tool  .ui-icon {
-  background-image: url(/static-media/images/icon-lock-district.png);
+  background-image: url(/static/images/icon-lock-district.png);
 }
 #single_drawing_tool  .ui-icon {
-  background-image: url(/static-media/images/icon-select.png);
+  background-image: url(/static/images/icon-select.png);
 }
 #rectangle_drawing_tool  .ui-icon {
-  background-image: url(/static-media/images/icon-select-rect.png);
+  background-image: url(/static/images/icon-select-rect.png);
 }
 #polygon_drawing_tool  .ui-icon {
-  background-image: url(/static-media/images/icon-select-poly.png);
+  background-image: url(/static/images/icon-select-poly.png);
 }
 #copy_paste_tool  .ui-icon {
-  background-image: url(/static-media/images/icon-copy-paste.png);
+  background-image: url(/static/images/icon-copy-paste.png);
 }
 #unassign_tool  .ui-icon {
-  background-image: url(/static-media/images/icon-copy-paste.png);
+  background-image: url(/static/images/icon-copy-paste.png);
 }
 #dragdrop_tool .ui-icon {
-  background-image: url(/static-media/images/icon-drop.png);
+  background-image: url(/static/images/icon-drop.png);
 }
 #anchor_tool .ui-icon {
-  background-image: url(/static-media/images/icon-anchor.png);
+  background-image: url(/static/images/icon-anchor.png);
 }
 #history_undo .ui-icon {
-  background-image: url(/static-media/images/icon-undo.png);
+  background-image: url(/static/images/icon-undo.png);
 }
 #history_redo  .ui-icon {
-  background-image: url(/static-media/images/icon-redo.png);
+  background-image: url(/static/images/icon-redo.png);
 }
 #district_select_tool  .ui-icon {
-  background-image: url(/static-media/images/icon-select-district.png);
+  background-image: url(/static/images/icon-select-district.png);
 }
 .delete_set .ui-icon {
-  background-image: url(/static-media/images/icon-trash.png);
+  background-image: url(/static/images/icon-trash.png);
 }
 #fix_unassigned_button .ui-icon {
-  background-image: url(/static-media/images/icon-fix.png);
+  background-image: url(/static/images/icon-fix.png);
 }
 #show_splits_button .ui-icon {
-  background-image: url(/static-media/images/icon-splits.png);
+  background-image: url(/static/images/icon-splits.png);
 }
 
 #generate_splits_report_button .ui-icon {
-  background-image: url(/static-media/images/icon-splits-report.png);
+  background-image: url(/static/images/icon-splits-report.png);
 }
 
 #multi_member_toggle .ui-icon {
-  background-image: url(/static-media/images/icon-members.png);
+  background-image: url(/static/images/icon-members.png);
 }
 
 #print_btn .ui-icon {
-  background-image: url(/static-media/images/icon-print.png);
+  background-image: url(/static/images/icon-print.png);
 }
 #shapefile_btn .ui-icon {
-  background-image: url(/static-media/images/icon-shape-file.png);
+  background-image: url(/static/images/icon-shape-file.png);
 }
 #plan_export_button .ui-icon {
-  background-image: url(/static-media/images/icon-export.png);
+  background-image: url(/static/images/icon-export.png);
 }
 #rawdata_btn .ui-icon {
-  background-image: url(/static-media/images/icon-raw-data.png);
+  background-image: url(/static/images/icon-raw-data.png);
 }
 
 .toolbar_menu_container#plan_export_container { 
@@ -1268,7 +1268,7 @@ div.toolset_group {
   font-size: 11px;
   font-weight:bold;
   cursor:pointer;
-  background: url(/static-media/images/divider-vert.png) 100% 0 repeat-y;
+  background: url(/static/images/divider-vert.png) 100% 0 repeat-y;
   padding: 3px 4px 3px;
   }
   
@@ -1304,7 +1304,7 @@ div#no_edit_at_zoom_level {
 }
 
 #app button, .ui-dialog button {
-    background-image: url(/static-media/images/bg-button-sm.png);
+    background-image: url(/static/images/bg-button-sm.png);
     background-position: 0 0; 
     background-repeat: repeat-x;
     background-color: #333;
@@ -1320,7 +1320,7 @@ div#no_edit_at_zoom_level {
 	
 
 #app .multiple .ui-buttonset .ui-button {
-    background-image: url(/static-media/images/bg-button-sm.png);
+    background-image: url(/static/images/bg-button-sm.png);
     background-position: 0 0; 
     background-repeat: repeat-x;
     background-color: #333;
@@ -1353,7 +1353,7 @@ padding: 0.4em 1em;
 }
     
 #app button.lg, .ui-dialog button.lg {
-    background-image: url(/static-media/images/bg-button-lg.png);
+    background-image: url(/static/images/bg-button-lg.png);
 }
 
 button.toolbar_toggle {
@@ -1397,7 +1397,7 @@ div#stats_options  .ui-button{
 }
  
 div#stats_options .ui-button .ui-icon {
-background: url(/static-media/images/icon-pencil.png) 0 0 no-repeat;
+background: url(/static/images/icon-pencil.png) 0 0 no-repeat;
 }  
 div#stats_options .ui-button .ui-button-text {
   padding-left: 23px; padding-right: 4px;
@@ -1413,10 +1413,10 @@ div#map_menu button.menu_toggle{
 
 
 button.menu_toggle .ui-icon-arrow-right {
-background: url(/static-media/images/icon-arrow.png) 4px 0 no-repeat;
+background: url(/static/images/icon-arrow.png) 4px 0 no-repeat;
 }
 button.menu_toggle .ui-icon-arrow-down {
-background: url(/static-media/images/icon-arrow.png) 2px -14px no-repeat;
+background: url(/static/images/icon-arrow.png) 2px -14px no-repeat;
 }
 
 
@@ -1425,7 +1425,7 @@ div#map_menu_header {
     padding: 8px 0 0 0;
     cursor: pointer;
     width: 270px;
-    background: #82AFB0 url(/static-media/images/bg-header-panel.png) 0 0 repeat-x;
+    background: #82AFB0 url(/static/images/bg-header-panel.png) 0 0 repeat-x;
     
     background-color: rgba(233,233,210, .35);
     *background-color: #82AFB0;
@@ -1541,7 +1541,7 @@ div#legend_swatch_3 {
     background-color: #666666;
 }
 .reference {
-    background: #2BB673 url(/static-media/images/icon-legend-boundary.gif) no-repeat top left;
+    background: #2BB673 url(/static/images/icon-legend-boundary.gif) no-repeat top left;
     border: none;
 }
 table#reference_legend {
@@ -1674,7 +1674,7 @@ div#map_settings_content .ui-slider .ui-slider-handle {
 
 div.plan_summary {
     padding: 10px 10px 15px;
-    background: url(/static-media/images/divider.png) 0 100% repeat-x;
+    background: url(/static/images/divider.png) 0 100% repeat-x;
     color: #3c3c3c;
     line-height: 16px;
     position:relative;
@@ -1836,7 +1836,7 @@ span.poptot {
   border: 2px solid transparent;
 }
 .locked {
-  background: #FF0000 url(/static-media/images/icon-legend-boundary.gif) no-repeat top left;
+  background: #FF0000 url(/static/images/icon-legend-boundary.gif) no-repeat top left;
   border: none;
   padding 2px;
 }
@@ -1895,7 +1895,7 @@ div#stats_legend_panel img  {
 
 div#map_menu button#stats_legend {
   width: 100%;
-  background: #1F8CBE url("/static-media/images/bg-button-sm.png") 0 0 repeat-x;
+  background: #1F8CBE url("/static/images/bg-button-sm.png") 0 0 repeat-x;
   border: 1px solid #ccc;
   margin: 0;
   -moz-border-radius: 0 0 8px 8px;
@@ -1970,7 +1970,7 @@ div#map_menu button#stats_legend {
 .evaluate #description {
 padding: 0 0 10px 0;
 margin-bottom: 10px;
-background: url("/static-media/images/divider-horz.png") 0 100% repeat-x;
+background: url("/static/images/divider-horz.png") 0 100% repeat-x;
 
 }
 
@@ -2003,7 +2003,7 @@ background: url("/static-media/images/divider-horz.png") 0 100% repeat-x;
   clear:both;
   padding: 10px 0;
   margin-bottom: 25px;
-  background: url("/static-media/images/divider-horz.png") repeat-x 100% 0;
+  background: url("/static/images/divider-horz.png") repeat-x 100% 0;
 }
 .evaluate #reportButtons #btnOpenReport {float:right}
 .evaluate #reportButtons #btnPreviewReport {float:left}
@@ -2084,9 +2084,9 @@ background: url("/static-media/images/divider-horz.png") 0 100% repeat-x;
 .stats-nav-buttons {cursor:pointer; position: absolute; right: 0; top:0; margin: 8px; }
 .stats-nav-buttons  {padding-left:10px;}
 .stats-nav-buttons .ui-button-icon-primary {display:none}
-#app .multiple .stats-nav-buttons.ui-buttonset .ui-button.ui-state-active  {background-image: url("/static-media/images/bg-button-sm.png")}
+#app .multiple .stats-nav-buttons.ui-buttonset .ui-button.ui-state-active  {background-image: url("/static/images/bg-button-sm.png")}
 #app .multiple .stats-nav-buttons.ui-buttonset .ui-button:active {background-image:none}
-.stats-nav-buttons .ui-icon-arrow-right {background: url(/static-media/images/icon-arrow-right.png) 0 1px no-repeat; right: 0;}
+.stats-nav-buttons .ui-icon-arrow-right {background: url(/static/images/icon-arrow-right.png) 0 1px no-repeat; right: 0;}
 
 
 #reportPreview .report_panel_title {	
@@ -2167,7 +2167,7 @@ div#nameandshare,
 }
 
 .share #saveandshare .explanation {
-background: url("/static-media/images/divider-horz.png") repeat-x scroll 0 100% transparent;
+background: url("/static/images/divider-horz.png") repeat-x scroll 0 100% transparent;
 padding-bottom: 20px;
 margin-bottom:20px;
 }
@@ -2177,7 +2177,7 @@ margin-bottom:20px;
     width:45%;
 }
 .share #nameandshare {
-   background: url("/static-media/images/divider-horz.png") repeat-x scroll 0 100% transparent;
+   background: url("/static/images/divider-horz.png") repeat-x scroll 0 100% transparent;
     padding-bottom: 15px;
 }
 .share #reportpreview {
@@ -2194,7 +2194,7 @@ margin-bottom:20px;
     margin: 15px 0 30px 0;
 }
 #step_share .loading {
-    background: url('/static-media/images/share-loading.gif') no-repeat left center;
+    background: url('/static/images/share-loading.gif') no-repeat left center;
     text-align: right;
 }
 
@@ -2275,7 +2275,7 @@ div.controlDiv {
     height: 17px;
     left: 27px;
     top:27px;
-    background: url(/static-media/openlayers/img/full-extent-mini.png) 0 0 no-repeat;
+    background: url(/static/openlayers/img/full-extent-mini.png) 0 0 no-repeat;
     background-color: #ffffff;
 }
 div.controlDiv span {
@@ -2347,7 +2347,7 @@ div.districtidtip {
 
 .ui-dialog .ui-dialog-titlebar {
   margin: -0.2em -0.2em 10px -0.2em;
-  background: #6EB29E url("/static-media/images/bg-toolbar.png") 0 0 repeat-x;
+  background: #6EB29E url("/static/images/bg-toolbar.png") 0 0 repeat-x;
   color: #fff;
   padding: .4em 1em .2em .8em;
   font-size: 16px;
@@ -2567,7 +2567,7 @@ span.multi_val.invalid {
 }
 
 .highlighted {
-  background: #007FFF url(/static-media/images/icon-legend-boundary.gif) no-repeat top left;
+  background: #007FFF url(/static/images/icon-legend-boundary.gif) no-repeat top left;
   border: none;
   padding 2px;
 }
@@ -2620,7 +2620,7 @@ span.multi_val.invalid {
     font-weight: bold;
     float: left;
     border: none;
-    background: url("/static-media/images/divider.png") repeat-x 0 100% transparent;
+    background: url("/static/images/divider.png") repeat-x 0 100% transparent;
     cursor: default;
     padding-bottom: 3px;
     padding-right: 38px;

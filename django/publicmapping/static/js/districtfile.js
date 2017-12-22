@@ -164,7 +164,7 @@ districtfile = function(options) {
     var indicatePending = function() {
         if (_visiblyUpdate && !_options.target.children().hasClass('pending')) {
             if (_options.menu_icon != null) {
-                $('.ui-icon', _options.target).css('background-image','url("/static-media/images/share-loading.gif")');
+                $('.ui-icon', _options.target).css('background-image','url("/static/images/share-loading.gif")');
             }
             else {
                 _options.target.empty();

@@ -30,10 +30,10 @@
 {% endcomment %}
 
 {% load redistricting_extras %}
-{% load i18n %}
+{% load i18n static %}
 <div class="leaderboard_panel {% if position|divisibleby:'2' %}even{% else %}odd{% endif %} {{cssclass}}">
   <div class="leaderboard_title">
-    <img src="/static-media/images/icon-help.png" class="leaderboard divtip">
+    <img src="{% static 'images/icon-help.png' %}" class="leaderboard divtip">
     <div class="tooltip"> {{description|safe}}</div>
     {% trans "Top" %} {{ settings.LEADERBOARD_MAX_RANKED|spellnumber|title }} - {{ title|safe }}
   </div>

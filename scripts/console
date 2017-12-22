@@ -21,7 +21,7 @@ then
     else
         docker-compose -f "${DIR}/../docker-compose.yml" \
                        run --rm --service-ports --entrypoint \
-                       "/bin/bash -c" "$1" "${@:2}"
+                       "/bin/bash" "$1" "${@:2}"
     fi
     exit
 fi

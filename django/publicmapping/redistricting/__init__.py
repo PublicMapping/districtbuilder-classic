@@ -35,21 +35,21 @@ class StoredConfig:
     U{https://github.com/PublicMapping/DistrictBuilder/blob/master/docs/config.dist.xml}
     """
 
-    def __init__(self, data, schema=None):
+    def __init__(self, data, schema_file=None):
         """
         Create a new StoredConfiguration on disk.
 
-        @param data: An XML data document, optionally conforming to the schema.
-        @keyword schema: Optional. An XSD schema document, describing the configuration.
+        @param data: An XML data document, optionally conforming to the schema_file.
+        @keyword schema_file: Optional. An XSD schema document, describing the configuration.
         """
-        if schema is not None:
-            if not os.path.exists(schema):
-                logging.warning('Configuration schema could not be found. Please check the path and try again.')
+        if schema_file is not None:
+            if not os.path.exists(schema_file):
+                logging.warning('Configuration schema file could not be found. Please check the path and try again.')
                 raise Exception()
 
-            self.schemafile = schema
+            self.schema_file = schema_file
         else:
-            self.schemafile = None
+            self.schema_file = None
 
         if not os.path.exists(data):
             logging.warning('Configuration data could not be found. Please check the path and try again.')
@@ -70,10 +70,10 @@ class StoredConfig:
 
         # clear any previous xml errors
         clear_error_log()
-        if self.schemafile is not None:
+        if self.schema_file is not None:
             try:
                 # Attempt parsing the schema file
-                schdoc = parse(self.schemafile)
+                schdoc = parse(self.schema_file)
             except XMLSyntaxError, e:
                 # The schema was not parsable XML
                 logging.warning('The schema XML file could not be parsed.')
@@ -83,7 +83,7 @@ class StoredConfig:
                 return False
 
             try:
-                theschema = XMLSchema(schdoc)
+                schema = XMLSchema(schdoc)
             except XMLSchemaParseError, e:
                 # The schema document is XML, but it's not a schema
                 logging.warning('The schema XML file was parsed, but it does not appear to be a valid XML Schema document.')
@@ -94,7 +94,7 @@ class StoredConfig:
 
         try:
             # Attempt parsing the data file
-            thedata = parse(self.datafile)
+            data = parse(self.datafile)
         except XMLSyntaxError, e:
             # The data was not parsable XML
             logging.warning('The data XML file could not be parsed.')
@@ -103,18 +103,18 @@ class StoredConfig:
 
             return False
 
-        if self.schemafile is not None:
-            if theschema.validate(thedata):
-                self.data = thedata
+        if self.schema_file is not None:
+            if schema.validate(data):
+                self.data = data
                 return True
 
             logging.warning('The data does not conform to the provided schema.')
-            for item in theschema.error_log:
+            for item in schema.error_log:
                 logging.info(item)
 
             return False
 
-        self.data = thedata
+        self.data = data
 
         return True
 
@@ -293,9 +293,6 @@ class StoredConfig:
             cfg = self.data.xpath('//Project')[0]
             root_dir = cfg.get('root')
 
-            output.write("\nMEDIA_ROOT = '%s/django/publicmapping/site-media/'\n" % root_dir)
-            output.write("\nSTATIC_ROOT = '%s/django/publicmapping/static-media/'\n" % root_dir)
-
             output.write("\nTEMPLATE_DIRS = (\n  '%s/django/publicmapping/templates',\n)\n" % root_dir)
             output.write("\nSLD_ROOT = '%s/sld/'\n" % root_dir)
 
@@ -312,7 +309,7 @@ class StoredConfig:
             output.write("\nSESSION_TIMEOUT = %d\n" % int(timeout))
 
             # If banner image setting does not exist, defaults to:
-            # '/static-media/images/banner-home.png'
+            # '/static/images/banner-home.png'
             banner = cfg.get('bannerimage')
             if banner:
                 output.write("\nBANNER_IMAGE = '%s'\n" % banner)

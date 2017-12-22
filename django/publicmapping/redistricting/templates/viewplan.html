@@ -10,9 +10,9 @@
 
    Unless required by applicable law or agreed to in writing, software
    distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
-   limitations under the License. 
+   limitations under the License.
 
    This file is part of The Public Mapping Project
    https://github.com/PublicMapping/
@@ -23,78 +23,78 @@
        This template provides basic mapping functionality for viewing and
        navigating districts and plans. The editplan template extends this
        functionality by providing editing tools.
- 
-   Author: 
+
+   Author:
        Andrew Jennings, David Zwarg, Kenny Shepard
 
 {% endcomment %}
 {% load redistricting_extras %}
-{% load i18n %}
+{% load i18n static %}
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="{{ language_code }}">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=8" />        
+    <meta http-equiv="X-UA-Compatible" content="IE=8" />
     <meta name="author" content="David Zwarg, Andrew Jennings, Kenny Shepard" />
     <meta name="copyright" content="&copy; 2010 Micah Altman, Michael McDonald"/>
     <meta property="og:title" content="{% trans "Redistricting plan by DistrictBuilder" %}" />
     <meta property="og:description" content="{% trans "DistrictBuilder is web-based, open source software for collaborative redistricting." %}" />
-    <meta property="og:image" content="/static-media/images/db_sprite.png" />
+    <meta property="og:image" content="{% static 'images/db_sprite.png' %}" />
     <title>{% trans "Open Source District Mapping Tool" %}</title>
-    <link rel="alternate" type="application/atom+xml" title="{% trans "Updated Plans from DistrictBuilder" %}" href="{% url publicmapping.redistricting.views.plan_feed %}"/>
-    <link rel="alternate" type="application/atom+xml" title="{% trans "Recently Shared Plans from DistrictBuilder" %}" href="{% url publicmapping.redistricting.views.share_feed %}"/>
-    <link rel="shortcut icon" href="/static-media/images/favicon.ico" />   
-    <link rel="stylesheet" type="text/css" href="/static-media/css/reset.css"/>
-    <link rel="stylesheet" type="text/css" href="/static-media/jqGrid/css/ui.jqgrid.css"/>
-    <link rel="stylesheet" type="text/css" href="/static-media/jquery/themes/custom-theme/jquery-ui.custom.css"/>
-    <link rel="stylesheet" type="text/css" href="/static-media/css/core.css"/> 
-    <link rel="stylesheet" type="text/css" href="/static-media/css/redistricting.css"/>
+    <link rel="alternate" type="application/atom+xml" title="{% trans "Updated Plans from DistrictBuilder" %}" href="{% url 'plan-feed' %}"/>
+    <link rel="alternate" type="application/atom+xml" title="{% trans "Recently Shared Plans from DistrictBuilder" %}" href="{% url 'share-feed' %}"/>
+    <link rel="shortcut icon" href="{% static 'images/favicon.ico' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/reset.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'jqGrid/css/ui.jqgrid.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'jquery/themes/custom-theme/jquery-ui.custom.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/core.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/redistricting.css' %}"/>
     <!--[if lte IE 7]>
-        <link rel="stylesheet" type="text/css" href="/static-media/css/ie7.css"/>
+        <link rel="stylesheet" type="text/css" href="{% static 'css/ie7.css' %}"/>
         <![endif]-->
-    <link rel="stylesheet" type="text/css" href="/static-media/css/visuals.css"/>   
-    <script type="text/javascript" src="/static-media/openlayers/OpenLayers.js"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/visuals.css' %}"/>
+    <script type="text/javascript" src="{% static 'openlayers/OpenLayers.js' %}"></script>
     {% if "arc" in basemaps %}
-    <script type="text/javascript" src="/static-media/openlayers/ArcGISCache.js"></script>
+    <script type="text/javascript" src="{% static 'openlayers/ArcGISCache.js' %}"></script>
     {% endif %}
 
-    <script type="text/javascript" src="{% url django.views.i18n.javascript_catalog %}"></script>    
+    <script type="text/javascript" src="{% url 'javascript-catalog' %}"></script>
     {% comment %}
 
     Load external javascript libraries.
 
     {% endcomment %}
-    <script type="text/javascript" src="/static-media/jquery/jquery-1.6.2.min.js"></script>
-    <script type="text/javascript" src="/static-media/jquery/jquery-ui-1.8.16.custom.min.js"></script>
-    <script type="text/javascript" src="/static-media/jquery/external/jquery.tools.tooltip.slide.min.js"></script>
-    <script type="text/javascript" src="/static-media/jqGrid/js/i18n/grid.locale-{{ language_code }}.js"></script>
-    <script type="text/javascript" src="/static-media/jqGrid/js/jquery.jqGrid.min.js"></script>
-    <script type="text/javascript" src="/static-media/jqGrid/plugins/grid.postext.js"></script>
-    <script type="text/javascript" src="/static-media/js/sprintf.js"></script>
+    <script type="text/javascript" src="{% static 'jquery/jquery-1.6.2.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'jquery/jquery-ui-1.8.16.custom.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'jquery/external/jquery.tools.tooltip.slide.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'jqGrid/js/i18n/grid.locale-{{ language_code }}.js' %}"></script>
+    <script type="text/javascript" src="{% static 'jqGrid/js/jquery.jqGrid.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'jqGrid/plugins/grid.postext.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/sprintf.js' %}"></script>
     {% comment %}
 
     Load internal javascript logic.
 
     {% endcomment %}
-    <script type="text/javascript" src="/static-media/js/utils.js"></script>
-    <script type="text/javascript" src="/static-media/js/ui.js"></script>
-    <script type="text/javascript" src="/static-media/js/viewablesorter.js"></script>
-    <script type="text/javascript" src="/static-media/js/mapping.js"></script>
-    <script type="text/javascript" src="/static-media/js/districtfile.js"></script>
-    <script type="text/javascript" src="/static-media/js/chooseplan.js"></script>
-    <script type="text/javascript" src="/static-media/js/reaggregator.js"></script>
-    <script type="text/javascript" src="/static-media/js/shareddistricts.js"></script>
-    <script type="text/javascript" src="/static-media/js/reports.js"></script>
-    <script type="text/javascript" src="/static-media/js/register.js"></script>
-    <script type="text/javascript" src="/static-media/js/statisticssets.js"></script>
-    <script type="text/javascript" src="/static-media/js/splitsreport.js"></script>
-    <script type="text/javascript" src="/static-media/js/sha1.js"></script>
-    <script type="text/javascript" src="/static-media/js/layerchooser.js"></script>
-    <script type="text/javascript" src="/static-media/js/print.js"></script>
-    <script type="text/javascript" src="/static-media/js/multimember.js"></script>
+    <script type="text/javascript" src="{% static 'js/utils.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/ui.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/viewablesorter.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/mapping.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/districtfile.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/chooseplan.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/reaggregator.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/shareddistricts.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/reports.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/register.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/statisticssets.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/splitsreport.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/sha1.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/layerchooser.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/print.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/multimember.js' %}"></script>
 
     {% if "bing" in basemaps %}
-    <script src="http://ecn.dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=6.2&mkt=en-us"></script> 
+    <script src="http://ecn.dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=6.2&mkt=en-us"></script>
     {% endif %}
     {% if "google" in basemaps %}
     <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAjpkAC9ePGem0lIq5XcMiuhR_wWLPFku8Ix9i2SXYRVK3e45q1BQUd_beF8dtzKET_EteAjPdGDwqpQ"></script>
@@ -103,9 +103,9 @@
     {% comment %}
 
     Initialize the variables required for rendering the map on this page.
-    These variables are pulled from the django settings module, and 
+    These variables are pulled from the django settings module, and
     dynamically computed from the current plan of interest.
-    
+
     {% endcomment %}
     <script type="text/javascript">
         // The name of the map server that serves up map tiles.
@@ -146,14 +146,14 @@
         var UNASSIGNED_DISTRICT_ID = {% if unassigned_id %}{{ unassigned_id }}{% else %}0{% endif %};
         // An array of configuration settings for the layers that are
         // used to select geography.
-        var SNAP_LAYERS = [ {% for snap in snaplayers %}{ 
-            geolevel: {{ snap.geolevel }}, 
+        var SNAP_LAYERS = [ {% for snap in snaplayers %}{
+            geolevel: {{ snap.geolevel }},
             level: '{{ snap.level }}',
-            layer: '{{ snap.layer }}', 
+            layer: '{{ snap.layer }}',
             long_description: '{{ snap.long_description }}',
-            min_zoom: {{ snap.min_zoom }} 
+            min_zoom: {{ snap.min_zoom }}
         }{% if not forloop.last %},{% endif %}{% endfor %} ];
-        // An array of demographic settings for the choropleth variations 
+        // An array of demographic settings for the choropleth variations
         // of the snap layer
         var DEMOGRAPHICS = [ {% for demo in demographics %}{
             id: {{ demo.id }},
@@ -161,8 +161,8 @@
             value: '{{ demo.value }}',
             isdefault: {{ demo.isdefault }},
             isdisplayed: {{ demo.isdisplayed }} }{% if not forloop.last %},{% endif %} {% endfor %} ];
-        var MAP_LAYERS = []; 
-        for (var i = 0; i < SNAP_LAYERS.length; i++) { 
+        var MAP_LAYERS = [];
+        for (var i = 0; i < SNAP_LAYERS.length; i++) {
             MAP_LAYERS.push( NAMESPACE + ':demo_' + SNAP_LAYERS[i].level + '_none' );
             for (var j = 0; j < DEMOGRAPHICS.length; j++) {
                 MAP_LAYERS.push( NAMESPACE + ':demo_' + SNAP_LAYERS[i].level + '_' + DEMOGRAPHICS[j].value );
@@ -174,7 +174,7 @@
         var BODY_MEMBER_LONG = '{{ body_member_long_label }}';
         var BODY_MEMBERS = '{{ body_members }}';
         var LEGISLATIVE_BODY = '{{ plan.legislative_body.name|lower }}';
-        // This settings determines whether a staff member is viewing the page in debug mode. 
+        // This settings determines whether a staff member is viewing the page in debug mode.
         // It can be used to display messages to help with debugging and/or configuration
         var DEBUG = {{ debugging_staff|lower }};
         {% if upload %}
@@ -206,7 +206,7 @@
 
   </head>
   <body onload="init();" id="app">
- 
+
 
 
   <div id="steps" style="visibility: hidden;">
@@ -217,7 +217,7 @@
       Under section 4.3 of the license following section may not be altered
       without the express written permission of the copyright holders.
       {% endcomment %}
-      <div id="logo"><a href="/"><img src="/static-media/images/title-app.png" alt="DistrictBuilder" /></a></div>
+      <div id="logo"><a href="/"><img src="{% static 'images/title-app.png' %}" alt="DistrictBuilder" /></a></div>
       {% comment %}
       ATTRIBUTION NOTICE SECTION ENDS
       {% endcomment %}
@@ -230,7 +230,7 @@
         <li id="tab_leaderboard" class="rounded"><a href="#step_leaderboard">{% trans "Leaderboards" %}</a></li>
         {% endif %}
       </ul>
-      
+
     {% csrf_token %}
 
     <div id="site_nav">
@@ -245,7 +245,7 @@
             {% else %}
             {% comment %}
 
-            If the user is logged in, display a link to an account 
+            If the user is logged in, display a link to an account
             management panel, and a logout link.
 
             {% endcomment %}
@@ -258,8 +258,8 @@
         </ul>
     </div>
     <div class="clear"></div>
-  </div>   
-      
+  </div>
+
    <div id="step_plan" class="main_content plan fulltab">
      <div class="shadow_left"></div>
      <div class="shadow_top"></div>
@@ -305,7 +305,7 @@
                 <div id="search_filter" ></div>
                 <input id="plan_search" type="search" placeholder="{% trans "Search" %}" />
                 <table id="plan_table"></table>
-                <div id="plan_table_pager"></div>  
+                <div id="plan_table_pager"></div>
             </div>
           <div id="upload_selection" class="middlecolumn" >
               <label>{% trans "Upload a District Index file:" %}</label>
@@ -336,8 +336,8 @@
                   </div>
                   {% endif %}
               </form>
-          </div>      
-          
+          </div>
+
             <div id="form_column">
                 <div id="form_action">
                     <div>
@@ -364,10 +364,10 @@
                     <h3>{% trans "Plan Details" %}</h3>
                       <label id="owner_label" for="owner">{% trans "User Name:" %}</label>
                       <input disabled type="text" id="owner" name="fields.owner" /><br/>
-                      
+
                       <label id="name_label" for="name">{% trans "Plan Name:" %}</label>
                       <input disabled type="text" id="name" name="fields.name" />
-                      
+
                       <label id="description_label" for="description">{% trans "Description:" %}</label>
                       <textarea disabled type="text" id="description" name="fields.description" rows="5" ></textarea><br/>
 
@@ -418,7 +418,7 @@
             {% endcomment %}
             {% endblock %}
             </div>
-            
+
             {% block toolset_tabs %}
               {% comment %}
 
@@ -427,10 +427,10 @@
               {% endcomment %}
               <ul class="mapping_tabs">
                 <li><a href="#toolset_draw">{% trans "Map Tools" %}</a></li>
-              </ul>  
+              </ul>
             {% endblock %}
-            
-  
+
+
 
           {% block toolset_draw %}
           {% comment %}
@@ -457,7 +457,7 @@
                </div>
               <div class="clear"></div>
             </div>
-          {% endblock %} 
+          {% endblock %}
 
           {% block toolset_district %}
           {% comment %}
@@ -488,7 +488,7 @@
 
               <ul class="mapping_tabs">
                 <li><a href="#sidebar_content"><button class="menu_toggle"></button>{% trans "Statistics" %}</a></li>
-              </ul> 
+              </ul>
                 <div class="sidebar_content">
                   <div id="map_menu_header">
                       <select></select>
@@ -507,7 +507,7 @@
 
           <div id="map_settings_content">
              <div id="map_type_content_container"></div>
-            <div id="opacity_slider"></div>          
+            <div id="opacity_slider"></div>
             <div id="reference_layer_id" class="layer_type_container">
                 <div id="reference_layer_label">{% trans "Reference Layer:" %}</div>
                 <div id="reference_layer_name">{% trans "None" %}</div>
@@ -537,11 +537,11 @@
                             {% trans "Select reference layer(s) for comparison." %}</div>
                         <div id="splits_report_available_layers">
                             {% for snap in snaplayers %}
-                            {% if not forloop.last %}                    
+                            {% if not forloop.last %}
                             <div class="layer_choice_wrapper">
                                 <input id="geolevel.{{ snap.geolevel }}" class="layer_choice" type="checkbox" value="geolevel.{{ snap.geolevel }}" />
                                 <label for="geolevel.{{ snap.geolevel }}">{{ snap.long_description }}</label>
-                            </div>                  
+                            </div>
                             {% endif %}
                             {% endfor %}
                         </div>
@@ -550,7 +550,7 @@
                         <div class="inverse_choice_wrapper">
                             <input id="inverse_choice" type="checkbox" />
                             <label id="inverse_choice_label" for="inverse_choice">{% trans "Reverse splits detection" %}</label>
-                        </div>                  
+                        </div>
 
                         <div class="extended_choice_wrapper">
                             <input id="extended_choice" type="checkbox" />
@@ -561,7 +561,7 @@
                             <div id="extended_choice_label_warning">
                                 {% trans "(Choosing this option will significantly increase the amount of time it takes to generate the report.)" %}
                             </div>
-                        </div>                  
+                        </div>
 
                         <div id="splits_report_ok_div">
                             <button id="splits_report_ok_button">{% trans "Generate Report" %}</button>
@@ -594,16 +594,16 @@
                     }).init();
                 });
             </script>
-             
+
           <div id="map_legend">
               <button id="legend_toggle">{% trans "Map Legend" %}</button>
           </div>
           {% comment %}
-          
+
           These hidden divs are used to style districts.
           This is needed because the legend items do not
           exist before the district layer is drawn.
-          
+
           {% endcomment %}
           <div class="locked" style="display:none"></div>
           <div class="highlighted" style="display:none"></div>
@@ -707,7 +707,7 @@
             </div>
           </div>
           <div id="reportPreviewContainer">
-            <div id="reportPreview" class="report multiple"><div class="reportStatus"><img src="/static-media/images/icon-table-lg.png" /><h1>{% trans "Please generate a report<br/>to preview statistics" %}</h1></div></div>
+            <div id="reportPreview" class="report multiple"><div class="reportStatus"><img src="{% static 'images/icon-table-lg.png' %}" /><h1>{% trans "Please generate a report<br/>to preview statistics" %}</h1></div></div>
           </div>
 
         {% else %}
@@ -715,19 +715,19 @@
             <div class="alt_reports">
             {% include reporting_template %}
             </div>
-          {% endif %} 
+          {% endif %}
         {% endif %}
         </div>
       </div>
     </div>
-    {% if has_leaderboard and not plan.is_community %}        
+    {% if has_leaderboard and not plan.is_community %}
     <div id="step_leaderboard" class="main_content leaderboard fulltab">
       <div class="shadow_left"></div>
       <div class="shadow_top"></div>
       <div class="toolbar  ui-widget-header" id="leaderboard_tabs">
           <ul id="leaderboard_nav">
               <li id="tab_topranked"><a href="#leaderboard_topranked_surrogate">{% trans "Top Ranked Users' Plans" %}</a><li>
-              {% if is_registered %}                  
+              {% if is_registered %}
               <li id="tab_myranked"><a href="#leaderboard_myranked_surrogate">{% trans "My Ranked Plans" %}</a></li>
               {% endif %}
           </ul>
@@ -736,18 +736,18 @@
 
           {% comment %}
 
-          These two 'surrogate' divs are needed due to changes in the jQuery UI Tab control 
+          These two 'surrogate' divs are needed due to changes in the jQuery UI Tab control
           that make it so the tab content divs are required to be within the parent tab control.
-          Without a complete stylistic redesign, the simplest workaround is to intercept tab 
+          Without a complete stylistic redesign, the simplest workaround is to intercept tab
           change events to these fake containers to hide/show the real containers (below).
 
           {% endcomment %}
           <div id="leaderboard_topranked_surrogate"></div>
-          {% if is_registered %}                  
+          {% if is_registered %}
           <div id="leaderboard_myranked_surrogate"></div>
           {% endif %}
        </div>
-    
+
       <div class="tab_content">
           {% ifnotequal leaderboard_bodies|length 1 %}
           <div class="leaderboard_panels">
@@ -768,7 +768,7 @@
           {% endifequal %}
 
           <div id="leaderboard_topranked"></div>
-          {% if is_registered %}                  
+          {% if is_registered %}
           <div id="leaderboard_myranked"></div>
           {% endif %}
       </div>
@@ -783,8 +783,8 @@
               {% block share_panel %}
               {% comment %}
 
-              Define a block entitled 'share_panel': this panel would show 
-              sharing options in an editor interface, but the default 
+              Define a block entitled 'share_panel': this panel would show
+              sharing options in an editor interface, but the default
               viewer does not have that capability.
 
               {% endcomment %}
@@ -793,7 +793,7 @@
                   <p>{% trans "Anyone can view this plan by visiting the following URL in a web browser:" %}</p>
                   <div id="share_url">
                       <script type="text/javascript">document.write(window.location.protocol, '//',
-                         window.location.host, '{% url publicmapping.redistricting.views.viewplan planid=plan.id %}');
+                         window.location.host, "{% url 'plan-view' planid=plan.id %}");
                       </script>
                  <ul class="share-buttons">
                   <li class="twitter-tweet">
@@ -801,7 +801,7 @@
                       {% trans "Tweet" %}
                     </a>
                     <script type="text/javascript" src="https://platform.twitter.com/widgets.js"></script>
-                  </li>   
+                  </li>
 
                   <li class="facebook-like">
                     <div id="fb-root"></div>
@@ -813,7 +813,7 @@
                     <script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
                     <g:plusone size="medium"></g:plusone>
                   </li>
-                </ul>            
+                </ul>
                   <div class="clear"></div>
                   </div>
               </div>
@@ -822,8 +822,8 @@
                   <h3>{% trans "Plan File Export" %}</h3>
                   <p>{% blocktrans with body_member_long_label|lower as bmlll %}
                   The {{ bmlll }} index file is a comma-separated-value file (csv).
-                  Each line lists the unique id of the building blocks of each {{ plan_text }} 
-                  (such as ward, census block, etc.) and the district to which it belongs. This 
+                  Each line lists the unique id of the building blocks of each {{ plan_text }}
+                  (such as ward, census block, etc.) and the district to which it belongs. This
                   file can be imported to your account or someone else's account or used in analysis
                   of the {{ plan_text }} using other GIS software.
                   {% endblocktrans %}
@@ -842,14 +842,14 @@
         {% endcomment %}
         {% endblock %}
     </div>
-</div>  
+</div>
 <div id="toolbar_plans">
-     <div class="toolset_group first"> 
+     <div class="toolset_group first">
        <div class="planname">
           {% if plan.name %}
           {% comment %}
 
-          If a plan exists and has a name, show the plan name at the 
+          If a plan exists and has a name, show the plan name at the
           bottom left of the map.
 
           {% endcomment %}
@@ -872,12 +872,12 @@
       </div>
      </div>
      {% if plan.name %}
-     <div class="toolset_group"> 
+     <div class="toolset_group">
        <div>
           {% comment %}
-          
+
           This label shows which layer is visible at the current zoom level.
-          
+
           {% endcomment %}
          <label>
            {% trans "Currently Viewing:" %}&nbsp;<span id="currently_viewing"></span>
@@ -939,7 +939,7 @@ Include the shared_districts markup if we're using the copy/paste tool
               <h2>1. {% blocktrans with layer_type='<span id="layer_type">Layer</span>' %}Select {{ layer_type }} Thematic Map{% endblocktrans %}</h2>
               <select id="showby" class="indented fillwidth" autocomplete="off">
                   <option value="none">{% trans "None" %}</option>
-                  {% for demo in demographics %}              
+                  {% for demo in demographics %}
                       <option value="{{ demo.value }}" {% if demo.isdefault == "true" %}selected=true{% endif %}>
                           {{ demo.text }}
                       </option>
@@ -947,13 +947,13 @@ Include the shared_districts markup if we're using the copy/paste tool
               </select>
             </div>
 
-            
+
             <div class="dialog_step" {% if plan.is_community %}style="display: none;"{% endif %}>
                 <h2>2. {% trans "Choose District Thematic Map" %}</h2>
                 {% comment %}
 
                 Dynamically populate the "Show Districts by:" dropdown,
-                based on the demographics that are configured in the 
+                based on the demographics that are configured in the
                 application.
 
                 {% endcomment %}
@@ -976,7 +976,7 @@ Include the shared_districts markup if we're using the copy/paste tool
                     {% endfor %}
                 </select>
             </div>
-            
+
             <div class="dialog_step">
               <h2>{% if plan.is_community %}2{% else %}3{% endif %}. {% trans "Choose a Reference Layer" %}</h2>
               <select id="reference_layer_select" class="indented fillwidth" autocomplete="off">
@@ -1052,15 +1052,15 @@ Include the stats editor if user can edit stats.
 <div id="stats_editor_container" class="stats_editor"
         title="{% trans "Edit Statistics Sets" %}" >
     <div id="stats_editor_instructions">
-        <h3>{% blocktrans %}You can select up to three statistics at once to display in 
-        the sidebar. Each set of three statistics will be saved in the dropdown 
-        for you to select or edit later. You may have up to three sets of 
+        <h3>{% blocktrans %}You can select up to three statistics at once to display in
+        the sidebar. Each set of three statistics will be saved in the dropdown
+        for you to select or edit later. You may have up to three sets of
         statistics saved.{% endblocktrans %}</h3>
     </div>
     1. {% trans "Select up to 3 statistics" %}
     <button id="clear_statistics">{% trans "Clear Choices" %}</button>
     <div id="available_statistics"> </div>
-    
+
     <div id="name_statistics_set">
         2. {% trans "Name Statistics Set" %}
         <input type="text" id="statistics_set_name" maxlength="50" />
@@ -1148,16 +1148,16 @@ Include the markup for the account management panel.
         // initialize the print feature
         var printer = printplan({
             target: $('#print_btn'),
-            height: 850, 
+            height: 850,
             width: 1024,
-            plan: PLAN_ID
+            plan: 0
         });
         printer.init();
     {% if plan.name %}
     {% comment %}
 
     If a plan exists, then load the geographic and demographic information
-    about this plan for display in the sidebar menu and display the draw tab. 
+    about this plan for display in the sidebar menu and display the draw tab.
 
     {% endcomment %}
         $('#steps').tabs('select', '#step_draw');
@@ -1165,7 +1165,7 @@ Include the markup for the account management panel.
         var exportShape = districtfile({
             target: $('#shapefile_btn'),
             type: 'shape',
-            menu_icon: '/static-media/images/icon-shape-file.png'
+            menu_icon: '{% static 'images/icon-shape-file.png' %}'
         });
         exportShape.init();
 
@@ -1173,11 +1173,11 @@ Include the markup for the account management panel.
         var exportRaw = districtfile({
             target: $('#rawdata_btn'),
             type: 'index',
-            menu_icon: '/static-media/images/icon-raw-data.png'
+            menu_icon: '{% static 'images/icon-raw-data.png' %}'
         });
         exportRaw.init();
 
-        // Load up the district index file checker whenever the 
+        // Load up the district index file checker whenever the
         // appropriate tab is clicked.
         var exportIndexFile = districtfile({
             target: $('#districtIndexFileTarget'),
@@ -1190,7 +1190,7 @@ Include the markup for the account management panel.
             }
         }});
 
-        if (typeof(stats) == 'undefined') { 
+        if (typeof(stats) == 'undefined') {
             stats = statisticssets({}).init();
         }
 

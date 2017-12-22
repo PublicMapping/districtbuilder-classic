@@ -30,10 +30,10 @@
 {% endcomment %}
 
 {% load redistricting_extras %}
-{% load i18n %}
+{% load i18n static %}
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <link rel="stylesheet" type="text/css" href="/static-media/css/reports.css"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/reports.css' %}"/>
   </head>
 
   <body>

@@ -116,7 +116,7 @@ def loadbard(request):
     else:
         msg = 'Bard will not be loaded - wrong server config or reports off.\n%s' % msg
 
-    return HttpResponse(msg, mimetype='text/plain')
+    return HttpResponse(msg, content_type='text/plain')
 
 
 def get_named_vector(parameter_string, rname, tag = None):
@@ -198,7 +198,7 @@ def getreport(request):
                 print "Quitting request, because BARD is not ready."
 
             drop_error(tempdir, basename, 'BARD is not enabled.')
-            return HttpResponse(json.dumps(status),mimetype='application/json')
+            return HttpResponse(json.dumps(status),content_type='application/json')
         else:
             status['reason'] = 'Reports functionality is not ready. Please try again later.'
             loadbard(True)
@@ -213,14 +213,14 @@ def getreport(request):
             if maxwait <= 0:
                 status['reason'] = 'Waiting for BARD to load timed out.'
                 drop_error(tempdir, basename, 'BARD load timed out.')
-                return HttpResponse(json.dumps(status), mimetype='application/json') 
+                return HttpResponse(json.dumps(status), content_type='application/json') 
     #Get the variables from the request
     if request.method != 'POST':
         status['reason'] = 'Information for report wasn\'t sent via POST'
         if settings.DEBUG:
             print "Quitting request, because the request wasn't POSTed."
         drop_error(tempdir, basename, 'Requested items were not delivered via POST.')
-        return HttpResponse(json.dumps(status),mimetype='application/json')
+        return HttpResponse(json.dumps(status),content_type='application/json')
 
     sorted_district_list = request.POST.get('district_list').split(';')
     nseat_param = request.POST.get('nseats')
@@ -240,7 +240,7 @@ def getreport(request):
         if settings.DEBUG:
             print traceback.format_exc()
         drop_error(tempdir, basename, 'Could not create BARD plan from map.')
-        return HttpResponse(json.dumps(status),mimetype='application/json')
+        return HttpResponse(json.dumps(status),content_type='application/json')
 
     if settings.DEBUG:
         print "Created assigned plan."
@@ -330,7 +330,7 @@ ratioVars =
             print traceback.format_exc()
         status['reason'] = 'Exception: %s' % traceback.format_exc()
         drop_error(tempdir, basename, traceback.format_exc())
-        return HttpResponse(json.dumps(status),mimetype='application/json')
+        return HttpResponse(json.dumps(status),content_type='application/json')
 
     if settings.DEBUG:
         print "Variables loaded, starting BARD."
@@ -376,9 +376,9 @@ ratioVars =
         status['reason'] = 'Exception: %s' % ex
         drop_error(tempdir, basename, traceback.format_exc())
 
-    return HttpResponse(json.dumps(status),mimetype='application/json')
+    return HttpResponse(json.dumps(status),content_type='application/json')
 
 @csrf_exempt
 def index(request):
     global bardWorkSpaceLoaded
-    return HttpResponse('Greetings from the BARD Report server.\n(Reporting:%s)' % bardWorkSpaceLoaded, mimetype='text/plain')
+    return HttpResponse('Greetings from the BARD Report server.\n(Reporting:%s)' % bardWorkSpaceLoaded, content_type='text/plain')

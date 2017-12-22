@@ -152,7 +152,7 @@ reports = function(options) {
         }
 
         var statusDiv = $('<div class="reportStatus" />');
-        statusDiv.append('<img class="reportLoading" src="/static-media/images/loading-large.gif" />');
+        statusDiv.append('<img class="reportLoading" src="/static/images/loading-large.gif" />');
         statusDiv.append($('<h1 id="genreport" />').text(gettext('Generating Report')));
         statusDiv.append($('<p />').text(gettext('You may use the rest of the application while the report is building.')));
         statusDiv.append($('<p />').text(gettext('A preview of your report will appear in this space when it is ready.')));

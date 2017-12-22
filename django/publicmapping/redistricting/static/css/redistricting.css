@@ -80,7 +80,7 @@
 #name_statistics_set input {margin: 0 5px}
 
 .statistics_set {
-    background: #fdfdfd url("/static-media/images/bg-button-sm.png") 0 15px repeat-x;
+    background: #fdfdfd url("/static/images/bg-button-sm.png") 0 15px repeat-x;
     border: 1px solid #CCCCCC;
     font-size: 12px;
     font-weight: bold;
@@ -112,7 +112,7 @@
     height: 60px;
     margin: 20px;
     border: solid 1px #A4C1C1;
-    background-image: url('/static-media/images/chooser-loading.gif');
+    background-image: url('/static/images/chooser-loading.gif');
     background-position: 50% 75%;
     background-repeat: no-repeat;
     text-align: center;

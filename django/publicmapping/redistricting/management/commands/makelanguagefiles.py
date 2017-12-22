@@ -65,7 +65,7 @@ class Command(BaseCommand):
                     extensions=['html','txt','email'],
                     interactive=False,
                     verbosity=options.get('verbosity'),
-                    ignore_patterns=[ 'static-media/jquery/*.*']
+                    ignore_patterns=[ 'static/jquery/*.*']
                 )
 
             # Make messages for javascript
@@ -75,7 +75,7 @@ class Command(BaseCommand):
                     domain='djangojs',
                     interactive=False,
                     verbosity=options.get('verbosity'),
-                    ignore_patterns=[ 'static-media*' ]
+                    ignore_patterns=[ 'static*' ]
                 )
 
             # Compile message file

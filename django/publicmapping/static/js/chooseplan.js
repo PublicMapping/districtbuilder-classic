@@ -275,7 +275,7 @@ chooseplan = function(options) {
     // Formatter used to display images in the shared column of the jqGrid
     $.extend($.fn.fmatter, {
         sharedImageFormatter: function (shared) {
-            return "<img height='16' width='16' src='/static-media/images/icon-" + ((shared) ? "" : "un") + "shared.png' />";
+            return "<img height='16' width='16' src='/static/images/icon-" + ((shared) ? "" : "un") + "shared.png' />";
         }, 
 
         // Formatter used for dates. The server returns a UTC timestamp
@@ -288,7 +288,8 @@ chooseplan = function(options) {
                  var offset = newDate.getTimezoneOffset() * 60000;
                  newDate = new Date(newDate - offset);
             }
-            return $.fn.fmatter.date(newDate.valueOf(), options, rowdata, 'show');
+            return newDate;
+            // return $.fn.fmatter.date(newDate.valueOf(), options, rowdata, 'show');
         },
 
         // Formatter used to display the "trash can" image in the delete
@@ -296,7 +297,7 @@ chooseplan = function(options) {
         deleteFormatter: function (a, b, obj) {
             var id = "delete-" + obj.pk;
             return "<img id='" + id  + "' class='delclick' height='16'" + 
-                "width='16' src='/static-media/images/icon-trash.png' alt='" +
+                "width='16' src='/static/images/icon-trash.png' alt='" +
                 obj.fields.name + "' />";
         },
 

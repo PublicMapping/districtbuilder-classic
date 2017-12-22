@@ -5143,7 +5143,7 @@ jQuery.extend({
 				s.accepts._default );
 		} catch(e) {}
 
-		// Allow custom headers/mimetypes and early abort
+		// Allow custom headers/content_types and early abort
 		if ( s.beforeSend && s.beforeSend.call(callbackContext, xhr, s) === false ) {
 			// Handle the global AJAX counter
 			if ( s.global && ! --jQuery.active ) {
