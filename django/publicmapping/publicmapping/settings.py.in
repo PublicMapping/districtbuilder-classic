@@ -209,6 +209,8 @@ STATICFILES_FINDERS = (
 
 SLD_ROOT = '/projects/PublicMapping/DistrictBuilder/sld/'
 
+WEB_TEMP = '/tmp'
+
 CONCURRENT_SESSIONS = 5
 SESSION_TIMEOUT = 15
 
