@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
+import logging.config
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -127,6 +128,34 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+LOGGING_CONFIG = None
+LOG_LEVEL = os.getenv('LOG_LEVEL', 'INFO')
+
+logging.config.dictConfig({
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'datefmt': '%Y-%m-%d %H:%M:%S %z',
+            'format': ('[%(asctime)s] [%(process)d] [%(levelname)s]'
+            ' %(message)s'),
+        }
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+    },
+    'loggers': {
+        '': {
+            'handlers': ['console'],
+            'level': LOG_LEVEL,
+        },
+    }
+})
+
+
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 
@@ -179,6 +208,8 @@ STATICFILES_FINDERS = (
 )
 
 SLD_ROOT = '/projects/PublicMapping/DistrictBuilder/sld/'
+
+WEB_TEMP = '/tmp'
 
 CONCURRENT_SESSIONS = 5
 SESSION_TIMEOUT = 15
