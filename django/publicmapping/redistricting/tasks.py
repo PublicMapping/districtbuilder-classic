@@ -32,7 +32,7 @@ from django_comments.models import Comment
 from django.contrib.sessions.models import Session
 from django.contrib.sites.models import Site
 from django.core.mail import send_mail, mail_admins, EmailMessage
-from django.template import loader, Context as DjangoContext
+from django.template import loader
 from django.db import connection, transaction
 from django.db.models import Sum, Min, Max, Avg
 from django.conf import settings
@@ -171,9 +171,10 @@ class DistrictIndexFile():
             error_subject = _("Problem importing your uploaded file.")
             success_subject = _("Upload and import plan confirmation.")
             admin_subject = _("Problem importing user uploaded file.")
-
-            context = DjangoContext({'user': owner, 'errors': list()})
-
+            context = {
+                'user': owner,
+                'errors': list()
+            }
         # Is this filename a zip archive?
         if filename.endswith('.zip'):
             try:
@@ -657,7 +658,7 @@ class DistrictIndexFile():
 
         # Add it as an attachment and send the email
         template = loader.get_template('submission.email')
-        context = DjangoContext({'user': user, 'plan': plan, 'post': post})
+        context = {'user': user, 'plan': plan, 'post': post}
         email = EmailMessage()
         email.subject = _(
             'Competition submission (user: %(username)s, planid: %(plan_id)d)'
@@ -675,7 +676,7 @@ class DistrictIndexFile():
         subject = _("Plan submitted successfully")
         user_email = post['email']
         template = loader.get_template('submitted.email')
-        context = DjangoContext({'user': user, 'plan': plan})
+        context = {'user': user, 'plan': plan}
         send_mail(
             subject,
             template.render(context),
@@ -1342,10 +1343,9 @@ class CalculatorReport:
             html = _('Error creating calculator report.')
 
         # Add to report container template
-        html = loader.get_template('report_panel_container.html').render(
-            DjangoContext({
-                'report_panels': html
-            }))
+        html = loader.get_template('report_panel_container.html').render({
+            'report_panels': html
+        })
 
         # Write it to file
         tempdir = settings.WEB_TEMP
@@ -2117,11 +2117,9 @@ def clean_quarantined(upload_id, language=None):
         logger.warn('Could not reset the is_valid flag on all plans.')
 
     status = {
-        'task_id':
-        None,
-        'success':
-        True,
-        'messages': [
+        'task_id':None,
+        'success':True,
+        'messages':[
             _('Upload complete. Subject "%(subject_name)s" added.') % {
                 'subject_name': upload.subject_name
             }
