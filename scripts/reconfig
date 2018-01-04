@@ -1,0 +1,40 @@
+#!/bin/bash
+set -e
+
+if [[ -n "${DB_DEBUG}" ]]; then
+    set -x
+fi
+
+function usage() {
+
+    echo -n \
+         "Usage: $(basename "$0")
+
+Re-copy configuration files. Run from outside the VM.
+"
+}
+
+function recopy_config() {
+
+    if  [ "$(whoami)" = "vagrant" ]; then
+        echo "Run this from outside the vm instead"
+        exit 1;
+    fi
+
+    echo "Re-copying settings and config files"
+    publicmapping_app_dir="django/publicmapping/publicmapping"
+    config_dir="django/publicmapping/config"
+    cp "${publicmapping_app_dir}/settings.py.in" "${publicmapping_app_dir}/settings.py"
+    cp "${config_dir}/config.dist.xml" "${config_dir}/config.xml"
+}
+
+if [ "${BASH_SOURCE[0]}" = "${0}" ]
+then
+    if [ "${1:-}" = "--help" ]
+    then
+        usage
+    else
+        recopy_config
+    fi
+    exit
+fi
