@@ -1,0 +1,6 @@
+---
+# defaults file for district-builder.config
+
+copy_ops:
+  - { src: django/publicmapping/publicmapping/settings.py.in, dst: django/publicmapping/publicmapping/settings.py }
+  - { src: django/publicmapping/config/config.dist.xml, dst: django/publicmapping/config/config.xml }
