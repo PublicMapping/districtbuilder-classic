@@ -10,7 +10,6 @@ django-redis==4.8.0
 django-rosetta==0.7.13
 django-staticfiles==1.2.1
 django-tagging==0.4.5
-django-sld==1.0.7
 django-contrib-comments==1.8.0
 django-extensions==1.9.1
 polib==1.0.8
@@ -24,3 +23,4 @@ xhtml2pdf==0.0.6
 html5lib==1.0b8
 git+git://github.com/PublicMapping/modestmaps-py.git@db-mod_1.4
 lxml==3.8.0
+colorbrewer==0.1.1

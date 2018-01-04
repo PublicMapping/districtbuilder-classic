@@ -39,13 +39,13 @@ from datetime import datetime, timedelta, tzinfo
 import httplib
 import polib
 import sld
+import sld_generator as generator
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.sessions.models import Session
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Avg, Model
 from django.utils.translation import ugettext as _
-from djsld import generator
 from redistricting.models import (
     ContiguityOverride,
     Geolevel,

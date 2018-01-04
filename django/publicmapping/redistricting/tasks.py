@@ -43,7 +43,7 @@ from tagging.utils import parse_tag_input
 from tagging.models import Tag, TaggedItem
 from datetime import datetime
 from lxml import etree, objectify
-from djsld import generator
+import sld_generator as generator
 import csv, time, zipfile, tempfile, os, sys, traceback, time
 import socket, urllib2, logging, re
 
