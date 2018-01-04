@@ -47,9 +47,19 @@ function load_dev_data() {
 
     echo "Loading shapefiles into database"
     docker-compose \
-        exec -T django ./manage.py setup config/config.xml -g1 -g2
-# TODO: performance is way too slow to import all three layers (-g0 is census blocks)
-#        exec -T django ./manage.py setup config/config.xml -g0 -g1 -g2
+        exec -T django ./manage.py setup config/config.xml -g0 -g1 -g2
+
+    echo "Nesting geolevels"
+    docker-compose \
+        exec -T django ./manage.py setup config/config.xml -n0 -n1 -n2
+
+    echo "Creating template plans"
+    docker-compose \
+        exec -T django ./manage.py setup config/config.xml -t
+
+    echo "Configuring geoserver"
+    docker-compose \
+        exec -T django ./manage.py setup config/config.xml -G
 
 }
 
