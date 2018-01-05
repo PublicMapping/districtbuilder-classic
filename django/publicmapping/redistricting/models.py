@@ -82,11 +82,11 @@ class BaseModel(models.Model):
         lang = translation.get_language()
         if not lang in I18N_CACHE:
             try:
-                path = os.path.join(settings.MEDIA_ROOT, '../locale/%s/LC_MESSAGES/xmlconfig.mo' % lang)
+                path = os.path.join(settings.STATIC_ROOT, '../locale/%s/LC_MESSAGES/xmlconfig.mo' % lang)
                 path = os.path.normpath(path)
                 I18N_CACHE[lang] = polib.mofile(path)
             except Exception, ex:
-                path = os.path.join(settings.MEDIA_ROOT, '../locale/%s/LC_MESSAGES/xmlconfig.po' % lang)
+                path = os.path.join(settings.STATIC_ROOT, '../locale/%s/LC_MESSAGES/xmlconfig.po' % lang)
                 path = os.path.normpath(path)
                 I18N_CACHE[lang] = polib.pofile(path)
 
