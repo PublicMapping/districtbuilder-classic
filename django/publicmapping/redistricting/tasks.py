@@ -1338,8 +1338,7 @@ class CalculatorReport:
                 name='%s_reports' % plan.legislative_body.name)
             html = display.render(plan, request, function_ids=function_ids)
         except Exception as ex:
-            logger.warn('Error creating calculator report')
-            logger.debug('Reason: %s', ex)
+            logger.exception('Error creating calculator report')
             html = _('Error creating calculator report.')
 
         # Add to report container template
