@@ -152,7 +152,7 @@ function init() {
     // set the max extent to be the boundaries of the world in
     // spherical mercator to avoid all geowebcache offset issues
     var max = 20037508.342789244;
-    var srs = "EPSG:3785";
+    var srs = "EPSG:3857";
     var extent = new OpenLayers.Bounds(-max, -max, max, max);
 
     // ensure the page is fully loaded before the map is initialized
@@ -275,8 +275,6 @@ function mapinit(srs,maxExtent) {
     // These layers are dependent on the layers available in geowebcache
     var layers = [];
 
-    
-
     // Calculate the minimum zoom level based on the extent of the study area
     var studyWidthMeters = STUDY_EXTENT[2] - STUDY_EXTENT[0];
     var studyHeightMeters = STUDY_EXTENT[3] - STUDY_EXTENT[1];
@@ -290,7 +288,7 @@ function mapinit(srs,maxExtent) {
     // zoom = log(maxmpp/mpp)/log(2)
     var hlevel = Math.log(maxMetersPerPixel / hMetersPerPixel) / Math.LN2;
     var vlevel = Math.log(maxMetersPerPixel / vMetersPerPixel) / Math.LN2;
-    
+
     var minZoomLevel = (hlevel < vlevel) ? Math.floor(hlevel) : Math.floor(vlevel);
     var maxZoomLevel = 17; // This level is far enough zoomed to view blocks in any state
     var numZoomLevels = maxZoomLevel - minZoomLevel + 1;
@@ -315,7 +313,7 @@ function mapinit(srs,maxExtent) {
                     hybrid: VEMapStyle.Hybrid,
                     road: VEMapStyle.Road 
                 };
-    
+
                 options.type = types[mapType];
                 if (options.type) {
                     return new OpenLayers.Layer.VirtualEarth(layerName, options);
@@ -330,13 +328,13 @@ function mapinit(srs,maxExtent) {
                     sphericalMercator: true,
                     maxExtent: maxExtent
                 };
-                
+
                 types = {
                     aerial: G_SATELLITE_MAP,
                     hybrid: G_HYBRID_MAP, 
                     road: G_NORMAL_MAP
                 };
-    
+
                 options.type = types[mapType];
                 if (options.type) {
                     return new OpenLayers.Layer.Google(layerName, options);
@@ -420,7 +418,7 @@ function mapinit(srs,maxExtent) {
         layer.setVisibility(false);
         layers.push(layer);
     }
-    
+
     // Set up the opacity slider and connect change events to control the base and thematic layer opacities
     $('#opacity_slider').slider({
         value: 100 - defaultThematicOpacity * 100,
@@ -439,7 +437,7 @@ function mapinit(srs,maxExtent) {
         var id = 'radio' + i;
         var button = $('<input type="radio" name="basemap" id="' + id + '"' + ((i === 0) ? 'checked=checked' : '') +
                        ' /><label for="' + id + '">' + ((layers.length === 1) ? gettext("Map Transparency") : layer.name) + '</label>');
-            
+
         // change the base layer when a new one is selected
         button.click(function() {
             olmap.setBaseLayer(layer);
@@ -464,7 +462,7 @@ function mapinit(srs,maxExtent) {
             resizable:false,
             open: function() { $(".ui-dialog-titlebar-close", $(this).parent()).hide(); }                    
         });
-        
+
         $.ajax({
             type: 'POST',
             url: '/districtmapping/plan/' + PLAN_ID + '/fixunassigned/',
@@ -484,13 +482,13 @@ function mapinit(srs,maxExtent) {
                         text: gettext('OK'),
                         click: function() { $(this).dialog('close'); }
                     }]
-                });                
+                });
             },
             error: function(xhr, textStatus, error) {
-                pleaseWait.remove();                        
+                pleaseWait.remove();
                 $('<div />').text(gettext('Error encountered while fixing unassigned')).dialog({
                     modal: true, autoOpen: true, title: gettext('Error'), resizable:false
-                });                
+                });
             }
         });
     });
@@ -518,7 +516,7 @@ function mapinit(srs,maxExtent) {
         } else {
             urlSuffix = 'geolevel/' + referenceLayerId.substring('geolevel.'.length);
         }
-    
+
         var waitDialog = $('<div />').text(gettext('Please wait. Querying for splits.'))
                 .dialog({
             modal: true,
@@ -526,7 +524,7 @@ function mapinit(srs,maxExtent) {
             title: gettext('Finding Splits'),
             escapeOnClose: false,
             resizable:false,
-            open: function() { $(".ui-dialog-titlebar-close", $(this).parent()).hide(); }                    
+            open: function() { $(".ui-dialog-titlebar-close", $(this).parent()).hide(); }
         });
 
         $.ajax({
@@ -649,7 +647,7 @@ function mapinit(srs,maxExtent) {
                 min_layer = snap_layer;
             }
         }
-        
+
         return { 
             layer: min_layer.layer, 
             level: min_layer.level,

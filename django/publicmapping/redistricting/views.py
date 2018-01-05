@@ -551,7 +551,7 @@ def commonplan(request, planid):
         'body_member_long_label': long_label,
         'body_members': body_members,
         'reporting_template': reporting_template,
-        'study_area_extent': study_area_extent.coords,
+        'study_area_extent': list(study_area_extent.extent),
         'has_leaderboard' : len(ScoreDisplay.objects.filter(is_page=True)) > 0,
         'calculator_reports' : json.dumps(calculator_reports),
         'allow_email_submissions': (
