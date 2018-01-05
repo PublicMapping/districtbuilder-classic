@@ -1348,13 +1348,10 @@ class CalculatorReport:
         tempdir = settings.WEB_TEMP
         filename = '%s_p%d_v%d_%s' % (plan.owner.username, plan.id,
                                       plan.version, stamp)
-        htmlfile = open(
-            '%s/%s.html' % (
-                tempdir,
-                filename,
-            ), mode='w', encoding='utf=8')
-        htmlfile.write(html)
-        htmlfile.close()
+        html_file_path = '%s/%s.html' % (tempdir, filename)
+
+        with open(html_file_path, mode='w', encoding='utf=8') as html_file:
+            html_file.write(html)
 
         # reset the language back to default
         if not prev_lang is None:
