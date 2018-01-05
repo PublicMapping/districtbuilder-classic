@@ -3630,7 +3630,8 @@ class ScoreFunction(BaseModel):
         Returns:
             An instance of the requested calculator.
         """
-        parts = self.calculator.split('.')
+        # TODO: Don't store fully qualified name of the module in the database
+        parts = self.calculator.split('.')[1:]
         module = ".".join(parts[:-1])
         m = __import__(module)
         for comp in parts[1:]:
