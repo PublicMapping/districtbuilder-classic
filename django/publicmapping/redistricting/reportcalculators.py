@@ -31,6 +31,7 @@ Author:
 from django.utils.translation import ugettext as _
 from redistricting.calculators import CalculatorBase, LengthWidthCompactness, Roeck, Schwartzberg
 
+
 class Population(CalculatorBase):
     """
     Report on the population in each district.
@@ -40,6 +41,7 @@ class Population(CalculatorBase):
     the optional values are specified, the population of the district will
     be marked within range if it falls between them.
     """
+
     def compute(self, **kwargs):
         district = kwargs['district']
 
@@ -47,21 +49,33 @@ class Population(CalculatorBase):
         avg_key = "population_" + self.arg_dict['value'][1]
 
         self.result = {
-            'raw': [
-                { 'label': _('DistrictID'), 'type': 'string', 'value': district.long_label },
-                { 'label': _('Population'), 'type': 'integer', 'value': pop_value, 'avg_key': avg_key }
-            ]
+            'raw': [{
+                'label': _('DistrictID'),
+                'type': 'string',
+                'value': district.long_label
+            }, {
+                'label': _('Population'),
+                'type': 'integer',
+                'value': pop_value,
+                'avg_key': avg_key
+            }]
         }
 
         # Add 'Within Target Range' column if min/max are configured
-        minval = self.get_value('min',district)
-        maxval = self.get_value('max',district)
-        
+        minval = self.get_value('min', district)
+        maxval = self.get_value('max', district)
+
         if pop_value is None or minval is None or maxval is None:
             return
-        
-        within_value = float(pop_value) > float(minval) and float(pop_value) < float(maxval)
-        self.result['raw'].append({ 'label': _('Within Target Range'), 'value': within_value, 'type': 'boolean' })
+
+        within_value = float(pop_value) > float(minval) and float(
+            pop_value) < float(maxval)
+        self.result['raw'].append({
+            'label': _('Within Target Range'),
+            'value': within_value,
+            'type': 'boolean'
+        })
+
 
 class Compactness(CalculatorBase):
     """
@@ -72,11 +86,12 @@ class Compactness(CalculatorBase):
     compactness calculation will be performed. Currently available comptypes
     are: 'LengthWidth', 'Roeck', and 'Schwartzberg'
     """
+
     def compute(self, **kwargs):
         district = kwargs['district']
         comptype = self.arg_dict['comptype'][1]
 
-        calc = None;
+        calc = None
         if comptype == 'LengthWidth':
             calc = LengthWidthCompactness()
         elif comptype == 'Roeck':
@@ -88,13 +103,20 @@ class Compactness(CalculatorBase):
 
         calc.compute(district=district)
         val = calc.result['value'] if calc.result else 0
-        
+
         self.result = {
-            'raw': [
-                { 'label': _('DistrictID'), 'type': 'string', 'value': district.long_label },
-                { 'label': _('Compactness'), 'type': 'percent', 'value': val, 'avg_key': comptype }
-            ]
+            'raw': [{
+                'label': _('DistrictID'),
+                'type': 'string',
+                'value': district.long_label
+            }, {
+                'label': _('Compactness'),
+                'type': 'percent',
+                'value': val,
+                'avg_key': comptype
+            }]
         }
+
 
 class Majority(CalculatorBase):
     """
@@ -104,6 +126,7 @@ class Majority(CalculatorBase):
     arguments: "value", and "total". If the ratio of the value to the total
     exceeds 50%, it is marked as a majority.
     """
+
     def compute(self, **kwargs):
         district = kwargs['district']
 
@@ -114,13 +137,27 @@ class Majority(CalculatorBase):
         prop_avg_key = pop_avg_key + "_" + "proportion"
 
         self.result = {
-            'raw': [
-                { 'label': _('DistrictID'), 'type': 'string', 'value': district.long_label },
-                { 'label': _('Population'), 'type': 'integer', 'value': pop_value, 'avg_key': pop_avg_key },
-                { 'label': _('Proportion'), 'type': 'percent', 'value': proportion, 'avg_key': prop_avg_key },
-                { 'label': '>= 50%', 'type': 'boolean', 'value': proportion >= .5 }
-            ]
+            'raw': [{
+                'label': _('DistrictID'),
+                'type': 'string',
+                'value': district.long_label
+            }, {
+                'label': _('Population'),
+                'type': 'integer',
+                'value': pop_value,
+                'avg_key': pop_avg_key
+            }, {
+                'label': _('Proportion'),
+                'type': 'percent',
+                'value': proportion,
+                'avg_key': prop_avg_key
+            }, {
+                'label': '>= 50%',
+                'type': 'boolean',
+                'value': proportion >= .5
+            }]
         }
+
 
 class Unassigned(CalculatorBase):
     """
@@ -129,12 +166,19 @@ class Unassigned(CalculatorBase):
     This calculator only operates on plans. It finds all of the unassigned base
     geounits, lists them by their portable_id, and tallys them up.
     """
+
     def compute(self, **kwargs):
         plan = kwargs['plan']
-        version = kwargs['version'] if 'version' in kwargs else plan.version            
+        version = kwargs['version'] if 'version' in kwargs else plan.version
         threshold = self.get_value('threshold')
         if not threshold:
             threshold = 100
 
-        geounits = plan.get_unassigned_geounits(threshold=threshold, version=version)
-        self.result = { 'raw': [{ 'type': 'list', 'value': [t[1] for t in geounits] }] }
+        geounits = plan.get_unassigned_geounits(
+            threshold=threshold, version=version)
+        self.result = {
+            'raw': [{
+                'type': 'list',
+                'value': [t[1] for t in geounits]
+            }]
+        }

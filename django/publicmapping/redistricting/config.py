@@ -965,8 +965,7 @@ class ConfigImporter:
                         'Didn\'t change scoreargument %s; attribute(s) "value" differ(s) from '
                         'database configuration.\n\twarning: sync your config file to your app'
                         ' configuration or use the -f switch with setup to force changes',
-                        name
-                    )
+                        name)
 
         return True
 
@@ -1240,19 +1239,19 @@ class SpatialUtils:
 
         # Create the feature types and their styles
 
-        geolevel_fields = [x for x in Geolevel._meta.fields
-                           if x.get_internal_type() != 'ForeignKey']
+        geolevel_fields = [
+            x for x in Geolevel._meta.fields
+            if x.get_internal_type() != 'ForeignKey'
+        ]
         geolevel_attrs = [{
             'name': field.name,
             'binding': SpatialUtils.get_binding(field)
         } for field in geolevel_fields]
 
-        subject_attrs = [{
-            'name': 'name',
-            'binding': 'java.lang.String'
-        }]
+        subject_attrs = [{'name': 'name', 'binding': 'java.lang.String'}]
 
-        if self.create_featuretype('identify_geounit', attributes=geolevel_attrs):
+        if self.create_featuretype(
+                'identify_geounit', attributes=geolevel_attrs):
             logger.debug('Created feature type "identify_geounit"')
         else:
             logger.warn('Could not create "identify_geounit" feature type')
@@ -1262,22 +1261,23 @@ class SpatialUtils:
                 # Skip 'abstract' geolevels if regions are configured
                 continue
 
-            if self.create_featuretype('simple_%s' % geolevel.name,
-                                       attributes=geolevel_attrs):
+            if self.create_featuretype(
+                    'simple_%s' % geolevel.name, attributes=geolevel_attrs):
                 logger.debug(
                     'Created "simple_%s" feature type' % geolevel.name)
             else:
-                logger.warn('Could not create "simple_%s" simple feature type' %
-                            geolevel.name)
+                logger.warn('Could not create "simple_%s" simple feature type'
+                            % geolevel.name)
 
-            if self.create_featuretype('simple_district_%s' % geolevel.name,
-                                       attributes=geolevel_attrs):
+            if self.create_featuretype(
+                    'simple_district_%s' % geolevel.name,
+                    attributes=geolevel_attrs):
                 logger.debug('Created "simple_district_%s" feature type' %
                              geolevel.name)
             else:
                 logger.warn(
-                    'Colud not create "simple_district_%s" simple district feature type' %
-                    geolevel.name)
+                    'Colud not create "simple_district_%s" simple district feature type'
+                    % geolevel.name)
 
             all_subjects = Subject.objects.all().order_by('sort_key')
             if all_subjects.count() > 0:
@@ -1372,7 +1372,8 @@ class SpatialUtils:
                 featuretype_name = get_featuretype_name(
                     geolevel.name, subject.name)
 
-                if self.create_featuretype(featuretype_name, attributes=subject_attrs):
+                if self.create_featuretype(
+                        featuretype_name, attributes=subject_attrs):
                     logger.debug(
                         'Created "%s" feature type' % featuretype_name)
                 else:
@@ -1426,7 +1427,8 @@ class SpatialUtils:
 
         # create simple_district as an alias to the largest geolevel (e.g. counties)
         if self.create_featuretype(
-                'simple_district', alias='simple_district_%s' % geolevel.name,
+                'simple_district',
+                alias='simple_district_%s' % geolevel.name,
                 attributes=geolevel_attrs):
             logger.debug('Created "simple_district" feature type')
         else:
@@ -1622,8 +1624,9 @@ class SpatialUtils:
                     'crs': 'EPSG:4326'
                 },
                 'maxFeatures': settings.FEATURE_LIMIT + 1,
-                'attributes':
-                {'attribute': attributes}
+                'attributes': {
+                    'attribute': attributes
+                }
             }
         }
 
@@ -1678,8 +1681,7 @@ class SpatialUtils:
             conn.request(method, url, data, headers)
             rsp = conn.getresponse()
             rsp.read()  # and discard
-            conn.close(
-            )
+            conn.close()
             if rsp.status != 201 and rsp.status != 200:
                 logger.debug('HTTP Status: %d, %s %s' % (
                     rsp.status,
@@ -1737,7 +1739,6 @@ class SpatialUtils:
 
         # Create the styles for the demographic layers
         style_url = '/geoserver/rest/styles'
-
 
         # Get or create the spatial style
         return self._check_spatial_resource(style_url, nsfeaturetype,
