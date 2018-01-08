@@ -1114,6 +1114,11 @@ def cleanup():
     management.call_command('cleanup')
 
 
+# TODO: Serve temp files appropriately. This is a stopgap solution to show
+# report generation working end to end by serving them as static files.
+tempdir = settings.STATIC_ROOT
+
+
 class PlanReport:
     """
     A collection of static methods that assist in asynchronous report
@@ -1143,7 +1148,6 @@ class PlanReport:
                         planid)
             return
 
-        tempdir = settings.WEB_TEMP
         filename = '%s_p%d_v%d_%s' % (plan.owner.username, plan.id,
                                       plan.version, stamp)
 
@@ -1238,7 +1242,6 @@ class PlanReport:
         except:
             return 'error'
 
-        tempdir = settings.WEB_TEMP
         filename = '%s_p%d_v%d_%s' % (plan.owner.username, plan.id,
                                       plan.version, stamp)
 
@@ -1270,7 +1273,6 @@ class PlanReport:
         except:
             return 'error'
 
-        tempdir = settings.WEB_TEMP
         filename = '%s_p%d_v%d_%s' % (plan.owner.username, plan.id,
                                       plan.version, stamp)
 
@@ -1345,7 +1347,6 @@ class CalculatorReport:
         })
 
         # Write it to file
-        tempdir = settings.WEB_TEMP
         filename = '%s_p%d_v%d_%s' % (plan.owner.username, plan.id,
                                       plan.version, stamp)
         html_file_path = '%s/%s.html' % (tempdir, filename)
@@ -1369,7 +1370,6 @@ class CalculatorReport:
         except:
             return 'error'
 
-        tempdir = settings.WEB_TEMP
         filename = '%s_p%d_v%d_%s' % (plan.owner.username, plan.id,
                                       plan.version, stamp)
         pending_file = '%s/%s.pending' % (tempdir, filename)
@@ -1395,7 +1395,6 @@ class CalculatorReport:
         except:
             return 'error'
 
-        tempdir = settings.WEB_TEMP
         filename = '%s_p%d_v%d_%s' % (plan.owner.username, plan.id,
                                       plan.version, stamp)
 
