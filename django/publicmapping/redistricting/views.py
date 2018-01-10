@@ -45,7 +45,7 @@ from django.contrib.gis.gdal import *
 from django.contrib.gis.gdal.libgdal import lgdal
 from django.contrib.sites.models import Site
 from django.contrib import humanize
-from django.template import loader
+from django.template import loader, Context as DjangoContext
 from django.template.context_processors import csrf
 from django.utils import translation
 from django.utils.translation import ugettext as _, ungettext as _n
@@ -754,7 +754,7 @@ def printplan(request, planid):
 
         # render pg to a string
         t = loader.get_template('printplan.html')
-        page = t.render(cfg)
+        page = t.render(DjangoContext(cfg))
         result = StringIO.StringIO()
 
         # setting encoding='UTF-8' causes an exception. removing this for now,
@@ -1484,12 +1484,13 @@ def get_splits_report(request, planid):
         report = loader.get_template('split_report.html')
         html = ''
         for layer in layers:
-            calc_context = {'extended': extended}
-            calc_context.update(plan.compute_splits(layer, version = version, inverse = inverse, extended = extended))
+            my_context = {'extended': extended}
+            my_context.update(plan.compute_splits(layer, version = version, inverse = inverse, extended = extended))
             last_item = layer is layers[-1]
             community_info = plan.get_community_type_info(layer, version = version, inverse = inverse, include_counts=last_item)
             if community_info is not None:
-                calc_context.update(community_info)
+                my_context.update(community_info)
+            calc_context = DjangoContext(my_context)
             html += report.render(calc_context)
             if not last_item:
                 html += '<hr />'
@@ -2620,7 +2621,7 @@ def plan_feed(request):
         'width': width,
         'height': height
     }
-    xml = feed.render(context)
+    xml = feed.render(DjangoContext(context))
 
     return HttpResponse(xml, content_type='application/atom+xml')
 
@@ -2653,6 +2654,6 @@ def share_feed(request):
         'width': width,
         'height': height
     }
-    xml = feed.render(context)
+    xml = feed.render(DjangoContext(context))
 
     return HttpResponse(xml, content_type='application/atom+xml')
