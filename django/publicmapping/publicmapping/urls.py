@@ -50,5 +50,7 @@ urlpatterns = (
         url(r'^i18n/', include('django.conf.urls.i18n'))
     ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
+    # TODO: Serve reports a better way
+    + static('/reports/', document_root=settings.STATIC_ROOT)
 )
 

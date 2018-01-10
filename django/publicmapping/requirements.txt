@@ -3,9 +3,8 @@ ipython==5.5.0
 gevent==1.2.2
 Django==1.11.5
 psycopg2==2.7.3
-celery==3.0.15
-kombu==3.0.37
-django-celery==3.0.11
+celery==3.1.25
+django-celery==3.2.2
 django-redis==4.8.0
 django-rosetta==0.7.13
 django-staticfiles==1.2.1

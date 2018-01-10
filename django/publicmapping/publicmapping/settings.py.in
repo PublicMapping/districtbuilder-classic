@@ -29,6 +29,14 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
+# Settings for django-celery process queue
+import djcelery
+djcelery.setup_loader()
+
+# TODO: Don't use Django as broker
+BROKER_URL = 'django://'
+
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -46,6 +54,8 @@ INSTALLED_APPS = [
     'polib',
     'rosetta',
     'tagging',
+    'djcelery',
+    'kombu.transport.django',
 
     # local
     'publicmapping',
