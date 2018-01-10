@@ -13,4 +13,4 @@ COPY . /usr/src/app
 
 WORKDIR /usr/src/app
 
-ENTRYPOINT ["/usr/local/bin/gunicorn"]
+ENTRYPOINT ["/usr/src/app/run_django.sh"]

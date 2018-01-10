@@ -23,16 +23,6 @@ services:
       - "8081:8081"
     volumes:
       - ./django/publicmapping/:/usr/src/app/
-    command:
-      - "--workers=2"
-      - "--timeout=60"
-      - "--bind=0.0.0.0:8080"
-      - "--reload"
-      - "--log-level=debug"
-      - "--access-logfile=-"
-      - "--error-logfile=-"
-      - "-kgevent"
-      - "publicmapping.wsgi"
     links:
       - postgres:postgres.internal.districtbuilder.com
       - redis:redis.internal.districtbuilder.com
