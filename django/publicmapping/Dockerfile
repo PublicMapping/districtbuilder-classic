@@ -13,4 +13,6 @@ COPY . /usr/src/app
 
 WORKDIR /usr/src/app
 
+RUN python manage.py collectstatic --noinput
+
 ENTRYPOINT ["/usr/local/bin/gunicorn"]

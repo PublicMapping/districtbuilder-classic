@@ -23,6 +23,7 @@ services:
       - "8081:8081"
     volumes:
       - ./django/publicmapping/:/usr/src/app/
+      - /usr/src/app/static
     command:
       - "--workers=2"
       - "--timeout=60"
