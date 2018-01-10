@@ -1,0 +1,4 @@
+---
+- name: Install pre-commit
+  local_action: command pip install pre-commit=="{{ pre_commit_version }}"
+  sudo: no
