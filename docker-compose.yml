@@ -15,15 +15,24 @@ services:
   redis:
     image: redis:3.2-alpine
 
+  nginx:
+    image: nginx:latest
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./nginx/:/etc/nginx/conf.d
+      - static-files:/static/
+    depends_on:
+      - django
+
   django:
     build:
       context: ./django/publicmapping
-    ports:
-      - "8080:8080"
-      - "8081:8081"
+    expose:
+      - "8080"
     volumes:
       - ./django/publicmapping/:/usr/src/app/
-      - /usr/src/app/static
+      - static-files:/usr/src/app/static
     command:
       - "--workers=2"
       - "--timeout=60"
@@ -48,3 +57,6 @@ services:
       - "9091:8080"
     links:
       - postgres:postgres.internal.districtbuilder.com
+
+volumes:
+  static-files:

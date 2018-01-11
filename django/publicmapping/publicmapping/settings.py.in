@@ -26,7 +26,7 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'foo')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['web']
 
 
 # Application definition
@@ -202,10 +202,9 @@ EMAIL_SUBJECT_PREFIX = 'None '
 
 MEDIA_ROOT = '/usr/src/app/site-media/'
 
-STATICFILES_FINDERS = (
-    'django.contrib.staticfiles.finders.FileSystemFinder',
-    'django.contrib.staticfiles.finders.AppDirectoriesFinder'
-)
+# We only use collectstatic to collect static files from installed apps
+# that aren't local (eg. django.contrib.admin).
+STATICFILES_FINDERS = ()
 
 SLD_ROOT = '/opt/sld/'
 
