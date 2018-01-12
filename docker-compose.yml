@@ -21,7 +21,7 @@ services:
       - "8080:8080"
     volumes:
       - ./nginx/:/etc/nginx/conf.d
-      - static-files:/static/
+      - ./django/publicmapping/static:/static/
     depends_on:
       - django
 
@@ -32,7 +32,6 @@ services:
       - "8080"
     volumes:
       - ./django/publicmapping/:/usr/src/app/
-      - static-files:/usr/src/app/static
     command:
       - "--workers=2"
       - "--timeout=60"
@@ -57,6 +56,3 @@ services:
       - "9091:8080"
     links:
       - postgres:postgres.internal.districtbuilder.com
-
-volumes:
-  static-files:
