@@ -15,15 +15,23 @@ services:
   redis:
     image: redis:3.2-alpine
 
+  nginx:
+    image: nginx:1.13.8-alpine
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./nginx/:/etc/nginx/conf.d
+      - ./django/publicmapping/static:/static/
+    depends_on:
+      - django
+
   django:
     build:
       context: ./django/publicmapping
-    ports:
-      - "8080:8080"
-      - "8081:8081"
+    expose:
+      - "8080"
     volumes:
       - ./django/publicmapping/:/usr/src/app/
-      - /usr/src/app/static
     command:
       - "--workers=2"
       - "--timeout=60"

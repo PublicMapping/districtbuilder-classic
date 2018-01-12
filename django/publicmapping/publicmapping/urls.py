@@ -48,7 +48,6 @@ urlpatterns = (
         url(r'^session', publicmapping_views.session),
         url(r'^admin', admin.site.urls),
         url(r'^i18n/', include('django.conf.urls.i18n'))
-    ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-
+    ]
 )
 
