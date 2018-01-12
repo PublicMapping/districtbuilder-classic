@@ -16,7 +16,7 @@ services:
     image: redis:3.2-alpine
 
   nginx:
-    image: nginx:latest
+    image: nginx:1.13.8-alpine
     ports:
       - "8080:8080"
     volumes:
