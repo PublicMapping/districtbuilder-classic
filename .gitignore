@@ -4,3 +4,6 @@
 
 deployment/ansible/roles/azavea.*
 .vagrant*
+
+# generated style files from geoserver
+sld
