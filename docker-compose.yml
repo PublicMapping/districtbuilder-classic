@@ -21,7 +21,8 @@ services:
       - "8080:8080"
     volumes:
       - ./nginx/:/etc/nginx/conf.d
-      - ./django/publicmapping/static:/static/
+      - ./django/publicmapping/static:/opt/static/
+      - ./sld:/opt/sld/
     depends_on:
       - django
 
@@ -32,6 +33,7 @@ services:
       - "8080"
     volumes:
       - ./django/publicmapping/:/usr/src/app/
+      - ./sld/:/opt/sld
     command:
       - "--workers=2"
       - "--timeout=60"
@@ -52,6 +54,7 @@ services:
       context: ./geoserver
     volumes:
       - ./geoserver/data_dir/:/data
+      - ./sld/:/data/sld
     ports:
       - "9091:8080"
     links:
