@@ -1,0 +1,8 @@
+services:
+  - docker
+
+install:
+  - ./scripts/update
+
+script:
+  - ./scripts/test
