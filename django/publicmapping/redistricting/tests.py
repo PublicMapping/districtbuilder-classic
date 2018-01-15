@@ -35,7 +35,6 @@ from django.db.models import Sum, Min, Max
 from django.test.client import Client
 from django.contrib.gis.geos import *
 from django.contrib.auth.models import User
-from django.utils import simplejson as json
 from lxml import etree
 from models import *
 from tasks import *
@@ -46,6 +45,7 @@ from redisutils import key_gen
 from django.conf import settings
 from datetime import datetime
 from tagging.models import Tag, TaggedItem
+import json
 import itertools
 import tempfile
 
@@ -4519,7 +4519,7 @@ class RegionConfigTest(BaseTestCase):
 
     fixtures = []
     def setUp(self):
-        self.store = StoredConfig('../../docs/config.dist.xml')
+        self.store = StoredConfig('./config/config.dist.xml')
         self.store.validate()
         self.cmd = Command()
 
@@ -4590,8 +4590,8 @@ class RegionConfigTest(BaseTestCase):
         self.region_tree = None
 
 class ConfigTestCase(TestCase):
-    good_data_filename = '../../docs/config.dist.xml'
-    good_schema_filename = '../../docs/config.xsd'
+    good_data_filename = './config/config.dist.xml'
+    good_schema_filename = './config/config.xsd'
     bad_data_filename = '/tmp/bad_data.xsd'
     bad_schema_filename = '/tmp/bad_schema.xsd'
 

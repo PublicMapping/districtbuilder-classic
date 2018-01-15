@@ -14,6 +14,13 @@ Run various test suites.
 "
 }
 
+function test_django_app() {
+    echo "Running tests"
+    docker-compose \
+        exec django \
+        ./manage.py test
+}
+
 if [ "${BASH_SOURCE[0]}" = "${0}" ]
 then
     if [ "${1:-}" = "--help" ]
@@ -23,6 +30,8 @@ then
         if which shellcheck &>/dev/null; then
             echo "Linting STRTA scripts"
             find ./scripts -type f -print0 | xargs -0 -r shellcheck
+            docker-compose up -d postgres django
+            test_django_app
         fi
     fi
     exit

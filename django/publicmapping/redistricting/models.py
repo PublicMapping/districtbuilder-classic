@@ -80,6 +80,9 @@ class BaseModel(models.Model):
         """
         super(BaseModel, self).__init__(*args, **kwargs)
         lang = translation.get_language()
+        # Hardcoding to avoid a bug in Django 1.8 get_language
+        # (refer to https://github.com/django-parler/django-parler/issues/90)
+        lang = 'en'
         if not lang in I18N_CACHE:
             try:
                 path = os.path.join(settings.STATIC_ROOT, '../locale/%s/LC_MESSAGES/xmlconfig.mo' % lang)
