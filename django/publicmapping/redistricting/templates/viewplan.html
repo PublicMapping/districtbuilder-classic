@@ -67,7 +67,9 @@
     <script type="text/javascript" src="{% static 'jquery/jquery-1.6.2.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'jquery/jquery-ui-1.8.16.custom.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'jquery/external/jquery.tools.tooltip.slide.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'jqGrid/js/i18n/grid.locale-{{ language_code }}.js' %}"></script>
+    {% with jqgrid_locale_path="jqGrid/js/i18n/grid.locale-"|add:language_code|add:".js" %}
+    <script type="text/javascript" src="{% static jqgrid_locale_path %}"></script>
+    {% endwith %}
     <script type="text/javascript" src="{% static 'jqGrid/js/jquery.jqGrid.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'jqGrid/plugins/grid.postext.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/sprintf.js' %}"></script>
