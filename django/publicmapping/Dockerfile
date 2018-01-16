@@ -13,4 +13,7 @@ COPY . /usr/src/app
 
 WORKDIR /usr/src/app
 
+RUN cp config/config.dist.xml config/config.xml && \
+    cp publicmapping/settings.py.in publicmapping/settings.py
+
 ENTRYPOINT ["/usr/local/bin/gunicorn"]

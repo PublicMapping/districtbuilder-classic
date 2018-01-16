@@ -1,7 +1,0 @@
----
-# tasks file for district-builder.config
-
-- name: Copy configuration files
-  become: false
-  local_action: command /bin/cp {{ project_root }}{{ item.src }} {{ project_root }}{{ item.dst }}
-  with_items: "{{ copy_ops }}"
