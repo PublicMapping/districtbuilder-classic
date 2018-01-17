@@ -34,6 +34,7 @@ from rpy2 import robjects
 from decimal import *
 import settings, threading, traceback, os, sys, time, tempfile, shutil
 
+
 def load_bard_workspace():
     """
     Load the workspace and setup R.
@@ -59,16 +60,22 @@ def load_bard_workspace():
 
         if settings.DEBUG:
             print 'Workspace loaded: %s' % bardWorkSpaceLoaded
-            robjects.r('trace(PMPreport, at=1, tracer=function()print(sys.calls()))')
+            robjects.r(
+                'trace(PMPreport, at=1, tracer=function()print(sys.calls()))')
 
     except Exception as e:
-        sys.stderr.write('BARD Could not be loaded.  Check your configuration and available memory')
+        sys.stderr.write(
+            'BARD Could not be loaded.  Check your configuration and available memory'
+        )
         return
+
 
 # A flag that indicates that the workspace was loaded
 bardWorkSpaceLoaded = False
 # The loading thread for the BARD setup
-bardLoadingThread = threading.Thread(target=load_bard_workspace, name='loading_bard')
+bardLoadingThread = threading.Thread(
+    target=load_bard_workspace, name='loading_bard')
+
 
 @csrf_exempt
 def loadbard(request):
@@ -93,7 +100,8 @@ def loadbard(request):
             print 'Boolean request!'
     elif isinstance(request, HttpRequest):
         threaded = request.META['mod_wsgi.application_group'] == 'bard-reports'
-        msg += 'mod_wsgi.application_group = "%s"' % request.META['mod_wsgi.application_group']
+        msg += 'mod_wsgi.application_group = "%s"' % request.META[
+            'mod_wsgi.application_group']
         if settings.DEBUG:
             print 'HttpRequest request!'
     else:
@@ -119,7 +127,7 @@ def loadbard(request):
     return HttpResponse(msg, content_type='text/plain')
 
 
-def get_named_vector(parameter_string, rname, tag = None):
+def get_named_vector(parameter_string, rname, tag=None):
     """
     Helper method to break up the strings that represents lists of 
     variables.
@@ -140,15 +148,21 @@ def get_named_vector(parameter_string, rname, tag = None):
     for extra in extras:
         pair = extra.split('|')
         if re.match('^[\d\.]+$', pair[1]):
-            robjects.r('%s = c(%s, list("%s"=%s))' % (rname, rname, pair[0], Decimal(pair[1])))
+            robjects.r('%s = c(%s, list("%s"=%s))' % (rname, rname, pair[0],
+                                                      Decimal(pair[1])))
         else:
-            robjects.r('%s = c(%s, list("%s"="%s"))' % (rname, rname, pair[0], pair[1]))
+            robjects.r('%s = c(%s, list("%s"="%s"))' % (rname, rname, pair[0],
+                                                        pair[1]))
+
 
 def drop_error(tempdir, basename, msg):
     """
     Drop an error .html output file and clean up the .pending file.
     """
-    output = open('%s/%s.html' % (tempdir, basename,), 'w')
+    output = open('%s/%s.html' % (
+        tempdir,
+        basename,
+    ), 'w')
     output.write("""<html>
 <h1>Error Generating Report</h1>
 <p>Your report could not be generated. Please try again.</p>
@@ -160,9 +174,13 @@ def drop_error(tempdir, basename, msg):
 """ % msg)
     output.close()
     try:
-        os.unlink('%s/%s.pending' % (tempdir, basename,))
+        os.unlink('%s/%s.pending' % (
+            tempdir,
+            basename,
+        ))
     except:
         return
+
 
 @csrf_exempt
 def getreport(request):
@@ -183,12 +201,14 @@ def getreport(request):
     if settings.DEBUG:
         print "Generating report. Is BARD loaded? %s" % bardWorkSpaceLoaded
 
-    status = { 'status': 'failure' }
-    stamp = request.POST.get('stamp','')
+    status = {'status': 'failure'}
+    stamp = request.POST.get('stamp', '')
 
     # set up the temp dir and filename
     tempdir = settings.WEB_TEMP
-    basename = '%s_p%d_v%d_%s' % (request.POST['plan_owner'], int(request.POST['plan_id']), int(request.POST['plan_version']), stamp)
+    basename = '%s_p%d_v%d_%s' % (request.POST['plan_owner'],
+                                  int(request.POST['plan_id']),
+                                  int(request.POST['plan_version']), stamp)
 
     if not bardWorkSpaceLoaded:
         if settings.REPORTS_ENABLED != 'BARD':
@@ -198,9 +218,11 @@ def getreport(request):
                 print "Quitting request, because BARD is not ready."
 
             drop_error(tempdir, basename, 'BARD is not enabled.')
-            return HttpResponse(json.dumps(status),content_type='application/json')
+            return HttpResponse(
+                json.dumps(status), content_type='application/json')
         else:
-            status['reason'] = 'Reports functionality is not ready. Please try again later.'
+            status[
+                'reason'] = 'Reports functionality is not ready. Please try again later.'
             loadbard(True)
 
             maxwait = 300
@@ -213,14 +235,17 @@ def getreport(request):
             if maxwait <= 0:
                 status['reason'] = 'Waiting for BARD to load timed out.'
                 drop_error(tempdir, basename, 'BARD load timed out.')
-                return HttpResponse(json.dumps(status), content_type='application/json') 
+                return HttpResponse(
+                    json.dumps(status), content_type='application/json')
     #Get the variables from the request
     if request.method != 'POST':
         status['reason'] = 'Information for report wasn\'t sent via POST'
         if settings.DEBUG:
             print "Quitting request, because the request wasn't POSTed."
-        drop_error(tempdir, basename, 'Requested items were not delivered via POST.')
-        return HttpResponse(json.dumps(status),content_type='application/json')
+        drop_error(tempdir, basename,
+                   'Requested items were not delivered via POST.')
+        return HttpResponse(
+            json.dumps(status), content_type='application/json')
 
     sorted_district_list = request.POST.get('district_list').split(';')
     nseat_param = request.POST.get('nseats')
@@ -231,51 +256,55 @@ def getreport(request):
 
     try:
         # Now we need an R Vector
-        robjects.r.assign('block_ids',sorted_district_list)
-        robjects.r.assign('num_seats',int(nseat_param))
-        robjects.r.assign('magnitude',mag_param)
-        robjects.r('bardplan = createAssignedPlan(bardmap, block_ids, nseats=num_seats, magnitude=magnitude)')
+        robjects.r.assign('block_ids', sorted_district_list)
+        robjects.r.assign('num_seats', int(nseat_param))
+        robjects.r.assign('magnitude', mag_param)
+        robjects.r(
+            'bardplan = createAssignedPlan(bardmap, block_ids, nseats=num_seats, magnitude=magnitude)'
+        )
     except Exception as ex:
         status['reason'] = 'Could not create BARD plan from map.'
         if settings.DEBUG:
             print traceback.format_exc()
         drop_error(tempdir, basename, 'Could not create BARD plan from map.')
-        return HttpResponse(json.dumps(status),content_type='application/json')
+        return HttpResponse(
+            json.dumps(status), content_type='application/json')
 
     if settings.DEBUG:
         print "Created assigned plan."
 
-    try: 
+    try:
         # assign names to the districts
         robjects.r('sorted_name_list = vector()')
         names = request.POST.get('district_names').split(';')
         for district in names:
-            robjects.r('sorted_name_list = c(sorted_name_list,"%s")' % district) 
+            robjects.r(
+                'sorted_name_list = c(sorted_name_list,"%s")' % district)
         robjects.r('levels(bardplan) <- sorted_name_list')
 
         # Get the other report variables from the POST request.  We'll only add
         # them to the report if they're in the request
         popVar = request.POST.get('pop_var', None)
         if settings.DEBUG:
-            print 'popVar',popVar
-        get_named_vector(popVar,'popVar')
+            print 'popVar', popVar
+        get_named_vector(popVar, 'popVar')
 
         popVarExtra = request.POST.get('pop_var_extra', None)
         if settings.DEBUG:
-            print 'popVarExtra',popVarExtra
+            print 'popVarExtra', popVarExtra
         get_named_vector(popVarExtra, 'popVarExtra')
-        
+
         post_list = request.POST.get('ratio_vars').split(';')
         if settings.DEBUG:
-            print 'post_list',post_list
+            print 'post_list', post_list
         if len(post_list) > 0 and post_list[0] != '':
             robjects.r('ratioVars = vector()')
             # Each of the ratioVars should have been posted as a list of items separated by
             # double pipes
             for i, ratioVar in enumerate(post_list):
                 ratioAttributes = ratioVar.split('||')
-                get_named_vector(ratioAttributes[0], 'rden%d'%i)
-                get_named_vector(ratioAttributes[2], 'rnum%d'%i)
+                get_named_vector(ratioAttributes[0], 'rden%d' % i)
+                get_named_vector(ratioAttributes[2], 'rnum%d' % i)
                 robjects.r("""
 ratioVars = 
     c(ratioVars, 
@@ -291,12 +320,12 @@ ratioVars =
 
         splitVars = request.POST.get('split_vars', None)
         if settings.DEBUG:
-            print 'splitVars',splitVars
+            print 'splitVars', splitVars
         get_named_vector(splitVars, 'splitVars')
-        
+
         repCompactness = request.POST.get('rep_comp', None)
         if settings.DEBUG:
-            print 'repCompactness',repCompactness
+            print 'repCompactness', repCompactness
         if 'true' == repCompactness:
             robjects.r('repCompactness = TRUE')
         else:
@@ -304,7 +333,7 @@ ratioVars =
 
         repCompactnessExtra = request.POST.get('rep_comp_extra', None)
         if settings.DEBUG:
-            print 'repCompactnessExtra',repCompactnessExtra
+            print 'repCompactnessExtra', repCompactnessExtra
         if 'true' == repCompactnessExtra:
             robjects.r('repCompactnessExtra = TRUE')
         else:
@@ -312,7 +341,7 @@ ratioVars =
 
         repSpatial = request.POST.get('rep_spatial', None)
         if settings.DEBUG:
-            print 'repSpatial',repSpatial
+            print 'repSpatial', repSpatial
         if 'true' == repSpatial:
             robjects.r('repSpatial = TRUE')
         else:
@@ -320,7 +349,7 @@ ratioVars =
 
         repSpatialExtra = request.POST.get('rep_spatial_extra', None)
         if settings.DEBUG:
-            print 'repSpatialExtra',repSpatialExtra
+            print 'repSpatialExtra', repSpatialExtra
         if 'true' == repSpatialExtra:
             robjects.r('repSpatialExtra = TRUE')
         else:
@@ -330,7 +359,8 @@ ratioVars =
             print traceback.format_exc()
         status['reason'] = 'Exception: %s' % traceback.format_exc()
         drop_error(tempdir, basename, traceback.format_exc())
-        return HttpResponse(json.dumps(status),content_type='application/json')
+        return HttpResponse(
+            json.dumps(status), content_type='application/json')
 
     if settings.DEBUG:
         print "Variables loaded, starting BARD."
@@ -342,7 +372,9 @@ ratioVars =
         robjects.r.assign('tempfiledir', tempfile.gettempdir())
         robjects.r.assign('filename', basename)
         robjects.r.assign('locale', translation.get_language())
-        robjects.r('report = HTMLInitFile(tempfiledir, filename=filename, BackGroundColor="#BBBBEE", Title="Plan Analysis")')
+        robjects.r(
+            'report = HTMLInitFile(tempfiledir, filename=filename, BackGroundColor="#BBBBEE", Title="Plan Analysis")'
+        )
         robjects.r('HTML.title("Plan Analysis", HR=2, file=report)')
         robjects.r("""PMPreport( bardplan, file=report, 
             popVar=popVar, 
@@ -376,9 +408,13 @@ ratioVars =
         status['reason'] = 'Exception: %s' % ex
         drop_error(tempdir, basename, traceback.format_exc())
 
-    return HttpResponse(json.dumps(status),content_type='application/json')
+    return HttpResponse(json.dumps(status), content_type='application/json')
+
 
 @csrf_exempt
 def index(request):
     global bardWorkSpaceLoaded
-    return HttpResponse('Greetings from the BARD Report server.\n(Reporting:%s)' % bardWorkSpaceLoaded, content_type='text/plain')
+    return HttpResponse(
+        'Greetings from the BARD Report server.\n(Reporting:%s)' %
+        bardWorkSpaceLoaded,
+        content_type='text/plain')

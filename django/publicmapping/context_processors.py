@@ -25,6 +25,7 @@ Author:
 
 from django.conf import settings
 
+
 def banner_image(request):
     """
     Add a banner_image variable to the template context.
@@ -44,4 +45,4 @@ def banner_image(request):
     else:
         context_dict['banner_image'] = '/static/images/banner-home.png'
 
-    return context_dict;
+    return context_dict

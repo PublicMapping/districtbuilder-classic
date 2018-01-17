@@ -44,15 +44,21 @@ from django.conf import settings
 import inflect
 from functools import update_wrapper
 
+
 class ComputedCharacteristicAdmin(admin.ModelAdmin):
     """
     Administrative settings for ComputedCharacteristics of a District.
     """
 
-    list_display = ('subject','district','number',)
+    list_display = (
+        'subject',
+        'district',
+        'number',
+    )
 
     # Enable filtering by subject
-    list_filter = ('subject',)
+    list_filter = ('subject', )
+
 
 class CharacteristicAdmin(admin.ModelAdmin):
     """
@@ -63,11 +69,16 @@ class CharacteristicAdmin(admin.ModelAdmin):
     """
 
     # When displayed as a list, show these fields in columns.
-    list_display = ('subject','geounit','number',)
+    list_display = (
+        'subject',
+        'geounit',
+        'number',
+    )
 
     # Don't try to lookup the relationships to geounits, just list their
     # IDs
-    raw_id_fields = ('geounit',)
+    raw_id_fields = ('geounit', )
+
 
 class CharacteristicInline(admin.TabularInline):
     """
@@ -79,6 +90,7 @@ class CharacteristicInline(admin.TabularInline):
 
     # The model that this inline class is displaying.
     model = Characteristic
+
 
 class GeounitAdmin(admin.OSMGeoAdmin):
     """
@@ -96,13 +108,19 @@ class GeounitAdmin(admin.OSMGeoAdmin):
     inlines = [CharacteristicInline]
 
     # When displayed as a list, show the name and geolevel
-    list_display = ('name',)
+    list_display = ('name', )
 
     # In admin view, show the name, portable_id, tree_code, geolevel, and geom fields.
-    fields = ('name','portable_id','tree_code','geom',)
+    fields = (
+        'name',
+        'portable_id',
+        'tree_code',
+        'geom',
+    )
 
     # Order geounits by name by default.
-    ordering = ('name',)
+    ordering = ('name', )
+
 
 class DistrictInline(admin.TabularInline):
     """
@@ -114,10 +132,16 @@ class DistrictInline(admin.TabularInline):
     """
 
     # The fields that are editable inline.
-    fields = ('district_id','short_label', 'long_label','version',)
+    fields = (
+        'district_id',
+        'short_label',
+        'long_label',
+        'version',
+    )
 
     # The model that this inline class is displaying.
     model = District
+
 
 class DistrictAdmin(admin.OSMGeoAdmin):
     """
@@ -134,16 +158,32 @@ class DistrictAdmin(admin.OSMGeoAdmin):
 
     # In admin view, show the district_id, name, plan, version, and geom
     # fields.
-    fields = ('district_id','short_label', 'long_label','plan','version','geom',)
+    fields = (
+        'district_id',
+        'short_label',
+        'long_label',
+        'plan',
+        'version',
+        'geom',
+    )
 
     # When displayed as a list, show the name, plan, and version.
-    list_display = ('short_label', 'long_label','plan','version',)
+    list_display = (
+        'short_label',
+        'long_label',
+        'plan',
+        'version',
+    )
 
     # Enable filtering by plan, version and district_id in the admin list view.
-    list_filter = ('plan','version','district_id')
+    list_filter = ('plan', 'version', 'district_id')
 
     # Order Districts by version and district_id by default.
-    ordering = ('version','district_id',)
+    ordering = (
+        'version',
+        'district_id',
+    )
+
 
 class PlanAdmin(admin.ModelAdmin):
     """
@@ -158,12 +198,14 @@ class PlanAdmin(admin.ModelAdmin):
 
     # When displayed as a list, show the name, is_template, is_shared,
     # owner, created, is_valid, processing_state, edited flags.
-    list_display = ('name','is_template','is_shared','owner','created','edited','is_valid', 'processing_state')
+    list_display = ('name', 'is_template', 'is_shared', 'owner', 'created',
+                    'edited', 'is_valid', 'processing_state')
 
-    list_filter = ('is_template','is_shared','is_valid','legislative_body','owner','is_valid', 'processing_state')
+    list_filter = ('is_template', 'is_shared', 'is_valid', 'legislative_body',
+                   'owner', 'is_valid', 'processing_state')
 
     # Order Plans by name by default.
-    ordering = ('name',)
+    ordering = ('name', )
 
     # Add custom actions
     def reaggregate_selected_plans(self, request, queryset):
@@ -183,6 +225,7 @@ class PlanAdmin(admin.ModelAdmin):
 
     actions = [reaggregate_selected_plans, validate_selected_plans]
 
+
 class SubjectAdmin(admin.ModelAdmin):
     """
     Administrative setting for Subjects.
@@ -194,13 +237,24 @@ class SubjectAdmin(admin.ModelAdmin):
     # When displayed as a list, show the display name, the short display,
     # and a flag indicating if it should be displayed (in the app), and
     # the percentage denominator.
-    list_display = ('name', 'sort_key', 'is_displayed','percentage_denominator',)
+    list_display = (
+        'name',
+        'sort_key',
+        'is_displayed',
+        'percentage_denominator',
+    )
 
-    fields = ('name', 'percentage_denominator', 'is_displayed', 'sort_key', 'format_string', 'version',)
-
+    fields = (
+        'name',
+        'percentage_denominator',
+        'is_displayed',
+        'sort_key',
+        'format_string',
+        'version',
+    )
 
     # Enable filtering by the displayed flag
-    list_filter = ('is_displayed',)
+    list_filter = ('is_displayed', )
 
     # Use a custom object deletion mechanism
     actions = ['delete_selected_subject']
@@ -214,9 +268,11 @@ class SubjectAdmin(admin.ModelAdmin):
 
         # This is django wrapper nastiness inherited from the default admin get_url method
         from django.conf.urls import url
+
         def wrap(view):
             def wrapper(*args, **kwargs):
                 return self.admin_site.admin_view(view)(*args, **kwargs)
+
             return update_wrapper(wrapper, view)
 
         info = self.model._meta.app_label, self.model._meta.model_name
@@ -269,7 +325,8 @@ class SubjectAdmin(admin.ModelAdmin):
         # Check that the user has delete permission for the actual model
         # BUT we can't use modeladmin.has_delete_permission, as it's overridden
         # above to hide the delete button on the change form.
-        if not request.user.has_perm(modeladmin.opts.app_label + '.' + modeladmin.opts.get_delete_permission()):
+        if not request.user.has_perm(modeladmin.opts.app_label + '.' +
+                                     modeladmin.opts.get_delete_permission()):
             raise PermissionDenied
 
         if request.REQUEST.get('post'):
@@ -280,10 +337,12 @@ class SubjectAdmin(admin.ModelAdmin):
                     obj_display = force_unicode(obj)
                     modeladmin.log_deletion(request, obj, obj_display)
                 queryset.delete()
-                modeladmin.message_user(request, _('Successfully deleted %(count)d %(item)s') % {
-                    'count': n,
-                    'item': engine.plural('subject', n)
-                })
+                modeladmin.message_user(
+                    request,
+                    _('Successfully deleted %(count)d %(item)s') % {
+                        'count': n,
+                        'item': engine.plural('subject', n)
+                    })
             # Return None to display the change list page again.
             return None
 
@@ -300,11 +359,15 @@ class SubjectAdmin(admin.ModelAdmin):
         }
 
         # Display the confirmation page
-        return render("admin/%s/%s/delete_selected_confirmation.html" % (app_label, opts.object_name.lower()),
-            context, context_instance=template.RequestContext(request))
+        return render(
+            "admin/%s/%s/delete_selected_confirmation.html" %
+            (app_label, opts.object_name.lower()),
+            context,
+            context_instance=template.RequestContext(request))
 
     # Customize the label of the delete_selected_subject action to look like the normal delete label
-    delete_selected_subject.short_description = ugettext_lazy("Delete selected %(verbose_name_plural)s")
+    delete_selected_subject.short_description = ugettext_lazy(
+        "Delete selected %(verbose_name_plural)s")
 
     # Use a special add_form template
     add_form_template = 'admin/redistricting/subject/add_form.html'
@@ -319,11 +382,16 @@ class SubjectAdmin(admin.ModelAdmin):
         geolevel, nunits = LegislativeLevel.get_basest_geolevel_and_count()
         context = {
             # get geounits at the basest of all base geolevels
-            'geounits': geolevel.geounit_set.all().order_by('portable_id').values_list('portable_id',flat=True)
+            'geounits':
+            geolevel.geounit_set.all().order_by('portable_id').values_list(
+                'portable_id', flat=True)
         }
 
-        resp = render("admin/%s/%s/add_template.csv" % (app_label, opts.object_name.lower()),
-            dictionary=context, content_type='text/plain')
+        resp = render(
+            "admin/%s/%s/add_template.csv" % (app_label,
+                                              opts.object_name.lower()),
+            dictionary=context,
+            content_type='text/plain')
         resp['Content-Disposition'] = 'attachement; filename=new_subject.csv'
         return resp
 
@@ -351,7 +419,10 @@ class SubjectAdmin(admin.ModelAdmin):
                 form._errors = {}
 
                 # Switch the form input types, as we're now processing the file in the background
-                form.fields['processing_file'].widget = forms.TextInput(attrs={'readOnly':True})
+                form.fields['processing_file'].widget = forms.TextInput(
+                    attrs={
+                        'readOnly': True
+                    })
                 form.fields['subject_upload'].widget = forms.HiddenInput()
             else:
                 errors = form._errors
@@ -360,35 +431,69 @@ class SubjectAdmin(admin.ModelAdmin):
                     form._errors = errors
                 else:
 
-                    form = SubjectUploadForm({'processing_file':form.ps_file, 'uploaded_file':form.ul_file, 'subject_name':form.temp_subject_name,'subject_upload':form.ul_file})
+                    form = SubjectUploadForm({
+                        'processing_file':
+                        form.ps_file,
+                        'uploaded_file':
+                        form.ul_file,
+                        'subject_name':
+                        form.temp_subject_name,
+                        'subject_upload':
+                        form.ul_file
+                    })
                     form._errors = errors
 
-                    form.fields['uploaded_file'].widget = forms.TextInput(attrs={'readOnly':True})
-                    form.fields['force_overwrite'].widget = forms.CheckboxInput()
+                    form.fields['uploaded_file'].widget = forms.TextInput(
+                        attrs={
+                            'readOnly': True
+                        })
+                    form.fields[
+                        'force_overwrite'].widget = forms.CheckboxInput()
                     form.fields['subject_upload'].widget = forms.HiddenInput()
                     form.fields['subject_name'].widget = forms.TextInput()
 
         context = {
-            'add': True,
-            'opts': opts,
-            'app_label': app_label,
-            'has_change_permission': True,
-            'upload_form': form,
-            'user': request.user,
-            'errors': form.errors,
-            'form_url': '/admin/%s/%s/upload/' % (app_label, opts.object_name.lower(),),
-            'request': { 'has_upload_template': True },
-            'is_processing': is_processing
+            'add':
+            True,
+            'opts':
+            opts,
+            'app_label':
+            app_label,
+            'has_change_permission':
+            True,
+            'upload_form':
+            form,
+            'user':
+            request.user,
+            'errors':
+            form.errors,
+            'form_url':
+            '/admin/%s/%s/upload/' % (
+                app_label,
+                opts.object_name.lower(),
+            ),
+            'request': {
+                'has_upload_template': True
+            },
+            'is_processing':
+            is_processing
         }
 
-        resp = render('admin/redistricting/subject/upload_form.html', context, context_instance=template.RequestContext(request))
+        resp = render(
+            'admin/redistricting/subject/upload_form.html',
+            context,
+            context_instance=template.RequestContext(request))
         return resp
 
-    def upload_status_view(modeladmin, request, form_url='', extra_context=None, task_uuid=''):
+    def upload_status_view(modeladmin,
+                           request,
+                           form_url='',
+                           extra_context=None,
+                           task_uuid=''):
         """
         Get the status of an uploading task.
         """
-        response = {'success':False}
+        response = {'success': False}
         task = verify_count.AsyncResult(task_uuid)
         if task is None:
             response['message'] = _('No task with that id.')
@@ -402,8 +507,8 @@ class SubjectAdmin(admin.ModelAdmin):
             else:
                 response['message'] = str(task.result)
 
-        return HttpResponse(json.dumps(response), content_type='application/json')
-
+        return HttpResponse(
+            json.dumps(response), content_type='application/json')
 
 
 class ScorePanelAdmin(admin.ModelAdmin):
@@ -411,40 +516,81 @@ class ScorePanelAdmin(admin.ModelAdmin):
     Administrative settings for ScorePanels.
     """
 
-    fields = ('name', 'title', 'displays', 'type', 'template', 'position', 'is_ascending', 'cssclass', 'score_functions',)
+    fields = (
+        'name',
+        'title',
+        'displays',
+        'type',
+        'template',
+        'position',
+        'is_ascending',
+        'cssclass',
+        'score_functions',
+    )
 
-    list_display = ('name', 'title', 'type', 'template', 'cssclass',)
+    list_display = (
+        'name',
+        'title',
+        'type',
+        'template',
+        'cssclass',
+    )
 
-    list_filter = ('type','cssclass',)
+    list_filter = (
+        'type',
+        'cssclass',
+    )
 
     ordering = ['name', 'title']
 
+
 class ScoreArgumentInline(admin.TabularInline):
     model = ScoreArgument
+
 
 class ScoreFunctionAdmin(admin.ModelAdmin):
     """
     Administrative settings for ScoreFunctions.
     """
-    fields = ('name', 'calculator', 'selectable_bodies', 'is_planscore', )
+    fields = (
+        'name',
+        'calculator',
+        'selectable_bodies',
+        'is_planscore',
+    )
 
-    list_display = ('name', 'is_planscore',)
+    list_display = (
+        'name',
+        'is_planscore',
+    )
 
-    list_filter = ('is_planscore', 'calculator',)
+    list_filter = (
+        'is_planscore',
+        'calculator',
+    )
 
     ordering = ['name']
 
-    inlines = [
-        ScoreArgumentInline
-    ]
+    inlines = [ScoreArgumentInline]
+
 
 class ScoreArgumentAdmin(admin.ModelAdmin):
     """
     Administrative settings for ScoreArguments
     """
-    fields = ('argument', 'type', 'value', 'function',)
+    fields = (
+        'argument',
+        'type',
+        'value',
+        'function',
+    )
 
-    list_display = ('argument', 'type', 'value', 'function',)
+    list_display = (
+        'argument',
+        'type',
+        'value',
+        'function',
+    )
 
     ordering = ['function', 'argument']
 
@@ -453,13 +599,18 @@ class ScoreDisplayAdmin(admin.ModelAdmin):
     """
     Administrative settings for ScoreDisplay
     """
-    list_filter = ('is_page',)
+    list_filter = ('is_page', )
+
 
 class ValidationCriteriaAdmin(admin.ModelAdmin):
     """
     Administrative settings for ValidationCriteria.
     """
-    fields = ('name','legislative_body','function',)
+    fields = (
+        'name',
+        'legislative_body',
+        'function',
+    )
 
 
 # Register these classes with the admin interface.

@@ -29,6 +29,7 @@ from django.core.management.base import BaseCommand
 from optparse import make_option
 from redistricting.models import *
 
+
 class Command(BaseCommand):
     """
     This command deletes all score configuration from the database
@@ -45,7 +46,10 @@ class Command(BaseCommand):
         if verbosity > 0:
             self.stdout.write('Deleting all score configuration\n')
 
-        for m in [ValidationCriteria, ScorePanel, ScoreDisplay, ScoreArgument, ScoreFunction]:
+        for m in [
+                ValidationCriteria, ScorePanel, ScoreDisplay, ScoreArgument,
+                ScoreFunction
+        ]:
             m.objects.all().delete()
 
         if verbosity > 0:

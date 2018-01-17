@@ -36,6 +36,7 @@ from redistricting.config import *
 
 logger = logging.getLogger(__name__)
 
+
 class Command(BaseCommand):
     """
     This command migrates all database configured strings into a set of
@@ -43,9 +44,13 @@ class Command(BaseCommand):
     """
     args = None
     help = 'Migrate database labels into internationalized message files.'
-    option_list = BaseCommand.option_list + (
-        make_option('-l', '--locale', dest='locale', default=None, action='store', help='Specify a locale.'),
-    )
+    option_list = BaseCommand.option_list + (make_option(
+        '-l',
+        '--locale',
+        dest='locale',
+        default=None,
+        action='store',
+        help='Specify a locale.'), )
 
     def setup_logging(self, verbosity):
         """
@@ -75,144 +80,116 @@ class Command(BaseCommand):
 
         # Make messages for each available locale
         for locale in locales:
-            logger.info('Processing locale %(locale)s', {'locale':locale})
+            logger.info('Processing locale %(locale)s', {'locale': locale})
 
             poutil = PoUtils(locale)
 
             for region in Region.objects.all():
                 # The short label of the region
                 poutil.add_or_update(
-                    msgid=u'%s short label' % region.name,
-                    msgstr=region.label
-                )
+                    msgid=u'%s short label' % region.name, msgstr=region.label)
                 # The label of the region
                 poutil.add_or_update(
-                    msgid=u'%s label' % region.name,
-                    msgstr=region.label
-                )
+                    msgid=u'%s label' % region.name, msgstr=region.label)
                 # The long description of the region
                 poutil.add_or_update(
                     msgid=u'%s long description' % region.name,
-                    msgstr=region.description
-                )
+                    msgstr=region.description)
 
                 for legislativebody in region.legislativebody_set.all():
                     # The short label for all districts in this body
                     poutil.add_or_update(
                         msgid=u'%s short label' % legislativebody.name,
-                        msgstr=legislativebody.short_label.replace('%s', '%(district_id)s')
-                    )
+                        msgstr=legislativebody.short_label.replace(
+                            '%s', '%(district_id)s'))
                     # The label for all districts in this body
                     poutil.add_or_update(
                         msgid=u'%s label' % legislativebody.name,
-                        msgstr=legislativebody.long_label.replace('%s', '%(district_id)s')
-                    )
+                        msgstr=legislativebody.long_label.replace(
+                            '%s', '%(district_id)s'))
                     # The description for all districts in this body (unused)
                     poutil.add_or_update(
                         msgid=u'%s long description' % legislativebody.name,
-                        msgstr=legislativebody.title
-                    )
+                        msgstr=legislativebody.title)
 
             for geolevel in Geolevel.objects.all():
                 # The short label of the geolevel
                 poutil.add_or_update(
                     msgid=u'%s short label' % geolevel.name,
-                    msgstr=geolevel.label
-                )
+                    msgstr=geolevel.label)
                 # The label of the geolevel
                 poutil.add_or_update(
-                    msgid=u'%s label' % geolevel.name,
-                    msgstr=geolevel.label
-                )
+                    msgid=u'%s label' % geolevel.name, msgstr=geolevel.label)
                 # The long description of the geolevel (unused)
                 poutil.add_or_update(
-                    msgid=u'%s long description' % geolevel.name,
-                    msgstr=''
-                )
+                    msgid=u'%s long description' % geolevel.name, msgstr='')
 
             for scoredisplay in ScoreDisplay.objects.all():
                 # The short label of the score display
                 poutil.add_or_update(
                     msgid=u'%s short label' % scoredisplay.name,
-                    msgstr=scoredisplay.title
-                )
+                    msgstr=scoredisplay.title)
                 # The label of the score display
                 poutil.add_or_update(
                     msgid=u'%s label' % scoredisplay.name,
-                    msgstr=scoredisplay.title
-                )
+                    msgstr=scoredisplay.title)
                 # The long description of the score display (unused)
                 poutil.add_or_update(
                     msgid=u'%s long description' % scoredisplay.name,
-                    msgstr=''
-                )
+                    msgstr='')
 
             for scorefunction in ScoreFunction.objects.all():
                 # The short label of the score function
                 poutil.add_or_update(
                     msgid=u'%s short label' % scorefunction.name,
-                    msgstr=scorefunction.label
-                )
+                    msgstr=scorefunction.label)
                 # The label of the score function
                 poutil.add_or_update(
                     msgid=u'%s label' % scorefunction.name,
-                    msgstr=scorefunction.label
-                )
+                    msgstr=scorefunction.label)
                 # The long description of the score function
                 poutil.add_or_update(
                     msgid=u'%s long description' % scorefunction.name,
-                    msgstr=scorefunction.description
-                )
+                    msgstr=scorefunction.description)
 
             for scorepanel in ScorePanel.objects.all():
                 # The short label of the score panel
                 poutil.add_or_update(
                     msgid=u'%s short label' % scorepanel.name,
-                    msgstr=scorepanel.title
-                )
+                    msgstr=scorepanel.title)
                 # The label of the score panel
                 poutil.add_or_update(
                     msgid=u'%s label' % scorepanel.name,
-                    msgstr=scorepanel.title
-                )
+                    msgstr=scorepanel.title)
                 # The long description of the score panel
                 poutil.add_or_update(
-                    msgid=u'%s long description' % scorepanel.name,
-                    msgstr=''
-                )
+                    msgid=u'%s long description' % scorepanel.name, msgstr='')
 
             for subject in Subject.objects.all():
                 # The short label of the subject
                 poutil.add_or_update(
                     msgid=u'%s short label' % subject.name,
-                    msgstr=subject.short_display
-                )
+                    msgstr=subject.short_display)
                 # The label of the subject
                 poutil.add_or_update(
-                    msgid=u'%s label' % subject.name,
-                    msgstr=subject.display
-                )
+                    msgid=u'%s label' % subject.name, msgstr=subject.display)
                 # The long description of the subject
                 poutil.add_or_update(
                     msgid=u'%s long description' % subject.name,
-                    msgstr=subject.description
-                )
+                    msgstr=subject.description)
 
             for validationcriterion in ValidationCriteria.objects.all():
                 # The short label of the validation criterion
                 poutil.add_or_update(
                     msgid=u'%s short label' % validationcriterion.name,
-                    msgstr=validationcriterion.title
-                )
+                    msgstr=validationcriterion.title)
                 # The label of the validation criterion
                 poutil.add_or_update(
                     msgid=u'%s label' % validationcriterion.name,
-                    msgstr=validationcriterion.title
-                )
+                    msgstr=validationcriterion.title)
                 # The long description of the validation criterion
                 poutil.add_or_update(
                     msgid=u'%s long description' % validationcriterion.name,
-                    msgstr=validationcriterion.description
-                )
+                    msgstr=validationcriterion.description)
 
             poutil.save()

@@ -421,9 +421,10 @@ class DistrictIndexFile():
 
             try:
                 # Build our new geometry from the union of our geounit geometries
-                new_geom = MultiPolygon(
-                    [x.geom.unary_union for x in Geounit.objects.filter(guFilter)]
-                ).unary_union
+                new_geom = MultiPolygon([
+                    x.geom.unary_union
+                    for x in Geounit.objects.filter(guFilter)
+                ]).unary_union
 
                 # Create a new district and save it
                 short_label = community_labels[

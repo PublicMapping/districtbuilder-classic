@@ -88,6 +88,7 @@ logger = logging.getLogger(__name__)
 # This constant is reused in multiple places.
 UNASSIGNED_DISTRICT_ID = 0
 
+
 def using_unique_session(u):
     """
     A test to determine if the user of the application is using a unique
@@ -114,13 +115,17 @@ def using_unique_session(u):
             decoded = session.get_decoded()
 
             if '_auth_user_id' in decoded and decoded['_auth_user_id'] == u.id:
-                if 'activity_time' in decoded and decoded['activity_time'] < datetime.now():
+                if 'activity_time' in decoded and decoded['activity_time'] < datetime.now(
+                ):
                     # delete this session of mine; it is dormant
-                    Session.objects.filter(session_key=session.session_key).delete()
+                    Session.objects.filter(
+                        session_key=session.session_key).delete()
                 else:
                     count += 1
         except SuspiciousOperation:
-            logger.debug("SuspiciousOperation caught while checking the number of sessions a user has open. Session key: %s", session.session_key)
+            logger.debug(
+                "SuspiciousOperation caught while checking the number of sessions a user has open. Session key: %s",
+                session.session_key)
 
     # after counting all the open and active sessions, go back through
     # the session list and assign the session count to all web sessions
@@ -133,9 +138,12 @@ def using_unique_session(u):
                 websession['count'] = count
                 websession.save()
         except SuspiciousOperation:
-            logger.debug("SuspiciousOperation caught while setting the session count on all user sessions. Session key: %s", session.session_key)
+            logger.debug(
+                "SuspiciousOperation caught while setting the session count on all user sessions. Session key: %s",
+                session.session_key)
 
     return (count <= 1)
+
 
 def unique_session_or_json_redirect(function):
     """
@@ -146,19 +154,23 @@ def unique_session_or_json_redirect(function):
     is not unique, then a JSON response is returned and the
     client is redirected to log off.
     """
-    def decorator(request, *args, **kwargs) :
+
+    def decorator(request, *args, **kwargs):
         def return_nonunique_session_result():
-            status = { 'success': False }
+            status = {'success': False}
             status['message'] = _(
                 "The current user may only have one session open at a time.")
             status['redirect'] = '/?msg=logoff'
-            return HttpResponse(json.dumps(status),content_type='application/json')
+            return HttpResponse(
+                json.dumps(status), content_type='application/json')
 
         if not using_unique_session(request.user):
             return return_nonunique_session_result()
         else:
             return function(request, *args, **kwargs)
+
     return wraps(function)(decorator)
+
 
 def is_session_available(req):
     """
@@ -177,15 +189,21 @@ def is_session_available(req):
     for session in sessions:
         try:
             decoded = session.get_decoded()
-            if (not req.user.is_anonymous()) and 'activity_time' in decoded and decoded['activity_time'] > datetime.now():
+            if (
+                    not req.user.is_anonymous()
+            ) and 'activity_time' in decoded and decoded['activity_time'] > datetime.now(
+            ):
                 count += 1
         except SuspiciousOperation:
-            logger.debug("SuspiciousOperation caught while checking the last activity time in a user's session. Session key: %s", session.session_key)
+            logger.debug(
+                "SuspiciousOperation caught while checking the last activity time in a user's session. Session key: %s",
+                session.session_key)
 
     avail = count < settings.CONCURRENT_SESSIONS
     req.session['avail'] = avail
 
     return avail
+
 
 def note_session_activity(req):
     """
@@ -197,7 +215,7 @@ def note_session_activity(req):
         req - An HttpRequest, with a session attribute
     """
     # The timeout in this timedelta specifies the number of minutes.
-    window = timedelta(0,0,0,0,settings.SESSION_TIMEOUT)
+    window = timedelta(0, 0, 0, 0, settings.SESSION_TIMEOUT)
     req.session['activity_time'] = (datetime.now() + window).isoformat()
 
 
@@ -218,22 +236,28 @@ def unloadplan(request, planid):
         A JSON HttpResponse which includes a status.
     """
     note_session_activity(request)
-    status = { 'success': False }
+    status = {'success': False}
 
     ps = Plan.objects.filter(pk=planid)
     if len(ps) > 0:
         p = ps[0]
 
         if not can_copy(request.user, p):
-            status['message'] = _("User %(user)s doesn't have permission to unload this plan") % {'user':request.user.username}
-            return HttpResponse(json.dumps(status),content_type='application/json')
+            status['message'] = _(
+                "User %(user)s doesn't have permission to unload this plan"
+            ) % {
+                'user': request.user.username
+            }
+            return HttpResponse(
+                json.dumps(status), content_type='application/json')
 
         # Purge temporary versions
         if settings.MAX_UNDOS_AFTER_EDIT > 0:
             p.purge_beyond_nth_step(settings.MAX_UNDOS_AFTER_EDIT)
 
     status['success'] = True
-    return HttpResponse(json.dumps(status),content_type='application/json')
+    return HttpResponse(json.dumps(status), content_type='application/json')
+
 
 @login_required
 @unique_session_or_json_redirect
@@ -258,28 +282,36 @@ def copyplan(request, planid):
     if not is_plan_ready(planid):
         return HttpResponseRedirect('/')
 
-    status = { 'success': False }
+    status = {'success': False}
     p = Plan.objects.get(pk=planid)
     # Check if this plan is copyable by the current user.
     if not can_copy(request.user, p):
         status['message'] = _("User %(username)s doesn't have permission to " \
             "copy this model" % {'username': request.user.username})
-        return HttpResponse(json.dumps(status),content_type='application/json')
+        return HttpResponse(
+            json.dumps(status), content_type='application/json')
 
     # Create a random name if there is no name provided
     newname = p.name + " " + str(random.random())
-    if (request.method == "POST" ):
+    if (request.method == "POST"):
         newname = request.POST["name"][0:200]
         shared = request.POST.get("shared", False)
 
-    plan_copy = Plan.objects.filter(name=newname, owner=request.user, legislative_body=p.legislative_body)
+    plan_copy = Plan.objects.filter(
+        name=newname, owner=request.user, legislative_body=p.legislative_body)
     # Check that the copied plan's name doesn't already exist.
     if len(plan_copy) > 0:
         status['message'] = _("You already have a plan named that. " \
             "Please pick a unique name.")
-        return HttpResponse(json.dumps(status),content_type='application/json')
+        return HttpResponse(
+            json.dumps(status), content_type='application/json')
 
-    plan_copy = Plan(name=newname, owner=request.user, is_shared=shared, legislative_body=p.legislative_body, processing_state=ProcessingState.READY)
+    plan_copy = Plan(
+        name=newname,
+        owner=request.user,
+        is_shared=shared,
+        legislative_body=p.legislative_body,
+        processing_state=ProcessingState.READY)
     plan_copy.create_unassigned = False
     plan_copy.save()
 
@@ -299,16 +331,18 @@ def copyplan(request, planid):
         except Exception as inst:
             status["message"] = _("Could not save district copies")
             status["exception"] = inst.message
-            return HttpResponse(json.dumps(status),content_type='application/json')
+            return HttpResponse(
+                json.dumps(status), content_type='application/json')
 
         # clone the characteristics, comments, and tags from the original
         # district to the copy
         district_copy.clone_relations_from(district)
 
     # Serialize the plan object to the response.
-    data = serializers.serialize("json", [ plan_copy ])
+    data = serializers.serialize("json", [plan_copy])
 
     return HttpResponse(data, content_type='application/json')
+
 
 @login_required
 @unique_session_or_json_redirect
@@ -325,10 +359,11 @@ def scoreplan(request, planid):
         a reason why the plan couldn't be validated
     """
     note_session_activity(request)
-    status = { 'success': False }
+    status = {'success': False}
     plan = Plan.objects.get(pk=planid)
 
-    criterion = ValidationCriteria.objects.filter(legislative_body=plan.legislative_body)
+    criterion = ValidationCriteria.objects.filter(
+        legislative_body=plan.legislative_body)
     status['success'] = True
     for criteria in criterion:
         try:
@@ -338,7 +373,9 @@ def scoreplan(request, planid):
 
         if not score or not score['value']:
             status['success'] = False
-            status['message'] = '<p>%s</p><p>%s</p>' % (criteria.get_short_label(), criteria.get_long_description() or criteria.function.get_long_description())
+            status['message'] = '<p>%s</p><p>%s</p>' % (
+                criteria.get_short_label(), criteria.get_long_description()
+                or criteria.function.get_long_description())
             break
 
     if status['success']:
@@ -349,7 +386,7 @@ def scoreplan(request, planid):
         plan.is_valid = True
         plan.save()
 
-    return HttpResponse(json.dumps(status),content_type='application/json')
+    return HttpResponse(json.dumps(status), content_type='application/json')
 
 
 def get_user_info(user):
@@ -368,14 +405,15 @@ def get_user_info(user):
     profile = user.profile
 
     return {
-        'username':user.username,
-        'email':user.email,
-        'password_hint':profile.pass_hint,
-        'firstname':user.first_name,
-        'lastname':user.last_name,
-        'organization':profile.organization,
-        'id':user.id
+        'username': user.username,
+        'email': user.email,
+        'password_hint': profile.pass_hint,
+        'firstname': user.first_name,
+        'lastname': user.last_name,
+        'organization': profile.organization,
+        'id': user.id
     }
+
 
 def commonplan(request, planid):
     """
@@ -397,14 +435,16 @@ def commonplan(request, planid):
         plan = plan[0]
         plan.edited = getutc(plan.edited)
         levels = plan.legislative_body.get_geolevels()
-        districts = plan.get_districts_at_version(plan.version,include_geom=False)
+        districts = plan.get_districts_at_version(
+            plan.version, include_geom=False)
         editable = can_edit(request.user, plan)
         default_demo = plan.legislative_body.get_default_subject()
         max_dists = plan.legislative_body.max_districts
         body_member_short_label = plan.legislative_body.get_short_label()
         body_member_long_label = plan.legislative_body.get_label()
         body_members = plan.legislative_body.get_members_label()
-        reporting_template = 'bard_%s.html' % plan.legislative_body.name if not plan.is_community() else None
+        reporting_template = 'bard_%s.html' % plan.legislative_body.name if not plan.is_community(
+        ) else None
 
         index = body_member_short_label.find('%(district_id)s')
         if index >= 0:
@@ -417,8 +457,10 @@ def commonplan(request, planid):
             tags = []
             calculator_reports = []
         else:
-            tags = Tag.objects.filter(name__startswith='type=').order_by('id').values_list('name',flat=True)
-            tags = map(lambda x:x[5:], tags)
+            tags = Tag.objects.filter(
+                name__startswith='type=').order_by('id').values_list(
+                    'name', flat=True)
+            tags = map(lambda x: x[5:], tags)
 
             # Reports defined with calculators (Score Displays, Panels, and Functions)
             # result is a map of relevant panels to score functions with labels and ids,
@@ -426,7 +468,8 @@ def commonplan(request, planid):
             calculator_reports = []
 
             if settings.REPORTS_ENABLED == 'CALC':
-                report_displays = ScoreDisplay.objects.filter(name="%s_reports" % plan.legislative_body.name)
+                report_displays = ScoreDisplay.objects.filter(
+                    name="%s_reports" % plan.legislative_body.name)
                 if len(report_displays) > 0:
                     calculator_reports = map(lambda p: {
                                 'title': p.__unicode__(),
@@ -446,7 +489,7 @@ def commonplan(request, planid):
         max_dists = 0
         body_member_short_label = ''
         body_member_long_label = _('District') + ' '
-        body_members = _n('district','districts',2)
+        body_members = _n('district', 'districts', 2)
         reporting_template = None
         tags = []
         calculator_reports = []
@@ -459,8 +502,7 @@ def commonplan(request, planid):
     if len(levels) > 0:
         study_area_extent = reduce(
             lambda x, y: x.union(y),
-            [x.simple for x in levels[0].geounit_set.all()]
-        )
+            [x.simple for x in levels[0].geounit_set.all()])
     else:
         # The geolevels with higher indexes are larger geography
         # Cycle through legislative bodies, since they may be in different regions
@@ -469,8 +511,7 @@ def commonplan(request, planid):
             if biglevel.geounit_set.count() > 0:
                 study_area_extent = reduce(
                     lambda x, y: x.union(y),
-                    [x.simple for x in biglevel.geounit_set.all()]
-                )
+                    [x.simple for x in biglevel.geounit_set.all()])
                 break
 
     for level in levels:
@@ -484,26 +525,28 @@ def commonplan(request, planid):
         })
     default_selected = False
     for demo in demos:
-        isdefault = str((not default_demo is None) and (demo.id == default_demo.id)).lower()
+        isdefault = str((not default_demo is None)
+                        and (demo.id == default_demo.id)).lower()
         if isdefault == 'true':
             default_selected = True
         # i18n-ize name & short_display here, not in js
         layers.append({
-            'id':demo.id,
-            'text':demo.get_short_label(),
-            'value':demo.name,
-            'isdefault':isdefault,
-            'isdisplayed':str(demo.is_displayed).lower()
+            'id': demo.id,
+            'text': demo.get_short_label(),
+            'value': demo.name,
+            'isdefault': isdefault,
+            'isdisplayed': str(demo.is_displayed).lower()
         })
     # If the default demo was not selected among the first three, we'll still need it for the dropdown menus
     if default_demo and not default_selected:
-        layers.insert( 0, {
-            'id':default_demo.id,
-            'text':default_demo.get_short_label(),
-            'value':default_demo.name,
-            'isdefault':str(True).lower(),
-            'isdisplayed':str(default_demo.is_displayed).lower()
-        })
+        layers.insert(
+            0, {
+                'id': default_demo.id,
+                'text': default_demo.get_short_label(),
+                'value': default_demo.name,
+                'isdefault': str(True).lower(),
+                'isdisplayed': str(default_demo.is_displayed).lower()
+            })
 
     # Try to get the mapserver protocol from the settings module.
     # Set it to an empty string if the setting isn't defined so the
@@ -515,8 +558,15 @@ def commonplan(request, planid):
     long_label = body_member_long_label.strip().lower()
 
     has_regions = Region.objects.all().count() > 1
-    bodies = LegislativeBody.objects.all().order_by('region__sort_key','sort_key')
-    l_bodies = [b for b in bodies if b in [sd.legislative_body for sd in ScoreDisplay.objects.filter(is_page=True)]]
+    bodies = LegislativeBody.objects.all().order_by('region__sort_key',
+                                                    'sort_key')
+    l_bodies = [
+        b for b in bodies
+        if b in [
+            sd.legislative_body
+            for sd in ScoreDisplay.objects.filter(is_page=True)
+        ]
+    ]
 
     try:
         loader.get_template(reporting_template)
@@ -524,53 +574,91 @@ def commonplan(request, planid):
         reporting_template = None
 
     return {
-        'bodies': bodies,
-        'has_regions': has_regions,
-        'leaderboard_bodies': l_bodies,
-        'plan': plan,
-        'districts': districts,
-        'mapserver': settings.MAP_SERVER,
-        'mapserver_protocol': mapserver_protocol,
-        'basemaps': settings.BASE_MAPS,
-        'namespace': settings.MAP_SERVER_NS,
-        'ns_href': settings.MAP_SERVER_NSHREF,
-        'feature_limit': settings.FEATURE_LIMIT,
-        'adjacency': settings.ADJACENCY,
-        'convexchoropleth': settings.CONVEX_CHOROPLETH,
-        'demographics': layers,
-        'snaplayers': snaplayers,
-        'unassigned_id': UNASSIGNED_DISTRICT_ID,
-        'is_registered': request.user.username != 'anonymous' and request.user.username != '',
-        'debugging_staff': settings.DEBUG and request.user.is_staff,
-        'userinfo': get_user_info(request.user),
-        'is_editable': editable,
-        'max_dists': max_dists + 1,
-        'ga_account': settings.GA_ACCOUNT,
-        'ga_domain': settings.GA_DOMAIN,
-        'body_member_short_label': short_label,
-        'body_member_long_label': long_label,
-        'body_members': body_members,
-        'reporting_template': reporting_template,
-        'study_area_extent': list(study_area_extent.extent),
-        'has_leaderboard' : len(ScoreDisplay.objects.filter(is_page=True)) > 0,
-        'calculator_reports' : json.dumps(calculator_reports),
-        'allow_email_submissions': (
-            'EMAIL_SUBMISSION' in settings.__members__ if hasattr(settings, '__members__')
-            else False
-        ),
-        'tags': tags,
-        'site': Site.objects.get_current(),
-        'plan_text': _("community map") if (plan and plan.is_community()) else _("plan"),
-        'language_code': translation.get_language(),
-        'LANGUAGES': settings.LANGUAGES # needed (as CAPS) for language chooser
+        'bodies':
+        bodies,
+        'has_regions':
+        has_regions,
+        'leaderboard_bodies':
+        l_bodies,
+        'plan':
+        plan,
+        'districts':
+        districts,
+        'mapserver':
+        settings.MAP_SERVER,
+        'mapserver_protocol':
+        mapserver_protocol,
+        'basemaps':
+        settings.BASE_MAPS,
+        'namespace':
+        settings.MAP_SERVER_NS,
+        'ns_href':
+        settings.MAP_SERVER_NSHREF,
+        'feature_limit':
+        settings.FEATURE_LIMIT,
+        'adjacency':
+        settings.ADJACENCY,
+        'convexchoropleth':
+        settings.CONVEX_CHOROPLETH,
+        'demographics':
+        layers,
+        'snaplayers':
+        snaplayers,
+        'unassigned_id':
+        UNASSIGNED_DISTRICT_ID,
+        'is_registered':
+        request.user.username != 'anonymous' and request.user.username != '',
+        'debugging_staff':
+        settings.DEBUG and request.user.is_staff,
+        'userinfo':
+        get_user_info(request.user),
+        'is_editable':
+        editable,
+        'max_dists':
+        max_dists + 1,
+        'ga_account':
+        settings.GA_ACCOUNT,
+        'ga_domain':
+        settings.GA_DOMAIN,
+        'body_member_short_label':
+        short_label,
+        'body_member_long_label':
+        long_label,
+        'body_members':
+        body_members,
+        'reporting_template':
+        reporting_template,
+        'study_area_extent':
+        list(study_area_extent.extent),
+        'has_leaderboard':
+        len(ScoreDisplay.objects.filter(is_page=True)) > 0,
+        'calculator_reports':
+        json.dumps(calculator_reports),
+        'allow_email_submissions': ('EMAIL_SUBMISSION' in settings.__members__
+                                    if hasattr(settings, '__members__') else
+                                    False),
+        'tags':
+        tags,
+        'site':
+        Site.objects.get_current(),
+        'plan_text':
+        _("community map") if (plan and plan.is_community()) else _("plan"),
+        'language_code':
+        translation.get_language(),
+        'LANGUAGES':
+        settings.LANGUAGES  # needed (as CAPS) for language chooser
     }
+
 
 def is_plan_ready(planid):
     """
     Determines if a plan is in a Ready state
     """
     planid = int(planid)
-    return planid == 0 or len(Plan.objects.filter(id=planid, processing_state=ProcessingState.READY)) > 0
+    return planid == 0 or len(
+        Plan.objects.filter(id=planid,
+                            processing_state=ProcessingState.READY)) > 0
+
 
 @user_passes_test(using_unique_session)
 def viewplan(request, planid):
@@ -591,7 +679,8 @@ def viewplan(request, planid):
         return HttpResponseRedirect('/')
 
     # Cleanup old versions for logged in users
-    if not request.user.is_anonymous() and (int(planid) == 0) and (settings.MAX_UNDOS_AFTER_EDIT > 0):
+    if not request.user.is_anonymous() and (int(planid) == 0) and (
+            settings.MAX_UNDOS_AFTER_EDIT > 0):
         for p in Plan.objects.filter(owner=request.user):
             p.purge_beyond_nth_step(settings.MAX_UNDOS_AFTER_EDIT)
 
@@ -612,14 +701,16 @@ def editplan(request, planid):
     Returns:
         A rendered HTML page for editing a plan.
     """
-    if request.user.is_anonymous() or not is_session_available(request) or not is_plan_ready(planid):
+    if request.user.is_anonymous(
+    ) or not is_session_available(request) or not is_plan_ready(planid):
         return HttpResponseRedirect('/')
 
     cfg = commonplan(request, planid)
     if cfg['is_editable'] == False:
         return HttpResponseRedirect('/districtmapping/plan/%s/view/' % planid)
-    plan = Plan.objects.get(id=planid,owner=request.user)
-    cfg['dists_maxed'] = len(cfg['districts']) > plan.legislative_body.max_districts
+    plan = Plan.objects.get(id=planid, owner=request.user)
+    cfg['dists_maxed'] = len(
+        cfg['districts']) > plan.legislative_body.max_districts
     cfg['available_districts'] = plan.get_available_districts()
 
     # Cleanup old versions
@@ -627,6 +718,7 @@ def editplan(request, planid):
         plan.purge_beyond_nth_step(settings.MAX_UNDOS_AFTER_EDIT)
 
     return render('editplan.html', cfg)
+
 
 @user_passes_test(using_unique_session)
 def printplan(request, planid):
@@ -658,15 +750,17 @@ def printplan(request, planid):
             not 'geography_lyr' in request.POST or \
             not 'district_url' in request.POST or \
             not 'district_lyr' in request.POST:
-            logger.warning('Missing required "bbox", "geography_url", "geography_lyr", "district_url", or "districts_lyr" parameter.')
+            logger.warning(
+                'Missing required "bbox", "geography_url", "geography_lyr", "district_url", or "districts_lyr" parameter.'
+            )
             return HttpResponseRedirect('../view/')
 
-        height = 500*2
+        height = 500 * 2
         if 'height' in request.POST:
-            height = int(request.POST['height'])*2
-        width = 1024*2
+            height = int(request.POST['height']) * 2
+        width = 1024 * 2
         if 'width' in request.POST:
-            width = int(request.POST['width'])*2
+            width = int(request.POST['width']) * 2
         opacity = 0.8
         if 'opacity' in request.POST:
             opacity = float(request.POST['opacity'])
@@ -702,55 +796,64 @@ def printplan(request, planid):
         # create basemap for compositing
         fullImg = basemap.draw()
 
-
         # geography layer
-        provider = ModestMaps.WMS.Provider(cfg['geography_url'], {
-            'LAYERS':cfg['geography_lyr'],
-            'TRANSPARENT':'true',
-            'SRS': 'EPSG:3785',
-            'HEIGHT': 512,
-            'WIDTH': 512
-        })
+        provider = ModestMaps.WMS.Provider(
+            cfg['geography_url'], {
+                'LAYERS': cfg['geography_lyr'],
+                'TRANSPARENT': 'true',
+                'SRS': 'EPSG:3785',
+                'HEIGHT': 512,
+                'WIDTH': 512
+            })
         overlayImg = ModestMaps.mapByExtent(provider, ll, ur, dims).draw()
 
         # create an invert mask of the geography
         maskImg = ImageChops.invert(overlayImg)
 
-
         # district fill layer
-        provider = ModestMaps.WMS.Provider(cfg['district_url'], {
-            'LAYERS':cfg['district_lyr'],
-            'TRANSPARENT':'false',
-            'SRS': 'EPSG:3785',
-            'SLD_BODY': request.POST['district_sld'],
-            'HEIGHT': 512,
-            'WIDTH': 512
-        })
-        overlayImg = Image.blend(overlayImg, ModestMaps.mapByExtent(provider, ll, ur, dims).draw(), 0.5)
+        provider = ModestMaps.WMS.Provider(
+            cfg['district_url'], {
+                'LAYERS': cfg['district_lyr'],
+                'TRANSPARENT': 'false',
+                'SRS': 'EPSG:3785',
+                'SLD_BODY': request.POST['district_sld'],
+                'HEIGHT': 512,
+                'WIDTH': 512
+            })
+        overlayImg = Image.blend(overlayImg,
+                                 ModestMaps.mapByExtent(
+                                     provider, ll, ur, dims).draw(), 0.5)
 
         # composite the overlay onto the base, using the mask (from geography)
-        fullImg = Image.composite(fullImg, Image.blend(fullImg, overlayImg, opacity), maskImg)
-
+        fullImg = Image.composite(fullImg,
+                                  Image.blend(fullImg, overlayImg, opacity),
+                                  maskImg)
 
         # district line & label layer
-        provider = ModestMaps.WMS.Provider(cfg['district_url'], {
-            'LAYERS':cfg['district_lyr'],
-            'TRANSPARENT':'true',
-            'SRS': 'EPSG:3785',
-            'SLD_BODY': request.POST['label_sld'],
-            'HEIGHT': 512,
-            'WIDTH': 512
-        })
+        provider = ModestMaps.WMS.Provider(
+            cfg['district_url'], {
+                'LAYERS': cfg['district_lyr'],
+                'TRANSPARENT': 'true',
+                'SRS': 'EPSG:3785',
+                'SLD_BODY': request.POST['label_sld'],
+                'HEIGHT': 512,
+                'WIDTH': 512
+            })
         overlayImg = ModestMaps.mapByExtent(provider, ll, ur, dims).draw()
 
         # create an invert mask of the labels & lines
         maskImg = ImageChops.invert(overlayImg)
 
         # composite the district labels on top of the composited basemap, geography & district areas
-        fullImg = Image.composite(fullImg, Image.blend(fullImg, overlayImg, opacity), maskImg)
+        fullImg = Image.composite(fullImg,
+                                  Image.blend(fullImg, overlayImg, opacity),
+                                  maskImg)
 
         # save
-        fullImg.save(settings.WEB_TEMP + ('/print-%s.jpg' % sha.hexdigest()),'jpeg',quality=100)
+        fullImg.save(
+            settings.WEB_TEMP + ('/print-%s.jpg' % sha.hexdigest()),
+            'jpeg',
+            quality=100)
 
         # render pg to a string
         t = loader.get_template('printplan.html')
@@ -763,13 +866,15 @@ def printplan(request, planid):
         # it isn't able to decipher.
         CreatePDF(page, result, show_error_as_pdf=True)
 
-        response = HttpResponse(result.getvalue(), content_type='application/pdf')
+        response = HttpResponse(
+            result.getvalue(), content_type='application/pdf')
         response['Content-Disposition'] = 'attachment; filename=plan.pdf'
 
         return response
 
     else:
         return HttpResponseRedirect('../view/')
+
 
 @login_required
 @unique_session_or_json_redirect
@@ -789,17 +894,23 @@ def createplan(request):
     """
     note_session_activity(request)
 
-    status = { 'success': False }
+    status = {'success': False}
     if request.method == "POST":
         name = request.POST['name'][0:200]
-        body = LegislativeBody.objects.get(id=int(request.POST['legislativeBody']))
-        plan = Plan(name=name, owner=request.user, legislative_body=body, processing_state=ProcessingState.READY)
+        body = LegislativeBody.objects.get(
+            id=int(request.POST['legislativeBody']))
+        plan = Plan(
+            name=name,
+            owner=request.user,
+            legislative_body=body,
+            processing_state=ProcessingState.READY)
         try:
             plan.save()
-            status = serializers.serialize("json", [ plan ])
+            status = serializers.serialize("json", [plan])
         except:
-            status = { 'success': False, 'message': _("Couldn't save new plan") }
-    return HttpResponse(json.dumps(status),content_type='application/json')
+            status = {'success': False, 'message': _("Couldn't save new plan")}
+    return HttpResponse(json.dumps(status), content_type='application/json')
+
 
 @unique_session_or_json_redirect
 def uploadfile(request):
@@ -821,7 +932,7 @@ def uploadfile(request):
         # they will not get a notice that they were logged out.
         return HttpResponseRedirect('/')
 
-    status = commonplan(request,0)
+    status = commonplan(request, 0)
     status['upload'] = True
     status['upload_status'] = True
 
@@ -837,7 +948,7 @@ def uploadfile(request):
         status['upload_status'] = False
         return render('viewplan.html', status)
 
-    if not filename.endswith(('.csv','.zip')):
+    if not filename.endswith(('.csv', '.zip')):
         logger.error('Uploaded file must be ".csv" or ".zip".')
         status['upload_status'] = False
     elif request.POST['userEmail'] == '':
@@ -850,8 +961,8 @@ def uploadfile(request):
                 dest.write(chunk)
             dest.close()
             if request.FILES['indexFile'].name.endswith('.zip'):
-                os.rename(dest.name, '%s%s' % (dest.name,'.zip'))
-                filename = '%s%s' % (dest.name,'.zip')
+                os.rename(dest.name, '%s%s' % (dest.name, '.zip'))
+                filename = '%s%s' % (dest.name, '.zip')
             else:
                 filename = dest.name
 
@@ -862,9 +973,18 @@ def uploadfile(request):
             return render('viewplan.html', status)
 
         # Put in a celery task to create the plan and email user on completion
-        DistrictIndexFile.index2plan.delay(request.POST['txtNewName'], request.POST['legislativeBody'], filename, owner = request.user, template = False, purge = True, email = request.POST['userEmail'], language=translation.get_language())
+        DistrictIndexFile.index2plan.delay(
+            request.POST['txtNewName'],
+            request.POST['legislativeBody'],
+            filename,
+            owner=request.user,
+            template=False,
+            purge=True,
+            email=request.POST['userEmail'],
+            language=translation.get_language())
 
     return render('viewplan.html', status)
+
 
 def generate_report_hash(qdict):
     """
@@ -884,6 +1004,7 @@ def generate_report_hash(qdict):
     sha.update(params)
     return sha.hexdigest()
 
+
 @unique_session_or_json_redirect
 def getreport(request, planid):
     """
@@ -902,25 +1023,29 @@ def getreport(request, planid):
     """
     note_session_activity(request)
 
-    status = { 'success': False }
+    status = {'success': False}
     try:
         plan = Plan.objects.get(pk=planid)
     except:
         status['message'] = _('No plan with the given id')
-        return HttpResponse(json.dumps(status),content_type='application/json')
+        return HttpResponse(
+            json.dumps(status), content_type='application/json')
 
     if not can_view(request.user, plan):
         status['message'] = _("User can't view the given plan")
-        return HttpResponse(json.dumps(status),content_type='application/json')
+        return HttpResponse(
+            json.dumps(status), content_type='application/json')
 
     if not settings.REPORTS_ENABLED is None:
         status['message'] = _('Reports functionality is turned off.')
-        return HttpResponse(json.dumps(status),content_type='application/json')
+        return HttpResponse(
+            json.dumps(status), content_type='application/json')
 
     # Get the variables from the request
     if request.method != 'POST':
         status['message'] = _("Information for report wasn't sent via POST")
-        return HttpResponse(json.dumps(status),content_type='application/json')
+        return HttpResponse(
+            json.dumps(status), content_type='application/json')
 
     stamp = request.POST.get('stamp', generate_report_hash(request.POST))
 
@@ -963,12 +1088,14 @@ def getreport(request, planid):
         }
 
         PlanReport.markpending(planid, stamp)
-        PlanReport.createreport.delay(planid, stamp, req, language=translation.get_language())
+        PlanReport.createreport.delay(
+            planid, stamp, req, language=translation.get_language())
     else:
         status['message'] = _(
             'Unrecognized status when checking report status.')
 
-    return HttpResponse(json.dumps(status),content_type='application/json')
+    return HttpResponse(json.dumps(status), content_type='application/json')
+
 
 @unique_session_or_json_redirect
 def getcalculatorreport(request, planid):
@@ -988,20 +1115,23 @@ def getcalculatorreport(request, planid):
     """
     note_session_activity(request)
 
-    status = { 'success': False }
+    status = {'success': False}
     try:
         plan = Plan.objects.get(pk=planid)
     except:
         status['message'] = _('No plan with the given id')
-        return HttpResponse(json.dumps(status),content_type='application/json')
+        return HttpResponse(
+            json.dumps(status), content_type='application/json')
 
     if not can_view(request.user, plan):
         status['message'] = _("User can't view the given plan")
-        return HttpResponse(json.dumps(status),content_type='application/json')
+        return HttpResponse(
+            json.dumps(status), content_type='application/json')
 
     if request.method != 'POST':
         status['message'] = _("Information for report wasn't sent via POST")
-        return HttpResponse(json.dumps(status),content_type='application/json')
+        return HttpResponse(
+            json.dumps(status), content_type='application/json')
 
     # extract the function ids from the POST
     function_ids = request.POST.get('functionIds', '')
@@ -1037,14 +1167,16 @@ def getcalculatorreport(request, planid):
             'stamp': stamp
         }
 
-        req = { 'functionIds': function_ids }
+        req = {'functionIds': function_ids}
         CalculatorReport.markpending(planid, stamp)
-        CalculatorReport.createcalculatorreport.delay(planid, stamp, req, language=translation.get_language())
+        CalculatorReport.createcalculatorreport.delay(
+            planid, stamp, req, language=translation.get_language())
     else:
         status['message'] = _(
             'Unrecognized status when checking report status.')
 
-    return HttpResponse(json.dumps(status),content_type='application/json')
+    return HttpResponse(json.dumps(status), content_type='application/json')
+
 
 @login_required
 @unique_session_or_json_redirect
@@ -1065,7 +1197,7 @@ def newdistrict(request, planid):
     """
     note_session_activity(request)
 
-    status = { 'success': False }
+    status = {'success': False}
     if len(request.POST.items()) >= 3:
         plan = Plan.objects.get(pk=planid, owner=request.user)
 
@@ -1086,14 +1218,18 @@ def newdistrict(request, planid):
         if 'district_short' in request.POST:
             district_short = request.POST['district_short'][0:10]
         elif not district_id is None:
-            district_short = plan.legislative_body.get_short_label() % {'district_id':district_id}
+            district_short = plan.legislative_body.get_short_label() % {
+                'district_id': district_id
+            }
         else:
             district_short = None
 
         if 'district_long' in request.POST:
             district_long = request.POST['district_long'][0:256]
         elif not district_id is None:
-            district_long = plan.legislative_body.get_label() % {'district_id':district_id}
+            district_long = plan.legislative_body.get_label() % {
+                'district_id': district_id
+            }
         else:
             district_long = None
 
@@ -1106,14 +1242,22 @@ def newdistrict(request, planid):
             try:
                 # add the geounits selected to this district -- this will
                 # create a new district w/1 version higher
-                fixed = plan.add_geounits((district_id, district_short, district_long,), geounit_ids, geolevel, version)
+                fixed = plan.add_geounits((
+                    district_id,
+                    district_short,
+                    district_long,
+                ), geounit_ids, geolevel, version)
 
                 # if there are comments, types or multiple members, add them to the district
-                district = plan.district_set.filter(district_id=district_id,short_label=district_short,long_label=district_long)[0]
+                district = plan.district_set.filter(
+                    district_id=district_id,
+                    short_label=district_short,
+                    long_label=district_long)[0]
                 if plan.legislative_body.multi_members_allowed:
                     district.num_members = plan.legislative_body.min_multi_district_members
                     district.save()
-                ct = ContentType.objects.get(app_label='redistricting',model='district')
+                ct = ContentType.objects.get(
+                    app_label='redistricting', model='district')
                 if 'comment' in request.POST and request.POST['comment'] != '':
                     comment = Comment(
                         object_pk=district.id,
@@ -1150,7 +1294,8 @@ def newdistrict(request, planid):
         else:
             status['message'] = _('Must specify name, geolevel, ' \
                 'and geounit ids for new district.')
-    return HttpResponse(json.dumps(status),content_type='application/json')
+    return HttpResponse(json.dumps(status), content_type='application/json')
+
 
 @login_required
 @unique_session_or_json_redirect
@@ -1169,24 +1314,27 @@ def add_districts_to_plan(request, planid):
         Some JSON explaining the success or failure of the paste operation
     """
 
-    status = { 'success': False }
+    status = {'success': False}
 
     # Make sure we can edit the given plan
     try:
         plan = Plan.objects.get(pk=planid)
     except:
         status['message'] = _('No plan with the given id')
-        return HttpResponse(json.dumps(status),content_type='application/json')
+        return HttpResponse(
+            json.dumps(status), content_type='application/json')
 
     if not can_edit(request.user, plan):
         status['message'] = _("User can't edit the given plan")
-        return HttpResponse(json.dumps(status),content_type='application/json')
+        return HttpResponse(
+            json.dumps(status), content_type='application/json')
 
     # Get the districts we want to merge
     district_list = request.POST.getlist('districts[]')
     if len(district_list) == 0:
         status['message'] = _("No districts selected to add to the given plan")
-        return HttpResponse(json.dumps(status),content_type='application/json')
+        return HttpResponse(
+            json.dumps(status), content_type='application/json')
     else:
         districts = District.objects.filter(id__in=district_list)
         version = int(request.POST.get('version', None))
@@ -1205,13 +1353,16 @@ def add_districts_to_plan(request, planid):
     try:
         results = plan.paste_districts(districts, version=version)
         status['success'] = True
-        status['message'] = _('Merged %(num_merged_districts)d districts') % {'num_merged_districts': len(results)}
+        status['message'] = _('Merged %(num_merged_districts)d districts') % {
+            'num_merged_districts': len(results)
+        }
         status['version'] = plan.version
     except Exception as ex:
         status['message'] = str(ex)
         status['exception'] = traceback.format_exc()
 
-    return HttpResponse(json.dumps(status),content_type='application/json')
+    return HttpResponse(json.dumps(status), content_type='application/json')
+
 
 @login_required
 @unique_session_or_json_redirect
@@ -1229,25 +1380,28 @@ def assign_district_members(request, planid):
         Some JSON explaining the success or failure of the paste operation
     """
 
-    status = { 'success': False }
+    status = {'success': False}
 
     # Make sure we can edit the given plan
     try:
         plan = Plan.objects.get(pk=planid)
     except:
         status['message'] = _('No plan with the given id')
-        return HttpResponse(json.dumps(status),content_type='application/json')
+        return HttpResponse(
+            json.dumps(status), content_type='application/json')
 
     if not can_edit(request.user, plan):
         status['message'] = _("User can't edit the given plan")
-        return HttpResponse(json.dumps(status),content_type='application/json')
+        return HttpResponse(
+            json.dumps(status), content_type='application/json')
 
     # Make sure this district allows multi-member assignment
     leg_bod = plan.legislative_body
     if (not leg_bod.multi_members_allowed):
         status['message'] = _(
             'Multi-members not allowed for this legislative body')
-        return HttpResponse(json.dumps(status),content_type='application/json')
+        return HttpResponse(
+            json.dumps(status), content_type='application/json')
 
     # Get the districts we want to assign members to
     districts = request.POST.getlist('districts[]')
@@ -1260,7 +1414,9 @@ def assign_district_members(request, planid):
         for i in range(0, len(districts)):
             id = int(districts[i])
             count = int(counts[i])
-            district = District.objects.filter(plan=plan,district_id=id,version__lte=version).order_by('version').reverse()[0]
+            district = District.objects.filter(
+                plan=plan, district_id=id,
+                version__lte=version).order_by('version').reverse()[0]
 
             if district.num_members != count:
                 if (changed == 0):
@@ -1278,14 +1434,17 @@ def assign_district_members(request, planid):
         status['version'] = plan.version
         status['modified'] = changed
         status['message'] = _('Modified members for %(num_districts)d '
-            'districts') % {'num_districts': changed}
+                              'districts') % {
+                                  'num_districts': changed
+                              }
     except Exception, ex:
         status['message'] = str(ex)
         status['exception'] = traceback.format_exc()
         logger.warn('Could not assign district members')
         logger.debug('Reason: %s', ex)
 
-    return HttpResponse(json.dumps(status),content_type='application/json')
+    return HttpResponse(json.dumps(status), content_type='application/json')
+
 
 @login_required
 @unique_session_or_json_redirect
@@ -1294,18 +1453,20 @@ def combine_districts(request, planid):
     Take the contents of one district and add them to another districts
     """
 
-    status = { 'success': False }
+    status = {'success': False}
 
     # Make sure we can edit the given plan
     try:
         plan = Plan.objects.get(pk=planid)
     except:
         status['message'] = _('No plan with the given id')
-        return HttpResponse(json.dumps(status),content_type='application/json')
+        return HttpResponse(
+            json.dumps(status), content_type='application/json')
 
     if not can_edit(request.user, plan):
         status['message'] = _("User can't edit the given plan")
-        return HttpResponse(json.dumps(status),content_type='application/json')
+        return HttpResponse(
+            json.dumps(status), content_type='application/json')
 
     # Get the districts we want to merge
     version = int(request.POST.get('version', plan.version))
@@ -1313,10 +1474,15 @@ def combine_districts(request, planid):
     to_id = int(request.POST.get('to_district_id', None))
 
     try:
-        all_districts = plan.get_districts_at_version(version, include_geom=True)
+        all_districts = plan.get_districts_at_version(
+            version, include_geom=True)
 
-        from_districts = filter(lambda d: True if d.district_id == from_id else False, all_districts)
-        to_district = filter(lambda d: True if d.district_id == to_id else False, all_districts)[0]
+        from_districts = filter(
+            lambda d: True if d.district_id == from_id else False,
+            all_districts)
+        to_district = filter(
+            lambda d: True if d.district_id == to_id else False,
+            all_districts)[0]
 
         locked = to_district.is_locked
         for district in from_districts:
@@ -1325,9 +1491,11 @@ def combine_districts(request, planid):
 
         if locked:
             status['message'] = _("Can't combine locked districts")
-            return HttpResponse(json.dumps(status),content_type='application/json')
+            return HttpResponse(
+                json.dumps(status), content_type='application/json')
 
-        result = plan.combine_districts(to_district, from_districts, version=version)
+        result = plan.combine_districts(
+            to_district, from_districts, version=version)
 
         if result[0] == True:
             status['success'] = True
@@ -1338,7 +1506,8 @@ def combine_districts(request, planid):
         status['exception'] = traceback.format_exc()
         logger.warn('Could not combine districts')
         logger.debug('Reason: %s', ex)
-    return HttpResponse(json.dumps(status),content_type='application/json')
+    return HttpResponse(json.dumps(status), content_type='application/json')
+
 
 @login_required
 @unique_session_or_json_redirect
@@ -1348,17 +1517,19 @@ def fix_unassigned(request, planid):
     or adjacent to another district
     """
 
-    status = { 'success': False }
+    status = {'success': False}
 
     try:
         plan = Plan.objects.get(pk=planid)
     except:
         status['message'] = _('No plan with the given id')
-        return HttpResponse(json.dumps(status),content_type='application/json')
+        return HttpResponse(
+            json.dumps(status), content_type='application/json')
 
     if not can_edit(request.user, plan):
         status['message'] = _("User can't edit the given plan")
-        return HttpResponse(json.dumps(status),content_type='application/json')
+        return HttpResponse(
+            json.dumps(status), content_type='application/json')
 
     try:
         version = int(request.POST.get('version', plan.version))
@@ -1371,7 +1542,7 @@ def fix_unassigned(request, planid):
         status['exception'] = traceback.format_exc()
         logger.warn('Could not fix unassigned')
         logger.debug('Reason: %s', ex)
-    return HttpResponse(json.dumps(status),content_type='application/json')
+    return HttpResponse(json.dumps(status), content_type='application/json')
 
 
 @unique_session_or_json_redirect
@@ -1394,39 +1565,49 @@ def get_splits(request, planid, otherid, othertype):
     """
 
     otherid = int(otherid)
-    status = { 'success': False }
+    status = {'success': False}
 
     try:
         plan = Plan.objects.get(pk=planid)
     except:
         status['message'] = _('No plan with the given id')
-        return HttpResponse(json.dumps(status),content_type='application/json')
+        return HttpResponse(
+            json.dumps(status), content_type='application/json')
 
     if not can_view(request.user, plan):
         status['message'] = _("User can't view the given plan")
-        return HttpResponse(json.dumps(status),content_type='application/json')
+        return HttpResponse(
+            json.dumps(status), content_type='application/json')
 
-    version = int(request.GET['version'] if 'version' in request.GET else plan.version)
+    version = int(request.GET['version']
+                  if 'version' in request.GET else plan.version)
     try:
         if othertype == 'plan':
             try:
                 otherplan = Plan.objects.get(pk=otherid)
             except:
                 status['message'] = _('No other plan with the given id')
-                return HttpResponse(json.dumps(status),content_type='application/json')
+                return HttpResponse(
+                    json.dumps(status), content_type='application/json')
             if not can_view(request.user, otherplan):
                 status['message'] = _("User can't view the given plan")
-                return HttpResponse(json.dumps(status),content_type='application/json')
+                return HttpResponse(
+                    json.dumps(status), content_type='application/json')
 
-            otherversion = int(request.GET['otherversion'] if 'otherversion' in request.GET else otherplan.version)
+            otherversion = int(request.GET['otherversion'] if 'otherversion' in
+                               request.GET else otherplan.version)
             splits = plan.find_plan_splits(otherplan, version, otherversion)
         elif othertype == 'geolevel':
             splits = plan.find_geolevel_splits(otherid, version)
         else:
-            status['message'] = _('othertype not supported: %(other)s') % { 'other': othertype }
-            return HttpResponse(json.dumps(status),content_type='application/json')
+            status['message'] = _('othertype not supported: %(other)s') % {
+                'other': othertype
+            }
+            return HttpResponse(
+                json.dumps(status), content_type='application/json')
 
-        split_word = _('split') if len(splits) == 1 else inflect.engine().plural(_('split'))
+        split_word = _('split') if len(
+            splits) == 1 else inflect.engine().plural(_('split'))
 
         status['success'] = True
         status['message'] = _('Found %(num_splits)d %(split_word)s') % \
@@ -1439,13 +1620,14 @@ def get_splits(request, planid, otherid, othertype):
         status['exception'] = traceback.format_exc()
         logger.warn('Could not query for splits')
         logger.debug('Reason: %s', ex)
-    return HttpResponse(json.dumps(status),content_type='application/json')
+    return HttpResponse(json.dumps(status), content_type='application/json')
+
 
 def get_processing_status(request):
     """
     Get the processing status for a list of plan ids
     """
-    status = { 'success': False }
+    status = {'success': False}
     plan_ids = request.GET.getlist('planIds[]')
     if len(plan_ids) == 0:
         status['message'] = _('No planIds provided')
@@ -1457,7 +1639,8 @@ def get_processing_status(request):
         status['success'] = True
         status['message'] = statuses
 
-    return HttpResponse(json.dumps(status),content_type='application/json')
+    return HttpResponse(json.dumps(status), content_type='application/json')
+
 
 def get_splits_report(request, planid):
     """
@@ -1468,26 +1651,39 @@ def get_splits_report(request, planid):
     try:
         plan = Plan.objects.get(pk=planid)
     except:
-        return HttpResponse(_('Plan does not exist.'), content_type='text/plain')
+        return HttpResponse(
+            _('Plan does not exist.'), content_type='text/plain')
 
-    if not using_unique_session(request.user) or not can_view(request.user, plan):
+    if not using_unique_session(request.user) or not can_view(
+            request.user, plan):
         return HttpResponseForbidden()
 
-    version = int(request.GET['version'] if 'version' in request.GET else plan.version)
-    inverse = request.GET['inverse'] == 'true' if 'inverse' in request.GET else False
-    extended = request.GET['extended'] == 'true' if 'extended' in request.GET else False
+    version = int(request.GET['version']
+                  if 'version' in request.GET else plan.version)
+    inverse = request.GET[
+        'inverse'] == 'true' if 'inverse' in request.GET else False
+    extended = request.GET[
+        'extended'] == 'true' if 'extended' in request.GET else False
     layers = request.GET.getlist('layers[]')
     if len(layers) == 0:
-        return HttpResponse(_('No layers were provided.'), content_type='text/plain')
+        return HttpResponse(
+            _('No layers were provided.'), content_type='text/plain')
 
-    try :
+    try:
         report = loader.get_template('split_report.html')
         html = ''
         for layer in layers:
             my_context = {'extended': extended}
-            my_context.update(plan.compute_splits(layer, version = version, inverse = inverse, extended = extended))
+            my_context.update(
+                plan.compute_splits(
+                    layer, version=version, inverse=inverse,
+                    extended=extended))
             last_item = layer is layers[-1]
-            community_info = plan.get_community_type_info(layer, version = version, inverse = inverse, include_counts=last_item)
+            community_info = plan.get_community_type_info(
+                layer,
+                version=version,
+                inverse=inverse,
+                include_counts=last_item)
             if community_info is not None:
                 my_context.update(community_info)
             calc_context = DjangoContext(my_context)
@@ -1523,13 +1719,13 @@ def addtodistrict(request, planid, districtid):
     """
     note_session_activity(request)
 
-    status = { 'success': False }
+    status = {'success': False}
 
     if len(request.REQUEST.items()) >= 2:
         try:
             geolevel = request.REQUEST["geolevel"]
             geounit_ids = string.split(request.REQUEST["geounits"], "|")
-            plan = Plan.objects.get(pk=planid,owner=request.user)
+            plan = Plan.objects.get(pk=planid, owner=request.user)
         except:
             status['exception'] = traceback.format_exc()
             status['message'] = _('Could not add units to district.')
@@ -1541,12 +1737,13 @@ def addtodistrict(request, planid, districtid):
             version = plan.version
 
         try:
-            fixed = plan.add_geounits(districtid, geounit_ids, geolevel, version)
-            status['success'] = True;
+            fixed = plan.add_geounits(districtid, geounit_ids, geolevel,
+                                      version)
+            status['success'] = True
             status['message'] = _('Updated %(num_fixed_districts)d districts') \
                 % {'num_fixed_districts': fixed}
             status['updated'] = fixed
-            plan = Plan.objects.get(pk=planid,owner=request.user)
+            plan = Plan.objects.get(pk=planid, owner=request.user)
             status['edited'] = getutc(plan.edited).isoformat()
             status['version'] = plan.version
         except Exception, ex:
@@ -1558,7 +1755,8 @@ def addtodistrict(request, planid, districtid):
     else:
         status['message'] = _("Geounits weren't found in a district.")
 
-    return HttpResponse(json.dumps(status),content_type='application/json')
+    return HttpResponse(json.dumps(status), content_type='application/json')
+
 
 @unique_session_or_json_redirect
 @login_required
@@ -1577,7 +1775,7 @@ def setdistrictlock(request, planid, district_id):
     """
     note_session_activity(request)
 
-    status = {'success':False}
+    status = {'success': False}
 
     if request.method != 'POST':
         return HttpResponseForbidden()
@@ -1591,10 +1789,13 @@ def setdistrictlock(request, planid, district_id):
 
     try:
         plan = Plan.objects.get(pk=planid)
-        district = plan.district_set.filter(district_id=district_id,version__lte=version).order_by('version').reverse()[0]
+        district = plan.district_set.filter(
+            district_id=district_id,
+            version__lte=version).order_by('version').reverse()[0]
     except ObjectDoesNotExist:
         status['message'] = _('Plan or district does not exist.')
-        return HttpResponse(json.dumps(status), content_type='application/json')
+        return HttpResponse(
+            json.dumps(status), content_type='application/json')
 
     if plan.owner != request.user:
         return HttpResponseForbidden()
@@ -1620,7 +1821,7 @@ def getdistricts(request, planid):
     """
     note_session_activity(request)
 
-    status = {'success':False}
+    status = {'success': False}
 
     plan = Plan.objects.filter(id=planid)
     if plan.count() == 1:
@@ -1631,13 +1832,14 @@ def getdistricts(request, planid):
         else:
             version = plan.version
 
-        districts = plan.get_districts_at_version(version,include_geom=False)
+        districts = plan.get_districts_at_version(version, include_geom=False)
 
         status['districts'] = []
 
         # Same calculation as plan.get_available_districts, but
         # g_a_d fetches districts all over again -- skip that overhead
-        status['available'] = plan.legislative_body.max_districts - len(districts) + 1
+        status['available'] = plan.legislative_body.max_districts - len(
+            districts) + 1
 
         # Find the maximum version in the returned districts
         max_version = max([d.version for d in districts])
@@ -1648,10 +1850,14 @@ def getdistricts(request, planid):
 
         for district in districts:
             status['districts'].append({
-                'id':district.district_id,
-                'short_label':' '.join(map(_, district.short_label.split(' '))),
-                'long_label':' '.join(map(_, district.long_label.split(' '))),
-                'version':district.version
+                'id':
+                district.district_id,
+                'short_label':
+                ' '.join(map(_, district.short_label.split(' '))),
+                'long_label':
+                ' '.join(map(_, district.long_label.split(' '))),
+                'version':
+                district.version
             })
         status['canUndo'] = can_undo
         status['success'] = True
@@ -1685,7 +1891,7 @@ def simple_district_versioned(request, planid, district_ids=None):
     """
     note_session_activity(request)
 
-    status = {'type':'FeatureCollection'}
+    status = {'type': 'FeatureCollection'}
 
     plan = Plan.objects.filter(id=planid)
     if plan.count() == 1:
@@ -1717,11 +1923,12 @@ def simple_district_versioned(request, planid, district_ids=None):
             if 'bbox' in request.GET:
                 bbox = request.GET['bbox']
                 # convert the request string into a tuple full of floats
-                bbox = tuple( map( lambda x: float(x), bbox.split(',')))
+                bbox = tuple(map(lambda x: float(x), bbox.split(',')))
             else:
                 bbox = plan.district_set.all().extent(field_name='simple')
 
-            status['features'] = plan.get_wfs_districts(version, subject_id, bbox, geolevel, district_ids)
+            status['features'] = plan.get_wfs_districts(
+                version, subject_id, bbox, geolevel, district_ids)
         else:
             status['features'] = []
             status['message'] = _('Subject for districts is required.')
@@ -1729,10 +1936,10 @@ def simple_district_versioned(request, planid, district_ids=None):
         status['features'] = []
         status['message'] = _('Query failed.')
 
-    return HttpResponse(json.dumps(status),content_type='application/json')
+    return HttpResponse(json.dumps(status), content_type='application/json')
 
 
-def get_unlocked_simple_geometries(request,planid):
+def get_unlocked_simple_geometries(request, planid):
     """
     Emulate a WFS service for selecting unlocked geometries.
 
@@ -1751,13 +1958,15 @@ def get_unlocked_simple_geometries(request,planid):
     """
     note_session_activity(request)
 
-    status = {'type':'FeatureCollection'}
+    status = {'type': 'FeatureCollection'}
 
     plan = Plan.objects.filter(id=planid)
     if plan.count() == 1:
         plan = plan[0]
         version = request.POST.get('version__eq', plan.version)
-        geolevel = request.POST.get('level__eq', plan.legislative_body.get_geolevels()[0].id)
+        geolevel = request.POST.get(
+            'level__eq',
+            plan.legislative_body.get_geolevels()[0].id)
         geom = request.POST.get('geom__eq', None)
         if geom is not None:
             try:
@@ -1778,15 +1987,21 @@ def get_unlocked_simple_geometries(request,planid):
             selection = Q(geom__intersects=geom)
 
             # Create a union of locked geometries
-            districts = [d.id for d in plan.get_districts_at_version(version, include_geom=True) if d.is_locked]
+            districts = [
+                d.id
+                for d in plan.get_districts_at_version(
+                    version, include_geom=True) if d.is_locked
+            ]
             locked = District.objects.filter(id__in=districts).collect()
 
             # Create a simplified locked boundary for fast, but not completely accurate lookups
             # Note: the preserve topology parameter of simplify is needed here
-            locked_buffered = locked.simplify(100, True).buffer(100) if locked else None
+            locked_buffered = locked.simplify(
+                100, True).buffer(100) if locked else None
 
             # Filter first by geolevel, then selection
-            filtered = Geolevel.objects.get(id=geolevel).geounit_set.filter(selection)
+            filtered = Geolevel.objects.get(
+                id=geolevel).geounit_set.filter(selection)
             # Assemble the matching features into geojson
             features = []
             for feature in filtered:
@@ -1820,7 +2035,8 @@ def get_unlocked_simple_geometries(request,planid):
                 })
 
             status['features'] = features
-            return HttpResponse(json.dumps(status),content_type='application/json')
+            return HttpResponse(
+                json.dumps(status), content_type='application/json')
 
         else:
             status['features'] = []
@@ -1830,19 +2046,22 @@ def get_unlocked_simple_geometries(request,planid):
         status['features'] = []
         status['message'] = _('Invalid plan.')
 
-    return HttpResponse(json.dumps(status),content_type='application/json')
+    return HttpResponse(json.dumps(status), content_type='application/json')
+
 
 @unique_session_or_json_redirect
 def get_statistics(request, planid):
     note_session_activity(request)
 
-    status = { 'success': False }
+    status = {'success': False}
     try:
         plan = Plan.objects.get(pk=planid)
     except:
         status['message'] = _(
-                "Couldn't get geography info from the server. No plan with the given id.")
-        return HttpResponse( json.dumps(status), content_type='application/json', status=500)
+            "Couldn't get geography info from the server. No plan with the given id."
+        )
+        return HttpResponse(
+            json.dumps(status), content_type='application/json', status=500)
 
     if 'version' in request.GET:
         try:
@@ -1853,7 +2072,9 @@ def get_statistics(request, planid):
         version = plan.version
 
     try:
-        display = ScoreDisplay.objects.get(legislative_body=plan.legislative_body, name="%s_sidebar_demo" % plan.legislative_body.name)
+        display = ScoreDisplay.objects.get(
+            legislative_body=plan.legislative_body,
+            name="%s_sidebar_demo" % plan.legislative_body.name)
     except:
         status['message'] = _('Unable to get Demographics ScoreDisplay')
         status['exception'] = traceback.format_exc()
@@ -1869,7 +2090,7 @@ def get_statistics(request, planid):
         logger.warn('No displayId in request.')
         logger.warn(str(request.POST))
 
-    try :
+    try:
         html = display.render(plan, request, version=version)
         return HttpResponse(html, content_type='text/html')
     except Exception, ex:
@@ -1877,7 +2098,8 @@ def get_statistics(request, planid):
         status['exception'] = traceback.format_exc()
         logger.warn("Couldn't render display tab")
         logger.debug('Reason: %s', ex)
-        return HttpResponse( json.dumps(status), content_type='application/json', status=500)
+        return HttpResponse(
+            json.dumps(status), content_type='application/json', status=500)
 
 
 def getutc(t):
@@ -1888,6 +2110,7 @@ def getutc(t):
     t_seconds = time.mktime(t_tuple)
     return t.utcfromtimestamp(t_seconds)
 
+
 @unique_session_or_json_redirect
 def getdistrictfilestatus(request, planid):
     """
@@ -1895,7 +2118,7 @@ def getdistrictfilestatus(request, planid):
     """
     note_session_activity(request)
 
-    status = { 'success':False }
+    status = {'success': False}
     plan = Plan.objects.get(pk=planid)
     if not can_copy(request.user, plan):
         return HttpResponseForbidden()
@@ -1907,7 +2130,8 @@ def getdistrictfilestatus(request, planid):
     except Exception as ex:
         status['message'] = _('Failed to get file status')
         status['exception'] = ex
-    return HttpResponse(json.dumps(status),content_type='application/json')
+    return HttpResponse(json.dumps(status), content_type='application/json')
+
 
 @unique_session_or_json_redirect
 def getdistrictfile(request, planid):
@@ -1929,17 +2153,22 @@ def getdistrictfile(request, planid):
             archive = DistrictShapeFile.plan2shape(plan)
         else:
             archive = DistrictIndexFile.plan2index(plan)
-        response = HttpResponse(open(archive.name).read(), content_type='application/zip')
-        response['Content-Disposition'] = 'attachment; filename="%s.zip"' % plan.get_friendly_name()
+        response = HttpResponse(
+            open(archive.name).read(), content_type='application/zip')
+        response[
+            'Content-Disposition'] = 'attachment; filename="%s.zip"' % plan.get_friendly_name(
+            )
     else:
         # Put in a celery task to create this file
         if is_shape:
             DistrictShapeFile.plan2shape.delay(plan)
         else:
             DistrictIndexFile.plan2index.delay(plan)
-        response = HttpResponse(_('File is not yet ready. Please try again in '
-            'a few minutes'))
+        response = HttpResponse(
+            _('File is not yet ready. Please try again in '
+              'a few minutes'))
     return response
+
 
 @unique_session_or_json_redirect
 def emaildistrictindexfile(request, planid):
@@ -1957,11 +2186,15 @@ def emaildistrictindexfile(request, planid):
         return HttpResponseForbidden()
 
     # Put in a celery task to create the file and send the emails
-    DistrictIndexFile.emailfile.delay(plan, request.user, request.POST, translation.get_language())
-    return HttpResponse(json.dumps({
-                                    'success': True,
-                                    'message': _('Task submitted') }),
-                                    content_type='application/json')
+    DistrictIndexFile.emailfile.delay(plan, request.user, request.POST,
+                                      translation.get_language())
+    return HttpResponse(
+        json.dumps({
+            'success': True,
+            'message': _('Task submitted')
+        }),
+        content_type='application/json')
+
 
 def getvalidplans(leg_body, owner=None):
     """
@@ -1973,14 +2206,17 @@ def getvalidplans(leg_body, owner=None):
 
     return list(Plan.objects.filter(pfilter))
 
+
 def getleaderboarddisplay(leg_body, owner_filter):
     """
     Returns the leaderboard ScoreDisplay given a legislative body and owner
     """
     try:
-        return ScoreDisplay.objects.get(name="%s_leader_%s" % (leg_body.name, owner_filter))
+        return ScoreDisplay.objects.get(name="%s_leader_%s" % (leg_body.name,
+                                                               owner_filter))
     except:
         return None
+
 
 def getleaderboard(request):
     """
@@ -1992,22 +2228,25 @@ def getleaderboard(request):
         return HttpResponseForbidden()
 
     owner_filter = request.GET['owner_filter']
-    body_pk = int(request.GET['legislative_body']);
+    body_pk = int(request.GET['legislative_body'])
     leg_body = LegislativeBody.objects.get(pk=body_pk)
 
     display = getleaderboarddisplay(leg_body, owner_filter)
     if display is None:
-        return HttpResponse(_('No display configured'), content_type='text/plain')
+        return HttpResponse(
+            _('No display configured'), content_type='text/plain')
 
-    plans = getvalidplans(leg_body, request.user if owner_filter == 'mine' else None)
+    plans = getvalidplans(leg_body, request.user
+                          if owner_filter == 'mine' else None)
 
-    try :
+    try:
         html = display.render(plans, request)
         return HttpResponse(html, content_type='text/html; charset=utf-8')
     except Exception, ex:
         logger.warn('Leaderboard could not be fetched.')
         logger.debug('Reason: %s', ex)
         return HttpResponse(str(ex), content_type='text/plain')
+
 
 def getleaderboardcsv(request):
     """
@@ -2019,23 +2258,27 @@ def getleaderboardcsv(request):
         return HttpResponseForbidden()
 
     owner_filter = request.GET['owner_filter']
-    body_pk = int(request.GET['legislative_body']);
+    body_pk = int(request.GET['legislative_body'])
     leg_body = LegislativeBody.objects.get(pk=body_pk)
-    plans = getvalidplans(leg_body, request.user if owner_filter == 'mine' else None)
+    plans = getvalidplans(leg_body, request.user
+                          if owner_filter == 'mine' else None)
 
     display = getleaderboarddisplay(leg_body, owner_filter)
-    plans = getvalidplans(leg_body, request.user if owner_filter == 'mine' else None)
+    plans = getvalidplans(leg_body, request.user
+                          if owner_filter == 'mine' else None)
 
     panels = display.scorepanel_set.all().order_by('position')
 
-    try :
+    try:
         # mark the response as csv, and create the csv writer
         response = HttpResponse(content_type='text/csv')
-        response['Content-Disposition'] = 'attachment; filename=leaderboard_scores.csv'
+        response[
+            'Content-Disposition'] = 'attachment; filename=leaderboard_scores.csv'
         writer = csv.writer(response)
 
         # write headers
-        writer.writerow(['Plan ID', 'Plan Name', 'User Name'] + [p.__unicode__() for p in panels])
+        writer.writerow(['Plan ID', 'Plan Name', 'User Name'] +
+                        [p.__unicode__() for p in panels])
 
         # write row for each plan
         for plan in plans:
@@ -2072,12 +2315,12 @@ def getplans(request):
         rows = int(request.POST.get('rows', 10))
         sidx = request.POST.get('sidx', 'id')
         sord = request.POST.get('sord', 'asc')
-        owner_filter = request.POST.get('owner_filter');
-        body_pk = request.POST.get('legislative_body');
-        body_pk = int(body_pk) if body_pk else body_pk;
-        search = request.POST.get('_search', False);
-        search_string = request.POST.get('searchString', '');
-        is_community = request.POST.get('is_community', False) == 'true';
+        owner_filter = request.POST.get('owner_filter')
+        body_pk = request.POST.get('legislative_body')
+        body_pk = int(body_pk) if body_pk else body_pk
+        search = request.POST.get('_search', False)
+        search_string = request.POST.get('searchString', '')
+        is_community = request.POST.get('is_community', False) == 'true'
     else:
         return HttpResponseForbidden()
     end = page * rows
@@ -2099,7 +2342,8 @@ def getplans(request):
     else:
         return HttpResponseBadRequest(_("Unknown filter method."))
 
-    not_creating = ~Q(processing_state=ProcessingState.CREATING) & ~Q(processing_state=ProcessingState.UNKNOWN)
+    not_creating = ~Q(processing_state=ProcessingState.CREATING) & ~Q(
+        processing_state=ProcessingState.UNKNOWN)
 
     # Set up the order_by parameter from sidx and sord in the request
     if sidx.startswith('fields.'):
@@ -2112,16 +2356,20 @@ def getplans(request):
         sidx = '-' + sidx
 
     if search:
-        search_filter = Q(name__icontains = search_string) | Q(description__icontains = search_string) | Q(owner__username__icontains = search_string)
+        search_filter = Q(name__icontains=search_string) | Q(
+            description__icontains=search_string) | Q(
+                owner__username__icontains=search_string)
     else:
         search_filter = None
 
     if body_pk:
         body_filter = Q(legislative_body=body_pk)
-        all_plans = Plan.objects.filter(available, not_creating, body_filter, search_filter).order_by(sidx)
+        all_plans = Plan.objects.filter(available, not_creating, body_filter,
+                                        search_filter).order_by(sidx)
     else:
         community_filter = Q(legislative_body__is_community=is_community)
-        all_plans = Plan.objects.filter(available, not_creating, search_filter, community_filter).order_by(sidx)
+        all_plans = Plan.objects.filter(available, not_creating, search_filter,
+                                        community_filter).order_by(sidx)
 
     if all_plans.count() > 0:
         total_pages = math.ceil(all_plans.count() / float(rows))
@@ -2141,15 +2389,18 @@ def getplans(request):
                 'is_template': plan.is_template,
                 'is_shared': plan.is_shared,
                 'owner': plan.owner.username,
-                'districtCount': '--', # load dynamically -- this is a big performance hit
+                'districtCount':
+                '--',  # load dynamically -- this is a big performance hit
                 'can_edit': can_edit(request.user, plan),
                 'plan_type': plan.legislative_body.get_long_description(),
                 'processing_state': plan.get_processing_state_display()
-                }
-            })
+            }
+        })
 
-    json_response = "{ \"total\":\"%d\", \"page\":\"%d\", \"records\":\"%d\", \"rows\":%s }" % (total_pages, page, len(all_plans), json.dumps(plans_list))
-    return HttpResponse(json_response,content_type='application/json')
+    json_response = "{ \"total\":\"%d\", \"page\":\"%d\", \"records\":\"%d\", \"rows\":%s }" % (
+        total_pages, page, len(all_plans), json.dumps(plans_list))
+    return HttpResponse(json_response, content_type='application/json')
+
 
 def get_shared_districts(request, planid):
     """
@@ -2175,7 +2426,8 @@ def get_shared_districts(request, planid):
         if not can_copy(request.user, plan):
             return HttpResponseForbidden()
 
-        all_districts = plan.get_districts_at_version(plan.version, include_geom=False)
+        all_districts = plan.get_districts_at_version(
+            plan.version, include_geom=False)
     except:
         plan = None
         all_districts = ()
@@ -2199,8 +2451,10 @@ def get_shared_districts(request, planid):
                 }
             })
 
-    json_response = "{ \"total\":\"%d\", \"page\":\"%d\", \"records\":\"%d\", \"rows\":%s }" % (total_pages, page, len(all_districts), json.dumps(districts_list))
-    return HttpResponse(json_response,content_type='application/json')
+    json_response = "{ \"total\":\"%d\", \"page\":\"%d\", \"records\":\"%d\", \"rows\":%s }" % (
+        total_pages, page, len(all_districts), json.dumps(districts_list))
+    return HttpResponse(json_response, content_type='application/json')
+
 
 @login_required
 @unique_session_or_json_redirect
@@ -2211,7 +2465,7 @@ def editplanattributes(request, planid):
     """
     note_session_activity(request)
 
-    status = { 'success': False }
+    status = {'success': False}
     if request.method != 'POST':
         return HttpResponseNotAllowed(['POST'])
     new_name = request.POST.get('name', None)
@@ -2221,7 +2475,7 @@ def editplanattributes(request, planid):
         return HttpResponseBadRequest(
             _('Must declare planId, name and description'))
 
-    plan = Plan.objects.filter(pk=planid,owner=request.user)
+    plan = Plan.objects.filter(pk=planid, owner=request.user)
     if plan.count() == 1:
         plan = plan[0]
         if not new_name is None:
@@ -2242,6 +2496,7 @@ def editplanattributes(request, planid):
         status['message'] = _("Cannot edit a plan you don't own.")
     return HttpResponse(json.dumps(status), content_type='application/json')
 
+
 @login_required
 @unique_session_or_json_redirect
 def deleteplan(request, planid):
@@ -2250,14 +2505,14 @@ def deleteplan(request, planid):
     """
     note_session_activity(request)
 
-    status = { 'success': False }
+    status = {'success': False}
     if request.method != 'POST':
         return HttpResponseNotAllowed(['POST'])
 
     if not planid:
         return HttpResponseBadRequest(_('Must declare planId'))
 
-    plan = Plan.objects.filter(pk=planid,owner=request.user)
+    plan = Plan.objects.filter(pk=planid, owner=request.user)
     if plan.count() == 1:
         plan = plan[0]
         try:
@@ -2274,6 +2529,7 @@ def deleteplan(request, planid):
 
     return HttpResponse(json.dumps(status), content_type='application/json')
 
+
 @login_required
 @unique_session_or_json_redirect
 def reaggregateplan(request, planid):
@@ -2282,14 +2538,14 @@ def reaggregateplan(request, planid):
     """
     note_session_activity(request)
 
-    status = { 'success': False }
+    status = {'success': False}
     if request.method != 'POST':
         return HttpResponseNotAllowed(['POST'])
 
     if not planid:
         return HttpResponseBadRequest(_('Must declare planId'))
 
-    plan = Plan.objects.filter(pk=planid,owner=request.user)
+    plan = Plan.objects.filter(pk=planid, owner=request.user)
     if plan.count() == 1:
         plan = plan[0]
         try:
@@ -2311,6 +2567,7 @@ def reaggregateplan(request, planid):
         status['message'] = _("Cannot reaggregate a plan you don't own.")
     return HttpResponse(json.dumps(status), content_type='application/json')
 
+
 def get_health(request):
     def num_users(minutes):
         users = 0
@@ -2323,8 +2580,10 @@ def get_health(request):
                 continue
 
             if 'activity_time' in decoded:
-                activity_delta = decoded['activity_time'] - timedelta(0,0,0,0,settings.SESSION_TIMEOUT)
-                if activity_delta > (datetime.now() - timedelta(0,0,0,0,minutes)):
+                activity_delta = decoded['activity_time'] - timedelta(
+                    0, 0, 0, 0, settings.SESSION_TIMEOUT)
+                if activity_delta > (
+                        datetime.now() - timedelta(0, 0, 0, 0, minutes)):
                     users += 1
         return users
 
@@ -2344,16 +2603,18 @@ def get_health(request):
                 {'mem_free':  commands.getoutput('free -m')}
         return HttpResponse(result, content_type='text/plain')
     except:
-        return HttpResponse(_("ERROR! Couldn't get health:\n%s") % traceback.format_exc())
+        return HttpResponse(
+            _("ERROR! Couldn't get health:\n%s") % traceback.format_exc())
 
 
 def statistics_sets(request, planid):
-    result = { 'success': False }
+    result = {'success': False}
 
     plan = Plan.objects.filter(id=planid)
     if plan.count() == 0:
         result['message'] = _('No plan with that ID exists.')
-        return HttpResponse(json.dumps(result),content_type='application/json')
+        return HttpResponse(
+            json.dumps(result), content_type='application/json')
     else:
         plan = plan[0]
 
@@ -2362,36 +2623,39 @@ def statistics_sets(request, planid):
         scorefunctions = []
 
         # Get the functions available for the users
-        user_functions = ScoreFunction.objects.filter(selectable_bodies=plan.legislative_body).order_by('name')
+        user_functions = ScoreFunction.objects.filter(
+            selectable_bodies=plan.legislative_body).order_by('name')
         for f in user_functions:
-            if 'report' not in f.name.lower() and 'comments' not in f.name.lower():
-                scorefunctions.append({ 'id': f.id, 'name': force_escape(f.get_label()) })
+            if 'report' not in f.name.lower(
+            ) and 'comments' not in f.name.lower():
+                scorefunctions.append({
+                    'id': f.id,
+                    'name': force_escape(f.get_label())
+                })
         result['functions'] = scorefunctions
-
 
         admin_display_names = [
             "%s_sidebar_demo" % plan.legislative_body.name,
         ]
 
         if plan.legislative_body.is_community:
-            admin_display_names.append("%s_sidebar_comments" %
-                    plan.legislative_body.name)
+            admin_display_names.append(
+                "%s_sidebar_comments" % plan.legislative_body.name)
         else:
-            admin_display_names.append("%s_sidebar_basic" %
-                    plan.legislative_body.name)
+            admin_display_names.append(
+                "%s_sidebar_basic" % plan.legislative_body.name)
         # Get the admin displays
         admin_displays = ScoreDisplay.objects.filter(
             owner__is_superuser=True,
             legislative_body=plan.legislative_body,
-            name__in=admin_display_names
-        )
+            name__in=admin_display_names)
 
         for admin_display in admin_displays:
             sets.append({
                 'id': admin_display.id,
                 'name': force_escape(admin_display.get_label()),
                 'functions': [],
-                'mine':False
+                'mine': False
             })
 
         try:
@@ -2404,11 +2668,17 @@ def statistics_sets(request, planid):
                 functions = []
                 for panel in display.scorepanel_set.all():
                     if panel.type == 'district':
-                        functions = map(lambda x: x.id, panel.score_functions.all())
+                        functions = map(lambda x: x.id,
+                                        panel.score_functions.all())
                         if len(functions) == 0:
                             result['message'] = _("No functions for %(panel)s") % \
                                                 {'panel_name': panel}
-                sets.append({ 'id': display.id, 'name': force_escape(display.__unicode__()), 'functions': functions, 'mine': display.owner==request.user })
+                sets.append({
+                    'id': display.id,
+                    'name': force_escape(display.__unicode__()),
+                    'functions': functions,
+                    'mine': display.owner == request.user
+                })
         except Exception, ex:
             result['message'] = _('No user displays for %(user)s') % \
                  {'user': request.user}
@@ -2421,7 +2691,10 @@ def statistics_sets(request, planid):
     elif request.method == 'POST' and 'delete' in request.POST:
         try:
             display = ScoreDisplay.objects.get(pk=request.POST.get('id', -1))
-            result['set'] = {'name':force_escape(display.__unicode__()), 'id':display.id}
+            result['set'] = {
+                'name': force_escape(display.__unicode__()),
+                'id': display.id
+            }
             qset = display.scorepanel_set.all()
             for panel in qset:
                 if panel.displays.count() == 1:
@@ -2439,14 +2712,19 @@ def statistics_sets(request, planid):
     elif request.method == 'POST':
         # If we're adding a new display, we should make sure they only have 3
         def validate_num(user, limit=3):
-            return ScoreDisplay.objects.filter(owner=user, legislative_body=plan.legislative_body, is_page=False).count() < limit
+            return ScoreDisplay.objects.filter(
+                owner=user,
+                legislative_body=plan.legislative_body,
+                is_page=False).count() < limit
 
         if 'functions[]' in request.POST:
             functions = request.POST.getlist('functions[]')
             functions = map(lambda x: int(x), functions)
             try:
-                display = ScoreDisplay.objects.get(title=request.POST.get('name'), owner=request.user)
-                display = display.copy_from(display=display, functions=functions)
+                display = ScoreDisplay.objects.get(
+                    title=request.POST.get('name'), owner=request.user)
+                display = display.copy_from(
+                    display=display, functions=functions)
             except:
                 limit = 3
                 if validate_num(request.user, limit):
@@ -2454,36 +2732,50 @@ def statistics_sets(request, planid):
                         owner__is_superuser=True,
                         legislative_body=plan.legislative_body,
                         is_page=False,
-			title="Demographics"
-                    )
+                        title="Demographics")
                     # DO NOT select the ScoreDisplay that contains
                     # the comment calculator
                     for disp in demo:
                         has_comments = False
                         for pnl in disp.scorepanel_set.all():
                             for fn in pnl.score_functions.all():
-                                has_comments = has_comments or fn.calculator.endswith('.Comments')
+                                has_comments = has_comments or fn.calculator.endswith(
+                                    '.Comments')
                         if not has_comments:
                             demo = disp
                             break
 
                     display = ScoreDisplay()
-                    display = display.copy_from(display=demo, title=request.POST.get('name'), owner=request.user, functions=functions)
+                    display = display.copy_from(
+                        display=demo,
+                        title=request.POST.get('name'),
+                        owner=request.user,
+                        functions=functions)
                     result['newRecord'] = True
                 else:
-                    result['message'] = _('Each user is limited to %(limit)d '
+                    result['message'] = _(
+                        'Each user is limited to %(limit)d '
                         'statistics sets. Please delete one or edit '
-                        'an existing set.') % { 'limit': limit }
+                        'an existing set.') % {
+                            'limit': limit
+                        }
                     result['error'] = 'limit'
-                    return HttpResponse(json.dumps(result),content_type='application/json')
+                    return HttpResponse(
+                        json.dumps(result), content_type='application/json')
 
-            result['set'] = {'name':force_escape(display.__unicode__()), 'id':display.id, 'functions':functions, 'mine': display.owner==request.user}
+            result['set'] = {
+                'name': force_escape(display.__unicode__()),
+                'id': display.id,
+                'functions': functions,
+                'mine': display.owner == request.user
+            }
             result['success'] = True
 
         else:
             result['message'] = _("Didn't get functions in POST parameter")
 
-    return HttpResponse(json.dumps(result),content_type='application/json')
+    return HttpResponse(json.dumps(result), content_type='application/json')
+
 
 #
 # Comment views
@@ -2498,8 +2790,10 @@ def purge_plan_clear_cache(district, version):
     district.plan.version = version
     district.plan.save()
 
-    cache = district.computeddistrictscore_set.filter(function__calculator__endswith='.Comments')
+    cache = district.computeddistrictscore_set.filter(
+        function__calculator__endswith='.Comments')
     cache.delete()
+
 
 @unique_session_or_json_redirect
 def district_info(request, planid, district_id):
@@ -2511,13 +2805,12 @@ def district_info(request, planid, district_id):
         planid -- The plan ID
         district_id -- The district ID, this is the district number in a plan, and NOT the id of a district.
     """
-    status = { 'success': False }
+    status = {'success': False}
     plan = Plan.objects.filter(id=planid)
     if plan.count() == 0:
         status['message'] = _('No plan with that ID was found.')
     else:
         plan = plan[0]
-
 
         version = plan.version
         if 'version' in request.GET:
@@ -2529,13 +2822,12 @@ def district_info(request, planid, district_id):
 
         district_id = int(district_id)
         district = plan.get_districts_at_version(version, include_geom=False)
-        district = filter(lambda d:d.district_id==district_id, district)
+        district = filter(lambda d: d.district_id == district_id, district)
 
         if request.method == 'POST':
             district = plan.district_set.get(id=request.POST['object_pk'])
             district.short_label = request.POST['district_short'][0:10]
             district.long_label = request.POST['district_long'][0:256]
-
 
             if district.version < version:
                 # The district version may lag behind the cursor
@@ -2559,8 +2851,10 @@ def district_info(request, planid, district_id):
             has_comment = 'comment' in request.POST and request.POST['comment'] != ''
             if has_comment:
                 # Don't thread comments, keep only the latest and greatest
-                ct = ContentType.objects.get(app_label='redistricting',model='district')
-                Comment.objects.filter(object_pk = district.id, content_type=ct).delete()
+                ct = ContentType.objects.get(
+                    app_label='redistricting', model='district')
+                Comment.objects.filter(
+                    object_pk=district.id, content_type=ct).delete()
                 comment = Comment(
                     object_pk=district.id,
                     content_type=ct,
@@ -2574,10 +2868,12 @@ def district_info(request, planid, district_id):
                 district.save()
 
             # Get the tags on this object of this type.
-            tset = Tag.objects.get_for_object(district).filter(name__startswith='type')
+            tset = Tag.objects.get_for_object(district).filter(
+                name__startswith='type')
 
             # Purge the tags of this same type off the object
-            TaggedItem.objects.filter(tag__in=tset, object_id=district.id).delete()
+            TaggedItem.objects.filter(
+                tag__in=tset, object_id=district.id).delete()
 
             purge_plan_clear_cache(district, version)
 
@@ -2597,6 +2893,7 @@ def district_info(request, planid, district_id):
 
     return HttpResponse(json.dumps(status), content_type='application/json')
 
+
 def plan_feed(request):
     feed = loader.get_template('plan_feed.xml')
     # MAP_SERVER = ''
@@ -2607,12 +2904,13 @@ def plan_feed(request):
     if extent[2] - extent[0] > extent[3] - extent[1]:
         # wider maps
         width = 500
-        height = int(500 * (extent[3]-extent[1]) / (extent[2]-extent[0]))
+        height = int(500 * (extent[3] - extent[1]) / (extent[2] - extent[0]))
     else:
         # taller maps
-        width = int(500 * (extent[2]-extent[0]) / (extent[3]-extent[1]))
+        width = int(500 * (extent[2] - extent[0]) / (extent[3] - extent[1]))
         height = 500
-    mapserver = settings.MAP_SERVER if settings.MAP_SERVER != '' else request.META['SERVER_NAME']
+    mapserver = settings.MAP_SERVER if settings.MAP_SERVER != '' else request.META[
+        'SERVER_NAME']
     context = {
         'plans': plans,
         'mapserver': mapserver,
@@ -2625,6 +2923,7 @@ def plan_feed(request):
 
     return HttpResponse(xml, content_type='application/atom+xml')
 
+
 def share_feed(request):
     feed = loader.get_template('shared_feed.xml')
     # MAP_SERVER = ''
@@ -2636,16 +2935,24 @@ def share_feed(request):
         if extent[2] - extent[0] > extent[3] - extent[1]:
             # wider maps
             width = 500
-            height = int(500 * (extent[3]-extent[1]) / (extent[2]-extent[0]))
+            height = int(500 * (extent[3] - extent[1]) /
+                         (extent[2] - extent[0]))
         else:
             # taller maps
-            width = int(500 * (extent[2]-extent[0]) / (extent[3]-extent[1]))
+            width = int(500 * (extent[2] - extent[0]) /
+                        (extent[3] - extent[1]))
             height = 500
     else:
-        extent = (0,0,0,0,)
+        extent = (
+            0,
+            0,
+            0,
+            0,
+        )
         width = 1
         height = 1
-    mapserver = settings.MAP_SERVER if settings.MAP_SERVER != '' else request.META['SERVER_NAME']
+    mapserver = settings.MAP_SERVER if settings.MAP_SERVER != '' else request.META[
+        'SERVER_NAME']
     context = {
         'plans': plans,
         'mapserver': mapserver,
