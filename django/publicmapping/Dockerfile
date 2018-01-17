@@ -13,4 +13,6 @@ COPY . /usr/src/app
 
 WORKDIR /usr/src/app
 
+RUN cp config/config.dist.xml config/config.xml
+
 ENTRYPOINT ["/usr/local/bin/gunicorn"]
