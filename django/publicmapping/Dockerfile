@@ -6,6 +6,8 @@ RUN mkdir -p /opt/sld
 RUN mkdir -p /opt/reports
 
 # Create reporter user that can write to reports directory
+# This user is used to run `celery worker` for reporting
+# as it is not recommended to run Celery services as root.
 RUN useradd -m reporter
 RUN chown reporter: /opt/reports
 
