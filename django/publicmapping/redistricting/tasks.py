@@ -24,8 +24,8 @@ Author:
     Andrew Jennings, David Zwarg
 """
 
-from celery.task import task
-from celery.task.http import HttpDispatchTask
+from publicmapping.celery import app
+# from celery.task.http import HttpDispatchTask
 from codecs import open
 from django.core import management
 from django_comments.models import Comment
@@ -132,7 +132,7 @@ class DistrictIndexFile():
     """
 
     @staticmethod
-    @task
+    @app.task
     def index2plan(name,
                    body,
                    filename,
@@ -562,7 +562,7 @@ class DistrictIndexFile():
             activate(prev_lang)
 
     @staticmethod
-    @task
+    @app.task
     def plan2index(plan):
         """
         Gets a zipped copy of the district index file for the
@@ -636,7 +636,7 @@ class DistrictIndexFile():
         return DistrictFile.get_file(plan)
 
     @staticmethod
-    @task
+    @app.task
     def emailfile(plan, user, post, language=None):
         """
         Email an archived district index file to a user.
@@ -886,7 +886,7 @@ class DistrictShapeFile():
         output.close()
 
     @staticmethod
-    @task
+    @app.task
     def plan2shape(plan):
         """
         Gets a zipped copy of the plan shape file.
@@ -1106,7 +1106,7 @@ class DistrictShapeFile():
         return DistrictFile.get_file(plan, True)
 
 
-@task
+@app.task
 def cleanup():
     """
     Clean out all the old sessions.
@@ -1123,7 +1123,7 @@ class PlanReport:
     """
 
     @staticmethod
-    @task
+    @app.task
     def createreport(planid, stamp, request, language=None):
         """
         Create the data structures required for a BARD report, and call
@@ -1305,7 +1305,7 @@ class CalculatorReport:
     """
 
     @staticmethod
-    @task
+    @app.task
     def createcalculatorreport(planid, stamp, request, language=None):
         """
         Create the report.
@@ -1429,7 +1429,7 @@ class CalculatorReport:
 #
 # Reaggregation tasks
 #
-@task
+@app.task
 def reaggregate_plan(plan_id):
     """
     Asynchronously reaggregate all computed characteristics for each district in the plan.
@@ -1464,7 +1464,7 @@ def reaggregate_plan(plan_id):
 #
 # Validation tasks
 #
-@task
+@app.task
 def validate_plan(plan_id):
     """
     Asynchronously validate a plan.
@@ -1499,7 +1499,7 @@ def validate_plan(plan_id):
     return is_valid
 
 
-@task
+@app.task
 @transaction.atomic
 def verify_count(upload_id, localstore, language):
     """
@@ -1615,7 +1615,7 @@ def verify_count(upload_id, localstore, language):
     return status
 
 
-@task
+@app.task
 def verify_preload(upload_id, language=None):
     """
     Continue the verification process by counting the number of geounits
@@ -1704,7 +1704,7 @@ def verify_preload(upload_id, language=None):
     return status
 
 
-@task
+@app.task
 @transaction.atomic
 def copy_to_characteristics(upload_id, language=None):
     """
@@ -1844,7 +1844,7 @@ def copy_to_characteristics(upload_id, language=None):
     return status
 
 
-@task
+@app.task
 def update_vacant_characteristics(upload_id, new_subj, language=None):
     """
     Update the values for the ComputedCharacteristics. This method
@@ -1930,7 +1930,7 @@ def update_vacant_characteristics(upload_id, new_subj, language=None):
     return status
 
 
-@task
+@app.task
 def renest_uploaded_subject(upload_id, language=None):
     """
     Renest all higher level geographies for the uploaded subject.
@@ -1995,7 +1995,7 @@ def renest_uploaded_subject(upload_id, language=None):
     return status
 
 
-@task
+@app.task
 def create_views_and_styles(upload_id, language=None):
     """
     Create the spatial views required for visualizing the subject data on the map.
@@ -2079,7 +2079,7 @@ def create_views_and_styles(upload_id, language=None):
     return status
 
 
-@task
+@app.task
 def clean_quarantined(upload_id, language=None):
     """
     Remove all temporary characteristics in the quarantine area for
