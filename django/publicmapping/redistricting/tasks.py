@@ -1145,7 +1145,7 @@ class PlanReport:
                         planid)
             return
 
-        tempdir = settings.WEB_TEMP
+        tempdir = settings.REPORTS_ROOT
         filename = '%s_p%d_v%d_%s' % (plan.owner.username, plan.id,
                                       plan.version, stamp)
 
@@ -1240,7 +1240,7 @@ class PlanReport:
         except:
             return 'error'
 
-        tempdir = settings.WEB_TEMP
+        tempdir = settings.REPORTS_ROOT
         filename = '%s_p%d_v%d_%s' % (plan.owner.username, plan.id,
                                       plan.version, stamp)
 
@@ -1272,7 +1272,7 @@ class PlanReport:
         except:
             return 'error'
 
-        tempdir = settings.WEB_TEMP
+        tempdir = settings.REPORTS_ROOT
         filename = '%s_p%d_v%d_%s' % (plan.owner.username, plan.id,
                                       plan.version, stamp)
 
@@ -1348,7 +1348,7 @@ class CalculatorReport:
         })
 
         # Write it to file
-        tempdir = settings.WEB_TEMP
+        tempdir = settings.REPORTS_ROOT
         filename = '%s_p%d_v%d_%s' % (plan.owner.username, plan.id,
                                       plan.version, stamp)
         htmlfile = open(
@@ -1375,7 +1375,7 @@ class CalculatorReport:
         except:
             return 'error'
 
-        tempdir = settings.WEB_TEMP
+        tempdir = settings.REPORTS_ROOT
         filename = '%s_p%d_v%d_%s' % (plan.owner.username, plan.id,
                                       plan.version, stamp)
         pending_file = '%s/%s.pending' % (tempdir, filename)
@@ -1401,7 +1401,7 @@ class CalculatorReport:
         except:
             return 'error'
 
-        tempdir = settings.WEB_TEMP
+        tempdir = settings.REPORTS_ROOT
         filename = '%s_p%d_v%d_%s' % (plan.owner.username, plan.id,
                                       plan.version, stamp)
 
