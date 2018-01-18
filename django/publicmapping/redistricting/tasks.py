@@ -25,7 +25,6 @@ Author:
 """
 
 from publicmapping.celery import app
-# from celery.task.http import HttpDispatchTask
 from codecs import open
 from django.core import management
 from django_comments.models import Comment
