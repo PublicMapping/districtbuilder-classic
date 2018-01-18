@@ -26,6 +26,7 @@ Author:
 import os, traceback, random, logging
 from lxml.etree import parse, clear_error_log, XMLSchema, XMLSyntaxError, XMLSchemaParseError
 
+
 class StoredConfig:
     """
     A class that is represented on disk by a configuration file. This class
@@ -44,7 +45,9 @@ class StoredConfig:
         """
         if schema_file is not None:
             if not os.path.exists(schema_file):
-                logging.warning('Configuration schema file could not be found. Please check the path and try again.')
+                logging.warning(
+                    'Configuration schema file could not be found. Please check the path and try again.'
+                )
                 raise Exception()
 
             self.schema_file = schema_file
@@ -52,13 +55,14 @@ class StoredConfig:
             self.schema_file = None
 
         if not os.path.exists(data):
-            logging.warning('Configuration data could not be found. Please check the path and try again.')
+            logging.warning(
+                'Configuration data could not be found. Please check the path and try again.'
+            )
             raise Exception()
 
         self.datafile = data
 
         self.data = None
-
 
     def validate(self):
         """
@@ -86,7 +90,9 @@ class StoredConfig:
                 schema = XMLSchema(schdoc)
             except XMLSchemaParseError, e:
                 # The schema document is XML, but it's not a schema
-                logging.warning('The schema XML file was parsed, but it does not appear to be a valid XML Schema document.')
+                logging.warning(
+                    'The schema XML file was parsed, but it does not appear to be a valid XML Schema document.'
+                )
                 for item in e.error_log:
                     logging.info(item)
 
@@ -108,7 +114,8 @@ class StoredConfig:
                 self.data = data
                 return True
 
-            logging.warning('The data does not conform to the provided schema.')
+            logging.warning(
+                'The data does not conform to the provided schema.')
             for item in schema.error_log:
                 logging.info(item)
 
@@ -117,7 +124,6 @@ class StoredConfig:
         self.data = data
 
         return True
-
 
     def merge_settings(self, settings):
         """
@@ -129,8 +135,8 @@ class StoredConfig:
             supported settings are "settings.py" and "reporting_settings.py"
         @returns: A flag indicating if the merge was successful.
         """
-        settings_in = open(settings+'.in','r')
-        settings_out = open(settings,'w')
+        settings_in = open(settings + '.in', 'r')
+        settings_out = open(settings, 'w')
 
         # Copy input settings for district builder
         for line in settings_in.readlines():
@@ -151,7 +157,6 @@ class StoredConfig:
 
             return False
 
-
     def _merge_common_settings(self, output):
         """
         Write common configuration settings to the output file.
@@ -161,10 +166,15 @@ class StoredConfig:
         """
         try:
             cfg = self.data.xpath('//Admin')[0]
-            output.write("\nADMINS = (\n  ('%s',\n  '%s'),\n)" % (cfg.get('user'), cfg.get('email')))
+            output.write("\nADMINS = (\n  ('%s',\n  '%s'),\n)" %
+                         (cfg.get('user'), cfg.get('email')))
             output.write("\nMANAGERS = ADMINS\n")
 
-            output.write("\nSECRET_KEY = '%s'\n" % "".join([random.choice("abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)") for i in range(50)]))
+            output.write("\nSECRET_KEY = '%s'\n" % "".join([
+                random.choice(
+                    "abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)")
+                for i in range(50)
+            ]))
 
             cfg = self.data.xpath('//Project')[0]
             root_dir = cfg.get('root')
@@ -204,7 +214,6 @@ class StoredConfig:
 
             return False
 
-
     def _merge_publicmapping_settings(self, output):
         """
         Write settings specific to the publicmapping django app to
@@ -218,9 +227,11 @@ class StoredConfig:
             output.write("TIME_ZONE = '%s'\n" % cfg.get('timezone'))
             output.write("LANGUAGES = (\n")
             for language in cfg.xpath('Language'):
-                output.write("    ('%s', '%s'),\n" % (language.get('code'), language.get('label')))
+                output.write("    ('%s', '%s'),\n" % (language.get('code'),
+                                                      language.get('label')))
             output.write(")\n")
-            output.write("# Modify to change the language of the application\n")
+            output.write(
+                "# Modify to change the language of the application\n")
             if not cfg.get('default') is None:
                 output.write("LANGUAGE_CODE = '%s'\n\n" % cfg.get('default'))
             else:
@@ -231,7 +242,9 @@ class StoredConfig:
 
             output.write("DATABASES = {\n")
             output.write("    'default': {\n")
-            output.write("        'ENGINE': 'django.contrib.gis.db.backends.postgis',\n")
+            output.write(
+                "        'ENGINE': 'django.contrib.gis.db.backends.postgis',\n"
+            )
             output.write("        'NAME': '%s',\n" % cfg.get('name'))
             output.write("        'USER': '%s',\n" % cfg.get('user'))
             output.write("        'PASSWORD': '%s',\n" % cfg.get('password'))
@@ -254,7 +267,8 @@ class StoredConfig:
             cfg = self.data.xpath('//Project/KeyValueStore')
             if len(cfg) > 0:
                 output.write("\nKEY_VALUE_STORE = {\n")
-                output.write("    'PASSWORD': '%s',\n" % cfg[0].get('password'))
+                output.write(
+                    "    'PASSWORD': '%s',\n" % cfg[0].get('password'))
                 output.write("    'HOST': '%s',\n" % cfg[0].get('host'))
                 output.write("    'PORT': '%s',\n" % cfg[0].get('port'))
                 output.write("    'DB': '%s',\n" % cfg[0].get('db'))
@@ -271,7 +285,9 @@ class StoredConfig:
             # Specific Settings for Convex Hull Choropleth - This choropleth
             # can only be displayed if convex hull is added to a list of score
             # functions
-            cfg = self.data.xpath('//Scoring/ScoreFunctions/ScoreFunction[@id="district_convex"]')
+            cfg = self.data.xpath(
+                '//Scoring/ScoreFunctions/ScoreFunction[@id="district_convex"]'
+            )
             if len(cfg) > 0:
                 output.write("\nCONVEX_CHOROPLETH = True\n")
             else:
@@ -285,7 +301,7 @@ class StoredConfig:
             output.write("EMAIL_SUBJECT_PREFIX = '%s '\n" % cfg.get('prefix'))
             use_tls = cfg.get('use_tls')
             if use_tls:
-                output.write("EMAIL_USE_TLS = %s\n" % ((use_tls == 'true'),))
+                output.write("EMAIL_USE_TLS = %s\n" % ((use_tls == 'true'), ))
             submission_email = cfg.get('submission_email')
             if submission_email:
                 output.write("EMAIL_SUBMISSION = '%s'\n" % submission_email)
@@ -293,10 +309,14 @@ class StoredConfig:
             cfg = self.data.xpath('//Project')[0]
             root_dir = cfg.get('root')
 
-            output.write("\nTEMPLATE_DIRS = (\n  '%s/django/publicmapping/templates',\n)\n" % root_dir)
+            output.write(
+                "\nTEMPLATE_DIRS = (\n  '%s/django/publicmapping/templates',\n)\n"
+                % root_dir)
             output.write("\nSLD_ROOT = '%s/sld/'\n" % root_dir)
 
-            output.write("\nSTATICFILES_DIRS = (\n  '%s/django/publicmapping/static/',\n)\n" % root_dir)
+            output.write(
+                "\nSTATICFILES_DIRS = (\n  '%s/django/publicmapping/static/',\n)\n"
+                % root_dir)
 
             quota = cfg.get('sessionquota')
             if not quota:
@@ -323,12 +343,14 @@ class StoredConfig:
                 if bardcfg is not None:
                     cfg = bardcfg
 
-                    output.write("BARD_TRANSFORM = '%s'\n" % cfg.get('transform'))
+                    output.write(
+                        "BARD_TRANSFORM = '%s'\n" % cfg.get('transform'))
                     server = cfg.get('server')
                     if server:
                         output.write("BARD_SERVER = '%s'\n" % server)
                     else:
-                        output.write("BARD_SERVER = 'http://localhost/reporting'\n")
+                        output.write(
+                            "BARD_SERVER = 'http://localhost/reporting'\n")
 
             cfg = self.data.xpath('//GoogleAnalytics')
             if len(cfg) > 0:
@@ -341,7 +363,8 @@ class StoredConfig:
             cfg = self.data.xpath('//Upload')
             if len(cfg) > 0:
                 cfg = cfg[0]
-                output.write("\nMAX_UPLOAD_SIZE = %s * 1024\n" % cfg.get('maxsize'))
+                output.write(
+                    "\nMAX_UPLOAD_SIZE = %s * 1024\n" % cfg.get('maxsize'))
             else:
                 output.write("\nMAX_UPLOAD_SIZE = 5000 * 1024\n")
 
@@ -352,9 +375,12 @@ class StoredConfig:
             if len(cfg) > 0:
                 cfg = cfg[0]
                 minpercent = cfg.get('minpercent') or minpercent
-                comparatorsubject = cfg.get('comparatorsubject') or comparatorsubject
-            output.write("\nFIX_UNASSIGNED_MIN_PERCENT = %d\n" % int(minpercent))
-            output.write("\nFIX_UNASSIGNED_COMPARATOR_SUBJECT = '%s'\n" % comparatorsubject)
+                comparatorsubject = cfg.get(
+                    'comparatorsubject') or comparatorsubject
+            output.write(
+                "\nFIX_UNASSIGNED_MIN_PERCENT = %d\n" % int(minpercent))
+            output.write("\nFIX_UNASSIGNED_COMPARATOR_SUBJECT = '%s'\n" %
+                         comparatorsubject)
 
             # Undo restrictions
             maxundosduringedit = 0
@@ -364,8 +390,10 @@ class StoredConfig:
                 cfg = cfg[0]
                 maxundosduringedit = cfg.get('duringedit') or 0
                 maxundosafteredit = cfg.get('afteredit') or 0
-            output.write("\nMAX_UNDOS_DURING_EDIT = %d\n" % int(maxundosduringedit))
-            output.write("\nMAX_UNDOS_AFTER_EDIT = %d\n" % int(maxundosafteredit))
+            output.write(
+                "\nMAX_UNDOS_DURING_EDIT = %d\n" % int(maxundosduringedit))
+            output.write(
+                "\nMAX_UNDOS_AFTER_EDIT = %d\n" % int(maxundosafteredit))
 
             # Leaderboard
             maxranked = 10
@@ -408,13 +436,15 @@ class StoredConfig:
 
             os.rename(output.name, './reporting/settings.py')
 
-            return (True, [],)
+            return (
+                True,
+                [],
+            )
         except Exception, ex:
             # An error occurred during the processing of the settings file
             logging.warning(traceback.format_exc())
 
             return False
-
 
     def get_node(self, node, parent=None):
         """
@@ -437,7 +467,6 @@ class StoredConfig:
 
         return nodes[0]
 
-
     def filter_nodes(self, node_filter, parent=None):
         """
         Get a list of nodes from the XML data.
@@ -453,7 +482,6 @@ class StoredConfig:
             return self.data.xpath(node_filter)
         else:
             return parent.xpath(node_filter)
-
 
     def get_admin(self):
         """
@@ -474,7 +502,8 @@ class StoredConfig:
         @param idattr: The ID of the GeoLevel node.
         @returns: The GeoLevel configuration node.
         """
-        return self.get_node('/DistrictBuilder/GeoLevels/GeoLevel[@id="%s"]' % idattr)
+        return self.get_node(
+            '/DistrictBuilder/GeoLevels/GeoLevel[@id="%s"]' % idattr)
 
     def get_regional_geolevel(self, rnode, idattr):
         """
@@ -486,7 +515,8 @@ class StoredConfig:
         @param idattr: The ref ID of the GeoLevel node.
         @returns: The GeoLevel configuration node.
         """
-        return self.get_node('GeoLevels//GeoLevel[@ref="%s"]' % idattr, parent=rnode)
+        return self.get_node(
+            'GeoLevels//GeoLevel[@ref="%s"]' % idattr, parent=rnode)
 
     def get_legislative_body(self, idattr):
         """
@@ -517,7 +547,8 @@ class StoredConfig:
         @param lbody_node: The LegisLativeBody parent node.
         @returns: The default subject node in a LegislativeBody.
         """
-        return self.get_node('//Subjects/Subject[@default="true"]', parent=lbody_node)
+        return self.get_node(
+            '//Subjects/Subject[@default="true"]', parent=lbody_node)
 
     def get_top_regional_geolevel(self, rnode):
         """
@@ -548,7 +579,8 @@ class StoredConfig:
         @param idattr: The ID of the ScoreFunction node.
         @returns: The ScoreFunction node.
         """
-        return self.get_node('//ScoreFunctions/ScoreFunction[@id="%s"]' % idattr)
+        return self.get_node(
+            '//ScoreFunctions/ScoreFunction[@id="%s"]' % idattr)
 
     def get_criterion_score(self, crit_node):
         """
@@ -605,7 +637,8 @@ class StoredConfig:
         @param region_node: The Region parent node.
         @returns: A list of all the LegislativeBody nodes in a Region.
         """
-        return self.filter_nodes('LegislativeBodies/LegislativeBody', parent=region_node)
+        return self.filter_nodes(
+            'LegislativeBodies/LegislativeBody', parent=region_node)
 
     def filter_legislative_bodies(self):
         """

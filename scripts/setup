@@ -23,5 +23,9 @@ then
         mkdir -p "${HOME}/.aws"
 
         vagrant up --provision
+
+        # Sets up pre-commit hooks to yapf new python files.
+        pre-commit install
+
     fi
 fi

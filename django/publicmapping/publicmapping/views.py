@@ -53,6 +53,7 @@ from random import choice
 import logging
 logger = logging.getLogger(__name__)
 
+
 def index(request):
     """
     Generate the index page for the application. The
@@ -75,16 +76,18 @@ def index(request):
     if 'avail' in request.session:
         avail = request.session['avail']
 
-    return HttpResponse(render(request, 'index.html', {
-        'is_registered':False,
-        'opensessions':count,
-        'sessionavail':avail,
-        'ga_account': settings.GA_ACCOUNT,
-        'ga_domain': settings.GA_DOMAIN,
-        'user': request.user,
-        'site': Site.objects.get_current(),
-        'language_code': get_language(),
-    }))
+    return HttpResponse(
+        render(
+            request, 'index.html', {
+                'is_registered': False,
+                'opensessions': count,
+                'sessionavail': avail,
+                'ga_account': settings.GA_ACCOUNT,
+                'ga_domain': settings.GA_DOMAIN,
+                'user': request.user,
+                'site': Site.objects.get_current(),
+                'language_code': get_language(),
+            }))
 
 
 @transaction.atomic()
@@ -117,25 +120,27 @@ def userregister(request):
     hint = request.POST.get('passwordhint', None)
     org = request.POST.get('organization', None)
     anonymous = False
-    status = { 'success':False }
+    status = {'success': False}
     if username != '' and password != '':
         if (username == 'anonymous' and password == 'anonymous'):
             user = AnonymousUser()
         else:
             name_exists = User.objects.filter(username__exact=username)
             if name_exists:
-                status['message'] ='name exists'
+                status['message'] = 'name exists'
                 return HttpResponse(json.dumps(status))
 
-            email_exists = email != '' and User.objects.filter(email__exact = email)
+            email_exists = email != '' and User.objects.filter(
+                email__exact=email)
             if email_exists:
-                status['message'] ='email exists'
+                status['message'] = 'email exists'
                 return HttpResponse(json.dumps(status))
 
             try:
                 User.objects.create_user(username, email, password)
             except Exception as error:
-                status['message'] = 'Sorry, we weren\'t able to create your account.'
+                status[
+                    'message'] = 'Sorry, we weren\'t able to create your account.'
                 return HttpResponse(json.dumps(status))
 
             # authenticate the user, and add additional registration info
@@ -150,7 +155,7 @@ def userregister(request):
             profile.pass_hint = hint
             profile.save()
 
-            login( request, user )
+            login(request, user)
 
         status['success'] = True
         status['redirect'] = '/districtmapping/plan/0/view/'
@@ -184,7 +189,7 @@ def userupdate(request):
     org = request.POST.get('organization', None)
     id = request.POST.get('userid', None)
 
-    status = { 'success':False, 'message':'Unspecified error.' }
+    status = {'success': False, 'message': 'Unspecified error.'}
 
     if username == 'anonymous':
         status['message'] = 'Cannot update anonymous account information.'
@@ -232,7 +237,7 @@ def userlogout(request):
     """
     key = request.session.session_key
     logout(request)
-    Session.objects.filter(session_key = key).delete()
+    Session.objects.filter(session_key=key).delete()
     if 'next' in request.GET:
         return HttpResponseRedirect(request.GET['next'])
     else:
@@ -256,11 +261,12 @@ def emailpassword(user):
         True if the user was modified and notified successfully.
     """
 
-    newpw = ''.join([choice('abcdefghjkmnopqrstuvwxyzABCDEFGHJKMNOPQRSTUVWXYZ023456789!@#$%^&*()-_=+') for i in range(8)])
-    context = Context({
-        'user': user,
-        'new_password': newpw
-    })
+    newpw = ''.join([
+        choice(
+            'abcdefghjkmnopqrstuvwxyzABCDEFGHJKMNOPQRSTUVWXYZ023456789!@#$%^&*()-_=+'
+        ) for i in range(8)
+    ])
+    context = Context({'user': user, 'new_password': newpw})
     template = loader.get_template('forgottenpassword.email')
 
     try:
@@ -271,8 +277,13 @@ def emailpassword(user):
     except:
         return False
 
-    send_mail(_('Your Password Reset Request'), template.render(context), settings.EMAIL_HOST_USER, [user.email], fail_silently=False)
+    send_mail(
+        _('Your Password Reset Request'),
+        template.render(context),
+        settings.EMAIL_HOST_USER, [user.email],
+        fail_silently=False)
     return True
+
 
 @cache_control(no_cache=True)
 def forgotpassword(request):
@@ -288,7 +299,7 @@ def forgotpassword(request):
         A JSON object with a password hint or a message indicating that an
         email was sent with their new password.
     """
-    status = {'success':False}
+    status = {'success': False}
     if 'username' in request.REQUEST and not request.REQUEST['username'] == '':
         username = request.REQUEST['username']
         try:
@@ -314,6 +325,7 @@ def forgotpassword(request):
 
     return HttpResponse(json.dumps(status))
 
+
 @login_required
 @cache_control(no_cache=True)
 def proxy(request):
@@ -336,15 +348,14 @@ def proxy(request):
         return HttpResponseNotFound()
 
     if request.method == 'POST':
-        rsp = urllib2.urlopen( urllib2.Request(
-            url,
-            request.raw_post_data,
-            {'Content-Type': request.META['CONTENT_TYPE'] }
-        ))
+        rsp = urllib2.urlopen(
+            urllib2.Request(url, request.raw_post_data, {
+                'Content-Type': request.META['CONTENT_TYPE']
+            }))
     else:
         rsp = urllib2.urlopen(url)
 
-    httprsp = HttpResponse( rsp.read() )
+    httprsp = HttpResponse(rsp.read())
     if rsp.info().has_key('Content-Type'):
         httprsp['Content-Type'] = rsp.info()['Content-Type']
     else:
@@ -354,9 +365,10 @@ def proxy(request):
 
     return httprsp
 
+
 @csrf_exempt
 def session(request):
-    status = { 'success': False, 'message': 'Unspecified error.' }
+    status = {'success': False, 'message': 'Unspecified error.'}
     user = request.user
 
     try:

@@ -30,6 +30,7 @@ from django.utils.translation import ugettext as _
 
 register = template.Library()
 
+
 @register.filter
 def spellnumber(value):
     """
@@ -40,11 +41,32 @@ def spellnumber(value):
         value - A number value
     """
     try:
-        return [_("zero"), _("one"), _("two"), _("three"), _("four"), _("five"), _("six"), _("seven"), _("eight"), _("nine"),
-         _("ten"), _("eleven"), _("twelve"), _("thirteen"), _("fourteen"), _("fifteen"), _("sixteen"),
-         _("seventeen"), _("eighteen"), _("nineteen"), _("twenty")][value]
+        return [
+            _("zero"),
+            _("one"),
+            _("two"),
+            _("three"),
+            _("four"),
+            _("five"),
+            _("six"),
+            _("seven"),
+            _("eight"),
+            _("nine"),
+            _("ten"),
+            _("eleven"),
+            _("twelve"),
+            _("thirteen"),
+            _("fourteen"),
+            _("fifteen"),
+            _("sixteen"),
+            _("seventeen"),
+            _("eighteen"),
+            _("nineteen"),
+            _("twenty")
+        ][value]
     except:
         return value
+
 
 @register.filter
 def dictsort_ignorecase(value, arg):
@@ -53,16 +75,17 @@ def dictsort_ignorecase(value, arg):
     the argument. Sort is case insensitive.
     """
 
-    def lower_if_string(object): 
-        try: 
-            return object.lower() 
-        except AttributeError: 
-            return object 
+    def lower_if_string(object):
+        try:
+            return object.lower()
+        except AttributeError:
+            return object
 
     var_resolve = template.Variable(arg).resolve
     decorated = [(lower_if_string(var_resolve(item)), item) for item in value]
     decorated.sort()
     return [item[1] for item in decorated]
+
 
 @register.filter
 def count_true_values(value, key):
@@ -75,6 +98,7 @@ def count_true_values(value, key):
         return str(len(filter(lambda x: x[key], value)))
     except:
         return ''
+
 
 @register.filter
 def avg_report_column(districtscores, row):
@@ -92,11 +116,11 @@ def avg_report_column(districtscores, row):
         avg_key = row['avg_key']
         total = 0
         num_items = 0
-        
+
         for districtscore in districtscores:
             if districtscore['district'].district_id == 0:
                 continue
-            
+
             for score in districtscore['scores']:
                 for scorerow in score['score']:
                     if 'avg_key' in scorerow and avg_key == scorerow['avg_key']:
@@ -104,8 +128,14 @@ def avg_report_column(districtscores, row):
                         total += float(scorerow['value'])
     except:
         return 'N/A'
-    
-    return format_report_value({ 'type': row['type'], 'value': 0 if not num_items else total / num_items })
+
+    return format_report_value({
+        'type':
+        row['type'],
+        'value':
+        0 if not num_items else total / num_items
+    })
+
 
 @register.filter
 def count_report_row_elements(row):
@@ -119,8 +149,9 @@ def count_report_row_elements(row):
             return floatformat(len(row['value']), 0)
     except:
         return ''
-    
+
     return ''
+
 
 @register.filter
 def format_report_value(row):
@@ -132,7 +163,7 @@ def format_report_value(row):
     try:
         if row['type'] == 'integer':
             return floatformat(row['value'], 0)
-    
+
         if row['type'] == 'percent':
             return floatformat(row['value'] * 100, 2) + '%'
 
@@ -147,6 +178,7 @@ def format_report_value(row):
         return 'N/A'
 
     return row['value']
+
 
 @register.filter
 def format_report_class(row):

@@ -34,6 +34,7 @@ from django.core.files.uploadedfile import UploadedFile
 from django.utils.translation import ugettext as _, get_language
 import os, tempfile, csv, re
 
+
 class SubjectUploadForm(forms.Form):
     """
     A form that accepts a subject file for upload that contains new Subject data.
@@ -52,7 +53,8 @@ class SubjectUploadForm(forms.Form):
     subject_name = forms.CharField(required=False, widget=forms.HiddenInput)
 
     # Overwrite checkbox to force an upload to win if subject names collide.
-    force_overwrite = forms.BooleanField(required=False, widget=forms.HiddenInput)
+    force_overwrite = forms.BooleanField(
+        required=False, widget=forms.HiddenInput)
 
     # The ID of the task that is currently running the verification.
     task_uuid = forms.CharField(required=False, widget=forms.HiddenInput)
@@ -75,24 +77,28 @@ class SubjectUploadForm(forms.Form):
         """
 
         subject_upload = self.cleaned_data['subject_upload']
-        if not subject_upload is None and isinstance(subject_upload,UploadedFile):
+        if not subject_upload is None and isinstance(subject_upload,
+                                                     UploadedFile):
             self.ul_file = subject_upload.name
             task_id = ''
 
             # Create a new record of uploaded subjects
-            sup = SubjectUpload(upload_filename=subject_upload.name, status='UL')
+            sup = SubjectUpload(
+                upload_filename=subject_upload.name, status='UL')
             sup.save()
 
             # try saving the uploaded file via stream to the file system
             try:
-                localstore = tempfile.NamedTemporaryFile(mode='w+', delete=False)
+                localstore = tempfile.NamedTemporaryFile(
+                    mode='w+', delete=False)
                 for chunk in subject_upload.chunks():
                     localstore.write(chunk)
             except Exception, ex:
                 sup.status = 'ER'
                 sup.save()
 
-                raise forms.ValidationError(_('Could not store uploaded Subject template.'))
+                raise forms.ValidationError(
+                    _('Could not store uploaded Subject template.'))
 
             sup.processing_filename = self.ps_file = localstore.name
             sup.save()
@@ -108,14 +114,16 @@ class SubjectUploadForm(forms.Form):
                 sup.status = 'ER'
                 sup.save()
 
-                raise forms.ValidationError(_('The uploaded file is missing subject data.'))
+                raise forms.ValidationError(
+                    _('The uploaded file is missing subject data.'))
 
             try:
                 clean_name = self._clean_name(reader.fieldnames[1][0:50])
                 sup.subject_name = self.temp_subject_name = clean_name
                 sup.save()
             except Exception, ex:
-                raise forms.ValidationError(_('The new subject name could not be determined.'))
+                raise forms.ValidationError(
+                    _('The new subject name could not be determined.'))
             finally:
                 localstore.close()
 
@@ -124,18 +132,21 @@ class SubjectUploadForm(forms.Form):
         elif self.cleaned_data['processing_file'] != '':
             self.ps_file = self.cleaned_data['processing_file']
             self.ul_file = self.cleaned_data['uploaded_file']
-            self.temp_subject_name = self._clean_name(self.cleaned_data['subject_name'])
+            self.temp_subject_name = self._clean_name(
+                self.cleaned_data['subject_name'])
 
-            sup = SubjectUpload.objects.get(upload_filename=self.ul_file,
-                processing_filename=self.ps_file)
+            sup = SubjectUpload.objects.get(
+                upload_filename=self.ul_file, processing_filename=self.ps_file)
 
             # the processing file must be in the /tmp/ folder, and may not contain any ".."
             if not self.temp_path_re.match(self.ps_file) or \
                 self.dotdot_path_re.match(self.ps_file) or \
                 not os.path.exists(self.ps_file):
-                raise forms.ValidationError(_('Uploaded file cannot be found.'))
+                raise forms.ValidationError(
+                    _('Uploaded file cannot be found.'))
         else:
-            self._errors['subject_upload'] = self.error_class([_('Uploaded file is required.')])
+            self._errors['subject_upload'] = self.error_class(
+                [_('Uploaded file is required.')])
             return self.cleaned_data
 
         # path for data dir is adjacent to the web_temp setting
@@ -150,8 +161,12 @@ class SubjectUploadForm(forms.Form):
             if not self.cleaned_data['force_overwrite']:
                 self.temp_subject_name = sup.subject_name
                 self._errors = {}
-                self._errors['subject_name'] = self.error_class([_('Please specify a unique subject name.')])
-                self._errors['force_overwrite'] = self.error_class([_('Check this box to overwrite the existing subject with the same name.')])
+                self._errors['subject_name'] = self.error_class(
+                    [_('Please specify a unique subject name.')])
+                self._errors['force_overwrite'] = self.error_class([
+                    _('Check this box to overwrite the existing subject with the same name.'
+                      )
+                ])
                 return self.cleaned_data
             saved_ul = '%s_%s.csv' % (saved_ul, str(collisions[0].version))
         else:
@@ -168,7 +183,8 @@ class SubjectUploadForm(forms.Form):
         sup.save()
 
         # verify_count begins a cascade of validation operations
-        task = verify_count.delay(sup.id, self.ps_file, language=get_language())
+        task = verify_count.delay(
+            sup.id, self.ps_file, language=get_language())
         sup.task_id = task.task_id
 
         sup.save()
@@ -182,7 +198,7 @@ class SubjectUploadForm(forms.Form):
         try:
             cmp1 = re.match(r'[^a-zA-Z_]+?([a-zA-Z_]+)', inputname)
             cmp2 = re.findall(r'[\w]+', inputname)
-            if cmp1 is None: 
+            if cmp1 is None:
                 if cmp2[0] == inputname:
                     return inputname
                 else:
@@ -192,5 +208,5 @@ class SubjectUploadForm(forms.Form):
 
             return '_'.join([cmp1] + cmp2[1:]).lower()
         except Exception, ex:
-            raise forms.ValidationError(_('Uploaded file contains an invalid subject name.'))
-            
+            raise forms.ValidationError(
+                _('Uploaded file contains an invalid subject name.'))

@@ -9,10 +9,12 @@ from django.db import DEFAULT_DB_ALIAS
 
 
 class Command(BaseCommand):
-    option_list = BaseCommand.option_list + (
-        make_option('--database', action='store', dest='database',
-            default=DEFAULT_DB_ALIAS, help='Specifies the database to use. Default is "default".'),
-    )
+    option_list = BaseCommand.option_list + (make_option(
+        '--database',
+        action='store',
+        dest='database',
+        default=DEFAULT_DB_ALIAS,
+        help='Specifies the database to use. Default is "default".'), )
     help = "Change a user's password for django.contrib.auth."
 
     requires_model_validation = False
@@ -25,7 +27,8 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         if len(args) > 1:
-            raise CommandError("need exactly one or zero arguments for username")
+            raise CommandError(
+                "need exactly one or zero arguments for username")
 
         if args:
             username, = args
@@ -46,11 +49,14 @@ class Command(BaseCommand):
             p1 = self._get_pass()
             p2 = self._get_pass("Password (again): ")
             if p1 != p2:
-                self.stdout.write("Passwords do not match. Please try again.\n")
+                self.stdout.write(
+                    "Passwords do not match. Please try again.\n")
                 count = count + 1
 
         if count == MAX_TRIES:
-            raise CommandError("Aborting password change for user '%s' after %s attempts" % (u, count))
+            raise CommandError(
+                "Aborting password change for user '%s' after %s attempts" %
+                (u, count))
 
         # Need to add a custom hash here to replicate
         # what is done with javascript client-side in the change-password
