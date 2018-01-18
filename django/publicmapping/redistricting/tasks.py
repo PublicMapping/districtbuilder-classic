@@ -1321,8 +1321,9 @@ class CalculatorReport:
         try:
             plan = Plan.objects.get(pk=planid)
         except:
-            logger.debug("Couldn't retrieve plan information for plan %d",
-                         planid)
+            logger.exception(
+                "Couldn't retrieve plan information for plan {}".format(planid)
+            )
             return
 
         function_ids = map(lambda s: int(s), request['functionIds'].split(','))
