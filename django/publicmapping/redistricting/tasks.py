@@ -20,7 +20,7 @@ License:
     See the License for the specific language governing permissions and
     limitations under the License.
 
-Author: 
+Author:
     Andrew Jennings, David Zwarg
 """
 
@@ -83,7 +83,7 @@ class DistrictFile():
         """
         Given a plan, this method will check to see whether the district file
         for the given plan exists, is pending, or has not been created.
-        
+
         Parameters:
             plan - the Plan for which a file has been requested
             shape - a flag indicating if this is to be a shapefile; defaults to False
@@ -103,13 +103,13 @@ class DistrictFile():
     def get_file(plan, shape=False):
         """
         Given a plan, return the district file for the plan at the current version.
-        
+
         Parameters:
             plan - the Plan for which a file has been requested.
             shape - a flag indicating if this is to be a shapefile; defaults to False
 
         Returns:
-            A file object representing the district file. If the file requested 
+            A file object representing the district file. If the file requested
             doesn't exist, nothing is returned.
         """
         if (DistrictFile.get_file_status(plan, shape) == 'done'):
@@ -124,10 +124,10 @@ class DistrictIndexFile():
     The publicmapping projects supports users importing and exporting
     their plans to district index files.  These two-column, csv-formatted
     files list all of the base geounits in a plan and to which district they
-    belong.  
+    belong.
 
     These files may be uploaded or downloaded in .zip format. The files
-    should not contain a header row - rows which do not contain a 
+    should not contain a header row - rows which do not contain a
     portable id from the database will be ignored.
     """
 
@@ -142,15 +142,15 @@ class DistrictIndexFile():
                    email=None,
                    language=None):
         """
-        Imports a plan using a district index file in csv format. 
-        There should be only two columns: a CODE matching the 
+        Imports a plan using a district index file in csv format.
+        There should be only two columns: a CODE matching the
         portable ids of geounits and a DISTRICT integer
         representing the district to which the geounit should belong.
 
         Parameters:
             name - The name of the Plan.
             filename - The path to the district index file.
-            owner - Optional. The user who owns this plan. If not 
+            owner - Optional. The user who owns this plan. If not
                 specified, defaults to the system admin.
             template - Optional. A flag indicating that this new plan
                 is a template that other users can instantiate.
@@ -570,7 +570,7 @@ class DistrictIndexFile():
 
         Parameters:
             plan - The plan for which to get an index file
-        
+
         Returns:
             A file object representing the zipped index file
         """
@@ -690,7 +690,7 @@ class DistrictIndexFile():
 
 class DistrictShapeFile():
     """
-    The publicmapping projects supports users exporting their plans to 
+    The publicmapping projects supports users exporting their plans to
     shape files.  These files list all of the districts, their geometries,
     and the computed characteristics of the plan's districts.
 
@@ -806,7 +806,7 @@ class DistrictShapeFile():
                     }
                 }
             },
-            'eainfo': {  # FGDC 5 
+            'eainfo': {  # FGDC 5
                 'detailed': {
                     'enttype': {
                         'enttypl':
@@ -893,7 +893,7 @@ class DistrictShapeFile():
 
         Parameters:
             plan - The plan for which to get a shape file
-        
+
         Returns:
             A file object representing the zipped shape file
         """
