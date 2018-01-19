@@ -176,6 +176,8 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = '/usr/src/app/static/'
 
+REPORTS_ROOT = '/opt/reports'
+
 # LEGACY SETTINGS
 
 # Location of your key value store, e.g., Redis
