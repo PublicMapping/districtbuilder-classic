@@ -39,7 +39,7 @@ urlpatterns = ([
             packages=js_info_dict['packages'], domain='djangojs'),
         name='javascript-catalog'),
     url(r'^accounts/register/$', publicmapping_views.userregister),
-    url(r'^accounts/login/$', auth_views.LoginView.as_view(), {
+    url(r'^accounts/login/$', auth_views.login, {
         'template_name': 'index.html'
     }),
     url(r'^accounts/logout/$', publicmapping_views.userlogout),
