@@ -77,6 +77,7 @@ import hashlib
 import inflect
 import logging
 import StringIO
+import dateutil.parser
 
 import ModestMaps
 from PIL import Image, ImageChops, ImageMath
@@ -189,10 +190,11 @@ def is_session_available(req):
     for session in sessions:
         try:
             decoded = session.get_decoded()
-            if (
-                    not req.user.is_anonymous()
-            ) and 'activity_time' in decoded and decoded['activity_time'] > datetime.now(
-            ):
+            activity_time = decoded.get('activity_time')
+            activity_time_datetime = activity_time and \
+                dateutil.parser.parse(activity_time)
+            if not req.user.is_anonymous() and activity_time_datetime and \
+                    activity_time_datetime > datetime.now():
                 count += 1
         except SuspiciousOperation:
             logger.debug(

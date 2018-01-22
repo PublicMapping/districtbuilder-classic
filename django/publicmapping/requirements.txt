@@ -22,3 +22,4 @@ html5lib==1.0b8
 git+git://github.com/PublicMapping/modestmaps-py.git@db-mod_1.4
 lxml==3.8.0
 colorbrewer==0.1.1
+python-dateutil==2.6.0
