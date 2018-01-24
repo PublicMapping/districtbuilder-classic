@@ -78,9 +78,7 @@ class Command(BaseCommand):
 
         # Use the specified locale, or if none are provided, use all defined in settings
         locale = options.get("locale")
-        locales = [locale
-                   ] if locale else [[l[0]] for l in settings.LANGUAGES
-                                     if l[0] in settings.ENABLED_LANGUAGES]
+        locales = [locale] if locale else [l[0] for l in settings.LANGUAGES]
 
         # Make messages for each available locale
         for locale in locales:
@@ -88,7 +86,7 @@ class Command(BaseCommand):
             if everything or options.get("templates"):
                 management.call_command(
                     'makemessages',
-                    locale=locale,
+                    locale=[locale],
                     extensions=['html', 'txt', 'email'],
                     interactive=False,
                     verbosity=options.get('verbosity'),
@@ -98,7 +96,7 @@ class Command(BaseCommand):
             if everything or options.get("javascript"):
                 management.call_command(
                     'makemessages',
-                    locale=locale,
+                    locale=[locale],
                     domain='djangojs',
                     interactive=False,
                     verbosity=options.get('verbosity'),
@@ -108,6 +106,6 @@ class Command(BaseCommand):
             if everything or options.get("compile"):
                 management.call_command(
                     'compilemessages',
-                    locale=locale,
+                    locale=[locale],
                     interactive=False,
                     verbosity=options.get('verbosity'))

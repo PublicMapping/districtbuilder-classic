@@ -169,11 +169,7 @@ class ConfigImporter:
         Save all modified po files.
         """
         for locale in self.poutils:
-            # TODO: these are coming from somewhere in the setup process.
-            # It's not clear where, but there are too many. Remove this
-            # check and the ENABLED_LANGUAGES setting when that's resolved.
-            if locale in settings.ENABLED_LANGUAGES:
-                self.poutils[locale].save()
+            self.poutils[locale].save()
 
     def import_superuser(self, force):
         """

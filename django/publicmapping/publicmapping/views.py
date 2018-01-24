@@ -87,6 +87,7 @@ def index(request):
                 'user': request.user,
                 'site': Site.objects.get_current(),
                 'language_code': get_language(),
+                'LANGUAGES': settings.LANGUAGES,
             }))
 
 

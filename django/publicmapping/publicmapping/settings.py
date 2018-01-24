@@ -59,6 +59,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
 ]
 
 ROOT_URLCONF = 'publicmapping.urls'
@@ -72,6 +73,7 @@ TEMPLATES = [
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
+                'django.template.context_processors.i18n',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
@@ -159,8 +161,17 @@ logging.config.dictConfig({
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 
+# TODO: these languages are defined in config.xml and these
+# settings will need to become dynamic
 LANGUAGE_CODE = 'en'
-ENABLED_LANGUAGES = ('en', 'es', 'fr', 'ja')
+LANGUAGES = (
+    ('en', 'English'),
+    ('es', 'Spanish'),
+)
+
+LOCALE_PATHS = [
+    'locale',
+]
 
 TIME_ZONE = 'UTC'
 
