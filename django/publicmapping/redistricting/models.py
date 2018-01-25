@@ -956,6 +956,9 @@ class Characteristic(models.Model):
     percentage = models.DecimalField(
         max_digits=12, decimal_places=8, null=True, blank=True)
 
+    class Meta:
+        unique_together = ("subject", "geounit")
+
     def __unicode__(self):
         """
         Represent the Characteristic as a unicode string. The
