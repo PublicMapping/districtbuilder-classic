@@ -719,7 +719,7 @@ def editplan(request, planid):
     if settings.MAX_UNDOS_AFTER_EDIT > 0:
         plan.purge_beyond_nth_step(settings.MAX_UNDOS_AFTER_EDIT)
 
-    return render('editplan.html', cfg)
+    return render(request, 'editplan.html', cfg)
 
 
 @user_passes_test(using_unique_session)
@@ -941,14 +941,14 @@ def uploadfile(request):
     index_file = request.FILES.get('indexFile', False)
     if not index_file:
         status['upload_status'] = False
-        return render('viewplan.html', status)
+        return render(request, 'viewplan.html', status)
     else:
         filename = index_file.name
 
     if index_file.size > settings.MAX_UPLOAD_SIZE:
         logger.error('File size exceeds allowable size.')
         status['upload_status'] = False
-        return render('viewplan.html', status)
+        return render(request, 'viewplan.html', status)
 
     if not filename.endswith(('.csv', '.zip')):
         logger.error('Uploaded file must be ".csv" or ".zip".')
@@ -972,7 +972,7 @@ def uploadfile(request):
             logger.error('Could not save uploaded file')
             logger.error('Reason: %s', ex)
             status['upload_status'] = False
-            return render('viewplan.html', status)
+            return render(request, 'viewplan.html', status)
 
         # Put in a celery task to create the plan and email user on completion
         DistrictIndexFile.index2plan.delay(
@@ -985,7 +985,7 @@ def uploadfile(request):
             email=request.POST['userEmail'],
             language=translation.get_language())
 
-    return render('viewplan.html', status)
+    return render(request, 'viewplan.html', status)
 
 
 def generate_report_hash(qdict):
