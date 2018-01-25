@@ -37,6 +37,7 @@ services:
     volumes:
       - ./django/publicmapping/:/usr/src/app/
       - ./sld/:/opt/sld
+      - data:/data
       - reports:/opt/reports
     entrypoint: /usr/local/bin/gunicorn
     command:
@@ -83,3 +84,4 @@ services:
 
 volumes:
   reports:
+  data:

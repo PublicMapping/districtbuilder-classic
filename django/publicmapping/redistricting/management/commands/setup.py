@@ -27,12 +27,16 @@ Author:
     Andrew Jennings, David Zwarg, Kenny Shepard
 """
 
-import json
-
 from decimal import Decimal
-from django.contrib.gis.gdal import *
-from django.contrib.gis.geos import *
-from django.contrib.gis.db.models import Sum, Union
+from django.contrib.gis.gdal import (
+    DataSource,
+    SpatialReference
+)
+from django.contrib.gis.geos import (
+    MultiPolygon,
+    LineString,
+    MultiLineString
+)
 from django.contrib.auth.models import User
 from django.core.cache import caches
 from django.core.management import call_command
@@ -40,19 +44,29 @@ from django.core.management.base import BaseCommand
 from django.conf import settings
 from django.utils import translation
 from django.utils.translation import ugettext as _, activate
-from optparse import make_option
 from os.path import exists
 from lxml.etree import parse, XSLT
-from xml.dom import minidom
-import redistricting
-from redistricting.models import *
-from redistricting.tasks import *
+from redistricting.config import Utils, SpatialUtils
+from redistricting.models import (
+    Geolevel,
+    Geounit,
+    Subject,
+    Characteristic,
+    LegislativeBody,
+    Plan,
+    ProcessingState,
+    configure_views
+)
 from redistricting.config import ConfigImporter
-import traceback, logging
+from redistricting import StoredConfig
+from redistricting.tasks import DistrictIndexFile
+import traceback
+import logging
+import sys
+import csv
+import types
 
 from redisutils import key_gen
-from django.db.models import Q
-import subprocess
 
 logger = logging.getLogger()
 logger.addHandler(logging.StreamHandler())
@@ -163,8 +177,8 @@ ERROR:
             sys.exit(1)
 
         try:
-            store = redistricting.StoredConfig(options.get('config'))
-        except Exception, ex:
+            store = StoredConfig(options.get('config'))
+        except Exception:
             logger.info("""
 ERROR:
 
@@ -236,7 +250,7 @@ file and try again.
         except:
             all_ok = False
             logger.info('ERROR importing geolevels.')
-            logger.debug(traceback.format_exc())
+            logger.info(traceback.format_exc())
 
         # Do this once after processing the geolevels
         config.import_contiguity_overrides()
@@ -314,7 +328,7 @@ file and try again.
             attrconfig = geolevel.xpath('Files/Attributes')
 
         if len(shapeconfig) == 0:
-            log.info("""
+            logger.info("""
 ERROR:
 
     The geographic level setup routine needs either a Shapefile or a
@@ -421,11 +435,11 @@ ERROR:
 
             ds = DataSource(shapefile.get('path'))
 
-            logger.debug('Importing from %s, %d of %d shapefiles...', ds,
-                         h + 1, len(config['shapefiles']))
+            logger.info('Importing from %s, %d of %d shapefiles...', ds,
+                        h + 1, len(config['shapefiles']))
 
             lyr = ds[0]
-            logger.debug('%d objects in shapefile', len(lyr))
+            logger.info('%d objects in shapefile', len(lyr))
 
             level = Geolevel.objects.get(name=config['geolevel'].lower()[:50])
             # Create the subjects we need
@@ -445,16 +459,14 @@ ERROR:
                 subject_objects['%s_by_id' % sub.name] = attr_name
 
             progress = 0.0
-            logger.debug('0% .. ')
+            logger.info('0% .. ')
             for i, feat in enumerate(lyr):
-
                 if (float(i) / len(lyr)) > (progress + 0.1):
                     progress += 0.1
-                    logger.debug('%2.0f%% .. ', progress * 100)
+                    logger.info('%2.0f%% .. ', progress * 100)
 
                 levels = [level]
-                for region, filter_list in config[
-                        'region_filters'].iteritems():
+                for region, filter_list in config['region_filters'].iteritems():
                     # Check for applicability of the function by examining the config
                     geolevel_xpath = '/DistrictBuilder/GeoLevels/GeoLevel[@name="%s"]' % config[
                         'geolevel']
@@ -464,18 +476,22 @@ ERROR:
                     if len(store.data.xpath(geolevel_region_xpath)) > 0:
                         # If the geolevel is in the region, check the filters
                         for f in filter_list:
-                            if f(feat) == True:
+                            if f(feat) is True:
                                 levels.append(
                                     Geolevel.objects.get(
                                         name='%s_%s' % (region, level.name)))
+                shape_name = get_shape_name(shapefile, feat)
+                shape_portable_id = get_shape_portable(shapefile, feat)
+                shape_tree_code = get_shape_tree(shapefile, feat)
                 prefetch = Geounit.objects.filter(
-                    Q(name=get_shape_name(shapefile, feat)),
-                    Q(geolevel__in=levels),
-                    Q(portable_id=get_shape_portable(shapefile, feat)),
-                    Q(tree_code=get_shape_tree(shapefile, feat)))
-                if prefetch.count() == 0:
+                    name=shape_name,
+                    geolevel__in=levels,
+                    portable_id=shape_portable_id,
+                    tree_code=shape_tree_code
+                )
+                should_create = prefetch.count() == 0
+                if should_create:
                     try:
-
                         # Store the geos geometry
                         # Buffer by 0 to get rid of any self-intersections which may make this geometry invalid.
                         geos = feat.geom.geos.buffer(0)
@@ -512,14 +528,14 @@ ERROR:
                             # the center of that line is my within-the-poly centroid.
                             center = intersection.centroid
                             first_poly = first_poly_extent = min_x = max_x = my_y = centerline = intersection = None
-
                         g = Geounit(
                             geom=my_geom,
-                            name=get_shape_name(shapefile, feat),
+                            name=shape_name,
                             simple=simple,
                             center=center,
-                            portable_id=get_shape_portable(shapefile, feat),
-                            tree_code=get_shape_tree(shapefile, feat))
+                            portable_id=shape_portable_id,
+                            tree_code=shape_tree_code
+                        )
                         g.save()
                         g.geolevel = levels
                         g.save()
@@ -527,7 +543,7 @@ ERROR:
                     except:
                         logger.info('Failed to import geometry for feature %d',
                                     feat.fid)
-                        logger.debug(traceback.format_exc())
+                        logger.info(traceback.format_exc())
                         continue
                 else:
                     g = prefetch[0]
@@ -535,7 +551,11 @@ ERROR:
                     g.save()
 
                 if not config['attributes']:
-                    self.set_geounit_characteristic(g, subject_objects, feat)
+                    # If we created a new Geounit, we can let this function know that it doesn't
+                    # need to check for existing Characteristics, which will speed things up
+                    # significantly.
+                    self.set_geounit_characteristic(g, subject_objects, feat,
+                                                    updates_possible=not should_create)
 
             logger.info('100%')
 
@@ -559,14 +579,12 @@ ERROR:
 
                 lyr = DataSource(attrconfig.get('path'))[0]
 
-                found = 0
-                missed = 0
                 for i, feat in enumerate(lyr):
                     if (float(i) / len(lyr)) > (progress + 0.1):
                         progress += 0.1
                         logger.info('%2.0f%% .. ', progress * 100)
 
-                    gid = get_shape_treeid(attrconfig, feat)
+                    gid = get_shape_tree(attrconfig, feat)
                     g = Geounit.objects.filter(tree_code=gid)
 
                     if g.count() > 0:
@@ -575,7 +593,8 @@ ERROR:
 
             logger.info('100%')
 
-    def set_geounit_characteristic(self, g, subject_objects, feat):
+    def set_geounit_characteristic(self, g, subject_objects, feat, updates_possible=True):
+        to_be_inserted = []
         for attr, obj in subject_objects.iteritems():
             if attr.endswith('_by_id'):
                 continue
@@ -591,30 +610,38 @@ ERROR:
                 denominator_field = subject_objects[
                     '%s_by_id' % obj.percentage_denominator.name]
                 denominator_value = Decimal(str(
-                    feat.get(denominator_field))).quantize(
-                        Decimal('000000.0000', 'ROUND_DOWN'))
+                    feat.get(denominator_field)
+                )).quantize(Decimal('000000.0000', 'ROUND_DOWN'))
                 if denominator_value > 0:
                     percentage = value / denominator_value
 
-            query = Characteristic.objects.filter(subject=obj, geounit=g)
-            if query.count() > 0:
-                c = query[0]
-                c.number = value
-                c.percentage = percentage
-            else:
-                c = Characteristic(
-                    subject=obj,
-                    geounit=g,
-                    number=value,
-                    percentage=percentage)
-            try:
-                c.save()
-            except:
-                c.number = '0.0'
-                c.save()
-                logger.info('Failed to set value "%s" to %d in feature "%s"',
-                            attr, feat.get(attr), g.name)
-                logger.debug(traceback.format_exc())
+            should_create = True
+            if updates_possible:
+                query = Characteristic.objects.filter(subject=obj, geounit=g)
+                if query.count() > 0:
+                    should_create = False
+                    c = query[0]
+                    c.number = value
+                    c.percentage = percentage
+                    try:
+                        c.save()
+                    except:
+                        c.number = '0.0'
+                        c.save()
+                        logger.info('Failed to set value "%s" to %d in feature "%s"',
+                                    attr, feat.get(attr), g.name)
+                        logger.info(traceback.format_exc())
+            if should_create:
+                to_be_inserted.append(
+                    Characteristic(
+                        subject=obj,
+                        geounit=g,
+                        number=value,
+                        percentage=percentage
+                    )
+                )
+        if to_be_inserted:
+            Characteristic.objects.bulk_create(to_be_inserted)
 
     def create_filter_functions(self, store):
         """
@@ -711,7 +738,7 @@ ERROR:
                 email=None,
                 language=default_language)
 
-            logger.debug('Created template plan "%s"', plan_name)
+            logger.info('Created template plan "%s"', plan_name)
 
         lbodies = config.xpath('//LegislativeBody[@id]')
         for lbody in lbodies:
@@ -725,11 +752,11 @@ ERROR:
                 is_template=True,
                 processing_state=ProcessingState.READY)
             if created:
-                logger.debug(
+                logger.info(
                     'Created Plan named "Blank" for LegislativeBody "%s"',
                     legislative_body.name)
             else:
-                logger.debug(
+                logger.info(
                     'Plan named "Blank" for LegislativeBody "%s" already exists',
                     legislative_body.name)
 
