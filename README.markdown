@@ -16,6 +16,7 @@ Ansible 2.2
 ### tl;dr ###
 
 ```bash
+$ cp django/publicmapping/config/config.dist.xml django/publicmapping/config/config.xml
 $ ./scripts/setup
 $ vagrant ssh
 $ ./scripts/update
