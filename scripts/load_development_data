@@ -55,6 +55,10 @@ function load_dev_data() {
     docker-compose \
         exec -T django ./manage.py setup config/config.xml -t
 
+    echo "Creating database views"
+    docker-compose \
+        exec -T django ./manage.py setup config/config.xml --views
+
     echo "Configuring geoserver"
     docker-compose \
         exec -T django ./manage.py setup config/config.xml -G
