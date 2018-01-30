@@ -16,7 +16,7 @@ Vagrant.configure(2) do |config|
       rsync__args: ["--verbose", "--archive", "--delete", "-z", "--links"]
 
   config.vm.provider :virtualbox do |vb|
-    vb.memory = 2048
+    vb.memory = 4096
     vb.cpus = 2
   end
 
