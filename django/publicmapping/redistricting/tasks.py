@@ -86,7 +86,7 @@ from django.contrib.gis.gdal import (
     Driver,
     OGRGeomType
 )
-from django.contrib.gis.geos import MultiPolygon
+from django.contrib.gis.geos import GeometryCollection
 from django.contrib.gis.gdal.error import check_err
 from django.contrib.gis.gdal.libgdal import lgdal
 from ctypes import c_double
@@ -460,10 +460,9 @@ class DistrictIndexFile():
 
             try:
                 # Build our new geometry from the union of our geounit geometries
-                new_geom = MultiPolygon([
-                    x.geom.unary_union
-                    for x in Geounit.objects.filter(guFilter)
-                ]).unary_union
+                new_geom = GeometryCollection(
+                    [gu.geom for gu in Geounit.objects.filter(guFilter)]
+                ).unary_union
 
                 # Create a new district and save it
                 short_label = (community_labels[district_id][:10] if is_community else
@@ -514,7 +513,7 @@ class DistrictIndexFile():
                     })
                 else:
                     logger.warn('Unable to create district %s.', district_id)
-                    logger.warn('Reason:', ex)
+                    logger.warn('Reason: %s', ex)
                 continue
 
             # For each district, create the ComputedCharacteristics
