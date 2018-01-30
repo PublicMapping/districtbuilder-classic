@@ -21,5 +21,3 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . /usr/src/app
 
 WORKDIR /usr/src/app
-
-RUN cp config/config.dist.xml config/config.xml
