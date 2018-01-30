@@ -26,29 +26,68 @@ Author:
 
 from publicmapping.celery import app
 from codecs import open
+from decimal import Decimal
 from django.core import management
 from django_comments.models import Comment
-from django.contrib.sessions.models import Session
 from django.contrib.sites.models import Site
+from django.contrib.contenttypes.models import ContentType
 from django.core.mail import send_mail, mail_admins, EmailMessage
 from django.template import loader
 from django.db import connection, transaction
-from django.db.models import Sum, Min, Max, Avg
+from django.db.models import Q, Sum, Min, Max, Avg
 from django.conf import settings
 from django.utils.translation import ugettext as _, ungettext as _n, get_language, activate
-from redistricting.models import *
-from redistricting.config import *
-from tagging.utils import parse_tag_input
-from tagging.models import Tag, TaggedItem
+from redistricting.models import (
+    LegislativeBody,
+    LegislativeLevel,
+    Plan,
+    ComputedPlanScore,
+    Subject,
+    Geounit,
+    Geolevel,
+    District,
+    Characteristic,
+    ComputedCharacteristic,
+    ProcessingState,
+    SubjectUpload,
+    SubjectStage,
+    ScoreDisplay,
+    ValidationCriteria,
+    enforce_multi,
+    create_unassigned_district,
+    configure_views,
+    get_featuretype_name
+)
+from redistricting.config import (
+    SpatialUtils,
+    PoUtils
+)
+from tagging.models import Tag
 from datetime import datetime
 from lxml import etree, objectify
 import sld_generator as generator
-import csv, time, zipfile, tempfile, os, sys, traceback, time
-import socket, urllib2, logging, re
+import csv
+import time
+import zipfile
+import tempfile
+import os
+import traceback
+import socket
+import urllib2
+import logging
+import re
 
 # all for shapefile exports
 from glob import glob
-from django.contrib.gis.gdal import *
+from django.contrib.gis.gdal import (
+    OGRGeometry,
+    SpatialReference,
+    Envelope,
+    Driver,
+    OGRGeomType
+)
+from django.contrib.gis.geos import MultiPolygon
+from django.contrib.gis.gdal.error import check_err
 from django.contrib.gis.gdal.libgdal import lgdal
 from ctypes import c_double
 
@@ -427,18 +466,10 @@ class DistrictIndexFile():
                 ]).unary_union
 
                 # Create a new district and save it
-                short_label = community_labels[
-                    district_id][:
-                                 10] if is_community else legislative_body.get_short_label(
-                                 ) % {
-                                     'district_id': district_id
-                                 }
-                long_label = community_labels[
-                    district_id][:
-                                 256] if is_community else legislative_body.get_label(
-                                 ) % {
-                                     'district_id': district_id
-                                 }
+                short_label = (community_labels[district_id][:10] if is_community else
+                               legislative_body.get_short_label() % {'district_id': district_id})
+                long_label = (community_labels[district_id][:256] if is_community else
+                              legislative_body.get_label() % {'district_id': district_id})
                 new_district = District(
                     short_label=short_label,
                     long_label=long_label,
@@ -483,7 +514,7 @@ class DistrictIndexFile():
                     })
                 else:
                     logger.warn('Unable to create district %s.', district_id)
-                    logger.debug('Reason:', ex)
+                    logger.warn('Reason:', ex)
                 continue
 
             # For each district, create the ComputedCharacteristics
@@ -492,8 +523,9 @@ class DistrictIndexFile():
             for subject in subjects:
                 try:
                     cc_value = Characteristic.objects.filter(
-                        geounit__in=geounit_ids, subject=subject).aggregate(
-                            Sum('number'))
+                        geounit__in=geounit_ids,
+                        subject=subject
+                    ).aggregate(Sum('number'))
                     value = cc_value['number__sum']
                     percentage = '0000.00000000'
 
@@ -519,12 +551,13 @@ class DistrictIndexFile():
                 except Exception, ex:
                     if email:
                         context['errors'].append({
-                            'message':
-                            _('Unable to create ComputedCharacteristic for district %(district_id)s, subject %(subject_name)s'
-                              ) % {
-                                  'district': district_id,
-                                  'subject_name': subject.name
-                              },
+                            'message': _(
+                                'Unable to create ComputedCharacteristic for district '
+                                '%(district_id)s, subject %(subject_name)s'
+                            ) % {
+                                'district': district_id,
+                                'subject_name': subject.name
+                            },
                             'traceback': None
                         })
                     else:
@@ -1144,10 +1177,6 @@ class PlanReport:
                         planid)
             return
 
-        tempdir = settings.REPORTS_ROOT
-        filename = '%s_p%d_v%d_%s' % (plan.owner.username, plan.id,
-                                      plan.version, stamp)
-
         logger.debug('Getting base geounits.')
 
         # Get the district mapping and order by geounit id
@@ -1184,15 +1213,18 @@ class PlanReport:
         logger.debug('Getting POST variables and settings.')
 
         info = plan.get_district_info()
-        names = map(lambda i: i[0], info)
+        # names = map(lambda i: i[0], info)   # TODO: Reenable
         nseats = map(lambda i: i[1], info)  # can't do it in the lambda
         nseats = reduce(lambda x, y: x + y, nseats, 0)
         # needs to be a str because of join() below
-        magnitude = map(lambda i: str(i[1]), info)
+        # magnitude = map(lambda i: str(i[1]), info)  # TODO: Reenable
 
         logger.debug('Firing web worker task.')
 
-        dispatcher = HttpDispatchTask()
+        # TODO: This was removed by Celery 4. The recommended solution is to copy-paste the Celery
+        # 3.1 implementation, but it's not clear if we still need this since it seems to be linked
+        # to BARD.
+        #dispatcher = HttpDispatchTask()
 
         # Callbacks do not fire for HttpDispatchTask -- why not?
         #
@@ -1207,26 +1239,27 @@ class PlanReport:
         # Increase the default timeout, just in case
         socket.setdefaulttimeout(600)
 
-        result = dispatcher.delay(
-            url=settings.BARD_SERVER + '/getreport/',
-            method='POST',
-            plan_id=planid,
-            plan_owner=plan.owner.username,
-            plan_version=plan.version,
-            district_list=';'.join(sorted_district_list),
-            district_names=';'.join(names),
-            district_mags=';'.join(magnitude),
-            nseats=nseats,
-            pop_var=request['popVar'],
-            pop_var_extra=request['popVarExtra'],
-            ratio_vars=';'.join(request['ratioVars[]']),
-            split_vars=request['splitVars'],
-            block_label_var=request['blockLabelVar'],
-            rep_comp=request['repComp'],
-            rep_comp_extra=request['repCompExtra'],
-            rep_spatial=request['repSpatial'],
-            rep_spatial_extra=request['repSpatialExtra'],
-            stamp=stamp)  # TODO: Add language when BARD supports it.
+        # TODO: Uncomment or remove when dealing with HttpDispatchTask issue, above
+        # result = dispatcher.delay(
+            # url=settings.BARD_SERVER + '/getreport/',
+            # method='POST',
+            # plan_id=planid,
+            # plan_owner=plan.owner.username,
+            # plan_version=plan.version,
+            # district_list=';'.join(sorted_district_list),
+            # district_names=';'.join(names),
+            # district_mags=';'.join(magnitude),
+            # nseats=nseats,
+            # pop_var=request['popVar'],
+            # pop_var_extra=request['popVarExtra'],
+            # ratio_vars=';'.join(request['ratioVars[]']),
+            # split_vars=request['splitVars'],
+            # block_label_var=request['blockLabelVar'],
+            # rep_comp=request['repComp'],
+            # rep_comp_extra=request['repCompExtra'],
+            # rep_spatial=request['repSpatial'],
+            # rep_spatial_extra=request['repSpatialExtra'],
+            # stamp=stamp)  # TODO: Add language when BARD supports it.
         return
 
     @staticmethod
@@ -1337,7 +1370,7 @@ class CalculatorReport:
             display = ScoreDisplay.objects.get(
                 name='%s_reports' % plan.legislative_body.name)
             html = display.render(plan, request, function_ids=function_ids)
-        except Exception as ex:
+        except Exception:
             logger.exception('Error creating calculator report')
             html = _('Error creating calculator report.')
 
@@ -1550,12 +1583,12 @@ def verify_count(upload_id, localstore, language):
         cursor.executemany(sql, tuple(args))
 
         logger.debug('Bulk loaded CSV records into the staging area.')
-    except AttributeError, aex:
+    except AttributeError:
         msg = _('There are an incorrect number of columns in the uploaded '
                 'Subject file')
 
         return {'task_id': None, 'success': False, 'messages': [msg]}
-    except Exception, ex:
+    except Exception:
         msg = _('Invalid data detected in the uploaded Subject file')
 
         return {'task_id': None, 'success': False, 'messages': [msg]}
@@ -1577,16 +1610,15 @@ def verify_count(upload_id, localstore, language):
         )
         if nlines < nunits:
             missing = nunits - nlines
-            msg += _n('There is %(count)d geounit missing.',
-                      'There are %(count)d geounits missing.', missing) % {
-                          'count': missing
-                      }
+            msg += _n(
+                'There is %(count)d geounit missing.',
+                'There are %(count)d geounits missing.', missing
+            ) % {'count': missing}
         else:
             extra = nlines - nunits
-            msg += _n('There is %(count)d extra geounit.',
-                      'There are %(count)d extra geounits.', extra) % {
-                          'count': extra
-                      }
+            msg += _n(
+                'There is %(count)d extra geounit.',
+                'There are %(count)d extra geounits.', extra) % {'count': extra}
 
         # since the transaction was never committed after all the inserts, this nullifies
         # all the insert statements, so there should be no quarantine to clean up
@@ -1639,16 +1671,18 @@ def verify_preload(upload_id, language=None):
     # This seizes postgres -- probably small memory limits.
     #aligned_units = upload.subjectstage_set.filter(portable_id__in=permanent_units).count()
 
-    permanent_units = geolevel.geounit_set.all().order_by(
-        'portable_id').values_list(
-            'portable_id', flat=True)
-    temp_units = upload.subjectstage_set.all().order_by(
-        'portable_id').values_list(
-            'portable_id', flat=True)
+    permanent_units = geolevel.geounit_set.all().order_by('portable_id').values_list(
+        'portable_id', flat=True
+    )
+    temp_units = upload.subjectstage_set.all().order_by('portable_id').values_list(
+        'portable_id', flat=True
+    )
 
     # quick check: make sure the first and last items are aligned
-    ends_match = permanent_units[0] == temp_units[0] and \
-        permanent_units[permanent_units.count()-1] == temp_units[temp_units.count()-1]
+    ends_match = (
+        permanent_units[0] == temp_units[0] and
+        permanent_units[permanent_units.count() - 1] == temp_units[temp_units.count() - 1]
+    )
     msg = _(
         'There are a correct number of geounits in the uploaded Subject file, '
     )
@@ -1669,9 +1703,7 @@ def verify_preload(upload_id, language=None):
         msg += _n(
             'but %(count)d geounit does not match the geounits in the database.',
             'but %(count)d geounits do not match the geounits in the database.',
-            mismatched) % {
-                'count': mismatched
-            }
+            mismatched) % {'count': mismatched}
 
     if not ends_match or nunits != aligned_units:
         logger.debug(msg)
@@ -2035,8 +2067,9 @@ def create_views_and_styles(upload_id, language=None):
                      geolevel.name, subject.name)
 
         qset = Geounit.objects.filter(
-            characteristic__subject=subject, geolevel=geolevel).annotate(
-                Avg('characteristic__number'))
+            characteristic__subject=subject,
+            geolevel=geolevel
+        ).annotate(Avg('characteristic__number'))
         sld_body = generator.as_quantiles(
             qset,
             'characteristic__number__avg',
@@ -2112,13 +2145,13 @@ def clean_quarantined(upload_id, language=None):
 
     try:
         Plan.objects.all().update(is_valid=False)
-    except Exception, ex:
+    except Exception:
         logger.warn('Could not reset the is_valid flag on all plans.')
 
     status = {
-        'task_id':None,
-        'success':True,
-        'messages':[
+        'task_id': None,
+        'success': True,
+        'messages': [
             _('Upload complete. Subject "%(subject_name)s" added.') % {
                 'subject_name': upload.subject_name
             }
