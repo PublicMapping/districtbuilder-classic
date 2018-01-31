@@ -27,14 +27,11 @@ Author:
 """
 
 from django.conf.urls import url, include
-from django.conf import settings
 
 from . import views as redistricting_views
 
 urlpatterns = [
-    url(r'plan/$', redistricting_views.viewplan, {
-        'planid': 0
-    }),
+    url(r'plan/$', redistricting_views.viewplan, {'planid': 0}),
     url(r'plan/create/$', redistricting_views.createplan),
     url(r'plan/upload/$', redistricting_views.uploadfile),
     url(r'plan/(?P<planid>\d*)/view/$',
@@ -42,7 +39,6 @@ urlpatterns = [
         name='plan-view'),
     url(r'plan/(?P<planid>\d*)/edit/$', redistricting_views.editplan),
     url(r'plan/(?P<planid>\d*)/print/$', redistricting_views.printplan),
-    url(r'plan/(?P<planid>\d*)/getreport/$', redistricting_views.getreport),
     url(r'plan/(?P<planid>\d*)/getcalculatorreport/$',
         redistricting_views.getcalculatorreport),
     url(r'plan/(?P<planid>\d*)/attributes/$',
