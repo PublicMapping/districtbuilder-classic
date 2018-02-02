@@ -33,7 +33,7 @@ class ConfigTestCase(TestCase):
     def test_constructor_missing_schema(self):
         try:
             x = StoredConfig(
-                self.bad_data_filename, schema=self.bad_schema_filename)
+                self.bad_data_filename, schema_file=self.bad_schema_filename)
             self.fail('Expected failure when passing nonexistant filenames to '
                       + 'constructor.')
         except:
@@ -42,7 +42,7 @@ class ConfigTestCase(TestCase):
     def test_construct_missing_data(self):
         try:
             x = StoredConfig(
-                self.bad_data_filename, schema=self.good_schema_filename)
+                self.bad_data_filename, schema_file=self.good_schema_filename)
             self.fail('Expected failure when passing nonexistant filenames to '
                       + 'constructor.')
         except:
@@ -50,7 +50,7 @@ class ConfigTestCase(TestCase):
 
     def test_construct_okay(self):
         x = StoredConfig(
-            self.good_data_filename, schema=self.good_schema_filename)
+            self.good_data_filename, schema_file=self.good_schema_filename)
 
         self.assertEqual(x.datafile, self.good_data_filename,
                          'Configuration data is not correct.')
@@ -63,7 +63,7 @@ class ConfigTestCase(TestCase):
         test_schema.write('<DistrictBuilder><junk></DistrictBuilder>\n')
         test_schema.close()
 
-        x = StoredConfig(self.good_data_filename, schema=test_schema.name)
+        x = StoredConfig(self.good_data_filename, schema_file=test_schema.name)
         is_valid = x.validate()
 
         os.remove(test_schema.name)
@@ -76,7 +76,7 @@ class ConfigTestCase(TestCase):
         test_schema.write('<DistrictBuilder><junk/></DistrictBuilder>\n')
         test_schema.close()
 
-        x = StoredConfig(self.good_data_filename, schema=test_schema.name)
+        x = StoredConfig(self.good_data_filename, schema_file=test_schema.name)
         is_valid = x.validate()
 
         os.remove(test_schema.name)
@@ -86,7 +86,7 @@ class ConfigTestCase(TestCase):
     def test_validation_schema_xml(self):
         test_schema = self.make_simple_schema()
 
-        x = StoredConfig(self.good_data_filename, schema=test_schema.name)
+        x = StoredConfig(self.good_data_filename, schema_file=test_schema.name)
         is_valid = x.validate()
 
         os.remove(test_schema.name)
@@ -101,7 +101,7 @@ class ConfigTestCase(TestCase):
         test_data.write('<DistrictBuilder><junk></DistrictBuilder>\n')
         test_data.close()
 
-        x = StoredConfig(test_data.name, schema=test_schema.name)
+        x = StoredConfig(test_data.name, schema_file=test_schema.name)
         is_valid = x.validate()
 
         os.remove(test_data.name)
@@ -116,7 +116,7 @@ class ConfigTestCase(TestCase):
         test_data.write('<DistrictBuilder><junk/></DistrictBuilder>\n')
         test_data.close()
 
-        x = StoredConfig(test_data.name, schema=test_schema.name)
+        x = StoredConfig(test_data.name, schema_file=test_schema.name)
         is_valid = x.validate()
 
         os.remove(test_data.name)
@@ -126,7 +126,7 @@ class ConfigTestCase(TestCase):
 
     def test_validation(self):
         x = StoredConfig(
-            self.good_data_filename, schema=self.good_schema_filename)
+            self.good_data_filename, schema_file=self.good_schema_filename)
 
         is_valid = x.validate()
 

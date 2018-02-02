@@ -34,6 +34,7 @@ from django.contrib.gis.db import models
 from django.contrib.gis.geos import (MultiPolygon, Polygon, GEOSGeometry,
                                      GEOSException, GeometryCollection, Point)
 from django.contrib.gis.db.models.query import GeoQuerySet
+from django.contrib.gis.db.models import Collect
 from django.contrib.auth.models import User
 from django.db.models import Sum, Max, Q, Count
 from django.db.models.signals import pre_save, post_save, m2m_changed
@@ -3579,7 +3580,7 @@ def safe_union(collection):
     """
     if isinstance(collection, GeoQuerySet):
         # collection is a GeoQuerySet
-        geom = collection.collect()
+        geom = collection.aggregate(Collect('geom'))['geom__collect']
         if collection.count() == 0:
             return geom
     elif isinstance(collection, GeometryCollection):

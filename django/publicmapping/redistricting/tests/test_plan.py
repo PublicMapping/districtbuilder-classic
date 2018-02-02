@@ -3,6 +3,7 @@ from base import BaseTestCase
 from django.db.models import Sum, Min, Max
 from django.test.client import Client
 from django.contrib.auth.models import User
+from django.contrib.gis.db.models import Collect
 
 from redistricting.models import *
 from redistricting.tasks import *
@@ -1023,7 +1024,7 @@ class PlanTestCase(BaseTestCase):
             totals[subject] = total['number__sum']
         total_geom = enforce_multi(
             District.objects.filter(plan=self.plan,
-                                    district_id__gt=0).collect(),
+                                    district_id__gt=0).aggregate(Collect('geom'))['geom__collect'],
             collapse=True)
 
         # Paste them all together now
