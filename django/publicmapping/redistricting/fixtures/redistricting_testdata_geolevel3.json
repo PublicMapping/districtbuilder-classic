@@ -17049,7 +17049,7 @@
   "pk": 1775, 
   "model": "redistricting.characteristic", 
   "fields": {
-   "geounit": 1776, 
+   "geounit": 1775, 
    "percentage": null, 
    "number": "9.0000", 
    "subject": 1001

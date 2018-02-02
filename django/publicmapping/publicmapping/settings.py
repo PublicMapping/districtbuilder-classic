@@ -67,7 +67,7 @@ ROOT_URLCONF = 'publicmapping.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['/usr/src/app/publicmapping/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

@@ -309,6 +309,10 @@ class StoredConfig:
             cfg = self.data.xpath('//Project')[0]
             root_dir = cfg.get('root')
 
+            # TODO: This has changed in the latest version of Django, but that might not be a
+            # problem because we're removing Django-specific settings from the config file so there
+            # should be no need to write settings.py any more. If that's true, this can simply be
+            # deleted.
             output.write(
                 "\nTEMPLATE_DIRS = (\n  '%s/django/publicmapping/templates',\n)\n"
                 % root_dir)
