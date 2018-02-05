@@ -19,9 +19,9 @@ services:
      - "${KEY_VALUE_STORE_PORT}:${KEY_VALUE_STORE_PORT}"
 
   nginx:
-    image: nginx:1.13.8-alpine
     env_file:
       - .env
+    image: nginx:1.12
     ports:
       - "${WEB_APP_PORT}:${WEB_APP_PORT}"
     volumes:
