@@ -27,7 +27,7 @@ class MultiMemberTestCase(BaseTestCase):
     ]
 
     def setUp(self):
-        BaseTestCase.setUp(self)
+        super(MultiMemberTestCase, self).setUp()
         self.geolevel = Geolevel.objects.get(name='middle level')
         self.geolevels = Geolevel.objects.all().order_by('-id')
 
@@ -80,7 +80,7 @@ class MultiMemberTestCase(BaseTestCase):
         self.geolevels = None
         self.geounits = None
         try:
-            BaseTestCase.tearDown(self)
+            super(MultiMemberTestCase, self).tearDown()
         except:
             import traceback
             print(traceback.format_exc())

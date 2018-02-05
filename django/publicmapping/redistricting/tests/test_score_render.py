@@ -13,7 +13,7 @@ class ScoreRenderTestCase(BaseTestCase):
     ]
 
     def setUp(self):
-        BaseTestCase.setUp(self)
+        super(ScoreRenderTestCase, self).setUp()
         self.geolevel = Geolevel.objects.get(name='middle level')
         self.geounits = list(
             Geounit.objects.filter(geolevel=self.geolevel).order_by('id'))
@@ -21,7 +21,7 @@ class ScoreRenderTestCase(BaseTestCase):
     def tearDown(self):
         self.geolevel = None
         self.geounits = None
-        BaseTestCase.tearDown(self)
+        super(ScoreRenderTestCase, self).tearDown()
 
     def test_panelrender_plan(self):
         geolevelid = self.geolevel.id
@@ -229,7 +229,7 @@ class ScoreRenderTestCase(BaseTestCase):
             template="sp_template2.html")
         # Create two functions, one with an arg and one without
         function = ScoreFunction(
-            calculator="redistricting.calculators.SumValues",
+            calculator="publicmapping.redistricting.calculators.SumValues",
             name="My Fresh Calc",
             is_planscore=False)
 
@@ -321,7 +321,7 @@ class ScoreRenderTestCase(BaseTestCase):
             template="sp_template1.html",
             cssclass="split_panel")
         function = ScoreFunction(
-            calculator="redistricting.calculators.SplitCounter",
+            calculator="publicmapping.redistricting.calculators.SplitCounter",
             name="splits_test",
             is_planscore=True)
         geolevel = self.plan.legislative_body.get_geolevels()[0]

@@ -12,7 +12,7 @@ class AllBlocksTestCase(BaseTestCase):
     ]
 
     def setUp(self):
-        BaseTestCase.setUp(self)
+        super(AllBlocksTestCase, self).setUp()
         self.geolevel = Geolevel.objects.get(name='middle level')
         self.geounits = list(
             Geounit.objects.filter(geolevel=self.geolevel).order_by('id'))
@@ -20,7 +20,7 @@ class AllBlocksTestCase(BaseTestCase):
     def tearDown(self):
         self.geolevel = None
         self.geounits = None
-        BaseTestCase.tearDown(self)
+        super(AllBlocksTestCase, self).tearDown()
 
     def test_allblocks(self):
         dist1ids = self.geounits[0:3] + self.geounits[9:12]

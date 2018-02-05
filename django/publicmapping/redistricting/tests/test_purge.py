@@ -13,7 +13,7 @@ class PurgeTestCase(BaseTestCase):
     ]
 
     def setUp(self):
-        BaseTestCase.setUp(self)
+        super(PurgeTestCase, self).setUp()
 
         # create a new buch of districts for this test case
         self.plan.district_set.all().delete()
@@ -43,7 +43,7 @@ class PurgeTestCase(BaseTestCase):
         self.geounits = None
         self.geolevel = None
         self.plan = None
-        BaseTestCase.tearDown(self)
+        super(PurgeTestCase, self).tearDown()
 
     def test_purge_lt_zero(self):
         self.plan.purge(before=-1)

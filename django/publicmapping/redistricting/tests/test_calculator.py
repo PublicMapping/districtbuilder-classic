@@ -21,7 +21,7 @@ class CalculatorTestCase(BaseTestCase):
     ]
 
     def setUp(self):
-        BaseTestCase.setUp(self)
+        super(CalculatorTestCase, self).setUp()
         self.geolevel = Geolevel.objects.get(name='middle level')
         self.geounits = list(self.geolevel.geounit_set.all().order_by('id'))
         self.subject1 = Subject.objects.get(name='TestSubject')
@@ -32,7 +32,7 @@ class CalculatorTestCase(BaseTestCase):
         self.geounits = None
         self.subject1 = None
         self.subject2 = None
-        BaseTestCase.tearDown(self)
+        super(CalculatorTestCase, self).tearDown()
 
     def test_sum1(self):
         sum1 = SumValues()

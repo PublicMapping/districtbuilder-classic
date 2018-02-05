@@ -15,7 +15,7 @@ class ReportCalculatorTestCase(BaseTestCase):
     ]
 
     def setUp(self):
-        BaseTestCase.setUp(self)
+        super(ReportCalculatorTestCase, self).setUp()
         self.geolevel = Geolevel.objects.get(name='middle level')
         self.geounits = list(
             Geounit.objects.filter(geolevel=self.geolevel).order_by('id'))
@@ -37,7 +37,7 @@ class ReportCalculatorTestCase(BaseTestCase):
         self.geounits = None
         self.subject1 = None
         self.subject2 = None
-        BaseTestCase.tearDown(self)
+        super(ReportCalculatorTestCase, self).tearDown()
 
     def test_population(self):
         """

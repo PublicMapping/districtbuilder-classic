@@ -47,6 +47,13 @@ from redisutils import key_gen
 redis_settings = settings.KEY_VALUE_STORE
 
 
+class DecimalEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, Decimal):
+            return float(obj)
+        return super(DecimalEncoder, self).default(obj)
+
+
 class CalculatorBase(object):
     """
     The base class for all calculators. CalculatorBase defines the result
@@ -131,7 +138,7 @@ class CalculatorBase(object):
         else:
             output = {'result': None}
 
-        return json.dumps(output, use_decimal=True)
+        return json.dumps(output, cls=DecimalEncoder)
 
     def template(self, template, context=None):
         """

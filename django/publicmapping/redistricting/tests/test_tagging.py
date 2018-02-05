@@ -20,7 +20,7 @@ class TaggingTestCase(BaseTestCase):
         self.assertEqual(2, alltags, 'Total number of tags is incorrect.')
 
         # Even though there are two tags, only one is used by this model
-        tags = Tag.objects.usage_for_model(self.district1)
+        tags = Tag.objects.usage_for_model(type(self.district1))
         self.assertEqual(1, len(tags),
                          'Total number of used tags is incorrect.')
 
@@ -30,7 +30,7 @@ class TaggingTestCase(BaseTestCase):
         self.assertEqual(2, alltags, 'Total number of tags is incorrect.')
 
         # Now the model is using both tags
-        tags = Tag.objects.usage_for_model(self.district1)
+        tags = Tag.objects.usage_for_model(type(self.district1))
         self.assertEqual(2, len(tags),
                          'Total number of used tags is incorrect.')
 
@@ -41,7 +41,7 @@ class TaggingTestCase(BaseTestCase):
         self.assertEqual(3, alltags, 'Total number of tags is incorrect.')
 
         # Three different tags parsed and assigned to the model
-        tags = Tag.objects.usage_for_model(self.district1)
+        tags = Tag.objects.usage_for_model(type(self.district1))
         self.assertEqual(3, len(tags),
                          'Total number of used tags is incorrect.')
 
