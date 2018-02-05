@@ -29,6 +29,7 @@ services:
       - ./django/publicmapping/static:/opt/static/
       - ./sld:/opt/sld/
       - reports:/opt/reports
+    command: /bin/bash -c "envsubst < /etc/nginx/conf.d/default.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
     depends_on:
       - django
 

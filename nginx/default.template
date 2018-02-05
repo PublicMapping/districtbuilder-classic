@@ -1,13 +1,13 @@
 upstream web {
-  server django:8080;
+  server django:${WEB_APP_PORT};
 }
 
 upstream geoserver {
-  server geoserver:8080;
+  server geoserver:${WEB_APP_PORT};
 }
 
 server {
-  listen 8080;
+  listen ${WEB_APP_PORT};
   server_name localhost;
 
   location / {
