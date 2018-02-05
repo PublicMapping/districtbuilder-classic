@@ -8,10 +8,14 @@ https://docs.djangoproject.com/en/1.11/topics/settings/
 
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.11/ref/settings/
+
+NOTE: This settings file should not be changed!
+      To configure the application, please see the documentation.
 """
 
 import os
 import logging.config
+from . import REDIS_URL
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -20,10 +24,19 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'foo')
+SECRET_KEY = os.getenv('WEB_APP_PASSWORD')
+
+ADMINS = (
+    (
+        os.getenv('ADMIN_USER'),
+        os.getenv('ADMIN_EMAIL'),
+    )
+)
+
+MANAGERS = ADMINS
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG', False)
 
 ALLOWED_HOSTS = ['web']
 
@@ -90,11 +103,11 @@ WSGI_APPLICATION = 'publicmapping.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': 'district_builder',
-        'USER': 'district_builder',
-        'PASSWORD': 'district_builder',
-        'HOST': 'postgres.internal.districtbuilder.com',
-        'PORT': '5432'
+        'NAME': os.getenv('DATABASE_NAME'),
+        'USER': os.getenv('DATABASE_USER'),
+        'PASSWORD': os.getenv('DATABASE_PASSWORD'),
+        'HOST': os.getenv('DATABASE_HOST'),
+        'PORT': os.getenv('DATABASE_PORT'),
     }
 }
 
@@ -102,7 +115,7 @@ DATABASES = {
 CACHES = {
     'default': {
         'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': 'redis://redis.internal.districtbuilder.com:6379',
+        'LOCATION': REDIS_URL,
         'OPTIONS': {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient'
         }
@@ -162,14 +175,6 @@ logging.config.dictConfig({
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 
-# TODO: these languages are defined in config.xml and these
-# settings will need to become dynamic
-LANGUAGE_CODE = 'en'
-LANGUAGES = (
-    ('en', 'English'),
-    ('es', 'Spanish'),
-)
-
 LOCALE_PATHS = [
     'locale',
 ]
@@ -193,25 +198,31 @@ REPORTS_ROOT = '/opt/reports'
 # LEGACY SETTINGS
 
 # Location of your key value store, e.g., Redis
-KEY_VALUE_STORE = ''
+KEY_VALUE_STORE = {
+    'PASSWORD': os.getenv('KEY_VALUE_STORE_PASSWORD'),
+    'HOST': os.getenv('KEY_VALUE_STORE_HOST'),
+    'PORT': os.getenv('KEY_VALUE_STORE_PORT'),
+    'DB': os.getenv('KEY_VALUE_STORE_DB'),
+}
 
-MAP_SERVER = ''
+MAP_SERVER = os.getenv('MAP_SERVER_HOST')
+MAP_SERVER_USER = os.getenv('MAP_SERVER_ADMIN')
+MAP_SERVER_PASS = os.getenv('MAP_SERVER_PASSWORD')
+
 BASE_MAPS = 'None'
 MAP_SERVER_NS = 'pmp'
 MAP_SERVER_NSHREF = 'https://github.com/PublicMapping/'
 FEATURE_LIMIT = 100
-MAP_SERVER_USER = 'GEOSERVER-ADMIN-USER'
-MAP_SERVER_PASS = 'GEOSERVER-ADMIN-PASS'
 
 ADJACENCY = False
 
 CONVEX_CHOROPLETH = False
 
+# TODO: Make sending email work
 EMAIL_HOST = 'localhost'
 EMAIL_PORT = 25
 EMAIL_HOST_USER = ''
 EMAIL_HOST_PASSWORD = ''
-EMAIL_SUBJECT_PREFIX = 'None '
 
 MEDIA_ROOT = '/usr/src/app/site-media/'
 
@@ -244,3 +255,8 @@ LEADERBOARD_MAX_RANKED = 10
 SITE_ID = 2
 
 REPORTS_ENABLED = 'CALC'
+
+# NOTE: Leave this at the end of the file!
+# These settings are generated based on config.xml
+# and allow for modifiying/overriding the default settings
+from publicmapping.config_settings import *
