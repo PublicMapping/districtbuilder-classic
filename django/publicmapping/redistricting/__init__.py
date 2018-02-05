@@ -79,7 +79,7 @@ class StoredConfig:
             try:
                 # Attempt parsing the schema file
                 schdoc = parse(self.schema_file)
-            except XMLSyntaxError, e:
+            except XMLSyntaxError as e:
                 # The schema was not parsable XML
                 logging.warning('The schema XML file could not be parsed.')
                 for item in e.error_log:
@@ -89,7 +89,7 @@ class StoredConfig:
 
             try:
                 schema = XMLSchema(schdoc)
-            except XMLSchemaParseError, e:
+            except XMLSchemaParseError as e:
                 # The schema document is XML, but it's not a schema
                 logging.warning(
                     'The schema XML file was parsed, but it does not appear to be a valid XML Schema document.'
@@ -102,7 +102,7 @@ class StoredConfig:
         try:
             # Attempt parsing the data file
             data = parse(self.datafile)
-        except XMLSyntaxError, e:
+        except XMLSyntaxError as e:
             # The data was not parsable XML
             logging.warning('The data XML file could not be parsed.')
             for item in e.error_log:
