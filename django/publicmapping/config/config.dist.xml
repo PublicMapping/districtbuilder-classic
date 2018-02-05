@@ -4,11 +4,11 @@
     <!-- Define legislative bodies referenced in the system. -->
     <LegislativeBodies>
         <!-- A Legislative body has an ID (for referencing in GeoLevel
-            definitions later), a name, and a label for plan items 
+            definitions later), a name, and a label for plan items
             ("District" for Congressional, etc) -->
-        <LegislativeBody id="congress" name="Congressional" short_label="%(district_id)s" 
+        <LegislativeBody id="congress" name="Congressional" short_label="%(district_id)s"
             long_label="District %(district_id)s" maxdistricts="11" sort_key="1" members="Districts"/>
-        <LegislativeBody id="house" name="State House" short_label="%(district_id)s" 
+        <LegislativeBody id="house" name="State House" short_label="%(district_id)s"
             long_label="District %(district_id)s" maxdistricts="100" sort_key="2" members="Districts"/>
         <LegislativeBody id="senate" name="State Senate" short_label="%(district_id)s"
             long_label="District %(district_id)s" maxdistricts="40" sort_key="3" members="Districts"/>
@@ -46,7 +46,7 @@
             <!-- A set of filters to apply to the largets GeoLevel shapefile. -->
             <RegionFilter>
                 <!-- A Single filter for the GEOID10 field in the vtd shapefile
-                     that selects all geographic units that match the value at the 
+                     that selects all geographic units that match the value at the
                      specified text string window. -->
                 <RegionCode attr="GEOID10" value="51059" start="0" width="5" />
                 <RegionCode attr="GEOID10" value="51600" start="0" width="5" />
@@ -68,7 +68,7 @@
 
     <!-- A list of subjects referenced in the system. -->
     <Subjects>
-        <!-- A Subject is a measurement type, such as "Total Population". 
+        <!-- A Subject is a measurement type, such as "Total Population".
             The subject is mapped to an attribute during the import phase,
             and contains a long and short display name. Subjects have IDs
             for referencing in GeoLevel definitions later. -->
@@ -92,26 +92,26 @@
         <Subject id="vap" field="VAP" name="Voting Age Population"
                  short_name="Voters" displayed="false" sortkey="8" />
         <Subject id="vapwnh" field="VAP_WNH" name="Voting Age Population - White"
-                 short_name="Wht Votng Age" displayed="false" sortkey="9" 
+                 short_name="Wht Votng Age" displayed="false" sortkey="9"
                  percentage_denominator="vap" />
-        <Subject id="popblk" field="TOTPOP_B" name="African-American" 
+        <Subject id="popblk" field="TOTPOP_B" name="African-American"
                  short_name="Black" displayed="false" sortkey="10" />
-        <Subject id="popwnh" field="TOTPOP_WNH" name="Total White Non-Hispanic" 
+        <Subject id="popwnh" field="TOTPOP_WNH" name="Total White Non-Hispanic"
                  short_name="White" displayed="false" sortkey="11" />
         <Subject id="vapasn" field="VAP_A" name="Voting Age Population - Asian-American"
-                 short_name="As Am Votng Age" displayed="false" sortkey="12" 
+                 short_name="As Am Votng Age" displayed="false" sortkey="12"
                  percentage_denominator="vap" />
         <Subject id="vapnam" field="VAP_NA" name="Voting Age Population - Native American"
-                 short_name="Nat Amer Votng Age" displayed="false" sortkey="13" 
+                 short_name="Nat Amer Votng Age" displayed="false" sortkey="13"
                  percentage_denominator="vap" />
         <Subject id="vappild" field="VAP_PI" name="Voting Age Population - Pacific Islander"
-                 short_name="Pac Isldr Votng Age" displayed="false" sortkey="14" 
+                 short_name="Pac Isldr Votng Age" displayed="false" sortkey="14"
                  percentage_denominator="vap" />
         <Subject id="presdem" field="PRS08DEM" name="Democratic Voters"
                  short_name="Democrat 08" displayed="false" sortkey="15" />
         <Subject id="presrep" field="PRS08REP" name="Republican Voters"
                  short_name="Republican 08" displayed="false" sortkey="16" />
-        <Subject id="poptot" field="TOTPOP" name="Total Population" 
+        <Subject id="poptot" field="TOTPOP" name="Total Population"
                  short_name="Total Pop." displayed="true" sortkey="17" default="true" />
         <Subject id="presoth" field="PRS08OTH" name="Other Voters"
                  short_name="Other 08" displayed="false" sortkey="18" />
@@ -121,7 +121,7 @@
                  short_name="Other Cand 09" displayed="false" sortkey="20" />
         <Subject id="govtot" field="GOV09TOT" name="Total Voter, Governor &apos;09"
                  short_name="Governor" displayed="false" sortkey="21" />
- 
+
         <!-- You can alias a subject by overriding the field, if the
             import shapefiles have different field names at different
             geographic levels. -->
@@ -164,9 +164,9 @@
                 <Argument name="threshold" value="0.5" />
             </ScoreFunction>
 
-            <!-- A district score that is threshold dependent, and returns 
-                T/F; this example uses 2 score functions: 1 to combine a 
-                set of subjects, and 2 to divide the sum over another 
+            <!-- A district score that is threshold dependent, and returns
+                T/F; this example uses 2 score functions: 1 to combine a
+                set of subjects, and 2 to divide the sum over another
                 subject. -->
             <ScoreFunction id="district_mintot" type="district"
                 calculator="publicmapping.redistricting.calculators.SumValues">
@@ -189,7 +189,7 @@
                 <LegislativeBody ref="house"/>
                 <LegislativeBody ref="senate"/>
             </ScoreFunction>
-            
+
             <!-- A custom calculator to calculate the convex hull ratio of a district -->
             <ScoreFunction id="district_convexhullratio" type="district"
                 calculator="publicmapping.redistricting.calculators.ConvexHullRatio"
@@ -198,7 +198,7 @@
                 <LegislativeBody ref="house"/>
                 <LegislativeBody ref="senate"/>
             </ScoreFunction>
-            
+
             <!-- A custom calculator to do contiguity, and is boolean. -->
             <ScoreFunction id="district_contiguous" type="district"
                 calculator="publicmapping.redistricting.calculators.Contiguity"
@@ -209,7 +209,7 @@
             </ScoreFunction>
 
             <!-- A plan score that aggregates all districts over a threshold -->
-            <ScoreFunction id="plan_count_majmin" type="plan" 
+            <ScoreFunction id="plan_count_majmin" type="plan"
                 calculator="publicmapping.redistricting.calculators.SumValues">
                 <ScoreArgument name="value1" ref="district_majmin" />
             </ScoreFunction>
@@ -223,7 +223,7 @@
                 calculator="publicmapping.redistricting.calculators.SumValues">
                 <ScoreArgument name="value1" ref="district_hispvap_thresh" />
             </ScoreFunction>
-           
+
             <!-- A plan score that evaluates all districts, and returns
                 1(T) if there is more than 0 districts that have a minority
                 majority. -->
@@ -481,7 +481,7 @@
                 <LegislativeBody ref="senate"/>
                 <LegislativeBody ref="community"/>
             </ScoreFunction>
-                
+
             <ScoreFunction id="district_poptot" type="district"
                 calculator="publicmapping.redistricting.calculators.SumValues"
                 user_selectable="true" label="Total Population">
@@ -518,7 +518,7 @@
             <ScoreFunction id="report_score_total_population_house" type="district"
                 calculator="publicmapping.redistricting.reportcalculators.Population"
                 label="Total Population" >
-                <LegislativeBody ref="house"/>              
+                <LegislativeBody ref="house"/>
                 <SubjectArgument name="value" ref="poptot" />
                 <Argument name="min" value="76010" />
                 <Argument name="max" value="84011" />
@@ -529,7 +529,7 @@
                 label="Voting Age Population" >
                 <LegislativeBody ref="congress"/>
                 <LegislativeBody ref="senate"/>
-                <LegislativeBody ref="house"/>              
+                <LegislativeBody ref="house"/>
                 <SubjectArgument name="value" ref="vap" />
             </ScoreFunction>
 
@@ -538,7 +538,7 @@
                 label="VAP African-American" >
                 <LegislativeBody ref="congress"/>
                 <LegislativeBody ref="senate"/>
-                <LegislativeBody ref="house"/>              
+                <LegislativeBody ref="house"/>
                 <SubjectArgument name="value" ref="vapblk" />
             </ScoreFunction>
 
@@ -547,7 +547,7 @@
                 label="VAP Hispanic/Latino" >
                 <LegislativeBody ref="congress"/>
                 <LegislativeBody ref="senate"/>
-                <LegislativeBody ref="house"/>              
+                <LegislativeBody ref="house"/>
                 <SubjectArgument name="value" ref="vaphisp" />
             </ScoreFunction>
 
@@ -557,7 +557,7 @@
                 label="VAP African-American" >
                 <LegislativeBody ref="congress"/>
                 <LegislativeBody ref="senate"/>
-                <LegislativeBody ref="house"/>              
+                <LegislativeBody ref="house"/>
                 <SubjectArgument name="value" ref="vapblk" />
                 <SubjectArgument name="total" ref="vap" />
             </ScoreFunction>
@@ -567,7 +567,7 @@
                 label="VAP Hispanic/Latino" >
                 <LegislativeBody ref="congress"/>
                 <LegislativeBody ref="senate"/>
-                <LegislativeBody ref="house"/>              
+                <LegislativeBody ref="house"/>
                 <SubjectArgument name="value" ref="vaphisp" />
                 <SubjectArgument name="total" ref="vap" />
             </ScoreFunction>
@@ -578,7 +578,7 @@
                 label="Length/Width" >
                 <LegislativeBody ref="congress"/>
                 <LegislativeBody ref="senate"/>
-                <LegislativeBody ref="house"/>              
+                <LegislativeBody ref="house"/>
                 <Argument name="comptype" value="LengthWidth" />
             </ScoreFunction>
 
@@ -587,7 +587,7 @@
                 label="Schwartzberg" >
                 <LegislativeBody ref="congress"/>
                 <LegislativeBody ref="senate"/>
-                <LegislativeBody ref="house"/>              
+                <LegislativeBody ref="house"/>
                 <Argument name="comptype" value="Schwartzberg" />
             </ScoreFunction>
 
@@ -596,7 +596,7 @@
                 label="Roeck" >
                 <LegislativeBody ref="congress"/>
                 <LegislativeBody ref="senate"/>
-                <LegislativeBody ref="house"/>              
+                <LegislativeBody ref="house"/>
                 <Argument name="comptype" value="Roeck" />
             </ScoreFunction>
 
@@ -606,7 +606,7 @@
                 label="Democratic" >
                 <LegislativeBody ref="congress"/>
                 <LegislativeBody ref="senate"/>
-                <LegislativeBody ref="house"/>              
+                <LegislativeBody ref="house"/>
                 <SubjectArgument name="value" ref="govdem" />
                 <SubjectArgument name="total" ref="govtot" />
             </ScoreFunction>
@@ -616,7 +616,7 @@
                 label="Republican" >
                 <LegislativeBody ref="congress"/>
                 <LegislativeBody ref="senate"/>
-                <LegislativeBody ref="house"/>              
+                <LegislativeBody ref="house"/>
                 <SubjectArgument name="value" ref="govrep" />
                 <SubjectArgument name="total" ref="govtot" />
             </ScoreFunction>
@@ -627,10 +627,10 @@
                 label="Unassigned Blocks" >
                 <LegislativeBody ref="congress"/>
                 <LegislativeBody ref="senate"/>
-                <LegislativeBody ref="house"/>              
+                <LegislativeBody ref="house"/>
             </ScoreFunction>
         </ScoreFunctions>
-        
+
         <ScorePanels>
             <ScorePanel id="panel_equipop_all" type="plan" position="1"
                 title="Equipopulation" template="leaderboard_panel_all.html">
@@ -702,7 +702,7 @@
 
             <!-- Basic Information -->
             <ScorePanel id="congresional_panel_info" type="district" position="2"
-                title="Basic Information" cssclass="district_basic_info congressional" 
+                title="Basic Information" cssclass="district_basic_info congressional"
                 template="basic_information.html">
                 <Score ref="a_congressional_population" />
                 <Score ref="district_contiguous" />
@@ -710,21 +710,21 @@
             </ScorePanel>
 
             <ScorePanel id="house_panel_info" type="district" position="2"
-                title="Basic Information" cssclass="district_basic_info house" 
+                title="Basic Information" cssclass="district_basic_info house"
                 template="basic_information.html">
                 <Score ref="a_house_population" />
                 <Score ref="district_contiguous" />
                 <Score ref="district_schwartzberg" />
             </ScorePanel>
-            
+
             <ScorePanel id="senate_panel_info" type="district" position="2"
-                title="Basic Information" cssclass="district_basic_info senate" 
+                title="Basic Information" cssclass="district_basic_info senate"
                 template="basic_information.html">
                 <Score ref="a_senate_population" />
                 <Score ref="district_contiguous" />
                 <Score ref="district_schwartzberg" />
             </ScorePanel>
-            
+
             <!-- Community Comments -->
             <ScorePanel id="community_panel_comments" type="district" position="2"
                 title="Plan Comments" cssclass="district_comments community"
@@ -734,7 +734,7 @@
 
             <!-- Demographics -->
             <ScorePanel id="congressional_panel_demo" type="district" position="2"
-                title="Demographics" cssclass="district_demographics congressional" 
+                title="Demographics" cssclass="district_demographics congressional"
                 template="demographics.html">
                 <Score ref="partisan_index" />
                 <Score ref="district_blkvap_percent" />
@@ -742,7 +742,7 @@
             </ScorePanel>
 
             <ScorePanel id="house_panel_demo" type="district" position="2"
-                title="Demographics" cssclass="district_demographics house" 
+                title="Demographics" cssclass="district_demographics house"
                 template="demographics.html">
                 <Score ref="partisan_index" />
                 <Score ref="district_blkvap_percent" />
@@ -750,7 +750,7 @@
             </ScorePanel>
 
             <ScorePanel id="senate_panel_demo" type="district" position="2"
-                title="Demographics" cssclass="district_demographics senate" 
+                title="Demographics" cssclass="district_demographics senate"
                 template="demographics.html">
                 <Score ref="partisan_index" />
                 <Score ref="district_blkvap_percent" />
@@ -758,12 +758,12 @@
             </ScorePanel>
 
             <ScorePanel id="community_panel_demo" type="district" position="2"
-                title="Demographics" cssclass="district_demographics community" 
+                title="Demographics" cssclass="district_demographics community"
                 template="communities.html">
                 <Score ref="district_poptot" />
                 <Score ref="district_vap" />
             </ScorePanel>
-            
+
             <!-- Calculator Reports configuration -->
             <!-- Population -->
             <ScorePanel id="report_panel_population" type="district" position="2"
@@ -804,44 +804,44 @@
                 <Score ref="report_score_unassigned" />
             </ScorePanel>
         </ScorePanels>
-        
+
         <ScoreDisplays>
-            <ScoreDisplay id="congress_leader_all" legislativebodyref="congress" type="leaderboard" 
+            <ScoreDisplay id="congress_leader_all" legislativebodyref="congress" type="leaderboard"
                 title="Congressional Leaderboard - All" cssclass="leaderboard congress">
                 <ScorePanel ref="panel_equipop_all" />
                 <ScorePanel ref="panel_compact_all" />
                 <ScorePanel ref="panel_competitive_all" />
                 <ScorePanel ref="panel_rf_all" />
             </ScoreDisplay>
-            <ScoreDisplay id="congress_leader_mine" legislativebodyref="congress" type="leaderboard" 
+            <ScoreDisplay id="congress_leader_mine" legislativebodyref="congress" type="leaderboard"
                 title="Congressional Leaderboard - Mine" cssclass="leaderboard congress">
                 <ScorePanel ref="panel_equipop_mine" />
                 <ScorePanel ref="panel_compact_mine" />
                 <ScorePanel ref="panel_competitive_mine" />
                 <ScorePanel ref="panel_rf_mine" />
             </ScoreDisplay>
-            <ScoreDisplay id="house_leader_all" legislativebodyref="house" type="leaderboard" 
+            <ScoreDisplay id="house_leader_all" legislativebodyref="house" type="leaderboard"
                 title="State House Leaderboard - All" cssclass="leaderboard house">
                 <ScorePanel ref="panel_equipop_all" />
                 <ScorePanel ref="panel_compact_all" />
                 <ScorePanel ref="panel_competitive_all" />
                 <ScorePanel ref="panel_rf_all" />
             </ScoreDisplay>
-            <ScoreDisplay id="house_leader_mine" legislativebodyref="house" type="leaderboard" 
+            <ScoreDisplay id="house_leader_mine" legislativebodyref="house" type="leaderboard"
                 title="State House Leaderboard - Mine" cssclass="leaderboard house">
                 <ScorePanel ref="panel_equipop_mine" />
                 <ScorePanel ref="panel_compact_mine" />
                 <ScorePanel ref="panel_competitive_mine" />
                 <ScorePanel ref="panel_rf_mine" />
             </ScoreDisplay>
-            <ScoreDisplay id="senate_leader_all" legislativebodyref="senate" type="leaderboard" 
+            <ScoreDisplay id="senate_leader_all" legislativebodyref="senate" type="leaderboard"
                 title="State Senate Leaderboard - All" cssclass="leaderboard senate">
                 <ScorePanel ref="panel_equipop_all" />
                 <ScorePanel ref="panel_compact_all" />
                 <ScorePanel ref="panel_competitive_all" />
                 <ScorePanel ref="panel_rf_all" />
             </ScoreDisplay>
-            <ScoreDisplay id="senate_leader_mine" legislativebodyref="senate" type="leaderboard" 
+            <ScoreDisplay id="senate_leader_mine" legislativebodyref="senate" type="leaderboard"
                 title="State Senate Leaderboard - Mine" cssclass="leaderboard senate">
                 <ScorePanel ref="panel_equipop_mine" />
                 <ScorePanel ref="panel_compact_mine" />
@@ -891,7 +891,7 @@
             </ScoreDisplay>
 
             <!-- Calculator Reports configuration -->
-            <ScoreDisplay id="congress_reports" legislativebodyref="congress" type="reports" 
+            <ScoreDisplay id="congress_reports" legislativebodyref="congress" type="reports"
                 title="Congressional Reports" cssclass="reports congress">
                 <ScorePanel ref="report_panel_population" />
                 <ScorePanel ref="report_panel_majmin" />
@@ -900,7 +900,7 @@
                 <ScorePanel ref="report_panel_spatial" />
             </ScoreDisplay>
 
-            <ScoreDisplay id="senate_reports" legislativebodyref="senate" type="reports" 
+            <ScoreDisplay id="senate_reports" legislativebodyref="senate" type="reports"
                 title="State Senate Reports" cssclass="reports senate">
                 <ScorePanel ref="report_panel_population" />
                 <ScorePanel ref="report_panel_majmin" />
@@ -909,7 +909,7 @@
                 <ScorePanel ref="report_panel_spatial" />
             </ScoreDisplay>
 
-            <ScoreDisplay id="house_reports" legislativebodyref="house" type="reports" 
+            <ScoreDisplay id="house_reports" legislativebodyref="house" type="reports"
                 title="State House Reports" cssclass="reports house">
                 <ScorePanel ref="report_panel_population" />
                 <ScorePanel ref="report_panel_majmin" />
@@ -919,14 +919,14 @@
             </ScoreDisplay>
         </ScoreDisplays>
     </Scoring>
-    
+
     <Validation>
         <Criteria legislativebodyref="congress">
-            <Criterion id="congress-equipop" name="Equipopulation - Congress" 
+            <Criterion id="congress-equipop" name="Equipopulation - Congress"
                 description="&lt;p&gt;Your plan does not meet the competition criteria for Equipopulation:&lt;/p&gt;&lt;p&gt;The population of each Congressional district must be 727,366 +/- 0.5%.&lt;/p&gt;">
                 <Score ref="a_congress_plan_equipopulation_validation" />
             </Criterion>
-            <Criterion id="congress-contiguous" name="AllContiguous - Congress" 
+            <Criterion id="congress-contiguous" name="AllContiguous - Congress"
                 description="&lt;p&gt;Your plan does not meet the competition criteria for Contiguity&lt;/p&gt;&lt;p&gt;Every part of a district must be reachable from every other part without crossing the district's borders. All districts within a plan must be contiguous. Water contiguity is permitted given Virginia's extensive coastal region. 'Point contiguity' or 'touch-point contiguity' where two sections of a district are connected at a single point is not permitted.&lt;/p&gt;">
                 <Score ref="plan_all_contiguous" />
             </Criterion>
@@ -941,11 +941,11 @@
             </Criterion>
         </Criteria>
         <Criteria legislativebodyref="house">
-            <Criterion id="house-equipop" name="Equipopulation - House" 
+            <Criterion id="house-equipop" name="Equipopulation - House"
                 description="&lt;p&gt;Your plan does not meet the competition criteria for Equipopulation:&lt;/p&gt;&lt;p&gt;The population of each House of Delegates district must be 80,010 +/- 5%.&lt;/p&gt;">
                 <Score ref="a_house_plan_equipopulation_validation" />
             </Criterion>
-            <Criterion id="house-contiguous" name="AllContiguous - House" 
+            <Criterion id="house-contiguous" name="AllContiguous - House"
                 description="&lt;p&gt;Your plan does not meet the competition criteria for Contiguity&lt;/p&gt;&lt;p&gt;Every part of a district must be reachable from every other part without crossing the district's borders. All districts within a plan must be contiguous. Water contiguity is permitted given Virginia's extensive coastal region. 'Point contiguity' or 'touch-point contiguity' where two sections of a district are connected at a single point is not permitted.&lt;/p&gt;">
                 <Score ref="plan_all_contiguous" />
             </Criterion>
@@ -960,11 +960,11 @@
             </Criterion>
         </Criteria>
         <Criteria legislativebodyref="senate">
-            <Criterion id="senate-equipop" name="Equipopulation - Senate" 
+            <Criterion id="senate-equipop" name="Equipopulation - Senate"
                 description="&lt;p&gt;Your plan does not meet the competition criteria for Equipopulation:&lt;/p&gt;&lt;p&gt;The population of each House of Delegates district must be 200,026 +/- 5%.&lt;/p&gt;">
                 <Score ref="a_senate_plan_equipopulation_validation" />
             </Criterion>
-            <Criterion id="senate-contiguous" name="AllContiguous - Senate" 
+            <Criterion id="senate-contiguous" name="AllContiguous - Senate"
                 description="&lt;p&gt;Your plan does not meet the competition criteria for Contiguity&lt;/p&gt;&lt;p&gt;Every part of a district must be reachable from every other part without crossing the district's borders. All districts within a plan must be contiguous. Water contiguity is permitted given Virginia's extensive coastal region. 'Point contiguity' or 'touch-point contiguity' where two sections of a district are connected at a single point is not permitted.&lt;/p&gt;">
                 <Score ref="plan_all_contiguous" />
             </Criterion>
@@ -979,48 +979,48 @@
             </Criterion>
         </Criteria>
     </Validation>
-    
+
     <!--
     <Adjacencies>
 
       In order to load 'Adjacency' into the database for use of the adjacency
       data must be in a tab-delimited text file where:
-      
+
       column 1 = geounit1_id
       column 2 = geounit2_id
       column 3 = cost/distance/travel time, etc.
-      
+
       The geounit_id's *must* be the same IDs that make up the portable_ids in
       the geounit table.
-      
+
       This text file must not have have a header row.
-      
+
       Please note, at this time the data import and adjacency calculator do not support
       data where the cost between A->B != B->A.
-      
+
       <Adjacency path="/projects/PublicMapping/DistrictBuilder/processed_15tiemposecciones.txt" regionref="mx"/>
     </Adjacencies>
     -->
-    
+
     <GeoLevels>
       <GeoLevel id="block" name="block" label="block" min_zoom="8" sort_key="3" tolerance="2.5">
           <!--
 
-          You may use EITHER the "Shapefile" or "Files" element as a child 
-          of geolevel to define the geography and attributes. The 
-          "Shapefile" element must contain both the geography and 
-          attributes, whereas the "Files" element contains an item for the 
+          You may use EITHER the "Shapefile" or "Files" element as a child
+          of geolevel to define the geography and attributes. The
+          "Shapefile" element must contain both the geography and
+          attributes, whereas the "Files" element contains an item for the
           geography, and multiple items for the attributes.
-          
+
           This is in anticipation of loading data that has been downloaded
           directly from the American Fact Finder web application hosted by
           the US Census Beureau.
-          
+
           -->
 
           <Shapefile path="/data/tl_2010_51_block10_3785_join.shp">
               <Fields>
-                  <!-- 
+                  <!--
 
                   Each Field item defines a field in the shapefile that
                   describes a different part of the geographic unit.
@@ -1049,38 +1049,38 @@
                   <Field name="GEOID10" type="tree" pos="3" width="14"/>
               </Fields>
           </Shapefile>
-          
+
           <!--
-          
-          A reference to a legislative body. A geolevel may be used by 
+
+          A reference to a legislative body. A geolevel may be used by
           many legislative bodies.
-          
+
           -->
       </GeoLevel>
 
       <!--
-      
+
       A child geolevel. The geography of the parent geolevel must
       be coincident in its child.
-          
+
       -->
       <GeoLevel id="vtd" name="vtd" label="vtd" min_zoom="4" sort_key="2" tolerance="25">
           <!--
 
-          You may use EITHER the "Shapefile" or "Files" element as a child 
-          of geolevel to define the geography and attributes. The 
-          "Shapefile" element must contain both the geography and 
-          attributes, whereas the "Files" element contains an item for the 
+          You may use EITHER the "Shapefile" or "Files" element as a child
+          of geolevel to define the geography and attributes. The
+          "Shapefile" element must contain both the geography and
+          attributes, whereas the "Files" element contains an item for the
           geography, and multiple items for the attributes.
-          
+
           This is in anticipation of loading data that has been downloaded
           directly from the American Fact Finder web application hosted by
           the US Census Beureau.
-          
+
           -->
           <Files>
               <Geography path="/data/tl_2010_51_vtd10_3785.shp">
-                  <!-- 
+                  <!--
 
                   Each Field item defines a field in the shapefile that
                   describes a different part of the geographic unit.
@@ -1113,28 +1113,28 @@
       </GeoLevel>
 
       <!--
-      
+
       A child geolevel. The geography of the parent geolevel must
       be coincident in its child.
-          
+
       -->
       <GeoLevel id="county" name="county" label="county" min_zoom="0" sort_key="1" tolerance="250">
           <!--
 
-          You may use EITHER the "Shapefile" or "Files" element as a child 
-          of geolevel to define the geography and attributes. The 
-          "Shapefile" element must contain both the geography and 
-          attributes, whereas the "Files" element contains an item for the 
+          You may use EITHER the "Shapefile" or "Files" element as a child
+          of geolevel to define the geography and attributes. The
+          "Shapefile" element must contain both the geography and
+          attributes, whereas the "Files" element contains an item for the
           geography, and multiple items for the attributes.
-          
+
           This is in anticipation of loading data that has been downloaded
           directly from the American Fact Finder web application hosted by
           the US Census Beureau.
-          
+
           -->
           <Files>
               <Geography path="/data/tl_2010_51_county10_3785.shp">
-                  <!-- 
+                  <!--
 
                   Each Field item defines a field in the shapefile that
                   describes a different part of the geographic unit.
@@ -1165,32 +1165,32 @@
           </Files>
       </GeoLevel>
     </GeoLevels>
-   
-    <!-- 
-    
+
+    <!--
+
     This element facilitates the creation of system templates. A
     system template is a plan owned by the admin user, that all other
     users can create derivative plans from.
-    
+
     -->
     <Templates>
         <Template name="Congressional">
             <!-- A reference to a legislative body. -->
             <LegislativeBody ref="congress"/>
-            
-            <!-- 
-            
+
+            <!--
+
             The path to the district index file. The index file must be
             a two column CSV file, with each row corresponding to 1) a
             unit of geography, and 2) the district it belongs to.
-            
+
             -->
             <Blockfile path="/data/cd111_index.csv" />
         </Template>
-        
+
         <Template name="State House">
             <LegislativeBody ref="house"/>
-            
+
             <Blockfile path="/data/sldl10_index.csv" />
         </Template>
 
@@ -1222,12 +1222,12 @@
         </Internationalization>
 
         <!-- Configuration items specific to the redistricting app. -->
-        <Redistricting>           
-            <!-- 
-            
-            Information about the mapserver and geoserver settings. 
+        <Redistricting>
+            <!--
 
-            The "basemaps" attribute is optional, and can be any set to 
+            Information about the mapserver and geoserver settings.
+
+            The "basemaps" attribute is optional, and can be any set to
             any combination (CSV) of the following:
               osm-road
               arc-road
@@ -1237,25 +1237,25 @@
               bing-road
               bing-aerial
               bing-hybrid
-             
+
             The options are displayed in the order in which they are set,
-            with the first one being set to the default base layer. If 
-            this is not set, it will default to osm-road. If the desire 
+            with the first one being set to the default base layer. If
+            this is not set, it will default to osm-road. If the desire
             is to have no base layer, set it to the empty string.
-            
+
             -->
             <MapServer
                 ns="pmp"
                 nshref="https://github.com/PublicMapping/"
                 maxfeatures="100" />
 
-            <!-- 
-            
-            Use a GoogleAnalytics account to tract the usage of the 
+            <!--
+
+            Use a GoogleAnalytics account to tract the usage of the
             application. This requires an account and domain.
 
             <GoogleAnalytics account="" domain=""/>
-            
+
             -->
 
             <!-- Upload file size restrictions. This is in KB -->
@@ -1278,5 +1278,5 @@
         <!-- Information about the mailer configuration. -->
         <Mailer />
     </Project>
-    
+
 </DistrictBuilder>
