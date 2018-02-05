@@ -1,11 +1,9 @@
 version: "3.3"
 services:
   postgres:
+    env_file:
+      - .env
     image: quay.io/azavea/postgis:2.2-postgres9.5-slim
-    environment:
-      - POSTGRES_DB=district_builder
-      - POSTGRES_USER=district_builder
-      - POSTGRES_PASSWORD=district_builder
     healthcheck:
       test: ["CMD-SHELL", "PGPASSWORD=POSTGRES_PASSWORD", "pg_isready", "-U", "district_builder"]
       interval: 15s
@@ -13,14 +11,18 @@ services:
       retries: 3
 
   redis:
+    env_file:
+      - .env
     image: redis:3.2-alpine
     ports:
-     - '6379:6379'
+     - "${KEY_VALUE_STORE_PORT}:${KEY_VALUE_STORE_PORT}"
 
   nginx:
     image: nginx:1.13.8-alpine
+    env_file:
+      - .env
     ports:
-      - "8080:8080"
+      - "${WEB_APP_PORT}:${WEB_APP_PORT}"
     volumes:
       - ./nginx/:/etc/nginx/conf.d
       - ./django/publicmapping/static:/opt/static/
@@ -30,10 +32,12 @@ services:
       - django
 
   django:
+    env_file:
+      - .env
     build:
       context: ./django/publicmapping
     expose:
-      - "8080"
+      - "${WEB_APP_PORT}"
     volumes:
       - ./django/publicmapping/:/usr/src/app/
       - ./reports:/opt/reports
@@ -41,7 +45,7 @@ services:
     command:
       - "--workers=2"
       - "--timeout=60"
-      - "--bind=0.0.0.0:8080"
+      - "--bind=0.0.0.0:${WEB_APP_PORT}"
       - "--reload"
       - "--log-level=debug"
       - "--access-logfile=-"
@@ -49,13 +53,17 @@ services:
       - "-kgevent"
       - "publicmapping.wsgi"
     links:
-      - postgres:postgres.internal.districtbuilder.com
-      - redis:redis.internal.districtbuilder.com
-      - geoserver:geoserver.internal.districtbuilder.com
+      - postgres:${DATABASE_HOST}
+      - redis:${KEY_VALUE_STORE_HOST}
+      - geoserver:${MAP_SERVER_HOST}
+    depends_on:
+      - config
 
   celery:
     build:
       context: ./django/publicmapping
+    env_file:
+      - .env
     volumes:
       - ./django/publicmapping/:/usr/src/app/
       - reports:/opt/reports
@@ -66,18 +74,20 @@ services:
       - "--uid=reporter"
       - "--loglevel=INFO"
     links:
-      - postgres:postgres.internal.districtbuilder.com
-      - redis:redis.internal.districtbuilder.com
+      - postgres:${DATABASE_HOST}
+      - redis:${KEY_VALUE_STORE_HOST}
 
   geoserver:
     build:
       context: ./geoserver
+    env_file:
+      - .env
     volumes:
       - ./sld/:/data/sld
     ports:
-      - "9091:8080"
+      - "${MAP_SERVER_PORT}:${WEB_APP_PORT}"
     links:
-      - postgres:postgres.internal.districtbuilder.com
+      - postgres:${DATABASE_HOST}
 
   languages:
     build:
