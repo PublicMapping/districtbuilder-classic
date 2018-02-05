@@ -14,6 +14,7 @@ services:
     env_file:
       - .env
     image: redis:3.2-alpine
+    command: redis-server --requirepass ${KEY_VALUE_STORE_PASSWORD}
     ports:
      - "${KEY_VALUE_STORE_PORT}:${KEY_VALUE_STORE_PORT}"
 
