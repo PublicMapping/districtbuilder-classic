@@ -14,7 +14,7 @@ class NestingTestCase(BaseTestCase):
     ]
 
     def setUp(self):
-        BaseTestCase.setUp(self)
+        super(NestingTestCase, self).setUp()
         self.geolevel = Geolevel.objects.get(name='middle level')
         self.geolevels = self.plan.legislative_body.get_geolevels()
 
@@ -55,7 +55,7 @@ class NestingTestCase(BaseTestCase):
         self.geolevels = None
         self.geounits = None
         try:
-            BaseTestCase.tearDown(self)
+            super(NestingTestCase, self).tearDown()
         except:
             import traceback
             print(traceback.format_exc())

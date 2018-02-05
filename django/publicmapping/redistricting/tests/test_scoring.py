@@ -18,7 +18,7 @@ class ScoringTestCase(BaseTestCase):
     ]
 
     def setUp(self):
-        BaseTestCase.setUp(self)
+        super(ScoringTestCase, self).setUp()
 
         # create a couple districts and populate with geounits
         # geounits = self.geounits[self.geolevels[1].id]
@@ -73,7 +73,7 @@ class ScoringTestCase(BaseTestCase):
         self.legbod = None
         self.subject1 = None
 
-        BaseTestCase.tearDown(self)
+        super(ScoringTestCase, self).tearDown()
 
     def testInvalidScenarios(self):
         """
@@ -89,7 +89,7 @@ class ScoringTestCase(BaseTestCase):
         """
         # create the ScoreFunction
         schwartzFunction = ScoreFunction(
-            calculator='redistricting.calculators.Schwartzberg',
+            calculator='publicmapping.redistricting.calculators.Schwartzberg',
             name='SchwartzbergFn')
 
         # multiple districts
@@ -137,7 +137,7 @@ class ScoringTestCase(BaseTestCase):
         """
         # create the scoring function for summing three parameters
         sumThreeFunction = ScoreFunction(
-            calculator='redistricting.calculators.SumValues',
+            calculator='publicmapping.redistricting.calculators.SumValues',
             name='SumThreeFn')
         sumThreeFunction.save()
 
@@ -170,12 +170,12 @@ class ScoringTestCase(BaseTestCase):
 
         # JSON -- also make sure uppercase format works
         score = sumThreeFunction.score(self.district1, 'JSON')
-        self.assertEqual('{"result": 3}', score,
+        self.assertEqual('{"result": 3.0}', score,
                          'sumThree was incorrect: %s' % score)
 
         # create the scoring function for summing a literal and a subject
         sumMixedFunction = ScoreFunction(
-            calculator='redistricting.calculators.SumValues',
+            calculator='publicmapping.redistricting.calculators.SumValues',
             name='SumMixedFn')
         sumMixedFunction.save()
 
@@ -203,7 +203,7 @@ class ScoringTestCase(BaseTestCase):
         """
         # create the scoring function for summing the districts in a plan
         sumPlanFunction = ScoreFunction(
-            calculator='redistricting.calculators.SumValues',
+            calculator='publicmapping.redistricting.calculators.SumValues',
             name='SumPlanFn',
             is_planscore=True)
         sumPlanFunction.save()
@@ -237,7 +237,7 @@ class ScoringTestCase(BaseTestCase):
         # create the scoring function for checking if a value passes a
         # threshold
         thresholdFunction1 = ScoreFunction(
-            calculator='redistricting.calculators.Threshold',
+            calculator='publicmapping.redistricting.calculators.Threshold',
             name='ThresholdFn1')
         thresholdFunction1.save()
 
@@ -259,7 +259,7 @@ class ScoringTestCase(BaseTestCase):
 
         # create a new scoring function to test the inverse
         thresholdFunction2 = ScoreFunction(
-            calculator='redistricting.calculators.Threshold',
+            calculator='publicmapping.redistricting.calculators.Threshold',
             name='ThresholdFn2')
         thresholdFunction2.save()
 
@@ -292,7 +292,7 @@ class ScoringTestCase(BaseTestCase):
     def testRangeFunction(self):
         # create the scoring function for checking if a value passes a range
         rangeFunction1 = ScoreFunction(
-            calculator='redistricting.calculators.Range', name='RangeFn')
+            calculator='publicmapping.redistricting.calculators.Range', name='RangeFn')
         rangeFunction1.save()
 
         # create the arguments
@@ -328,7 +328,7 @@ class ScoringTestCase(BaseTestCase):
         """
         # create the scoring function for summing two literals
         sumTwoLiteralsFunction = ScoreFunction(
-            calculator='redistricting.calculators.SumValues',
+            calculator='publicmapping.redistricting.calculators.SumValues',
             name='SumTwoLiteralsFn')
         sumTwoLiteralsFunction.save()
         ScoreArgument(
@@ -344,7 +344,7 @@ class ScoringTestCase(BaseTestCase):
 
         # create the scoring function for summing a literal and a score
         sumLiteralAndScoreFunction = ScoreFunction(
-            calculator='redistricting.calculators.SumValues',
+            calculator='publicmapping.redistricting.calculators.SumValues',
             name='SumLiteralAndScoreFn')
         sumLiteralAndScoreFunction.save()
 
@@ -370,7 +370,7 @@ class ScoringTestCase(BaseTestCase):
 
         # sum two of these nested sums
         sumTwoNestedSumsFunction = ScoreFunction(
-            calculator='redistricting.calculators.SumValues',
+            calculator='publicmapping.redistricting.calculators.SumValues',
             name='SumTwoNestedSumsFn')
         sumTwoNestedSumsFunction.save()
         ScoreArgument(
@@ -406,7 +406,7 @@ class ScoringTestCase(BaseTestCase):
         """
         # create the scoring function for summing the districts in a plan
         sumPlanFunction = ScoreFunction(
-            calculator='redistricting.calculators.SumValues',
+            calculator='publicmapping.redistricting.calculators.SumValues',
             name='SumPlanFn',
             is_planscore=True)
         sumPlanFunction.save()
@@ -432,7 +432,7 @@ class ScoringTestCase(BaseTestCase):
         # create the scoring function for summing the sum of the districts in a
         # plan
         sumSumPlanFunction = ScoreFunction(
-            calculator='redistricting.calculators.SumValues',
+            calculator='publicmapping.redistricting.calculators.SumValues',
             name='SumSumPlanFn',
             is_planscore=True)
         sumSumPlanFunction.save()
@@ -445,15 +445,15 @@ class ScoringTestCase(BaseTestCase):
         # test nested sum
         score = sumSumPlanFunction.score(self.plan)
         self.assertEqual(
-            num_districts**2, score['value'],
+            num_districts ** 2, score['value'],
             'sumSumPlanFunction was incorrect: %d' % score['value'])
 
         # test a list of plans
         score = sumSumPlanFunction.score([self.plan, self.plan])
-        self.assertEqual(num_districts**2, score[0]['value'],
+        self.assertEqual(num_districts ** 2, score[0]['value'],
                          'sumSumPlanFunction was incorrect for first plan: %d'
                          % score[0]['value'])
-        self.assertEqual(num_districts**2, score[1]['value'],
+        self.assertEqual(num_districts ** 2, score[1]['value'],
                          'sumSumPlanFunction was incorrect for second plan: %d'
                          % score[1]['value'])
 
@@ -466,7 +466,7 @@ class ScoringTestCase(BaseTestCase):
         """
         # create the district scoring function for getting subject1
         districtSubjectFunction = ScoreFunction(
-            calculator='redistricting.calculators.SumValues',
+            calculator='publicmapping.redistricting.calculators.SumValues',
             name='GetSubjectFn')
         districtSubjectFunction.save()
 
@@ -478,7 +478,7 @@ class ScoringTestCase(BaseTestCase):
 
         # create the plan scoring function for summing values
         planSumFunction = ScoreFunction(
-            calculator='redistricting.calculators.SumValues',
+            calculator='publicmapping.redistricting.calculators.SumValues',
             name='PlanSumFn',
             is_planscore=True)
         planSumFunction.save()
@@ -504,7 +504,7 @@ class ScoringTestCase(BaseTestCase):
 
         # test with multiple arguments
         districtSubjectFunction2 = ScoreFunction(
-            calculator='redistricting.calculators.SumValues',
+            calculator='publicmapping.redistricting.calculators.SumValues',
             name='GetSubjectFn2')
         districtSubjectFunction2.save()
         ScoreArgument(
@@ -519,7 +519,7 @@ class ScoringTestCase(BaseTestCase):
             type='subject').save()
 
         planSumFunction2 = ScoreFunction(
-            calculator='redistricting.calculators.SumValues',
+            calculator='publicmapping.redistricting.calculators.SumValues',
             name='PlanSumFn2',
             is_planscore=True)
         planSumFunction2.save()

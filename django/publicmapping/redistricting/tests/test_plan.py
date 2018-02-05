@@ -25,7 +25,7 @@ class PlanTestCase(BaseTestCase):
     ]
 
     def setUp(self):
-        BaseTestCase.setUp(self)
+        super(PlanTestCase, self).setUp()
         self.geolevel = Geolevel.objects.get(name='middle level')
         self.geolevels = Geolevel.objects.all().order_by('-id')
 
@@ -39,7 +39,7 @@ class PlanTestCase(BaseTestCase):
         self.geolevels = None
         self.geounits = None
         try:
-            BaseTestCase.tearDown(self)
+            super(PlanTestCase, self).tearDown()
         except:
             import traceback
             print(traceback.format_exc())

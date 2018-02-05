@@ -1,30 +1,30 @@
 [
  {
-  "pk": 1, 
-  "model": "sites.site", 
+  "pk": 1,
+  "model": "sites.site",
   "fields": {
-   "domain": "examples.com", 
+   "domain": "examples.com",
    "name": "examples.com"
   }
- }, 
+ },
  {
-  "pk": 1001, 
-  "model": "redistricting.subject", 
+  "pk": 1001,
+  "model": "redistricting.subject",
   "fields": {
-   "sort_key": 1, 
-   "format_string": "%0.2f", 
-   "name": "TestSubject", 
-   "is_displayed": true, 
+   "sort_key": 1,
+   "format_string": "%0.2f",
+   "name": "TestSubject",
+   "is_displayed": true,
    "percentage_denominator": null
   }
- }, 
+ },
  {
-  "pk": 1002, 
-  "model": "redistricting.subject", 
+  "pk": 1002,
+  "model": "redistricting.subject",
   "fields": {
-   "sort_key": 2, 
-   "format_string": "%0.2f", 
-   "name": "TestSubject2", 
+   "sort_key": 2,
+   "format_string": "%0.2f",
+   "name": "TestSubject2",
    "is_displayed": true, 
    "percentage_denominator": null
   }
@@ -35,6 +35,57 @@
   "fields": {
    "name": "Default",
    "sort_key": 1
+  }
+ },
+ {
+  "pk": 1,
+  "model": "redistricting.legislativebody",
+  "fields": {
+   "name": "FirstTestLegislativeBody",
+   "max_districts": 20,
+   "multi_members_allowed": false,
+   "multi_district_label_format": "{name} - [{num_members}]",
+   "min_multi_districts": 0,
+   "max_multi_districts": 0,
+   "min_multi_district_members": 0,
+   "max_multi_district_members": 0,
+   "min_plan_members": 0,
+   "max_plan_members": 0,
+   "region": 1001
+  }
+ },
+ {
+  "pk": 2,
+  "model": "redistricting.legislativebody",
+  "fields": {
+   "name": "SecondTestLegislativeBody",
+   "max_districts": 20,
+   "multi_members_allowed": false,
+   "multi_district_label_format": "{name} - [{num_members}]",
+   "min_multi_districts": 0,
+   "max_multi_districts": 0,
+   "min_multi_district_members": 0,
+   "max_multi_district_members": 0,
+   "min_plan_members": 0,
+   "max_plan_members": 0,
+   "region": 1001
+  }
+ },
+ {
+  "pk": 3,
+  "model": "redistricting.legislativebody",
+  "fields": {
+   "name": "ThirdTestLegislativeBody",
+   "max_districts": 20,
+   "multi_members_allowed": false,
+   "multi_district_label_format": "{name} - [{num_members}]",
+   "min_multi_districts": 0,
+   "max_multi_districts": 0,
+   "min_multi_district_members": 0,
+   "max_multi_district_members": 0,
+   "min_plan_members": 0,
+   "max_plan_members": 0,
+   "region": 1001
   }
  },
  {
@@ -53,19 +104,19 @@
    "max_plan_members": 0,
    "region": 1001
   }
- }, 
+ },
  {
-  "pk": 1003, 
-  "model": "redistricting.geolevel", 
+  "pk": 1003,
+  "model": "redistricting.geolevel",
   "fields": {
-   "sort_key": 3, 
-   "min_zoom": 1, 
-   "tolerance": 10.0, 
+   "sort_key": 3,
+   "min_zoom": 1,
+   "tolerance": 10.0,
    "name": "biggest level"
   }
- }, 
+ },
  {
-  "pk": 1002, 
+  "pk": 1002,
   "model": "redistricting.geolevel", 
   "fields": {
    "sort_key": 2, 
@@ -529,7 +580,7 @@
    "last_login": "2011-03-03 19:31:10", 
    "groups": [], 
    "user_permissions": [], 
-   "password": "sha1$55d95$8d6ad9466271e588d9fc6bfce3212e5a66a62ba6", 
+   "password": "pbkdf2_sha256$36000$3WsLYrzuARfX$2Up8rItCX/5VGIwDR/hvCsX53awyRnEo2VDQIwFGlXI=", 
    "email": "", 
    "date_joined": "2011-03-02 12:41:31"
   }

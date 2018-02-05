@@ -13,7 +13,7 @@ class StatisticsSetTestCase(BaseTestCase):
     ]
 
     def setUp(self):
-        BaseTestCase.setUp(self)
+        super(StatisticsSetTestCase, self).setUp()
 
         display = ScoreDisplay.objects.get(title='Demographics')
         summary = ScorePanel.objects.get(title='Plan Summary')
@@ -35,7 +35,7 @@ class StatisticsSetTestCase(BaseTestCase):
 
     def tearDown(self):
         self.display.delete()
-        BaseTestCase.tearDown(self)
+        super(StatisticsSetTestCase, self).tearDown()
 
     def test_copy_scoredisplay(self):
         user = User(username="Stats User")

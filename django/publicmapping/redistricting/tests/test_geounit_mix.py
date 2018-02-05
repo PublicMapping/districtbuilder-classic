@@ -15,7 +15,7 @@ class GeounitMixTestCase(BaseTestCase):
     """
 
     def setUp(self):
-        BaseTestCase.setUp(self)
+        super(GeounitMixTestCase, self).setUp()
         self.geolevels = Geolevel.objects.all().order_by('-id')
         self.geounits = {}
         for gl in self.geolevels:
@@ -27,7 +27,7 @@ class GeounitMixTestCase(BaseTestCase):
         self.geolevels = None
         self.geounits = None
         self.legbod = None
-        BaseTestCase.tearDown(self)
+        super(GeounitMixTestCase, self).tearDown()
 
     def test_numgeolevels(self):
         """

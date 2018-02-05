@@ -15,7 +15,7 @@ class CommunityTypeTestCase(BaseTestCase):
     ]
 
     def setUp(self):
-        BaseTestCase.setUp(self)
+        super(CommunityTypeTestCase, self).setUp()
         self.geolevel = Geolevel.objects.get(name='middle level')
         self.geolevels = Geolevel.objects.all().order_by('-id')
         self.legbod = LegislativeBody.objects.get(name='TestLegislativeBody')
@@ -44,7 +44,7 @@ class CommunityTypeTestCase(BaseTestCase):
         self.community.delete()
 
         try:
-            BaseTestCase.tearDown(self)
+            super(CommunityTypeTestCase, self).tearDown()
         except:
             import traceback
             print(traceback.format_exc())

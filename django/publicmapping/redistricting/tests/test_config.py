@@ -54,7 +54,7 @@ class ConfigTestCase(TestCase):
 
         self.assertEqual(x.datafile, self.good_data_filename,
                          'Configuration data is not correct.')
-        self.assertEqual(x.schemafile, self.good_schema_filename,
+        self.assertEqual(x.schema_file, self.good_schema_filename,
                          'Configuration schema is not correct.')
 
     def test_validation_schema_xml_parser(self):
