@@ -20,7 +20,10 @@ Ansible 2.2
 ### tl;dr ###
 
 ```bash
+$ # Copy config and make any necessary edits
 $ cp django/publicmapping/config/config.dist.xml django/publicmapping/config/config.xml
+$ # Copy .env file and add password/modify as necessary
+$ cp django/publicmapping/.env.sample django/publicmapping/.env
 $ ./scripts/setup
 $ vagrant ssh
 $ ./scripts/update
