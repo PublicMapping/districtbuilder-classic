@@ -373,22 +373,6 @@
                     </xs:annotation>
                     <xs:complexType>
                         <xs:sequence>
-                            <xs:element name="Database">
-                                <xs:complexType>
-                                    <xs:attribute name="host" type="xs:string" use="optional" />
-                                    <xs:attribute name="name" type="xs:string" use="required" />
-                                    <xs:attribute name="user" type="xs:string" use="required" />
-                                    <xs:attribute name="password" type="xs:string" use="required" />
-                                </xs:complexType>
-                            </xs:element>
-                            <xs:element name="KeyValueStore" minOccurs="0">
-                                <xs:complexType>
-                                    <xs:attribute name="host" type="xs:string" use="optional" />
-                                    <xs:attribute name="port" type="xs:string" use="required" />
-                                    <xs:attribute name="password" type="xs:string" use="required" />
-                                    <xs:attribute name="db" type="xs:string" use="required" />
-                                </xs:complexType>
-                            </xs:element>
                             <xs:element name="Internationalization">
                                 <xs:complexType>
                                     <xs:sequence>
@@ -403,24 +387,13 @@
                                     <xs:attribute name="default" type="xs:string" use="optional" />
                                 </xs:complexType>
                             </xs:element>
-                            <xs:element name="Admin">
-                                <xs:complexType>
-                                    <xs:attribute name="user" type="xs:string" use="required" />
-                                    <xs:attribute name="email" type="xs:string" use="required" />
-                                    <xs:attribute name="password" type="xs:string" use="required" />
-                                </xs:complexType>
-                            </xs:element>
                             <xs:element name="Redistricting">
                                 <xs:complexType>
                                     <xs:sequence>
                                         <xs:element name="MapServer">
                                             <xs:complexType>
-                                                <xs:attribute name="hostname" type="xs:string" use="required" />
                                                 <xs:attribute name="ns" type="xs:string" use="required" />
                                                 <xs:attribute name="nshref" type="xs:string" use="required" />
-                                                <xs:attribute name="adminuser" type="xs:string" use="required" />
-                                                <xs:attribute name="adminpass" type="xs:string" use="required" />
-                                                <xs:attribute name="styles" type="xs:string" use="required" />
                                                 <xs:attribute name="maxfeatures" type="xs:positiveInteger" />
                                                 <xs:attribute name="basemaps" type="xs:string" />
                                             </xs:complexType>
@@ -456,14 +429,8 @@
                                     </xs:sequence>
                                 </xs:complexType>
                             </xs:element>
-                            <xs:element name="Reporting" minOccurs="0" maxOccurs="1" />
                             <xs:element name="Mailer">
                                 <xs:complexType>
-                                    <xs:attribute name="server" type="xs:string" use="required" />
-                                    <xs:attribute name="port" type="xs:positiveInteger" use="required" />
-                                    <xs:attribute name="username" type="xs:string" use="required" />
-                                    <xs:attribute name="password" type="xs:string" use="required" />
-                                    <xs:attribute name="use_tls" type="xs:boolean" use="optional" />
                                     <xs:attribute name="submission_email" type="xs:string" use="optional" />
                                 </xs:complexType>
                             </xs:element>
@@ -474,8 +441,6 @@
                                 </xs:complexType>
                             </xs:element>
                         </xs:sequence>
-                        <xs:attribute name="root" type="xs:string" use="required" />
-                        <xs:attribute name="temp" type="xs:string" use="optional" />
                         <xs:attribute name="sessionquota" type="xs:positiveInteger" use="optional" />
                         <xs:attribute name="sessiontimeout" type="xs:positiveInteger" use="optional" />
                     </xs:complexType>

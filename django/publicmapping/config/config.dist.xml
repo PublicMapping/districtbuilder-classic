@@ -1200,39 +1200,12 @@
             <Blockfile path="/data/sldu10_index.csv" />
         </Template>
     </Templates>
-    
-    <!-- 
-    
-    Configuration settings for the components of the application. The
-    "root" attribute defines the location in the file system, under
-    which the rest of the application components can be found.
-    
+
+    <!--
+    Configuration settings for the components of the application.
     -->
-    <Project root="/projects/PublicMapping/DistrictBuilder" sessionquota="5" 
-             sessiontimeout="15" temp="/projects/PublicMapping/local/reports">
-        <!-- 
-            Database connection information.
-
-            If you change the user to something different than 
-            'publicmapping', you will have to define a schema in
-            postgresql by the same name as the user.
-
-            The 'host' attribute is optional.
-        -->
-        <Database name="district_builder"
-                  user="district_builder"
-                  password="district_builder"
-                  host="postgres.internal.districtbuilder.com"/>
-
-        <!--
-           Key Value Store is required for the adjacency feature. 
-
-           This should be the location of your redis database.
-           All parameters are required.
-
-        <KeyValueStore host="localhost" port="6379" password="" db="0"/>
-        -->        
-
+    <Project sessionquota="5"
+             sessiontimeout="15">
         <!--
            Internationalization and localization information.
 
@@ -1247,15 +1220,7 @@
             <Language code="es" label="Spanish" />
             <Language code="ja" label="Japanese" />
         </Internationalization>
-        
-        <!-- 
-        
-        Administrative user information. This will create an administrative
-        superuser in django with these credentials.
-        
-        -->
-        <Admin user="ADMIN-USER-NAME" email="ADMIN-EMAIL" password="STRONG-PASSWORD"/>
-        
+
         <!-- Configuration items specific to the redistricting app. -->
         <Redistricting>           
             <!-- 
@@ -1279,9 +1244,10 @@
             is to have no base layer, set it to the empty string.
             
             -->
-            <MapServer hostname="" ns="pmp" nshref="https://github.com/PublicMapping/"
-                adminuser="admin" adminpass="geoserver" maxfeatures="100" 
-                styles="/opt/sld/" />
+            <MapServer
+                ns="pmp"
+                nshref="https://github.com/PublicMapping/"
+                maxfeatures="100" />
 
             <!-- 
             
@@ -1308,109 +1274,9 @@
             -->
             <FixUnassigned minpercent="99" comparatorsubject="poptot" />
         </Redistricting>
-        
-        <!-- 
-        Configure the engine used for reporting. Can be either Calculator Reports or BARD
-        -->
-        <Reporting>
-            <!--
-               Use calculators for reporting. tempdir is the location where
-               the reports are stored and served from.
-            -->
-            <CalculatorReports tempdir="/projects/PublicMapping/local/reports" />          
 
-            <!-- This configuration is set up for reporting using Calculator reports
-                 (report panels are constructed via ScoreDisplays/ScorePanels/ScoreFunctiosn).
-                 The below, commented-out, configuration is an example of reporting
-                 using BARD.
-
-            <BardConfigs>
-                <BardConfig 
-                    id="tenpercent"
-                    shape="/data/vablock_bard_save.Rdata" 
-                    temp="/projects/PublicMapping/local/reports"
-                    transform="/projects/PublicMapping/DistrictBuilder/docs/bard_template.xslt">
-                    <PopVars>
-                        <PopVar subjectref="poptot" threshold=".1" default="true" />
-                        <PopVar subjectref="vap" />
-                        <PopVar subjectref="vapwnh" />
-                        <PopVar subjectref="vapblk" />
-                        <PopVar subjectref="vaphisp" default="false" />
-                    </PopVars>
-                    <RatioVars>
-                        <RatioVar id="racialComp" label="Majority Minority Districts" threshold=".5">
-                            <Numerators>
-                                <Numerator subjectref="vapblk" />
-                                <Numerator subjectref="vaphisp" />
-                            </Numerators>
-                            <Denominator subjectref="vap" />
-                        </RatioVar>
-                        <RatioVar id="partyControl" label="Party-Controlled Districts" threshold=".5">
-                            <Numerators>
-                                <Numerator subjectref="govdem" />
-                                <Numerator subjectref="govrep" />
-                            </Numerators>
-                            <Denominator subjectref="vap" />
-                        </RatioVar>
-                    </RatioVars>
-                    <SplitVars>
-                        <SplitVar field="COUNTYFP10" label="County" />
-                        <SplitVar field="VTDST10" label="VTD" />
-                    </SplitVars>
-                </BardConfig>
-                <BardConfig 
-                    id="fivepercent"
-                    shape="/data/vablock_bard_save.Rdata" 
-                    temp="/projects/PublicMapping/local/reports"
-                    transform="/projects/PublicMapping/DistrictBuilder/docs/bard_template.xslt">
-                    <PopVars>
-                        <PopVar subjectref="poptot" threshold=".05" default="true" />
-                        <PopVar subjectref="vap" />
-                        <PopVar subjectref="vapwnh" />
-                        <PopVar subjectref="vapblk" />
-                        <PopVar subjectref="vaphisp" default="false" />
-                    </PopVars>
-                    <RatioVars>
-                        <RatioVar id="racialComp" label="Majority Minority Districts" threshold=".5">
-                            <Numerators>
-                                <Numerator subjectref="vapblk" />
-                                <Numerator subjectref="vaphisp" />
-                            </Numerators>
-                            <Denominator subjectref="vap" />
-                        </RatioVar>
-                        <RatioVar id="partyControl" label="Party-Controlled Districts" threshold=".5">
-                            <Numerators>
-                                <Numerator subjectref="govdem" />
-                                <Numerator subjectref="govrep" />
-                            </Numerators>
-                            <Denominator subjectref="vap" />
-                        </RatioVar>
-                    </RatioVars>
-                    <SplitVars>
-                        <SplitVar field="COUNTYFP10" label="County" />
-                        <SplitVar field="VTDST10" label="VTD" />
-                    </SplitVars>
-                </BardConfig>
-            </BardConfigs>
-            <BardBodyConfigs>
-                <BardBodyConfig
-                    id="congress_blocks"
-                    legislativebodyref="congress"
-                    bardconfigref="fivepercent" />
-                <BardBodyConfig
-                    id="house_blocks"
-                    legislativebodyref="house"
-                    bardconfigref="tenpercent" />
-                <BardBodyConfig
-                    id="senate_blocks"
-                    legislativebodyref="senate"
-                    bardconfigref="tenpercent" />
-            </BardBodyConfigs>
-            -->
-        </Reporting>
-        
         <!-- Information about the mailer configuration. -->
-        <Mailer server="localhost" port="25" username="" password=""/>
+        <Mailer />
     </Project>
     
 </DistrictBuilder>
