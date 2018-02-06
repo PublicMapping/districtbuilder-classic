@@ -5,7 +5,7 @@ services:
       - .env
     image: quay.io/azavea/postgis:2.2-postgres9.5-slim
     healthcheck:
-      test: ["CMD-SHELL", "PGPASSWORD=POSTGRES_PASSWORD", "pg_isready", "-U", "district_builder"]
+      test: ["CMD-SHELL", "PGPASSWORD=${DATABASE_PASSWORD}", "pg_isready", "-U", "${DATABASE_USER}"]
       interval: 15s
       timeout: 5s
       retries: 3
