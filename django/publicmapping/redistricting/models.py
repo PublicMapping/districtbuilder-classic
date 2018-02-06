@@ -76,10 +76,9 @@ class BaseModel(models.Model):
         Initialize the message file cache.
         """
         super(BaseModel, self).__init__(*args, **kwargs)
-        lang = translation.get_language()
         # Hardcoding to avoid a bug in Django 1.8 get_language
         # (refer to https://github.com/django-parler/django-parler/issues/90)
-        lang = 'en'
+        lang = translation.get_language() or settings.LANGUAGE_CODE
         if not lang in I18N_CACHE:
             try:
                 path = os.path.join(
