@@ -3,6 +3,10 @@ services:
   postgres:
     env_file:
       - .env
+    environment:
+      - POSTGRES_DB=${DATABASE_DATABASE}
+      - POSTGRES_USER=${DATABASE_USER}
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
     image: quay.io/azavea/postgis:2.2-postgres9.5-slim
     healthcheck:
       test: ["CMD-SHELL", "PGPASSWORD=${DATABASE_PASSWORD}", "pg_isready", "-U", "${DATABASE_USER}"]
