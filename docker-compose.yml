@@ -82,6 +82,18 @@ services:
     links:
       - postgres:postgres.internal.districtbuilder.com
 
+  languages:
+    build:
+      context: ./django/publicmapping
+    volumes:
+      - ./django/publicmapping/:/usr/src/app/
+    entrypoint: /usr/local/bin/python
+    command:
+      - "manage.py"
+      - "makelanguagefiles"
+    depends_on:
+      - django
+
 volumes:
   reports:
   data:
