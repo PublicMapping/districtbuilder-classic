@@ -1,6 +1,8 @@
 DistrictBuilder
 ===============
 
+[![Build Status](https://travis-ci.org/PublicMapping/DistrictBuilder.svg?branch=develop)](https://travis-ci.org/PublicMapping/DistrictBuilder)
+
 [DistrictBuilder](http://www.districtbuilder.org/) is software created by the [Public Mapping Project](http://www.publicmapping.org/resources/software).
 
 
