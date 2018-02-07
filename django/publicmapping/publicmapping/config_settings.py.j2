@@ -15,7 +15,7 @@ LANGUAGE_CODE = '{{ i18n.get('default') or i18n[0].get('code') }}'
 BASE_MAPS = '{{ map_server.get('basemaps') }}'
 MAP_SERVER_NS = '{{ map_server.get('ns') }}'
 MAP_SERVER_NSHREF = '{{ map_server.get('nshref') }}'
-FEATURE_LIMIT = '{{ map_server.get('maxfeatures') }}'
+FEATURE_LIMIT = {{ map_server.get('maxfeatures') }}
 
 ADJACENCY = {{ True if adjacencies|length > 0 else False }}
 
