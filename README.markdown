@@ -98,3 +98,15 @@ Support
 More information about the application settings, configuration information, and run-time information is available in the PublicMapping/DistrictBuilder [wiki](https://github.com/PublicMapping/DistrictBuilder/wiki).
 
 Bug reports and feature requests can be reported to the PublicMapping/DistrictBuilder [issue tracker](https://github.com/PublicMapping/DistrictBuilder/issues).
+
+Development
+-----------
+
+For development and contribution to this repo, it is recommended to install [pre-commit](https://pre-commit.com/) and setup the `yapf` hook as follows:
+
+```bash
+$ pip install pre-commit
+$ pre-commit install
+```
+
+This will help with style of the Python code contributed to District Builder.

@@ -5,6 +5,7 @@ Brief description of what this PR does, and why it is needed.
 ### Checklist
 
 - [ ] PR has a name that won't get you publicly shamed for vagueness
+- [ ] Files changed in the PR have been `yapf`-ed for style violations
 
 ### Demo
 
