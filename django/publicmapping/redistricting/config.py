@@ -1232,7 +1232,7 @@ class SpatialUtils:
                 'connectionParameters': {
                     'host': os.getenv('DATABASE_HOST', self.host),
                     'port': os.getenv('DATABASE_PORT'),
-                    'database': os.getenv('DATABASE_NAME'),
+                    'database': os.getenv('DATABASE_DATABASE'),
                     'user': os.getenv('DATABASE_USER'),
                     'passwd': os.getenv('DATABASE_PASSWORD'),
                     'dbtype': 'postgis',
