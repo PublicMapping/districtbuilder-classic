@@ -4467,15 +4467,15 @@ def configure_views():
             cursor.execute(sql, {'geolevel_id': geolevel.id})
             logger.debug('Created simple_%s view ...', geolevel.name)
 
-        for subject in Subject.objects.all():
-            sql = "CREATE OR REPLACE VIEW %s AS SELECT rg.id, rg.name, rgg.geolevel_id, rg.geom, rc.number, rc.percentage FROM redistricting_geounit rg JOIN redistricting_geounit_geolevel rgg ON rg.id = rgg.geounit_id JOIN redistricting_characteristic rc ON rg.id = rc.geounit_id WHERE rc.subject_id = %%(subject_id)s AND rgg.geolevel_id = %%(geolevel_id)s;" % get_featuretype_name(
-                geolevel.name, subject.name)
-            cursor.execute(sql, {
-                'subject_id': subject.id,
-                'geolevel_id': geolevel.id
-            })
-            logger.debug('Created %s view ...',
-                         get_featuretype_name(geolevel.name, subject.name))
+            for subject in Subject.objects.all():
+                sql = "CREATE OR REPLACE VIEW %s AS SELECT rg.id, rg.name, rgg.geolevel_id, rg.geom, rc.number, rc.percentage FROM redistricting_geounit rg JOIN redistricting_geounit_geolevel rgg ON rg.id = rgg.geounit_id JOIN redistricting_characteristic rc ON rg.id = rc.geounit_id WHERE rc.subject_id = %%(subject_id)s AND rgg.geolevel_id = %%(geolevel_id)s;" % get_featuretype_name(
+                    geolevel.name, subject.name)
+                cursor.execute(sql, {
+                    'subject_id': subject.id,
+                    'geolevel_id': geolevel.id
+                })
+                logger.debug('Created %s view ...',
+                            get_featuretype_name(geolevel.name, subject.name))
 
 
 def get_featuretype_name(geolevel_name, subject_name=None):
@@ -4487,6 +4487,7 @@ def get_featuretype_name(geolevel_name, subject_name=None):
     else:
         return 'demo_%s_%s' % (geolevel_name, subject_name)
 
+    
 
 # Enable tagging of districts by registering them with the tagging module
 register(District)

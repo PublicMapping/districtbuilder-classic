@@ -8,9 +8,9 @@ fi
 function usage() {
 
     echo -n \
-"Usage: $(basename "$0")
+"Usage: $(basename "$0") [config.xml]
 
-Load a database dump from S3
+Configure the application with demo data
 "
 }
 
@@ -45,23 +45,27 @@ function load_dev_data() {
 
     echo "Loading shapefiles into database"
     docker-compose \
-        exec -T django ./manage.py setup config/config.xml -g0 -g1 -g2
+        exec -T django ./manage.py setup "${configPath}" -g0 -g1 -g2
 
     echo "Nesting geolevels"
     docker-compose \
-        exec -T django ./manage.py setup config/config.xml -n0 -n1 -n2
+        exec -T django ./manage.py setup "${configPath}" -n0 -n1 -n2
 
     echo "Creating template plans"
     docker-compose \
-        exec -T django ./manage.py setup config/config.xml -t
+        exec -T django ./manage.py setup "${configPath}" -t
 
     echo "Creating database views"
     docker-compose \
-        exec -T django ./manage.py setup config/config.xml --views
+        exec -T django ./manage.py setup "${configPath}" --views
 
     echo "Configuring geoserver"
     docker-compose \
-        exec -T django ./manage.py setup config/config.xml -G
+        exec -T django ./manage.py setup "${configPath}" -G
+
+    echo "Creating translation files"
+    docker-compose \
+        exec -T django ./manage.py setup "${configPath}" -l
 
 }
 
@@ -71,6 +75,7 @@ then
     then
         usage
     else
+        configPath="config/${1:-config.xml}"
         docker-compose up -d postgres django
         load_dev_data
     fi

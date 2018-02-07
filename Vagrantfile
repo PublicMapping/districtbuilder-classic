@@ -12,7 +12,7 @@ Vagrant.configure(2) do |config|
   # file corruption issue.
   config.vm.synced_folder ".", "/vagrant",
       type: "rsync",
-      rsync__exclude: ".git/",
+      rsync__exclude: [".git/", "geoserver/data_dir/"],
       rsync__args: ["--verbose", "--archive", "--delete", "-z", "--links"]
 
   config.vm.provider :virtualbox do |vb|

@@ -7,3 +7,5 @@ deployment/ansible/roles/azavea.*
 
 # generated style files from geoserver
 sld
+geoserver/data_dir
+data

@@ -36,9 +36,7 @@ services:
       - "8080"
     volumes:
       - ./django/publicmapping/:/usr/src/app/
-      - ./sld/:/opt/sld
-      - data:/data
-      - reports:/opt/reports
+      - ./reports:/opt/reports
     entrypoint: /usr/local/bin/gunicorn
     command:
       - "--workers=2"
@@ -75,7 +73,6 @@ services:
     build:
       context: ./geoserver
     volumes:
-      - ./geoserver/data_dir/:/data
       - ./sld/:/data/sld
     ports:
       - "9091:8080"

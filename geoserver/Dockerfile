@@ -1,5 +1,5 @@
 # A GeoServer installation
-FROM openjdk:8-jre-alpine
+FROM openjdk:8-jre-slim
 
 ENV GEOSERVER_VERSION 2.11.2
 ENV GEOSERVER_ZIP_URL http://sourceforge.net/projects/geoserver/files/GeoServer/${GEOSERVER_VERSION}/geoserver-${GEOSERVER_VERSION}-bin.zip
@@ -7,10 +7,10 @@ ENV GEOSERVER_ZIP_URL http://sourceforge.net/projects/geoserver/files/GeoServer/
 ENV GEOSERVER_DIR /usr/share
 ENV GEOSERVER_EXT_DIR $GEOSERVER_DIR/geoserver-$GEOSERVER_VERSION/webapps/geoserver/WEB-INF/lib
 ENV PATH /usr/share/geoserver-$GEOSERVER_VERSION/bin:$PATH
-ENV JAVA_HOME /usr/lib/jvm/java-1.8-openjdk
+ENV JAVA_HOME /usr/lib/jvm/java-1.8.0-openjdk-amd64
 ENV GEOSERVER_HOME $GEOSERVER_DIR/geoserver-$GEOSERVER_VERSION/
 
-RUN apk add --update ca-certificates openssl && update-ca-certificates && \
+RUN apt-get update && apt-get install -y -qq ca-certificates openssl unzip wget && update-ca-certificates && \
   wget -O $GEOSERVER_DIR/geoserver.zip $GEOSERVER_ZIP_URL && \
   unzip -qq $GEOSERVER_DIR/geoserver.zip -d $GEOSERVER_DIR && \
   rm $GEOSERVER_DIR/geoserver.zip

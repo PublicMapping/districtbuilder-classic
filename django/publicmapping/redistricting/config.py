@@ -62,6 +62,8 @@ from redistricting.models import (
     get_featuretype_name,
 )
 
+import requests
+
 logger = logging.getLogger(__name__)
 
 
@@ -605,6 +607,7 @@ class ConfigImporter:
                             node[0], body, subject, obj)
 
                 parentless = self.store.get_top_regional_geolevel(region)
+
                 if parentless is not None:
                     add_legislative_level_for_geolevel(
                         parentless, legislative_body, subject, None)
@@ -1186,6 +1189,25 @@ class SpatialUtils:
         @returns: A flag indicating if geoserver was configured correctly.
         """
 
+        # Set the Geoserver proxy base url
+        # This is necessary for geoserver to know where to look for its internal
+        # resources like its copy of openlayers and other things
+
+        settings = requests.get(
+            'http://geoserver.internal.districtbuilder.com:8080/geoserver/rest/settings.json',
+            headers=self.headers['default']
+        ).json()
+
+        settings['global']['proxyBaseUrl'] = 'http://localhost:8080/geoserver'
+
+        resp = requests.put(
+            'http://geoserver.internal.districtbuilder.com:8080/geoserver/rest/settings',
+            json=settings,
+            headers=self.headers['default']
+        )
+        resp.raise_for_status()
+
+
         # Create our namespace
         namespace_url = '/geoserver/rest/namespaces'
         namespace_obj = {'namespace': {'prefix': self.ns, 'uri': self.nshref}}
@@ -1244,7 +1266,13 @@ class SpatialUtils:
             'binding': SpatialUtils.get_binding(field)
         } for field in geolevel_fields]
 
-        subject_attrs = [{'name': 'name', 'binding': 'java.lang.String'}]
+        subject_attrs = [
+            {'name': 'name', 'binding': 'java.lang.String'},
+            {'name': 'geom', 'binding': 'java.lang.String'},
+            {'name': 'geolevel_id', 'binding': 'com.vividsolutions.jts.geom.MultiPolygon'},
+            {'name': 'number', 'binding': 'java.lang.Double'},
+            {'name': 'percentage', 'binding': 'java.lang.Double'},
+        ]
 
         if self.create_featuretype(
                 'identify_geounit', attributes=geolevel_attrs):
@@ -1601,22 +1629,21 @@ class SpatialUtils:
                 'keywords': [],
                 'metadataLinks': [],
                 'dataLinks': [],
-                'nativeCRS': 'EPSG:3785',
-                'srs': 'EPSG:3785',
+                'nativeCRS': 'EPSG:900913',
+                'srs': 'EPSG:900913',
                 # Set the bounding box to the maximum spherical mercator extent
                 # in order to avoid all issues with geowebcache tile offsets
                 'nativeBoundingBox': {
-                    'minx': '%0.1f' % -8974318.61690597,
-                    'miny': '%0.1f' % 4813698.29328726,
-                    'maxx': '%0.1f' % -8312679.70006949,
-                    'maxy': '%0.1f' % 5244191.63658937,
-                    'crs': 'EPSG:3785'
+                    'minx': '%0.1f' % -20037508.342789244,
+                    'miny': '%0.1f' % -20048966.1040146,
+                    'maxx': '%0.1f' % 20037508.342789244,
+                    'maxy': '%0.1f' % 20048966.104014594,
                 },
                 'latLonBoundingBox': {
-                    'minx': -80.61767578124999,
-                    'miny': 39.639537564366684,
-                    'maxx': -74.674072265625,
-                    'maxy': 42.5530802889558,
+                    'minx': -180,
+                    'miny': -85.1,
+                    'maxx': 180,
+                    'maxy': 85.1,
                     'crs': 'EPSG:4326'
                 },
                 'maxFeatures': settings.FEATURE_LIMIT + 1,
@@ -1648,14 +1675,12 @@ class SpatialUtils:
         @returns: True if the resource exists and is readable.
         """
         try:
-            conn = httplib.HTTPConnection(self.host, self.port)
-            conn.request('GET', url, None, self.headers['default'])
-            rsp = conn.getresponse()
-            rsp.read()  # and discard
-            conn.close()
-            return rsp.status == 200
-        except:
-            # HTTP 400, 500 errors are also considered exceptions by the httplib
+            resp = requests.get(
+                url, headers=self.headers['default'], params={'quietOnNotFound': True}
+            )
+            resp.raise_for_status()
+            return resp.status_code == 200
+        except requests.exceptions.RequestException:
             return False
 
     def _rest_config(self, method, url, data=None, headers=None):
