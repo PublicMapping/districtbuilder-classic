@@ -135,16 +135,9 @@ function init() {
         return;
     }
 
-    // default map_server is on same host unless otherwise specified 
-    if (MAP_SERVER === "") {
-        MAP_SERVER = window.location.host;
-    }
-
-    // default map_server protocol is the same as the request unless 
-    // otherwise specified
-    if (MAP_SERVER_PROTOCOL === "") {
-        MAP_SERVER_PROTOCOL = window.location.protocol;
-    }
+    // map_server must be running on the same host
+    MAP_SERVER = window.location.host;
+    MAP_SERVER_PROTOCOL = window.location.protocol;
 
     // set the version cursor
     $('#history_cursor').val(PLAN_VERSION);
