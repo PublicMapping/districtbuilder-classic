@@ -110,10 +110,11 @@
 
     {% endcomment %}
     <script type="text/javascript">
+        // NOTE: map server must be running on same host/protocol
         // The name of the map server that serves up map tiles.
-        var MAP_SERVER = '{{ mapserver }}';
+        var MAP_SERVER = window.location.host;
         // The protocol used to access the map server.
-        var MAP_SERVER_PROTOCOL = '{{ mapserver_protocol }}';
+        var MAP_SERVER_PROTOCOL = window.location.protocol;
         // The names of the base maps to display.
         var BASE_MAPS = '{{ basemaps }}'
         // default to open street map if nothing is provided

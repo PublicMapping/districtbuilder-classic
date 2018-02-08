@@ -135,10 +135,6 @@ function init() {
         return;
     }
 
-    // map_server must be running on the same host
-    MAP_SERVER = window.location.host;
-    MAP_SERVER_PROTOCOL = window.location.protocol;
-
     // set the version cursor
     $('#history_cursor').val(PLAN_VERSION);
 
