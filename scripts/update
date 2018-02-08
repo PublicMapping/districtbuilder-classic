@@ -9,15 +9,20 @@ function usage() {
 
     echo -n \
 "Usage: $(basename "$0")
-Setup external project dependencies.
+Setup project containers and database.
 "
 }
 
-
 function build_containers() {
+    echo "Building containers"
     docker-compose build
 }
 
+function run_migrations() {
+    echo "Running migrations"
+    docker-compose \
+        exec -T django ./manage.py migrate
+}
 
 if [ "${BASH_SOURCE[0]}" = "${0}" ]
 then
@@ -25,8 +30,9 @@ then
     then
         usage
     else
-        echo "Building containers"
         build_containers
+        docker-compose up -d postgres django
+        run_migrations
     fi
     exit
 fi
