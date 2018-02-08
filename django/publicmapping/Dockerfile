@@ -20,4 +20,10 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . /usr/src/app
 
+RUN pip install config/district_builder_config
+
+RUN python -m district_builder_config.generate_settings \
+  config/config.xsd \
+  config/config.xml
+
 WORKDIR /usr/src/app

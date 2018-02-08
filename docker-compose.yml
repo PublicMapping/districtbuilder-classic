@@ -62,8 +62,6 @@ services:
       - postgres:${DATABASE_HOST}
       - redis:${KEY_VALUE_STORE_HOST}
       - geoserver:${MAP_SERVER_HOST}
-    depends_on:
-      - config
 
   celery:
     build:
@@ -98,6 +96,8 @@ services:
   languages:
     build:
       context: ./django/publicmapping
+    env_file:
+      - .env
     volumes:
       - ./django/publicmapping/:/usr/src/app/
     entrypoint: /usr/local/bin/python
@@ -106,17 +106,6 @@ services:
       - "makelanguagefiles"
     depends_on:
       - django
-
-  config:
-    build:
-      context: ./django/publicmapping
-    volumes:
-      - ./django/publicmapping/:/usr/src/app/
-    entrypoint: /usr/local/bin/python
-    command:
-      - "generate_settings.py"
-      - "config/config.xsd"
-      - "config/config.xml"
 
 volumes:
   reports:

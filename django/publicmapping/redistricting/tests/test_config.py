@@ -3,7 +3,7 @@ import tempfile
 import os
 import logging
 
-from redistricting import StoredConfig
+from district_builder_config import StoredConfig
 
 
 class ConfigTestCase(TestCase):

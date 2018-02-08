@@ -1,7 +1,7 @@
 #!/usr/bin/python
 from optparse import OptionParser
 import sys
-from redistricting import StoredConfig
+from . import StoredConfig
 import logging
 
 logging.basicConfig(format='%(message)s')
