@@ -28,8 +28,19 @@ $ cp django/publicmapping/.env.sample django/publicmapping/.env
 $ ./scripts/setup
 $ vagrant ssh
 $ ./scripts/update
-$ ./scripts/configure
 ```
+
+If you want to get DistrictBuilder up and running quickly with demo data, you can then run
+```bash
+$ ./scripts/configure_va_demo
+```
+
+Otherwise, you'll need to provide your own shapefiles and config.xml file, and then run
+```bash
+$ ./scripts/load_configured_data
+```
+
+More detailed instructions on loading your own data can be found below.
 
 :zzz:
 
@@ -57,9 +68,9 @@ Ease of interacting with the configuration file is a planned area for future dev
 with docker installed. `vagrant ssh` gets you into the virtual machine so you can run commands.
 From there, running `./scripts/update` builds containers. The rest of the setup happens either
 directly or indirectly through a setup management command. To get started, run
-`./script/setup`, followed by `vagrant ssh`, followed by `./scripts/update`.
+`./scripts/setup`, followed by `vagrant ssh`, followed by `./scripts/update`.
  
-Then, run `./scripts/configure`. It is not fast. Currently, it takes several hours, with the exact
+Then, run `./scripts/configure_va_demo`. It is not fast. Currently, it takes several hours, with the exact
 time depending on hardware. We are working on ways to improve the speed of loading data.
 
 The script will do several things

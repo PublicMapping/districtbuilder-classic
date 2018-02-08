@@ -15,6 +15,7 @@ NOTE: This settings file should not be changed!
 
 import os
 import logging.config
+import logging
 from . import REDIS_URL
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -232,4 +233,9 @@ REPORTS_ENABLED = 'CALC'
 # NOTE: Leave this at the end of the file!
 # These settings are generated based on config.xml
 # and allow for modifiying/overriding the default settings
-from publicmapping.config_settings import *
+try:
+    from publicmapping.config_settings import *
+except ImportError:
+    logger = logging.getLogger(__name__)
+    logger.error('Could not find config_settings; double-check the README for missed setup steps')
+    raise
