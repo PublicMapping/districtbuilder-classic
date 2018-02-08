@@ -206,8 +206,8 @@ KEY_VALUE_STORE = {
 }
 
 MAP_SERVER = os.getenv('MAP_SERVER_HOST')
-MAP_SERVER_USER = os.getenv('MAP_SERVER_ADMIN')
-MAP_SERVER_PASS = os.getenv('MAP_SERVER_PASSWORD')
+MAP_SERVER_USER = os.getenv('MAP_SERVER_ADMIN_USER')
+MAP_SERVER_PASS = os.getenv('MAP_SERVER_ADMIN_PASSWORD')
 
 # TODO: Make sending email work
 EMAIL_HOST = 'localhost'
