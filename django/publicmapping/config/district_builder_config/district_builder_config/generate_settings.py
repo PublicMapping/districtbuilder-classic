@@ -1,5 +1,5 @@
 #!/usr/bin/python
-from optparse import OptionParser
+import argparse
 import sys
 from . import StoredConfig
 import logging
@@ -12,30 +12,31 @@ logging.logProcesses = 0
 logger = logging.getLogger()
 
 def main():
-    """
-    Main method to start the setup of DistrictBuilder.
-    """
-    usage = "usage: %prog [options] SCHEMA CONFIG"
-    parser = OptionParser(usage=usage)
-    parser.add_option('-v', '--verbosity', dest="verbosity",
+    parser = argparse.ArgumentParser(
+        description='Generate settings file based on configuration')
+    parser.add_argument('schema', help='path to schema file used for validation')
+    parser.add_argument('config', help='path to config file')
+    parser.add_argument('output_path', help='path that generated settings file will be written to')
+    parser.add_argument('-v', '--verbosity', dest="verbosity",
             help="Verbosity level; 0=minimal output, 1=normal output, 2=all output",
-            default=1, type="int")
+            default=1, type=int)
 
-    (options, args) = parser.parse_args()
+    args = parser.parse_args()
 
-    setup_logging(options.verbosity)
+    setup_logging(args.verbosity)
 
-    if len(args) != 2:
+    if len(sys.argv) != 4:
         logger.warning("""
 ERROR:
 
-    This script requires a configuration file and a schema. Please check
-    the command line arguments and try again.
+    This script requires a schema, a configuration file, and an output path for
+    the settings file that is generated. Please check the command line
+    arguments and try again.
 """)
         sys.exit(1)
 
     try:
-        config = StoredConfig(args[1], schema_file=args[0])
+        config = StoredConfig(args.config, schema_file=args.schema)
     except Exception as e:
         logger.exception("Error initializing config")
         sys.exit(1)
@@ -46,7 +47,7 @@ ERROR:
 
     logger.info("Validated config.")
 
-    status = config.write_settings()
+    status = config.write_settings(output_path=args.output_path)
     if status:
         logger.info("Generated Django settings.")
     else:

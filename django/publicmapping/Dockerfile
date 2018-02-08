@@ -24,6 +24,7 @@ RUN pip install config/district_builder_config
 
 RUN python -m district_builder_config.generate_settings \
   config/config.xsd \
-  config/config.xml
+  config/config.xml \
+  publicmapping/config_settings.py
 
 WORKDIR /usr/src/app

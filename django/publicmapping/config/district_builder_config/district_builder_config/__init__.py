@@ -129,7 +129,7 @@ class StoredConfig:
         return True
 
 
-    def write_settings(self, output_path='publicmapping/config_settings.py'):
+    def write_settings(self, output_path):
         """
         Write new settings file based off of the configuration provided, which
         will then be imported by the main settings file.
