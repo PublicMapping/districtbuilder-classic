@@ -564,8 +564,7 @@ def commonplan(request, planid):
     bodies = LegislativeBody.objects.all().order_by('region__sort_key',
                                                     'sort_key')
     l_bodies = [
-        b for b in bodies
-        if b in [
+        b for b in bodies if b in [
             sd.legislative_body
             for sd in ScoreDisplay.objects.filter(is_page=True)
         ]
@@ -1899,13 +1898,11 @@ def get_unlocked_simple_geometries(request, planid):
 
             # Create a union of locked geometries
             districts = [
-                d.id
-                for d in plan.get_districts_at_version(
+                d.id for d in plan.get_districts_at_version(
                     version, include_geom=True) if d.is_locked
             ]
             locked = District.objects.filter(id__in=districts).aggregate(
-                Collect('geom')
-            )['geom__collect']
+                Collect('geom'))['geom__collect']
 
             # Create a simplified locked boundary for fast, but not completely accurate lookups
             # Note: the preserve topology parameter of simplify is needed here
@@ -2813,7 +2810,8 @@ def plan_feed(request):
     # MAP_SERVER_NS = 'pmp'
     plans = Plan.objects.all().order_by('-edited')[0:10]
     geolevel = plans[0].legislative_body.get_geolevels()[0]
-    extent = geolevel.geounit_set.aggregate(Collect('geom'))['geom__collect'].extent
+    extent = geolevel.geounit_set.aggregate(
+        Collect('geom'))['geom__collect'].extent
     if extent[2] - extent[0] > extent[3] - extent[1]:
         # wider maps
         width = 500
@@ -2844,7 +2842,8 @@ def share_feed(request):
     plans = Plan.objects.filter(is_shared=True).order_by('-edited')[0:10]
     if plans.count() < 0:
         geolevel = plans[0].legislative_body.get_geolevels()[0]
-        extent = geolevel.geounit_set.aggregate(Collect('geom'))['geom__collect'].extent
+        extent = geolevel.geounit_set.aggregate(
+            Collect('geom'))['geom__collect'].extent
         if extent[2] - extent[0] > extent[3] - extent[1]:
             # wider maps
             width = 500
