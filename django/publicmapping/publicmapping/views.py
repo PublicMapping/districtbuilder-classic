@@ -301,8 +301,10 @@ def forgotpassword(request):
         email was sent with their new password.
     """
     status = {'success': False}
-    if 'username' in request.REQUEST and not request.REQUEST['username'] == '':
-        username = request.REQUEST['username']
+    data = request.POST
+    username = data.get('username')
+    email = data.get('email')
+    if username:
         try:
             user = User.objects.get(username__exact=username)
             status['success'] = True
@@ -311,8 +313,7 @@ def forgotpassword(request):
         except:
             status['field'] = 'username'
             status['message'] = 'Invalid username. Please try again.'
-    elif 'email' in request.REQUEST and not request.REQUEST['email'] == '':
-        email = request.REQUEST['email']
+    elif email:
         try:
             user = User.objects.get(email__exact=email)
             status['mode'] = 'sending'
