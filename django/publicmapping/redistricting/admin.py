@@ -329,7 +329,7 @@ class SubjectAdmin(admin.ModelAdmin):
                                      modeladmin.opts.get_delete_permission()):
             raise PermissionDenied
 
-        if request.REQUEST.get('post'):
+        if request.POST:
             n = queryset.count()
             if n:
                 engine = inflect.engine()
@@ -346,7 +346,7 @@ class SubjectAdmin(admin.ModelAdmin):
             # Return None to display the change list page again.
             return None
 
-        warned = 'warned' in request.REQUEST and request.REQUEST['warned'] == 'on'
+        warned = request.POST.get('warned') == 'on'
 
         context = {
             "object_name": force_unicode(opts.verbose_name),
