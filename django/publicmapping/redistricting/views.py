@@ -551,12 +551,6 @@ def commonplan(request, planid):
                 'isdisplayed': str(default_demo.is_displayed).lower()
             })
 
-    # Try to get the mapserver protocol from the settings module.
-    # Set it to an empty string if the setting isn't defined so the
-    # front-end Javascript will set a reasonable default (currently
-    # the same protocol as the request to the webserver).
-    mapserver_protocol = getattr(settings, 'MAP_SERVER_PROTOCOL', '')
-
     short_label = body_member_short_label.strip().lower()
     long_label = body_member_long_label.strip().lower()
 
@@ -587,10 +581,6 @@ def commonplan(request, planid):
         plan,
         'districts':
         districts,
-        'mapserver':
-        settings.MAP_SERVER,
-        'mapserver_protocol':
-        mapserver_protocol,
         'basemaps':
         settings.BASE_MAPS,
         'namespace':

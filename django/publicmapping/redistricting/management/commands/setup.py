@@ -58,7 +58,7 @@ from redistricting.models import (
     configure_views
 )
 from redistricting.config import ConfigImporter
-from redistricting import StoredConfig
+from district_builder_config import StoredConfig
 from redistricting.tasks import DistrictIndexFile
 import traceback
 import logging

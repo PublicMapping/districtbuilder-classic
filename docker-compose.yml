@@ -1,39 +1,49 @@
 version: "3.3"
 services:
   postgres:
-    image: quay.io/azavea/postgis:2.2-postgres9.5-slim
+    env_file:
+      - .env
     environment:
-      - POSTGRES_DB=district_builder
-      - POSTGRES_USER=district_builder
-      - POSTGRES_PASSWORD=district_builder
+      - POSTGRES_DB=${DATABASE_DATABASE}
+      - POSTGRES_USER=${DATABASE_USER}
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+    image: quay.io/azavea/postgis:2.2-postgres9.5-slim
     healthcheck:
-      test: ["CMD-SHELL", "PGPASSWORD=POSTGRES_PASSWORD", "pg_isready", "-U", "district_builder"]
+      test: ["CMD-SHELL", "PGPASSWORD=${DATABASE_PASSWORD}", "pg_isready", "-U", "${DATABASE_USER}"]
       interval: 15s
       timeout: 5s
       retries: 3
 
   redis:
+    env_file:
+      - .env
     image: redis:3.2-alpine
+    command: redis-server --requirepass ${KEY_VALUE_STORE_PASSWORD}
     ports:
-     - '6379:6379'
+     - "${KEY_VALUE_STORE_PORT}:${KEY_VALUE_STORE_PORT}"
 
   nginx:
-    image: nginx:1.13.8-alpine
+    env_file:
+      - .env
+    image: nginx:1.12
     ports:
-      - "8080:8080"
+      - "${WEB_APP_PORT}:${WEB_APP_PORT}"
     volumes:
       - ./nginx/:/etc/nginx/conf.d
       - ./django/publicmapping/static:/opt/static/
       - ./sld:/opt/sld/
       - reports:/opt/reports
+    command: /bin/bash -c "envsubst < /etc/nginx/conf.d/default.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
     depends_on:
       - django
 
   django:
+    env_file:
+      - .env
     build:
       context: ./django/publicmapping
     expose:
-      - "8080"
+      - "${WEB_APP_PORT}"
     volumes:
       - ./django/publicmapping/:/usr/src/app/
       - ./reports:/opt/reports
@@ -41,7 +51,7 @@ services:
     command:
       - "--workers=2"
       - "--timeout=60"
-      - "--bind=0.0.0.0:8080"
+      - "--bind=0.0.0.0:${WEB_APP_PORT}"
       - "--reload"
       - "--log-level=debug"
       - "--access-logfile=-"
@@ -49,13 +59,15 @@ services:
       - "-kgevent"
       - "publicmapping.wsgi"
     links:
-      - postgres:postgres.internal.districtbuilder.com
-      - redis:redis.internal.districtbuilder.com
-      - geoserver:geoserver.internal.districtbuilder.com
+      - postgres:${DATABASE_HOST}
+      - redis:${KEY_VALUE_STORE_HOST}
+      - geoserver:${MAP_SERVER_HOST}
 
   celery:
     build:
       context: ./django/publicmapping
+    env_file:
+      - .env
     volumes:
       - ./django/publicmapping/:/usr/src/app/
       - reports:/opt/reports
@@ -66,22 +78,26 @@ services:
       - "--uid=reporter"
       - "--loglevel=INFO"
     links:
-      - postgres:postgres.internal.districtbuilder.com
-      - redis:redis.internal.districtbuilder.com
+      - postgres:${DATABASE_HOST}
+      - redis:${KEY_VALUE_STORE_HOST}
 
   geoserver:
     build:
       context: ./geoserver
+    env_file:
+      - .env
     volumes:
       - ./sld/:/data/sld
     ports:
-      - "9091:8080"
+      - "${MAP_SERVER_PORT}:${WEB_APP_PORT}"
     links:
-      - postgres:postgres.internal.districtbuilder.com
+      - postgres:${DATABASE_HOST}
 
   languages:
     build:
       context: ./django/publicmapping
+    env_file:
+      - .env
     volumes:
       - ./django/publicmapping/:/usr/src/app/
     entrypoint: /usr/local/bin/python

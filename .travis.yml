@@ -2,6 +2,13 @@ services:
   - docker
 
 install:
+  - cp .env.sample .env
+  - sed -i 's/WEB_APP_PASSWORD=/WEB_APP_PASSWORD=travis/' .env
+  - sed -i 's/ADMIN_PASSWORD=/ADMIN_PASSWORD=admin/' .env
+  - sed -i 's/DATABASE_PASSWORD=/DATABASE_PASSWORD=district_builder/' .env
+  - sed -i 's/KEY_VALUE_STORE_PASSWORD=/KEY_VALUE_STORE_PASSWORD=redis/' .env
+  - sed -i 's/MAP_SERVER_ADMIN_PASSWORD=/MAP_SERVER_ADMIN_PASSWORD=geoserver/' .env
+  - cp django/publicmapping/config/config.dist.xml django/publicmapping/config/config.xml
   - ./scripts/update
 
 script:

@@ -181,15 +181,14 @@ class ConfigImporter:
         @returns: A flag indicating if the import was successful.
         """
         try:
-            admcfg = self.store.get_admin()
             admin_attributes = {
                 'first_name': 'Admin',
                 'last_name': 'User',
                 'is_staff': True,
                 'is_active': True,
                 'is_superuser': True,
-                'username': admcfg.get('user')[:30],
-                'email': admcfg.get('email')[:75]
+                'username': os.getenv('ADMIN_USER'),
+                'email': os.getenv('ADMIN_EMAIL'),
             }
 
             admin, created, changed, message = check_and_update(
@@ -205,7 +204,7 @@ class ConfigImporter:
 
             if created or changed or force:
                 m = hashlib.sha1()
-                m.update(admcfg.get('password'))
+                m.update(os.getenv('ADMIN_PASSWORD'))
                 admin.set_password(m.hexdigest())
                 admin.save()
 
@@ -1027,28 +1026,24 @@ class SpatialUtils:
 
             mapconfig = self.store.get_mapserver()
 
-            self.host = mapconfig.get('hostname')
-            self.port = 8080  # should this be parameterized?
+            self.host = os.getenv('MAP_SERVER_HOST')
+            self.port = os.getenv('WEB_APP_PORT')
 
             self.ns = mapconfig.get('ns')
             self.nshref = mapconfig.get('nshref')
 
-            user_pass = '%s:%s' % (mapconfig.get('adminuser'),
-                                   mapconfig.get('adminpass'))
-
-            self.styledir = mapconfig.get('styles')
+            user_pass = '%s:%s' % (os.getenv('MAP_SERVER_ADMIN_USER'),
+                                   os.getenv('MAP_SERVER_ADMIN_PASSWORD'))
         elif isinstance(config, dict):
             try:
-                self.host = config['host']
-                self.port = 8080
+                self.host = os.getenv('MAP_SERVER_HOST')
+                self.port = os.getenv('WEB_APP_PORT')
 
                 self.ns = config['ns']
                 self.nshref = config['nshref']
 
-                user_pass = '%s:%s' % (config['adminuser'],
-                                       config['adminpass'])
-
-                self.styledir = config['styles']
+                user_pass = '%s:%s' % (os.getenv('MAP_SERVER_ADMIN_USER'),
+                                       os.getenv('MAP_SERVER_ADMIN_PASSWORD'))
             except:
                 logger.error(
                     'SpatialUtils is missing a required key in the settings dictionary.'
@@ -1062,7 +1057,7 @@ class SpatialUtils:
             raise Exception()
 
         if self.host == '':
-            self.host = 'geoserver.internal.districtbuilder.com'
+            self.host = os.getenv('MAP_SERVER_HOST')
 
         auth = 'Basic %s' % base64.b64encode(user_pass)
         self.headers = {
@@ -1224,8 +1219,6 @@ class SpatialUtils:
             )
             return False
 
-        dbconfig = self.store.get_database()
-
         data_store_url = '/geoserver/rest/workspaces/%s/datastores' % self.ns
         data_store_name = 'PostGIS'
 
@@ -1237,11 +1230,11 @@ class SpatialUtils:
                     'link': self.nshref
                 },
                 'connectionParameters': {
-                    'host': dbconfig.get('host', self.host),
-                    'port': 5432,
-                    'database': dbconfig.get('name'),
-                    'user': dbconfig.get('user'),
-                    'passwd': dbconfig.get('password'),
+                    'host': os.getenv('DATABASE_HOST', self.host),
+                    'port': os.getenv('DATABASE_PORT'),
+                    'database': os.getenv('DATABASE_DATABASE'),
+                    'user': os.getenv('DATABASE_USER'),
+                    'passwd': os.getenv('DATABASE_PASSWORD'),
                     'dbtype': 'postgis',
                     'schema': 'public'
                 }

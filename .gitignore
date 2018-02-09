@@ -1,6 +1,7 @@
 *.pyc
 *.mo
 *.swp
+*.env
 
 deployment/ansible/roles/azavea.*
 .vagrant*
