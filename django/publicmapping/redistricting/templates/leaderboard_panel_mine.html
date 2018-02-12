@@ -28,7 +28,7 @@
        Andrew Jennings, David Zwarg, Kenny Shepard
 
 {% endcomment %}
-{% load i18n %}
+{% load i18n static %}
 <div class="leaderboard_panel {% if position|divisibleby:'2' %}even{% else %}odd{% endif %} {{cssclass}}">
   <div class="leaderboard_title">
     <img src="{% static 'images/icon-help.png' %}" class="leaderboard divtip">
