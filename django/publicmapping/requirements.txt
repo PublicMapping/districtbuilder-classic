@@ -1,4 +1,5 @@
 Gunicorn==19.7.1
+dict2xml==1.5
 ipython==5.5.0
 gevent==1.2.2
 Django==1.11.10
@@ -15,6 +16,7 @@ polib==1.0.8
 inflect==0.2.3
 python-sld==1.0.9
 numpy==1.13.3
+fiona==1.7.11
 scipy==0.19.1
 PySAL==1.14.2
 Pillow==1.7.8
