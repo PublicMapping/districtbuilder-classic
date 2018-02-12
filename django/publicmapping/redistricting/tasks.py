@@ -24,70 +24,50 @@ Author:
     Andrew Jennings, David Zwarg
 """
 
-from publicmapping.celery import app
-from codecs import open
-from decimal import Decimal
-from django.core import management
-from django_comments.models import Comment
-from django.contrib.sites.models import Site
-from django.contrib.contenttypes.models import ContentType
-from django.core.mail import send_mail, mail_admins, EmailMessage
-from django.template import loader
-from django.db import connection, transaction
-from django.db.models import Q, Sum, Max, Avg
-from django.conf import settings
-from django.utils.translation import ugettext as _, ungettext as _n, get_language, activate
-from redistricting.models import (
-    LegislativeBody,
-    LegislativeLevel,
-    Plan,
-    ComputedPlanScore,
-    Subject,
-    Geounit,
-    Geolevel,
-    District,
-    Characteristic,
-    ComputedCharacteristic,
-    ProcessingState,
-    SubjectUpload,
-    SubjectStage,
-    ScoreDisplay,
-    ValidationCriteria,
-    enforce_multi,
-    create_unassigned_district,
-    configure_views,
-    get_featuretype_name
-)
-from redistricting.config import (
-    SpatialUtils,
-    PoUtils
-)
-from tagging.models import Tag
-from datetime import datetime
-from lxml import etree, objectify
-import sld_generator as generator
 import csv
-import time
-import zipfile
-import tempfile
-import os
-import traceback
+import json
 import logging
+import os
 import re
-
-# all for shapefile exports
+import tempfile
+import time
+import traceback
+import zipfile
+from codecs import open
+from datetime import datetime
+from decimal import Decimal
 from glob import glob
-from django.contrib.gis.gdal import (
-    OGRGeometry,
-    SpatialReference,
-    Envelope,
-    Driver,
-    OGRGeomType
-)
+
+from dict2xml import dict2xml
+import fiona
+from fiona import crs
+
+import sld_generator as generator
+from django.conf import settings
+from django.contrib.contenttypes.models import ContentType
 from django.contrib.gis.geos import GeometryCollection
-from django.contrib.gis.gdal.error import check_err
-from django.contrib.gis.gdal.libgdal import lgdal
-from ctypes import c_double
+from django.contrib.sites.models import Site
+from django.core import management
+from django.core.mail import EmailMessage, mail_admins, send_mail
+from django.db import connection, transaction
+from django.db.models import Avg, Max, Q, Sum
+from django.template import loader
+from django.utils.translation import ugettext as _
+from django.utils.translation import ungettext as _n
+from django.utils.translation import activate, get_language
+from django_comments.models import Comment
+from lxml import etree, objectify
+from publicmapping.celery import app
+from redistricting.config import PoUtils, SpatialUtils
+from redistricting.models import (Characteristic, ComputedCharacteristic,
+                                  ComputedPlanScore, District, Geolevel,
+                                  Geounit, LegislativeBody, LegislativeLevel,
+                                  Plan, ProcessingState, ScoreDisplay, Subject,
+                                  SubjectStage, SubjectUpload,
+                                  ValidationCriteria, configure_views,
+                                  create_unassigned_district, enforce_multi,
+                                  get_featuretype_name)
+from tagging.models import Tag
 
 logger = logging.getLogger(__name__)
 
@@ -740,24 +720,23 @@ class DistrictShapeFile():
             A dict of metadata information about this plan.
         """
         if len(districts) > 0:
-            srs = SpatialReference(districts[0].geom.srid)
+            srs = districts[0].geom.srs.wkt
             districts[0].geom.transform(4326)
-            e = None
-            for i in range(1, len(districts)):
-                districts[i].geom.transform(4326)
-                if not districts[i].geom.empty:
-                    if e is None:
-                        e = Envelope(districts[i].geom.extent)
-                    else:
-                        e.expand_to_include(districts[i].geom.extent)
+            (xmin, ymin, xmax, ymax) = districts[0].geom.extent
+            for dist in districts:
+                transformed = dist.geom.transform(4326, clone=True)
+                if transformed:
+                    (xmin_, ymin_, xmax_, ymax_) = transformed.extent
+                else:
+                    continue
+                (xmin, ymin, xmax, ymax) = (
+                    xmin if xmin < xmin_ else xmin_,
+                    ymin if ymin < ymin_ else ymin_,
+                    xmax if xmax > xmax_ else xmax_,
+                    ymax if ymax > ymax_ else ymax_
+                )
         else:
-            srs = SpatialReference(4326)
-            e = Envelope((
-                -180.0,
-                -90.0,
-                180.0,
-                90.0,
-            ))
+            raise ValueError('Refusing to export a shapefile of an empty plan')
 
         site = Site.objects.get_current()
 
@@ -800,10 +779,10 @@ class DistrictShapeFile():
                 },
                 'spdom': {  # FGDC 1.5
                     'bounding': {
-                        'westbc': e.min_x,
-                        'eastbc': e.max_x,
-                        'northbc': e.max_y,
-                        'southbc': e.min_y
+                        'westbc': xmin,
+                        'eastbc': xmax,
+                        'northbc': ymax,
+                        'southbc': ymin
                     }
                 },
                 'keywords': {  # FGDC 1.6
@@ -829,7 +808,7 @@ class DistrictShapeFile():
                 'horizsys': {
                     'planar': {  # FGDC 4.1.2
                         'gridsys': {
-                            'othergrd': srs.wkt
+                            'othergrd': srs
                         }
                     }
                 }
@@ -874,44 +853,62 @@ class DistrictShapeFile():
             filename -- The destination of the serialized metadata
         """
 
-        def dict2elem(elem, d):
-            """
-            Recursive dictionary element serializer helper.
-            """
-            if isinstance(d, dict):
-                # the element passed is a dict
-                for key in d:
-                    if isinstance(d[key], list):
-                        # this dict item is a list -- serialize a series of these
-                        items = d[key]
-                        for item in items:
-                            sub = etree.SubElement(elem, key)
-                            dict2elem(sub, item)
-                    else:
-                        # this dict item is a scalar or another dict
-                        sub = etree.SubElement(elem, key)
-                        if isinstance(d[key], basestring):
-                            try:
-                                d[key] = d[key].encode('ascii', 'replace')
-                            except:
-                                pass
-                            dict2elem(sub, d[key])
-            else:
-                # the element passed is no longer a dict, it's a scalar value
-                elem._setText(str(d).encode('ascii', 'replace'))
+        # this is stupid, just use dict2xml
+        xml = dict2xml(meta)
+        with open(filename, 'w+') as output:
+            output.write(xml)
 
-            return elem
+    @staticmethod
+    def make_record_properties(fieldnames, default='float', overrides={}, aliases={}):
+        """Create a fiona shapefile schema from field names and overrides
 
-        elem = objectify.Element('metadata')
-        elem = dict2elem(elem, meta)
+        Args:
+            fieldnames ([str]): the names of the fields
+            overrides (dict): specific fieldname -> type mappings to include
 
-        # remove some lxml cruft
-        objectify.deannotate(elem, pytype=True, xsi=True, xsi_nil=True)
-        etree.cleanup_namespaces(elem)
+        Returns:
+            dict
+        """
+        return [(aliases.get(f, f), overrides.get(f, default)) for f in fieldnames]
 
-        output = open(filename, 'w+')
-        output.write(etree.tostring(elem, pretty_print=True))
-        output.close()
+    @staticmethod
+    def district_to_record(district, field_names, subject_names, aliases={}):
+        """Convert a District into a record
+
+        Args:
+            district (District): the district to convert
+            field_names ([str]): the fields to extract from this record
+            subject_names ([str]): subjects to get characteristics for for this record
+            aliases (dict): alternate names for fields
+
+        Returns:
+            dict
+        """
+
+        properties = {
+            aliases.get(field, field): getattr(district, field) for field in field_names
+        }
+
+        for sname in subject_names:
+            subject = Subject.objects.get(name=sname)
+            try:
+                compchar = district.computedcharacteristic_set.get(
+                    subject=subject)
+            except (
+                    ComputedCharacteristic.DoesNotExist, ComputedCharacteristic.MultipleObjectsReturned
+            ):
+                compchar = ComputedCharacteristic(
+                    subject=subject, district=district, number=0.0)
+            properties.update({sname: float(compchar.number)})
+
+        geometry = json.loads(district.geom.geojson)
+
+        return {
+            'type': 'Feature',
+            'geometry': geometry,
+            'id': district.id,
+            'properties': properties
+        }
 
     @staticmethod
     @app.task
@@ -923,7 +920,7 @@ class DistrictShapeFile():
             plan - The plan for which to get a shape file
 
         Returns:
-            A file object representing the zipped shape file
+            A file name pointing to the zipped shape file
         """
         exportFile = None
         plan = Plan.objects.get(id=plan_id)
@@ -948,38 +945,15 @@ class DistrictShapeFile():
                 meta = DistrictShapeFile.generate_metadata(plan, districts)
 
                 # Open a driver, and create a data source
-                driver = Driver('ESRI Shapefile')
-                datasource = lgdal.OGR_Dr_CreateDataSource(
-                    driver._ptr, exportFile.name, None)
-
-                # Get the geometry field
-                geo_field = filter(lambda x: x.name == 'geom',
-                                   District._meta.fields)[0]
-
-                # Determine the geometry type from the field
-                ogr_type = OGRGeomType(geo_field.geom_type).num
-                # Get the spatial reference
-                native_srs = SpatialReference(geo_field.srid)
-                #Create a layer
-                layer = lgdal.OGR_DS_CreateLayer(
-                    datasource, 'District', native_srs._ptr, ogr_type, None)
+                driver = 'ESRI Shapefile'
 
                 # Set up mappings of field names for export, as well as shapefile
                 # column aliases (only 8 characters!)
-                (
-                    OGRInteger,
-                    OGRReal,
-                    OGRString,
-                ) = (
-                    0,
-                    2,
-                    4,
-                )
-                dfieldnames = [
+                district_fieldnames = [
                     'id', 'district_id', 'short_label', 'long_label',
                     'version', 'num_members'
                 ]
-                sfieldnames = list(Subject.objects.all().values_list(
+                subject_names = list(Subject.objects.all().values_list(
                     'name', flat=True))
                 aliases = {
                     'district_id': 'dist_num',
@@ -987,38 +961,40 @@ class DistrictShapeFile():
                     'short_label': 'label',
                     'long_label': 'descr'
                 }
-                ftypes = {
-                    'id': OGRInteger,
-                    'district_id': OGRInteger,
-                    'short_label': OGRString,
-                    'long_label': OGRString,
-                    'version': OGRInteger,
-                    'num_members': OGRInteger
+                # Map fields to types where the default is incorrect
+                mapped_fields = {
+                    'id': 'int',
+                    'district_id': 'int',
+                    'short_label': 'str:10',
+                    'long_label': 'str:254',
+                    'version': 'int',
+                    'num_members': 'int'
                 }
 
                 # set the district attributes
-                for fieldname in dfieldnames + sfieldnames:
+                record_properties = DistrictShapeFile.make_record_properties(
+                    district_fieldnames + subject_names, overrides=mapped_fields, aliases=aliases
+                )
+
+                # Add record metadata to meta
+                for fieldname in district_fieldnames + subject_names:
 
                     # default to double data types, unless the field type is defined
-                    ftype = OGRReal
-                    if fieldname in ftypes:
-                        ftype = ftypes[fieldname]
+                    ftype = mapped_fields.get(fieldname, 'float')
 
-                    definition = fieldname
                     # customize truncated field names
-                    if fieldname in aliases:
-                        fieldname = aliases[fieldname]
+                    fieldname = aliases.get(fieldname, fieldname)
 
-                    if ftype == OGRString:
+                    if fiona.prop_type(ftype) == unicode:
                         domain = {'udom': 'User entered value.'}
-                    elif ftype == OGRInteger:
+                    elif fiona.prop_type(ftype) == int:
                         rdommin = 0
                         rdommax = '+Infinity'
-                        if definition == 'id':
+                        if fieldname == 'id':
                             rdommin = 1
-                        elif definition == 'district_id':
+                        elif fieldname == 'district_id':
                             rdommax = plan.legislative_body.max_districts
-                        elif definition == 'num_members':
+                        elif fieldname == 'num_members':
                             if plan.legislative_body.multi_members_allowed:
                                 rdommax = plan.legislative_body.max_multi_district_members
                                 rdommin = plan.legislative_body.min_multi_district_members
@@ -1032,9 +1008,9 @@ class DistrictShapeFile():
                                 'rdommax': rdommax
                             }
                         }
-                    elif ftype == OGRReal:
-                        definition = Subject.objects.get(
-                            name=definition).get_label()
+                    elif fiona.prop_type(ftype) == float:
+                        # fieldname = Subject.objects.get(
+                        #     name=fieldname).get_label()
                         domain = {
                             'rdom': {
                                 'rdommin': 0.0,
@@ -1044,68 +1020,29 @@ class DistrictShapeFile():
 
                     attr = {
                         'attrlabl': fieldname,
-                        'attrdef': definition,
+                        'attrdef': fieldname,
                         'attrdomv': domain
                     }
 
                     meta['eainfo']['detailed']['attr'].append(attr)
 
-                    # create the field definition
-                    fld = lgdal.OGR_Fld_Create(str(fieldname), ftype)
-                    # add the field definition to the layer
-                    added = lgdal.OGR_L_CreateField(layer, fld, 0)
-                    check_err(added)
-
-                # get all the field definitions for the new layer
-                feature_definition = lgdal.OGR_L_GetLayerDefn(layer)
-
+                # Create the schema for writing out the shapefile
+                schema = {'geometry': 'Polygon', 'properties': record_properties}
                 # begin exporting districts
-                for district in districts:
-                    # create a feature
-                    feature = lgdal.OGR_F_Create(feature_definition)
+                with fiona.open(
+                        exportFile.name,
+                        'w',
+                        driver=driver,
+                        crs=crs.from_string(districts[0].geom.crs.wkt),
+                        schema=schema
+                ) as sink:
+                    for district in districts:
+                        # create a feature
+                        feature = DistrictShapeFile.district_to_record(
+                            district, district_fieldnames, subject_names, aliases
+                        )
 
-                    # attach each field from the district model
-                    for idx, field in enumerate(dfieldnames):
-                        value = getattr(district, field)
-                        ftype = ftypes[field]
-                        if ftype == OGRInteger:
-                            lgdal.OGR_F_SetFieldInteger(
-                                feature, idx, int(value))
-                        elif ftype == OGRString:
-                            try:
-                                lgdal.OGR_F_SetFieldString(
-                                    feature, idx, str(value))
-                            except UnicodeEncodeError:
-                                lgdal.OGR_F_SetFieldString(feature, idx, '')
-
-                    # attach each field for the subjects that relate to this model
-                    for idx, sname in enumerate(sfieldnames):
-                        subject = Subject.objects.get(name=sname)
-                        try:
-                            compchar = district.computedcharacteristic_set.get(
-                                subject=subject)
-                        except:
-                            compchar = ComputedCharacteristic(
-                                subject=subject, district=district, number=0.0)
-                        lgdal.OGR_F_SetFieldDouble(feature,
-                                                   idx + len(dfieldnames),
-                                                   c_double(compchar.number))
-
-                    # convert the geos geometry to an ogr geometry
-                    geometry = OGRGeometry(district.geom.ewkt)
-                    geometry.transform(native_srs)
-                    # save the geometry to the feature
-                    added = lgdal.OGR_F_SetGeometry(feature, geometry._ptr)
-                    check_err(added)
-
-                    # add the feature to the layer
-                    added = lgdal.OGR_L_SetFeature(layer, feature)
-                    check_err(added)
-
-                # clean up ogr
-                lgdal.OGR_L_SyncToDisk(layer)
-                lgdal.OGR_DS_Destroy(datasource)
-                lgdal.OGRCleanupAll()
+                        sink.write(feature)
 
                 # write metadata
                 DistrictShapeFile.meta2xml(meta, exportFile.name[:-4] + '.xml')
@@ -1115,17 +1052,20 @@ class DistrictShapeFile():
                 exportedFiles = glob(exportFile.name[:-4] + '*')
                 for exp in exportedFiles:
                     zipwriter.write(exp, '%sv%d%s' % (plan.get_friendly_name(),
-                                                      plan.version, exp[-4:]))
+                                                        plan.version, exp[-4:]))
                 zipwriter.close()
                 archive.close()
                 os.rename(archive.name,
-                          DistrictFile.get_file_name(plan, True) + '.zip')
+                            DistrictFile.get_file_name(plan, True) + '.zip')
+            except ValueError as e:
+                os.unlink(archive.name)
+                logger.warn('The plan "%s" was empty, so I bailed out')
             except Exception, ex:
+                os.unlink(archive.name)
                 logger.warn('The plan "%s" could not be saved to a shape file',
                             plan.name)
                 logger.debug('Reason: %s', ex)
-                os.unlink(archive.name)
-            # delete the temporary csv file
+            # delete the temporary file
             finally:
                 if not exportFile is None:
                     exportedFiles = glob(exportFile.name[:-4] + '*')
