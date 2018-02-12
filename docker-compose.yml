@@ -77,6 +77,7 @@ services:
       - "--app=publicmapping"
       - "--uid=reporter"
       - "--loglevel=INFO"
+      - "--without-mingle"
     links:
       - postgres:${DATABASE_HOST}
       - redis:${KEY_VALUE_STORE_HOST}

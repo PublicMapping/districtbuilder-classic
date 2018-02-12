@@ -12,7 +12,10 @@ Vagrant.configure(2) do |config|
   # file corruption issue.
   config.vm.synced_folder ".", "/vagrant",
       type: "rsync",
-      rsync__exclude: [".git/", "geoserver/data_dir/", "django/publicmapping/publicmapping/config_settings.py"],
+      rsync__exclude: [".git/",
+                       "reports/",
+                       "geoserver/data_dir/",
+                       "django/publicmapping/publicmapping/config_settings.py"],
       rsync__args: ["--verbose", "--archive", "--delete", "-z", "--links"]
 
   config.vm.provider :virtualbox do |vb|

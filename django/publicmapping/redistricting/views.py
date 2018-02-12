@@ -2050,20 +2050,20 @@ def getdistrictfile(request, planid):
     file_status = DistrictFile.get_file_status(plan, shape=is_shape)
     if file_status == 'done':
         if is_shape:
-            archive = DistrictShapeFile.plan2shape(plan)
+            archive = DistrictShapeFile.plan2shape(plan.id)
         else:
-            archive = DistrictIndexFile.plan2index(plan)
+            archive = DistrictIndexFile.plan2index(plan.id)
         response = HttpResponse(
-            open(archive.name).read(), content_type='application/zip')
+            open(archive).read(), content_type='application/zip')
         response[
             'Content-Disposition'] = 'attachment; filename="%s.zip"' % plan.get_friendly_name(
             )
     else:
         # Put in a celery task to create this file
         if is_shape:
-            DistrictShapeFile.plan2shape.delay(plan)
+            DistrictShapeFile.plan2shape.delay(plan.id)
         else:
-            DistrictIndexFile.plan2index.delay(plan)
+            DistrictIndexFile.plan2index.delay(plan.id)
         response = HttpResponse(
             _('File is not yet ready. Please try again in '
               'a few minutes'))

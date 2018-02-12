@@ -108,7 +108,7 @@ class DistrictFile():
             plan - the Plan for which a file has been requested
             shape - a flag indicating if this is to be a shapefile; defaults to False
         """
-        basename = "%s/plan%dv%d" % (tempfile.gettempdir(), plan.id,
+        basename = "%s/plan%dv%d" % (settings.REPORTS_ROOT, plan.id,
                                      plan.version)
         if shape:
             basename += '-shp'
@@ -149,10 +149,8 @@ class DistrictFile():
             doesn't exist, nothing is returned.
         """
         if (DistrictFile.get_file_status(plan, shape) == 'done'):
-            district_file = open(
-                DistrictFile.get_file_name(plan, shape) + '.zip', 'r')
-            district_file.close()
-            return district_file
+            file_name = DistrictFile.get_file_name(plan, shape) + '.zip'
+            return file_name
 
 
 class DistrictIndexFile():
@@ -592,7 +590,7 @@ class DistrictIndexFile():
 
     @staticmethod
     @app.task
-    def plan2index(plan):
+    def plan2index(plan_id):
         """
         Gets a zipped copy of the district index file for the
         given plan.
@@ -601,8 +599,9 @@ class DistrictIndexFile():
             plan - The plan for which to get an index file
 
         Returns:
-            A file object representing the zipped index file
+            A file name pointing to the zipped index file
         """
+        plan = Plan.objects.get(id=plan_id)
         status = DistrictFile.get_file_status(plan)
         while status == 'pending':
             time.sleep(15)
@@ -916,7 +915,7 @@ class DistrictShapeFile():
 
     @staticmethod
     @app.task
-    def plan2shape(plan):
+    def plan2shape(plan_id):
         """
         Gets a zipped copy of the plan shape file.
 
@@ -927,6 +926,7 @@ class DistrictShapeFile():
             A file object representing the zipped shape file
         """
         exportFile = None
+        plan = Plan.objects.get(id=plan_id)
         status = DistrictFile.get_file_status(plan, True)
         while status == 'pending':
             time.sleep(15)
