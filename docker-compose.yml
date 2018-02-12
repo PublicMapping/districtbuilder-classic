@@ -46,7 +46,7 @@ services:
       - "${WEB_APP_PORT}"
     volumes:
       - ./django/publicmapping/:/usr/src/app/
-      - ./reports:/opt/reports
+      - reports:/opt/reports
     entrypoint: /usr/local/bin/gunicorn
     command:
       - "--workers=2"
