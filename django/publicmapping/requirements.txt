@@ -1,7 +1,7 @@
 Gunicorn==19.7.1
 ipython==5.5.0
 gevent==1.2.2
-Django==1.11.5
+Django==1.11.10
 psycopg2==2.7.3
 celery[redis]==4.1.0
 django-redis==4.8.0
