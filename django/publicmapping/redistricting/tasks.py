@@ -1195,16 +1195,11 @@ class CalculatorReport:
         })
 
         # Write it to file
-        tempdir = settings.REPORTS_ROOT
         filename = '%s_p%d_v%d_%s' % (plan.owner.username, plan.id,
                                       plan.version, stamp)
-        htmlfile = open(
-            '%s/%s.html' % (
-                tempdir,
-                filename,
-            ), mode='w', encoding='utf=8')
-        htmlfile.write(html)
-        htmlfile.close()
+        file_path = '%s/%s.html' % (settings.REPORTS_ROOT, filename)
+        with open(file_path, mode='w', encoding='utf=8') as htmlfile:
+            htmlfile.write(html)
 
         # reset the language back to default
         if not prev_lang is None:
