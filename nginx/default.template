@@ -12,6 +12,7 @@ server {
 
   location / {
     proxy_pass http://web;
+    client_max_body_size 20M;
   }
 
   location /geoserver/ {
