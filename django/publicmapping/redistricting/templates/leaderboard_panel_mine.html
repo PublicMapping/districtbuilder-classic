@@ -47,15 +47,15 @@
     </thead>
     <tbody>
       {% for planscore in planscores %}
-      {% if planscore.plan.owner.username == context.user.username %} 
+      {% if planscore.plan.owner.username == context.user.username %}
       <tr>
         <td>{{forloop.counter}}</td>
         <td>{{planscore.plan.owner.username}}</td>
         <td>
-          {% if planscore.plan.is_shared %} 
-          <a href="../../../plan/{{planscore.plan.id}}/view/" target="_blank">{{planscore.plan.name}}</a> 
-          {% else %} 
-          {{planscore.plan.name}} 
+          {% if planscore.plan.is_shared %}
+          <a href="../../../plan/{{planscore.plan.id}}/view/" target="_blank">{{planscore.plan.name}}</a>
+          {% else %}
+          {{planscore.plan.name}}
           {% endif %}
         </td>
         <td>{{planscore.score|safe}}</td>
