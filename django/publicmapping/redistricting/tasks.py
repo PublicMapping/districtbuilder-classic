@@ -1198,7 +1198,7 @@ class CalculatorReport:
         filename = '%s_p%d_v%d_%s' % (plan.owner.username, plan.id,
                                       plan.version, stamp)
         file_path = '%s/%s.html' % (settings.REPORTS_ROOT, filename)
-        with open(file_path, mode='w', encoding='utf=8') as htmlfile:
+        with open(file_path, mode='w', encoding='utf8') as htmlfile:
             htmlfile.write(html)
 
         # reset the language back to default
