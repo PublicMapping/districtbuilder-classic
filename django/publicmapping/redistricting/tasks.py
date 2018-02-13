@@ -59,14 +59,12 @@ from django_comments.models import Comment
 from lxml import etree, objectify
 from publicmapping.celery import app
 from redistricting.config import PoUtils, SpatialUtils
-from redistricting.models import (Characteristic, ComputedCharacteristic,
-                                  ComputedPlanScore, District, Geolevel,
-                                  Geounit, LegislativeBody, LegislativeLevel,
-                                  Plan, ProcessingState, ScoreDisplay, Subject,
-                                  SubjectStage, SubjectUpload,
-                                  ValidationCriteria, configure_views,
-                                  create_unassigned_district, enforce_multi,
-                                  get_featuretype_name)
+from redistricting.models import (
+    Characteristic, ComputedCharacteristic, ComputedPlanScore, District,
+    Geolevel, Geounit, LegislativeBody, LegislativeLevel, Plan,
+    ProcessingState, ScoreDisplay, Subject, SubjectStage, SubjectUpload,
+    ValidationCriteria, configure_views, create_unassigned_district,
+    enforce_multi, get_featuretype_name)
 from tagging.models import Tag
 
 logger = logging.getLogger(__name__)
@@ -185,10 +183,7 @@ class DistrictIndexFile():
             error_subject = _("Problem importing your uploaded file.")
             success_subject = _("Upload and import plan confirmation.")
             admin_subject = _("Problem importing user uploaded file.")
-            context = {
-                'user': owner,
-                'errors': list()
-            }
+            context = {'user': owner, 'errors': list()}
         # Is this filename a zip archive?
         if filename.endswith('.zip'):
             try:
@@ -436,15 +431,21 @@ class DistrictIndexFile():
 
             try:
                 # Build our new geometry from the union of our geounit geometries
-                new_geom = GeometryCollection(
-                    [gu.geom for gu in Geounit.objects.filter(guFilter)]
-                ).unary_union
+                new_geom = GeometryCollection([
+                    gu.geom for gu in Geounit.objects.filter(guFilter)
+                ]).unary_union
 
                 # Create a new district and save it
-                short_label = (community_labels[district_id][:10] if is_community else
-                               legislative_body.get_short_label() % {'district_id': district_id})
-                long_label = (community_labels[district_id][:256] if is_community else
-                              legislative_body.get_label() % {'district_id': district_id})
+                short_label = (community_labels[district_id][:10]
+                               if is_community else
+                               legislative_body.get_short_label() % {
+                                   'district_id': district_id
+                               })
+                long_label = (community_labels[district_id][:256]
+                              if is_community else
+                              legislative_body.get_label() % {
+                                  'district_id': district_id
+                              })
                 new_district = District(
                     short_label=short_label,
                     long_label=long_label,
@@ -498,9 +499,8 @@ class DistrictIndexFile():
             for subject in subjects:
                 try:
                     cc_value = Characteristic.objects.filter(
-                        geounit__in=geounit_ids,
-                        subject=subject
-                    ).aggregate(Sum('number'))
+                        geounit__in=geounit_ids, subject=subject).aggregate(
+                            Sum('number'))
                     value = cc_value['number__sum']
                     percentage = '0000.00000000'
 
@@ -526,13 +526,12 @@ class DistrictIndexFile():
                 except Exception, ex:
                     if email:
                         context['errors'].append({
-                            'message': _(
-                                'Unable to create ComputedCharacteristic for district '
-                                '%(district_id)s, subject %(subject_name)s'
-                            ) % {
-                                'district': district_id,
-                                'subject_name': subject.name
-                            },
+                            'message':
+                            _('Unable to create ComputedCharacteristic for district '
+                              '%(district_id)s, subject %(subject_name)s') % {
+                                  'district': district_id,
+                                  'subject_name': subject.name
+                              },
                             'traceback': None
                         })
                     else:
@@ -616,8 +615,8 @@ class DistrictIndexFile():
                                 0].comment if len(comments) > 0 else ''
                             dm[district.district_id] = (district.long_label,
                                                         types, comments)
-                    mapping = [(pid, did, members, dm[did][0],
-                                dm[did][1], dm[did][2])
+                    mapping = [(pid, did, members, dm[did][0], dm[did][1],
+                                dm[did][2])
                                for (gid, pid, did, members) in units]
 
                 difile = csv.writer(f)
@@ -729,12 +728,11 @@ class DistrictShapeFile():
                     (xmin_, ymin_, xmax_, ymax_) = transformed.extent
                 else:
                     continue
-                (xmin, ymin, xmax, ymax) = (
-                    xmin if xmin < xmin_ else xmin_,
-                    ymin if ymin < ymin_ else ymin_,
-                    xmax if xmax > xmax_ else xmax_,
-                    ymax if ymax > ymax_ else ymax_
-                )
+                (xmin, ymin, xmax, ymax) = (xmin
+                                            if xmin < xmin_ else xmin_, ymin
+                                            if ymin < ymin_ else ymin_, xmax
+                                            if xmax > xmax_ else xmax_, ymax
+                                            if ymax > ymax_ else ymax_)
         else:
             raise ValueError('Refusing to export a shapefile of an empty plan')
 
@@ -859,7 +857,10 @@ class DistrictShapeFile():
             output.write(xml)
 
     @staticmethod
-    def make_record_properties(fieldnames, default='float', overrides={}, aliases={}):
+    def make_record_properties(fieldnames,
+                               default='float',
+                               overrides={},
+                               aliases={}):
         """Create a fiona shapefile schema from field names and overrides
 
         Args:
@@ -869,7 +870,8 @@ class DistrictShapeFile():
         Returns:
             dict
         """
-        return [(aliases.get(f, f), overrides.get(f, default)) for f in fieldnames]
+        return [(aliases.get(f, f), overrides.get(f, default))
+                for f in fieldnames]
 
     @staticmethod
     def district_to_record(district, field_names, subject_names, aliases={}):
@@ -886,7 +888,8 @@ class DistrictShapeFile():
         """
 
         properties = {
-            aliases.get(field, field): getattr(district, field) for field in field_names
+            aliases.get(field, field): getattr(district, field)
+            for field in field_names
         }
 
         for sname in subject_names:
@@ -894,9 +897,8 @@ class DistrictShapeFile():
             try:
                 compchar = district.computedcharacteristic_set.get(
                     subject=subject)
-            except (
-                    ComputedCharacteristic.DoesNotExist, ComputedCharacteristic.MultipleObjectsReturned
-            ):
+            except (ComputedCharacteristic.DoesNotExist,
+                    ComputedCharacteristic.MultipleObjectsReturned):
                 compchar = ComputedCharacteristic(
                     subject=subject, district=district, number=0.0)
             properties.update({sname: float(compchar.number)})
@@ -973,8 +975,9 @@ class DistrictShapeFile():
 
                 # set the district attributes
                 record_properties = DistrictShapeFile.make_record_properties(
-                    district_fieldnames + subject_names, overrides=mapped_fields, aliases=aliases
-                )
+                    district_fieldnames + subject_names,
+                    overrides=mapped_fields,
+                    aliases=aliases)
 
                 # Add record metadata to meta
                 for fieldname in district_fieldnames + subject_names:
@@ -1027,20 +1030,22 @@ class DistrictShapeFile():
                     meta['eainfo']['detailed']['attr'].append(attr)
 
                 # Create the schema for writing out the shapefile
-                schema = {'geometry': 'Polygon', 'properties': record_properties}
+                schema = {
+                    'geometry': 'Polygon',
+                    'properties': record_properties
+                }
                 # begin exporting districts
                 with fiona.open(
                         exportFile.name,
                         'w',
                         driver=driver,
                         crs=crs.from_string(districts[0].geom.crs.wkt),
-                        schema=schema
-                ) as sink:
+                        schema=schema) as sink:
                     for district in districts:
                         # create a feature
                         feature = DistrictShapeFile.district_to_record(
-                            district, district_fieldnames, subject_names, aliases
-                        )
+                            district, district_fieldnames, subject_names,
+                            aliases)
 
                         sink.write(feature)
 
@@ -1052,11 +1057,11 @@ class DistrictShapeFile():
                 exportedFiles = glob(exportFile.name[:-4] + '*')
                 for exp in exportedFiles:
                     zipwriter.write(exp, '%sv%d%s' % (plan.get_friendly_name(),
-                                                        plan.version, exp[-4:]))
+                                                      plan.version, exp[-4:]))
                 zipwriter.close()
                 archive.close()
                 os.rename(archive.name,
-                            DistrictFile.get_file_name(plan, True) + '.zip')
+                          DistrictFile.get_file_name(plan, True) + '.zip')
             except ValueError as e:
                 os.unlink(archive.name)
                 logger.warn('The plan "%s" was empty, so I bailed out')
@@ -1109,8 +1114,8 @@ class CalculatorReport:
             plan = Plan.objects.get(pk=planid)
         except:
             logger.exception(
-                "Couldn't retrieve plan information for plan {}".format(planid)
-            )
+                "Couldn't retrieve plan information for plan {}".format(
+                    planid))
             return
 
         function_ids = map(lambda s: int(s), request['functionIds'].split(','))
@@ -1131,7 +1136,8 @@ class CalculatorReport:
 
         # Add to report container template
         html = loader.get_template('report_panel_container.html').render({
-            'report_panels': html
+            'report_panels':
+            html
         })
 
         # Write it to file
@@ -1360,15 +1366,16 @@ def verify_count(upload_id, localstore, language):
         )
         if nlines < nunits:
             missing = nunits - nlines
-            msg += _n(
-                'There is %(count)d geounit missing.',
-                'There are %(count)d geounits missing.', missing
-            ) % {'count': missing}
+            msg += _n('There is %(count)d geounit missing.',
+                      'There are %(count)d geounits missing.', missing) % {
+                          'count': missing
+                      }
         else:
             extra = nlines - nunits
-            msg += _n(
-                'There is %(count)d extra geounit.',
-                'There are %(count)d extra geounits.', extra) % {'count': extra}
+            msg += _n('There is %(count)d extra geounit.',
+                      'There are %(count)d extra geounits.', extra) % {
+                          'count': extra
+                      }
 
         # since the transaction was never committed after all the inserts, this nullifies
         # all the insert statements, so there should be no quarantine to clean up
@@ -1421,18 +1428,17 @@ def verify_preload(upload_id, language=None):
     # This seizes postgres -- probably small memory limits.
     #aligned_units = upload.subjectstage_set.filter(portable_id__in=permanent_units).count()
 
-    permanent_units = geolevel.geounit_set.all().order_by('portable_id').values_list(
-        'portable_id', flat=True
-    )
-    temp_units = upload.subjectstage_set.all().order_by('portable_id').values_list(
-        'portable_id', flat=True
-    )
+    permanent_units = geolevel.geounit_set.all().order_by(
+        'portable_id').values_list(
+            'portable_id', flat=True)
+    temp_units = upload.subjectstage_set.all().order_by(
+        'portable_id').values_list(
+            'portable_id', flat=True)
 
     # quick check: make sure the first and last items are aligned
-    ends_match = (
-        permanent_units[0] == temp_units[0] and
-        permanent_units[permanent_units.count() - 1] == temp_units[temp_units.count() - 1]
-    )
+    ends_match = (permanent_units[0] == temp_units[0] and
+                  permanent_units[permanent_units.count()
+                                  - 1] == temp_units[temp_units.count() - 1])
     msg = _(
         'There are a correct number of geounits in the uploaded Subject file, '
     )
@@ -1453,7 +1459,9 @@ def verify_preload(upload_id, language=None):
         msg += _n(
             'but %(count)d geounit does not match the geounits in the database.',
             'but %(count)d geounits do not match the geounits in the database.',
-            mismatched) % {'count': mismatched}
+            mismatched) % {
+                'count': mismatched
+            }
 
     if not ends_match or nunits != aligned_units:
         logger.debug(msg)
@@ -1817,9 +1825,8 @@ def create_views_and_styles(upload_id, language=None):
                      geolevel.name, subject.name)
 
         qset = Geounit.objects.filter(
-            characteristic__subject=subject,
-            geolevel=geolevel
-        ).annotate(Avg('characteristic__number'))
+            characteristic__subject=subject, geolevel=geolevel).annotate(
+                Avg('characteristic__number'))
         sld_body = generator.as_quantiles(
             qset,
             'characteristic__number__avg',
@@ -1899,8 +1906,10 @@ def clean_quarantined(upload_id, language=None):
         logger.warn('Could not reset the is_valid flag on all plans.')
 
     status = {
-        'task_id': None,
-        'success': True,
+        'task_id':
+        None,
+        'success':
+        True,
         'messages': [
             _('Upload complete. Subject "%(subject_name)s" added.') % {
                 'subject_name': upload.subject_name
