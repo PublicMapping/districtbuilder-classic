@@ -132,7 +132,7 @@
         <ScoreFunctions>
             <!-- A district score that returns a percentage -->
             <ScoreFunction id="district_blkvap_percent" type="district"
-                calculator="publicmapping.redistricting.calculators.Percent"
+                calculator="redistricting.calculators.Percent"
                 label="Black VAP">
                 <SubjectArgument name="numerator" ref="vapblk" />
                 <SubjectArgument name="denominator" ref="vap" />
@@ -142,13 +142,13 @@
                 <LegislativeBody ref="community"/>
             </ScoreFunction>
             <ScoreFunction id="district_blkvap_thresh" type="district"
-                calculator="publicmapping.redistricting.calculators.Threshold"
+                calculator="redistricting.calculators.Threshold"
                 label="Black VAP Threshold">
                 <ScoreArgument name="value" ref="district_blkvap_percent" />
                 <Argument name="threshold" value="0.5" />
             </ScoreFunction>
             <ScoreFunction id="district_hispvap_percent" type="district"
-                calculator="publicmapping.redistricting.calculators.Percent"
+                calculator="redistricting.calculators.Percent"
                 label="His. VAP">
                 <SubjectArgument name="numerator" ref="vaphisp" />
                 <SubjectArgument name="denominator" ref="vap" />
@@ -158,7 +158,7 @@
                 <LegislativeBody ref="community"/>
             </ScoreFunction>
             <ScoreFunction id="district_hispvap_thresh" type="district"
-                calculator="publicmapping.redistricting.calculators.Threshold"
+                calculator="redistricting.calculators.Threshold"
                 label="His. VAP Threshold">
                 <ScoreArgument name="value" ref="district_hispvap_percent" />
                 <Argument name="threshold" value="0.5" />
@@ -169,12 +169,12 @@
                 set of subjects, and 2 to divide the sum over another
                 subject. -->
             <ScoreFunction id="district_mintot" type="district"
-                calculator="publicmapping.redistricting.calculators.SumValues">
+                calculator="redistricting.calculators.SumValues">
                 <SubjectArgument name="value1" ref="popblk" />
                 <SubjectArgument name="value2" ref="pophisp" />
             </ScoreFunction>
             <ScoreFunction id="district_majmin" type="district"
-                calculator="publicmapping.redistricting.calculators.DivideAndThreshold" >
+                calculator="redistricting.calculators.DivideAndThreshold" >
                 <ScoreArgument name="numerator" ref="district_mintot" />
                 <SubjectArgument name="denominator" ref="poptot" />
                 <Argument name="threshold" value="0.5" />
@@ -183,7 +183,7 @@
             <!-- A custom calculator to calculate compactness, and return
                 the raw compactness score. -->
             <ScoreFunction id="district_schwartzberg" type="district"
-                calculator="publicmapping.redistricting.calculators.Schwartzberg"
+                calculator="redistricting.calculators.Schwartzberg"
                 label="Compactness" user_selectable="true">
                 <LegislativeBody ref="congress"/>
                 <LegislativeBody ref="house"/>
@@ -192,7 +192,7 @@
 
             <!-- A custom calculator to calculate the convex hull ratio of a district -->
             <ScoreFunction id="district_convexhullratio" type="district"
-                calculator="publicmapping.redistricting.calculators.ConvexHullRatio"
+                calculator="redistricting.calculators.ConvexHullRatio"
                 label="Convex Hull Ratio" user_selectable="true">
                 <LegislativeBody ref="congress"/>
                 <LegislativeBody ref="house"/>
@@ -201,7 +201,7 @@
 
             <!-- A custom calculator to do contiguity, and is boolean. -->
             <ScoreFunction id="district_contiguous" type="district"
-                calculator="publicmapping.redistricting.calculators.Contiguity"
+                calculator="redistricting.calculators.Contiguity"
                 label="Contiguous" user_selectable="true">
                 <LegislativeBody ref="congress"/>
                 <LegislativeBody ref="house"/>
@@ -210,17 +210,17 @@
 
             <!-- A plan score that aggregates all districts over a threshold -->
             <ScoreFunction id="plan_count_majmin" type="plan"
-                calculator="publicmapping.redistricting.calculators.SumValues">
+                calculator="redistricting.calculators.SumValues">
                 <ScoreArgument name="value1" ref="district_majmin" />
             </ScoreFunction>
 
             <ScoreFunction id="plan_blkvap_thresh" type="plan"
-                calculator="publicmapping.redistricting.calculators.SumValues">
+                calculator="redistricting.calculators.SumValues">
                 <ScoreArgument name="value1" ref="district_blkvap_thresh" />
             </ScoreFunction>
 
             <ScoreFunction id="plan_hispvap_thresh" type="plan"
-                calculator="publicmapping.redistricting.calculators.SumValues">
+                calculator="redistricting.calculators.SumValues">
                 <ScoreArgument name="value1" ref="district_hispvap_thresh" />
             </ScoreFunction>
 
@@ -228,32 +228,32 @@
                 1(T) if there is more than 0 districts that have a minority
                 majority. -->
             <ScoreFunction id="plan_major_minor" type="plan"
-                calculator="publicmapping.redistricting.calculators.Threshold"
+                calculator="redistricting.calculators.Threshold"
                 label="Majority-Minority">
                 <ScoreArgument name="value" ref="district_majmin" />
                 <Argument name="threshold" value="0" />
             </ScoreFunction>
 
             <ScoreFunction id="plan_contiguous" type="plan"
-                calculator="publicmapping.redistricting.calculators.SumValues"
+                calculator="redistricting.calculators.SumValues"
                 label="Contiguous">
                 <ScoreArgument name="value1" ref="district_contiguous"/>
             </ScoreFunction>
 
             <ScoreFunction id="b_plan_congress_noncontiguous" type="plan"
-                calculator="publicmapping.redistricting.calculators.Contiguity"
+                calculator="redistricting.calculators.Contiguity"
                 label="Contiguous">
                 <Argument name="target" value="11" />
             </ScoreFunction>
 
             <ScoreFunction id="b_plan_house_noncontiguous" type="plan"
-                calculator="publicmapping.redistricting.calculators.Contiguity"
+                calculator="redistricting.calculators.Contiguity"
                 label="Contiguous">
                 <Argument name="target" value="100" />
             </ScoreFunction>
 
             <ScoreFunction id="b_plan_senate_noncontiguous" type="plan"
-                calculator="publicmapping.redistricting.calculators.Contiguity"
+                calculator="redistricting.calculators.Contiguity"
                 label="Contiguous">
                 <Argument name="target" value="40" />
             </ScoreFunction>
@@ -262,7 +262,7 @@
             <ScoreFunction id="a_congressional_population" type="district"
                 label="Tot Pop" user_selectable="true"
                 description="Population interval calculator for congressional."
-                calculator="publicmapping.redistricting.calculators.Interval">
+                calculator="redistricting.calculators.Interval">
                 <SubjectArgument name="subject" ref="poptot" />
                 <Argument name="target" value="727366" />
                 <Argument name="bound1" value=".005" />
@@ -273,7 +273,7 @@
             <ScoreFunction id="a_house_population" type="district"
                 label="Tot Pop" user_selectable="true"
                 description="Population interval calculator for house."
-                calculator="publicmapping.redistricting.calculators.Interval">
+                calculator="redistricting.calculators.Interval">
                 <SubjectArgument name="subject" ref="poptot" />
                 <Argument name="target" value="80010" />
                 <Argument name="bound1" value=".005" />
@@ -284,7 +284,7 @@
             <ScoreFunction id="a_senate_population" type="district"
                 label="Tot Pop" user_selectable="true"
                 description="Population interval calculator for senate."
-                calculator="publicmapping.redistricting.calculators.Interval">
+                calculator="redistricting.calculators.Interval">
                 <SubjectArgument name="subject" ref="poptot" />
                 <Argument name="target" value="200026" />
                 <Argument name="bound1" value=".005" />
@@ -294,28 +294,28 @@
 
             <!-- leaderboard functions -->
             <ScoreFunction id="a_congress_plan_count_districts" type="plan"
-                calculator="publicmapping.redistricting.calculators.CountDistricts"
+                calculator="redistricting.calculators.CountDistricts"
                 label="Count Districts"
                 description="The number of districts in a Congressional redistricting plan must be 11.">
                 <Argument name="target" value="11" />
             </ScoreFunction>
 
             <ScoreFunction id="a_house_plan_count_districts" type="plan"
-                calculator="publicmapping.redistricting.calculators.CountDistricts"
+                calculator="redistricting.calculators.CountDistricts"
                 label="Count Districts"
                 description="The number of districts in a House of Delegates redistricting plan must be 100.">
                 <Argument name="target" value="100" />
             </ScoreFunction>
 
             <ScoreFunction id="a_senate_plan_count_districts" type="plan"
-                calculator="publicmapping.redistricting.calculators.CountDistricts"
+                calculator="redistricting.calculators.CountDistricts"
                 label="Count Districts"
                 description="The number of districts in a State Senate redistricting plan must be 100.">
                 <Argument name="target" value="40" />
             </ScoreFunction>
 
             <ScoreFunction id="a_congress_plan_equipopulation_validation" type="plan"
-                calculator="publicmapping.redistricting.calculators.Equipopulation"
+                calculator="redistricting.calculators.Equipopulation"
                 label="Target Pop. (727,366)"
                 description="The population of each Congressional district must be 727,366 +/- 0.5%.">
                 <Argument name="min" value="723729"/>
@@ -325,7 +325,7 @@
             </ScoreFunction>
 
             <ScoreFunction id="a_congress_plan_equipopulation_summary" type="plan"
-                calculator="publicmapping.redistricting.calculators.Equipopulation"
+                calculator="redistricting.calculators.Equipopulation"
                 label="Target Pop. (727,366)"
                 description="The population of each Congressional district must be 727,366 +/- 0.5%.">
                 <Argument name="min" value="723729"/>
@@ -335,7 +335,7 @@
             </ScoreFunction>
 
             <ScoreFunction id="a_house_plan_equipopulation_validation" type="plan"
-                calculator="publicmapping.redistricting.calculators.Equipopulation"
+                calculator="redistricting.calculators.Equipopulation"
                 label="Target Pop. (80,010)"
                 description="The population of each House of Delegates district must be 80,010 +/- 5%.">
                 <Argument name="min" value="76010"/>
@@ -345,7 +345,7 @@
             </ScoreFunction>
 
             <ScoreFunction id="a_house_plan_equipopulation_summary" type="plan"
-                calculator="publicmapping.redistricting.calculators.Equipopulation"
+                calculator="redistricting.calculators.Equipopulation"
                 label="Target Pop. (80,010)"
                 description="The population of each House of Delegates district must be 80,010 +/- 5%.">
                 <Argument name="min" value="76010"/>
@@ -355,7 +355,7 @@
             </ScoreFunction>
 
             <ScoreFunction id="a_senate_plan_equipopulation_validation" type="plan"
-                calculator="publicmapping.redistricting.calculators.Equipopulation"
+                calculator="redistricting.calculators.Equipopulation"
                 label="Target Pop. (200,026)"
                 description="The population of each State Senate district must be 200,026 +/- 5%.">
                 <Argument name="min" value="190025"/>
@@ -365,7 +365,7 @@
             </ScoreFunction>
 
             <ScoreFunction id="a_senate_plan_equipopulation_summary" type="plan"
-                calculator="publicmapping.redistricting.calculators.Equipopulation"
+                calculator="redistricting.calculators.Equipopulation"
                 label="Target Pop. (200,026)"
                 description="The population of each State Senate district must be 200,026 +/- 5%.">
                 <Argument name="min" value="190025"/>
@@ -375,19 +375,19 @@
             </ScoreFunction>
 
             <ScoreFunction id="plan_all_blocks_assigned" type="plan"
-                calculator="publicmapping.redistricting.calculators.AllBlocksAssigned"
+                calculator="redistricting.calculators.AllBlocksAssigned"
                 label="All Blocks Assigned"
                 description="All blocks in the plan must be assigned.">
             </ScoreFunction>
 
             <ScoreFunction id="plan_all_contiguous" type="plan"
-                calculator="publicmapping.redistricting.calculators.AllContiguous"
+                calculator="redistricting.calculators.AllContiguous"
                 label="All Contiguous"
                 description="Contiguity means that every part of a district must be reachable from every other part without crossing the district&apos;s borders. All districts within a plan must be contiguous. Water contiguity is permitted given Virginia&apos;s extensive coastal region. &apos;Point contiguity&apos; or &apos;touch-point contiguity&apos; where two sections of a district are connected at a single point is not permitted.">
             </ScoreFunction>
 
             <ScoreFunction id="plan_competitiveness" type="plan"
-                calculator="publicmapping.redistricting.calculators.Competitiveness"
+                calculator="redistricting.calculators.Competitiveness"
                 label="Competitiveness"
                 description="Each plan&apos;s overall political competitiveness is determined by averaging each district.s &apos;partisan differential&apos;.  The partisan differential of each district is calculated by subtracting the Democratic &apos;partisan index&apos; from the Republican &apos;partisan index&apos;.&lt;br/&gt;&lt;br/&gt;&apos;Heavily&apos; competitive districts are districts with partisan differentials of less than or equal to 5%. &apos;Generally&apos; competitive districts are districts with partisan differentials of greater than 5% but less than 10%.">
                 <SubjectArgument name="democratic" ref="govdem" />
@@ -395,14 +395,14 @@
             </ScoreFunction>
 
             <ScoreFunction id="plan_equivalence" type="plan"
-                calculator="publicmapping.redistricting.calculators.Equivalence"
+                calculator="redistricting.calculators.Equivalence"
                 label="Equal Population"
                 description="The Equipopulation score is the difference between the district with the highest population and the district with the lowest population.">
                 <SubjectArgument name="value" ref="poptot" />
             </ScoreFunction>
 
             <ScoreFunction id="plan_majority_minority_blk_congress" type="plan"
-                calculator="publicmapping.redistricting.calculators.MajorityMinority"
+                calculator="redistricting.calculators.MajorityMinority"
                 label="Black VAP Majority (&gt;50%)"
                 description="Compliance with the Voting Rights Act will be assumed if maps include a minority-majority district in any area where a minority group is (as described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) &apos;sufficiently large and geographically compact to constitute a majority in a single-member district&apos;.">
                 <SubjectArgument name="population" ref="vap" />
@@ -411,7 +411,7 @@
             </ScoreFunction>
 
             <ScoreFunction id="plan_majority_minority_blk_house" type="plan"
-                calculator="publicmapping.redistricting.calculators.MajorityMinority"
+                calculator="redistricting.calculators.MajorityMinority"
                 label="Black VAP Majority (&gt;50%)"
                 description="Compliance with the Voting Rights Act will be assumed if maps include a minority-majority district in any area where a minority group is (as described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) &apos;sufficiently large and geographically compact to constitute a majority in a single-member district&apos;.">
                 <SubjectArgument name="population" ref="vap" />
@@ -420,7 +420,7 @@
             </ScoreFunction>
 
             <ScoreFunction id="plan_majority_minority_blk_senate" type="plan"
-                calculator="publicmapping.redistricting.calculators.MajorityMinority"
+                calculator="redistricting.calculators.MajorityMinority"
                 label="Black VAP Majority (&gt;50%)"
                 description="Compliance with the Voting Rights Act will be assumed if maps include a minority-majority district in any area where a minority group is (as described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) &apos;sufficiently large and geographically compact to constitute a majority in a single-member district&apos;.">
                 <SubjectArgument name="population" ref="vap" />
@@ -429,7 +429,7 @@
             </ScoreFunction>
 
             <ScoreFunction id="plan_majority_minority_hisp" type="plan"
-                calculator="publicmapping.redistricting.calculators.MajorityMinority"
+                calculator="redistricting.calculators.MajorityMinority"
                 label="Hisp. VAP Majority (&gt;50%)"
                 description="Compliance with the Voting Rights Act will be assumed if maps include a minority-majority district in any area where a minority group is (as described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) &apos;sufficiently large and geographically compact to constitute a majority in a single-member district&apos;.">
                 <SubjectArgument name="population" ref="vap" />
@@ -438,7 +438,7 @@
             </ScoreFunction>
 
             <ScoreFunction id="plan_majority_minority" type="plan"
-                calculator="publicmapping.redistricting.calculators.MajorityMinority"
+                calculator="redistricting.calculators.MajorityMinority"
                 label="Majority Minority District"
                 description="Compliance with the Voting Rights Act will be assumed if maps include a minority-majority district in any area where a minority group is (as described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) &apos;sufficiently large and geographically compact to constitute a majority in a single-member district&apos;.">
                 <SubjectArgument name="population" ref="vap" />
@@ -448,7 +448,7 @@
             </ScoreFunction>
 
             <ScoreFunction id="plan_repfairness" type="plan"
-                calculator="publicmapping.redistricting.calculators.RepresentationalFairness"
+                calculator="redistricting.calculators.RepresentationalFairness"
                 label="Representational Fairness"
                 description="Representational fairness is increased when the percentage of districts a party would likely win (based upon the &apos;partisan index&apos; used to determine Competitiveness) closely mirrors that party.s percentage of the statewide vote." >
                 <Argument name="range" value="0.05" />
@@ -457,13 +457,13 @@
             </ScoreFunction>
 
             <ScoreFunction id="plan_schwartzberg" type="plan"
-                calculator="publicmapping.redistricting.calculators.Schwartzberg"
+                calculator="redistricting.calculators.Schwartzberg"
                 label="Average Compactness"
                 description="The competition is using the &apos;Inverse Schwartzberg&apos; compactness measure. This measure is a ratio of the circumference of the circle whose area is equal to the area of the district to the perimeter of the district." >
             </ScoreFunction>
 
             <ScoreFunction id="partisan_index" type="district"
-                calculator="publicmapping.redistricting.calculators.SumValues"
+                calculator="redistricting.calculators.SumValues"
                 user_selectable="true" label="Partisan Index">
                 <SubjectArgument name="value1" ref="govdem" />
                 <LegislativeBody ref="congress"/>
@@ -473,7 +473,7 @@
             </ScoreFunction>
 
             <ScoreFunction id="district_vap" type="district"
-                calculator="publicmapping.redistricting.calculators.SumValues"
+                calculator="redistricting.calculators.SumValues"
                 user_selectable="true" label="Voting Age Pop.">
                 <SubjectArgument name="value1" ref="vap" />
                 <LegislativeBody ref="congress"/>
@@ -483,14 +483,14 @@
             </ScoreFunction>
 
             <ScoreFunction id="district_poptot" type="district"
-                calculator="publicmapping.redistricting.calculators.SumValues"
+                calculator="redistricting.calculators.SumValues"
                 user_selectable="true" label="Total Population">
                 <SubjectArgument name="value1" ref="poptot" />
                 <LegislativeBody ref="community"/>
             </ScoreFunction>
 
             <ScoreFunction id="district_comments" type="district"
-                calculator="publicmapping.redistricting.calculators.Comments"
+                calculator="redistricting.calculators.Comments"
                 user_selectable="false" label="Comments">
                 <LegislativeBody ref="community"/>
             </ScoreFunction>
@@ -498,7 +498,7 @@
             <!-- Calculator Reports configuration -->
             <!-- Population -->
             <ScoreFunction id="report_score_total_population_congress" type="district"
-                calculator="publicmapping.redistricting.reportcalculators.Population"
+                calculator="redistricting.reportcalculators.Population"
                 label="Total Population" >
                 <LegislativeBody ref="congress"/>
                 <SubjectArgument name="value" ref="poptot" />
@@ -507,7 +507,7 @@
             </ScoreFunction>
 
             <ScoreFunction id="report_score_total_population_senate" type="district"
-                calculator="publicmapping.redistricting.reportcalculators.Population"
+                calculator="redistricting.reportcalculators.Population"
                 label="Total Population" >
                 <LegislativeBody ref="senate"/>
                 <SubjectArgument name="value" ref="poptot" />
@@ -516,7 +516,7 @@
             </ScoreFunction>
 
             <ScoreFunction id="report_score_total_population_house" type="district"
-                calculator="publicmapping.redistricting.reportcalculators.Population"
+                calculator="redistricting.reportcalculators.Population"
                 label="Total Population" >
                 <LegislativeBody ref="house"/>
                 <SubjectArgument name="value" ref="poptot" />
@@ -525,7 +525,7 @@
             </ScoreFunction>
 
             <ScoreFunction id="report_score_vap" type="district"
-                calculator="publicmapping.redistricting.reportcalculators.Population"
+                calculator="redistricting.reportcalculators.Population"
                 label="Voting Age Population" >
                 <LegislativeBody ref="congress"/>
                 <LegislativeBody ref="senate"/>
@@ -534,7 +534,7 @@
             </ScoreFunction>
 
             <ScoreFunction id="report_score_vapblk" type="district"
-                calculator="publicmapping.redistricting.reportcalculators.Population"
+                calculator="redistricting.reportcalculators.Population"
                 label="VAP African-American" >
                 <LegislativeBody ref="congress"/>
                 <LegislativeBody ref="senate"/>
@@ -543,7 +543,7 @@
             </ScoreFunction>
 
             <ScoreFunction id="report_score_vaphisp" type="district"
-                calculator="publicmapping.redistricting.reportcalculators.Population"
+                calculator="redistricting.reportcalculators.Population"
                 label="VAP Hispanic/Latino" >
                 <LegislativeBody ref="congress"/>
                 <LegislativeBody ref="senate"/>
@@ -553,7 +553,7 @@
 
             <!-- Majority Minority Districts -->
             <ScoreFunction id="report_score_majmin_blk" type="district"
-                calculator="publicmapping.redistricting.reportcalculators.Majority"
+                calculator="redistricting.reportcalculators.Majority"
                 label="VAP African-American" >
                 <LegislativeBody ref="congress"/>
                 <LegislativeBody ref="senate"/>
@@ -563,7 +563,7 @@
             </ScoreFunction>
 
             <ScoreFunction id="report_score_majmin_hisp" type="district"
-                calculator="publicmapping.redistricting.reportcalculators.Majority"
+                calculator="redistricting.reportcalculators.Majority"
                 label="VAP Hispanic/Latino" >
                 <LegislativeBody ref="congress"/>
                 <LegislativeBody ref="senate"/>
@@ -574,7 +574,7 @@
 
             <!-- Compactness -->
             <ScoreFunction id="report_score_compactness_lw" type="district"
-                calculator="publicmapping.redistricting.reportcalculators.Compactness"
+                calculator="redistricting.reportcalculators.Compactness"
                 label="Length/Width" >
                 <LegislativeBody ref="congress"/>
                 <LegislativeBody ref="senate"/>
@@ -583,7 +583,7 @@
             </ScoreFunction>
 
             <ScoreFunction id="report_score_compactness_sc" type="district"
-                calculator="publicmapping.redistricting.reportcalculators.Compactness"
+                calculator="redistricting.reportcalculators.Compactness"
                 label="Schwartzberg" >
                 <LegislativeBody ref="congress"/>
                 <LegislativeBody ref="senate"/>
@@ -592,7 +592,7 @@
             </ScoreFunction>
 
             <ScoreFunction id="report_score_compactness_ro" type="district"
-                calculator="publicmapping.redistricting.reportcalculators.Compactness"
+                calculator="redistricting.reportcalculators.Compactness"
                 label="Roeck" >
                 <LegislativeBody ref="congress"/>
                 <LegislativeBody ref="senate"/>
@@ -602,7 +602,7 @@
 
             <!-- Party-Controlled Districts -->
             <ScoreFunction id="report_score_party_dem" type="district"
-                calculator="publicmapping.redistricting.reportcalculators.Majority"
+                calculator="redistricting.reportcalculators.Majority"
                 label="Democratic" >
                 <LegislativeBody ref="congress"/>
                 <LegislativeBody ref="senate"/>
@@ -612,7 +612,7 @@
             </ScoreFunction>
 
             <ScoreFunction id="report_score_party_rep" type="district"
-                calculator="publicmapping.redistricting.reportcalculators.Majority"
+                calculator="redistricting.reportcalculators.Majority"
                 label="Republican" >
                 <LegislativeBody ref="congress"/>
                 <LegislativeBody ref="senate"/>
@@ -623,7 +623,7 @@
 
             <!-- Spatial Analysis -->
             <ScoreFunction id="report_score_unassigned" type="plan"
-                calculator="publicmapping.redistricting.reportcalculators.Unassigned"
+                calculator="redistricting.reportcalculators.Unassigned"
                 label="Unassigned Blocks" >
                 <LegislativeBody ref="congress"/>
                 <LegislativeBody ref="senate"/>
