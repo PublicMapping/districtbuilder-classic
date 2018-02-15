@@ -285,7 +285,7 @@ file and try again.
                 self.create_template(store.data)
             except:
                 logger.info('ERROR creating templates.')
-                logger.debug(traceback.format_exc())
+                logger.info(traceback.format_exc())
                 all_ok = False
 
         if options.get("static"):

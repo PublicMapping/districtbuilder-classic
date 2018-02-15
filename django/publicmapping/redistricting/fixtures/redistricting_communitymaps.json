@@ -70,7 +70,7 @@
   "fields": {
    "is_user_selectable": true, 
    "is_planscore": false, 
-   "calculator": "publicmapping.redistricting.calculators.Interval", 
+   "calculator": "redistricting.calculators.Interval", 
    "name": "a_congressional_population"
   }
  }, 
@@ -80,7 +80,7 @@
   "fields": {
    "is_user_selectable": true, 
    "is_planscore": false, 
-   "calculator": "publicmapping.redistricting.calculators.Percent", 
+   "calculator": "redistricting.calculators.Percent", 
    "name": "district_blkvap_percent"
   }
  }, 
@@ -90,7 +90,7 @@
   "fields": {
    "is_user_selectable": false, 
    "is_planscore": false, 
-   "calculator": "publicmapping.redistricting.calculators.Comments", 
+   "calculator": "redistricting.calculators.Comments", 
    "name": "district_comments"
   }
  }, 
@@ -100,7 +100,7 @@
   "fields": {
    "is_user_selectable": true, 
    "is_planscore": false, 
-   "calculator": "publicmapping.redistricting.calculators.Contiguity", 
+   "calculator": "redistricting.calculators.Contiguity", 
    "name": "district_contiguous"
   }
  }, 
@@ -110,7 +110,7 @@
   "fields": {
    "is_user_selectable": true, 
    "is_planscore": false, 
-   "calculator": "publicmapping.redistricting.calculators.Percent", 
+   "calculator": "redistricting.calculators.Percent", 
    "name": "district_hispvap_percent"
   }
  }, 

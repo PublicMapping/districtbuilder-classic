@@ -381,7 +381,7 @@
   "pk": 1, 
   "model": "redistricting.scorefunction", 
   "fields": {
-   "calculator": "publicmapping.redistricting.calculators.Equivalence", 
+   "calculator": "redistricting.calculators.Equivalence", 
    "is_planscore": true, 
    "name": "Equipopulation"
   }
@@ -390,7 +390,7 @@
   "pk": 2, 
   "model": "redistricting.scorefunction", 
   "fields": {
-   "calculator": "publicmapping.redistricting.calculators.Schwartzberg", 
+   "calculator": "redistricting.calculators.Schwartzberg", 
    "is_planscore": true, 
    "name": "Schwartzberg"
   }
@@ -399,7 +399,7 @@
   "pk": 3, 
   "model": "redistricting.scorefunction", 
   "fields": {
-   "calculator": "publicmapping.redistricting.calculators.PartisanDifferential", 
+   "calculator": "redistricting.calculators.PartisanDifferential", 
    "is_planscore": true, 
    "name": "Competitiveness"
   }
@@ -408,7 +408,7 @@
   "pk": 4, 
   "model": "redistricting.scorefunction", 
   "fields": {
-   "calculator": "publicmapping.redistricting.calculators.RepresentationalFairness", 
+   "calculator": "redistricting.calculators.RepresentationalFairness", 
    "is_planscore": true, 
    "name": "Representational Fairness"
   }
@@ -417,7 +417,7 @@
   "pk": 6, 
   "model": "redistricting.scorefunction", 
   "fields": {
-   "calculator": "publicmapping.redistricting.calculators.CountDistricts", 
+   "calculator": "redistricting.calculators.CountDistricts", 
    "is_planscore": true, 
    "name": "Valid Count - State House"
   }
@@ -426,7 +426,7 @@
   "pk": 5, 
   "model": "redistricting.scorefunction", 
   "fields": {
-   "calculator": "publicmapping.redistricting.calculators.CountDistricts", 
+   "calculator": "redistricting.calculators.CountDistricts", 
    "is_planscore": true, 
    "name": "Valid Count - Congress"
   }
@@ -435,7 +435,7 @@
   "pk": 7, 
   "model": "redistricting.scorefunction", 
   "fields": {
-   "calculator": "publicmapping.redistricting.calculators.CountDistricts", 
+   "calculator": "redistricting.calculators.CountDistricts", 
    "is_planscore": true, 
    "name": "Valid Count - State Senate" 
   }
@@ -444,7 +444,7 @@
   "pk": 9, 
   "model": "redistricting.scorefunction", 
   "fields": {
-   "calculator": "publicmapping.redistricting.calculators.Equipopulation", 
+   "calculator": "redistricting.calculators.Equipopulation", 
    "is_planscore": true, 
    "name": "Valid Population - State House" 
   }
@@ -453,7 +453,7 @@
   "pk": 8, 
   "model": "redistricting.scorefunction", 
   "fields": {
-   "calculator": "publicmapping.redistricting.calculators.Equipopulation", 
+   "calculator": "redistricting.calculators.Equipopulation", 
    "is_planscore": true, 
    "name": "Valid Population - Congress" 
   }
@@ -462,7 +462,7 @@
   "pk": 10, 
   "model": "redistricting.scorefunction", 
   "fields": {
-   "calculator": "publicmapping.redistricting.calculators.Equipopulation", 
+   "calculator": "redistricting.calculators.Equipopulation", 
    "is_planscore": true, 
    "name": "Valid Population - State Senate" 
   }
@@ -471,7 +471,7 @@
   "pk": 11, 
   "model": "redistricting.scorefunction", 
   "fields": {
-   "calculator": "publicmapping.redistricting.calculators.MajorityMinority", 
+   "calculator": "redistricting.calculators.MajorityMinority", 
    "is_planscore": true, 
    "name": "Minority Majority" 
   }
@@ -480,7 +480,7 @@
   "pk": 12, 
   "model": "redistricting.scorefunction", 
   "fields": {
-   "calculator": "publicmapping.redistricting.calculators.Contiguity", 
+   "calculator": "redistricting.calculators.Contiguity", 
    "is_planscore": true, 
    "name": "Contiguous" 
   }
@@ -489,7 +489,7 @@
   "pk": 13, 
   "model": "redistricting.scorefunction", 
   "fields": {
-   "calculator": "publicmapping.redistricting.calculators.AllBlocksAssigned", 
+   "calculator": "redistricting.calculators.AllBlocksAssigned", 
    "is_planscore": true, 
    "name": "All Blocks Assigned - State House" 
   }
@@ -498,7 +498,7 @@
   "pk": 14, 
   "model": "redistricting.scorefunction", 
   "fields": {
-   "calculator": "publicmapping.redistricting.calculators.AllBlocksAssigned", 
+   "calculator": "redistricting.calculators.AllBlocksAssigned", 
    "is_planscore": true, 
    "name": "All Blocks Assigned  - Congress" 
   }
@@ -507,7 +507,7 @@
   "pk": 15, 
   "model": "redistricting.scorefunction", 
   "fields": {
-   "calculator": "publicmapping.redistricting.calculators.AllBlocksAssigned", 
+   "calculator": "redistricting.calculators.AllBlocksAssigned", 
    "is_planscore": true, 
    "name": "All Blocks Assigned  - State Senate" 
   }

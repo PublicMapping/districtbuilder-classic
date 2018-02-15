@@ -4,13 +4,15 @@ import unittest
 from redisutils import key_gen
 import itertools
 
+import redis
+
 from redistricting.models import Geolevel, Geounit, District
 from redistricting.calculators import Adjacency
 from django.conf import settings
 
 
-@unittest.skipIf(settings.KEY_VALUE_STORE == '',
-                 'Redis is not configured in settings.')
+@unittest.skipIf('calculators' not in settings.CACHES,
+                 'Calculator cache is not configured in settings.')
 class AdjacencyTestCase(BaseTestCase):
     """
     Unit tests for the adjacency calculator
@@ -53,7 +55,9 @@ class AdjacencyTestCase(BaseTestCase):
         self.r = redis.StrictRedis(
             host=redis_settings['HOST'],
             port=int(redis_settings['PORT']),
-            db=15)
+            password=redis_settings['PASSWORD'],
+            db=15
+        )
 
         base_geolevel = Geolevel.objects.get(name='smallest level')
         base_geounits = Geounit.objects.filter(
