@@ -56,8 +56,7 @@ class AdjacencyTestCase(BaseTestCase):
             host=redis_settings['HOST'],
             port=int(redis_settings['PORT']),
             password=redis_settings['PASSWORD'],
-            db=15
-        )
+            db=15)
 
         base_geolevel = Geolevel.objects.get(name='smallest level')
         base_geounits = Geounit.objects.filter(

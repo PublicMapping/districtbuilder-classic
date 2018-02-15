@@ -1,226 +1,226 @@
 [
  {
-  "pk": 6, 
-  "model": "redistricting.legislativebody", 
+  "pk": 6,
+  "model": "redistricting.legislativebody",
   "fields": {
-   "multi_district_label_format": "", 
-   "max_multi_districts": 0, 
-   "name": "community_map", 
-   "is_community": true, 
-   "max_districts": 999, 
-   "min_multi_districts": 0, 
-   "max_plan_members": 0, 
-   "multi_members_allowed": false, 
-   "min_plan_members": 0, 
-   "max_multi_district_members": 0, 
+   "multi_district_label_format": "",
+   "max_multi_districts": 0,
+   "name": "community_map",
+   "is_community": true,
+   "max_districts": 999,
+   "min_multi_districts": 0,
+   "max_plan_members": 0,
+   "multi_members_allowed": false,
+   "min_plan_members": 0,
+   "max_multi_district_members": 0,
    "min_multi_district_members": 0
   }
  },
  {
-  "pk": 19, 
-  "model": "redistricting.target", 
+  "pk": 19,
+  "model": "redistricting.target",
   "fields": {
-   "range2": "1.0000", 
-   "range1": "1.0000", 
-   "value": "8001024.0000", 
+   "range2": "1.0000",
+   "range1": "1.0000",
+   "value": "8001024.0000",
    "subject": 1
   }
- }, 
+ },
  {
-  "pk": 44, 
-  "model": "redistricting.legislativelevel", 
+  "pk": 44,
+  "model": "redistricting.legislativelevel",
   "fields": {
-   "legislative_body": 6, 
-   "target": 19, 
-   "parent": null, 
+   "legislative_body": 6,
+   "target": 19,
+   "parent": null,
    "geolevel": 1
   }
- }, 
+ },
  {
-  "pk": 45, 
-  "model": "redistricting.legislativelevel", 
+  "pk": 45,
+  "model": "redistricting.legislativelevel",
   "fields": {
-   "legislative_body": 6, 
-   "target": 19, 
-   "parent": 44, 
+   "legislative_body": 6,
+   "target": 19,
+   "parent": 44,
    "geolevel": 2
   }
- }, 
+ },
  {
-  "pk": 46, 
-  "model": "redistricting.legislativelevel", 
+  "pk": 46,
+  "model": "redistricting.legislativelevel",
   "fields": {
-   "legislative_body": 6, 
-   "target": 19, 
-   "parent": 45, 
+   "legislative_body": 6,
+   "target": 19,
+   "parent": 45,
    "geolevel": 3
   }
- }, 
+ },
  {
-  "pk": 6, 
-  "model": "redistricting.legislativedefault", 
+  "pk": 6,
+  "model": "redistricting.legislativedefault",
   "fields": {
-   "legislative_body": 6, 
+   "legislative_body": 6,
    "target": 19
   }
  },
  {
-  "pk": 3263, 
-  "model": "redistricting.scorefunction", 
+  "pk": 3263,
+  "model": "redistricting.scorefunction",
   "fields": {
-   "is_user_selectable": true, 
-   "is_planscore": false, 
-   "calculator": "redistricting.calculators.Interval", 
+   "is_user_selectable": true,
+   "is_planscore": false,
+   "calculator": "redistricting.calculators.Interval",
    "name": "a_congressional_population"
   }
- }, 
+ },
  {
-  "pk": 3267, 
-  "model": "redistricting.scorefunction", 
+  "pk": 3267,
+  "model": "redistricting.scorefunction",
   "fields": {
-   "is_user_selectable": true, 
-   "is_planscore": false, 
-   "calculator": "redistricting.calculators.Percent", 
+   "is_user_selectable": true,
+   "is_planscore": false,
+   "calculator": "redistricting.calculators.Percent",
    "name": "district_blkvap_percent"
   }
- }, 
+ },
  {
-  "pk": 3289, 
-  "model": "redistricting.scorefunction", 
+  "pk": 3289,
+  "model": "redistricting.scorefunction",
   "fields": {
-   "is_user_selectable": false, 
-   "is_planscore": false, 
-   "calculator": "redistricting.calculators.Comments", 
+   "is_user_selectable": false,
+   "is_planscore": false,
+   "calculator": "redistricting.calculators.Comments",
    "name": "district_comments"
   }
- }, 
+ },
  {
-  "pk": 3264, 
-  "model": "redistricting.scorefunction", 
+  "pk": 3264,
+  "model": "redistricting.scorefunction",
   "fields": {
-   "is_user_selectable": true, 
-   "is_planscore": false, 
-   "calculator": "redistricting.calculators.Contiguity", 
+   "is_user_selectable": true,
+   "is_planscore": false,
+   "calculator": "redistricting.calculators.Contiguity",
    "name": "district_contiguous"
   }
- }, 
+ },
  {
-  "pk": 3268, 
-  "model": "redistricting.scorefunction", 
+  "pk": 3268,
+  "model": "redistricting.scorefunction",
   "fields": {
-   "is_user_selectable": true, 
-   "is_planscore": false, 
-   "calculator": "redistricting.calculators.Percent", 
+   "is_user_selectable": true,
+   "is_planscore": false,
+   "calculator": "redistricting.calculators.Percent",
    "name": "district_hispvap_percent"
   }
- }, 
+ },
  {
-  "pk": 1985, 
-  "model": "redistricting.scorepanel", 
+  "pk": 1985,
+  "model": "redistricting.scorepanel",
   "fields": {
    "score_functions": [
     3289
-   ], 
-   "is_ascending": true, 
-   "title": "Plan Comments", 
+   ],
+   "is_ascending": true,
+   "title": "Plan Comments",
    "displays": [
     1233
-   ], 
-   "template": "plan_comments.html", 
-   "position": 0, 
-   "cssclass": "plan_summary", 
+   ],
+   "template": "plan_comments.html",
+   "position": 0,
+   "cssclass": "plan_summary",
    "type": "district",
    "name": ""
   }
- }, 
+ },
  {
-  "pk": 1988, 
-  "model": "redistricting.scorepanel", 
+  "pk": 1988,
+  "model": "redistricting.scorepanel",
   "fields": {
    "score_functions": [
     3263
-   ], 
-   "is_ascending": true, 
-   "title": "Community Summary", 
+   ],
+   "is_ascending": true,
+   "title": "Community Summary",
    "displays": [
     1234
-   ], 
-   "template": "community_summary.html", 
-   "position": 1, 
-   "cssclass": "plan_summary", 
+   ],
+   "template": "community_summary.html",
+   "position": 1,
+   "cssclass": "plan_summary",
    "type": "plan_summary",
    "name": ""
   }
- }, 
+ },
  {
-  "pk": 1987, 
-  "model": "redistricting.scorepanel", 
+  "pk": 1987,
+  "model": "redistricting.scorepanel",
   "fields": {
    "score_functions": [
-    3267, 
-    3264, 
+    3267,
+    3264,
     3268
-   ], 
-   "is_ascending": true, 
-   "title": "Basic Information", 
+   ],
+   "is_ascending": true,
+   "title": "Basic Information",
    "displays": [
     1234
-   ], 
-   "template": "communities.html", 
-   "position": 2, 
-   "cssclass": "district_basic_info congressional", 
+   ],
+   "template": "communities.html",
+   "position": 2,
+   "cssclass": "district_basic_info congressional",
    "type": "district",
    "name": ""
   }
- }, 
+ },
  {
-  "pk": 1233, 
-  "model": "redistricting.scoredisplay", 
+  "pk": 1233,
+  "model": "redistricting.scoredisplay",
   "fields": {
-   "owner": 1, 
-   "legislative_body": 6, 
-   "cssclass": "demographics", 
-   "is_page": false, 
+   "owner": 1,
+   "legislative_body": 6,
+   "cssclass": "demographics",
+   "is_page": false,
    "title": "Community Mapping",
    "name": ""
   }
- }, 
+ },
  {
-  "pk": 1234, 
-  "model": "redistricting.scoredisplay", 
+  "pk": 1234,
+  "model": "redistricting.scoredisplay",
   "fields": {
-   "owner": 1, 
-   "legislative_body": 6, 
-   "cssclass": "demographics", 
-   "is_page": false, 
+   "owner": 1,
+   "legislative_body": 6,
+   "cssclass": "demographics",
+   "is_page": false,
    "title": "Demographics",
    "name": ""
   }
  },
  {
-  "pk": 54, 
-  "model": "tagging.tag", 
+  "pk": 54,
+  "model": "tagging.tag",
   "fields": {
    "name": "type=Minority"
   }
- }, 
+ },
  {
-  "pk": 52, 
-  "model": "tagging.tag", 
+  "pk": 52,
+  "model": "tagging.tag",
   "fields": {
    "name": "type=Neighborhood"
   }
- }, 
+ },
  {
-  "pk": 55, 
-  "model": "tagging.tag", 
+  "pk": 55,
+  "model": "tagging.tag",
   "fields": {
    "name": "type=Administrative Boundary"
   }
- }, 
+ },
  {
-  "pk": 53, 
-  "model": "tagging.tag", 
+  "pk": 53,
+  "model": "tagging.tag",
   "fields": {
    "name": "type=Local Government"
   }

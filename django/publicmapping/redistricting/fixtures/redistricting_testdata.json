@@ -25,7 +25,7 @@
    "sort_key": 2,
    "format_string": "%0.2f",
    "name": "TestSubject2",
-   "is_displayed": true, 
+   "is_displayed": true,
    "percentage_denominator": null
   }
  },
@@ -89,10 +89,10 @@
   }
  },
  {
-  "pk": 1001, 
-  "model": "redistricting.legislativebody", 
+  "pk": 1001,
+  "model": "redistricting.legislativebody",
   "fields": {
-   "name": "TestLegislativeBody", 
+   "name": "TestLegislativeBody",
    "max_districts": 20,
    "multi_members_allowed": false,
    "multi_district_label_format": "{name} - [{num_members}]",
@@ -117,471 +117,471 @@
  },
  {
   "pk": 1002,
-  "model": "redistricting.geolevel", 
+  "model": "redistricting.geolevel",
   "fields": {
-   "sort_key": 2, 
-   "min_zoom": 2, 
-   "tolerance": 10.0, 
+   "sort_key": 2,
+   "min_zoom": 2,
+   "tolerance": 10.0,
    "name": "middle level"
   }
- }, 
+ },
  {
-  "pk": 1001, 
-  "model": "redistricting.geolevel", 
+  "pk": 1001,
+  "model": "redistricting.geolevel",
   "fields": {
-   "sort_key": 1, 
-   "min_zoom": 3, 
-   "tolerance": 10.0, 
+   "sort_key": 1,
+   "min_zoom": 3,
+   "tolerance": 10.0,
    "name": "smallest level"
   }
- }, 
+ },
  {
-  "pk": 1001, 
-  "model": "redistricting.legislativelevel", 
+  "pk": 1001,
+  "model": "redistricting.legislativelevel",
   "fields": {
-   "legislative_body": 1001, 
-   "subject": 1001, 
-   "parent": null, 
+   "legislative_body": 1001,
+   "subject": 1001,
+   "parent": null,
    "geolevel": 1001
   }
- }, 
+ },
  {
-  "pk": 1002, 
-  "model": "redistricting.legislativelevel", 
+  "pk": 1002,
+  "model": "redistricting.legislativelevel",
   "fields": {
-   "legislative_body": 1001, 
-   "subject": 1001, 
-   "parent": 1001, 
+   "legislative_body": 1001,
+   "subject": 1001,
+   "parent": 1001,
    "geolevel": 1002
   }
- }, 
+ },
  {
-  "pk": 1003, 
-  "model": "redistricting.legislativelevel", 
+  "pk": 1003,
+  "model": "redistricting.legislativelevel",
   "fields": {
-   "legislative_body": 1001, 
-   "subject": 1001, 
-   "parent": 1002, 
+   "legislative_body": 1001,
+   "subject": 1001,
+   "parent": 1002,
    "geolevel": 1003
   }
- }, 
+ },
  {
-  "pk": 1001, 
-  "model": "redistricting.geounit", 
+  "pk": 1001,
+  "model": "redistricting.geounit",
   "fields": {
-   "name": "Unit 1-0", 
-   "simple": "MULTIPOLYGON (((0.0000000000000000 0.0000000000000000, 0.3333333333333333 0.0000000000000000, 0.3333333333333333 0.3333333333333333, 0.0000000000000000 0.3333333333333333, 0.0000000000000000 0.0000000000000000)))", 
-   "center": "POINT (0.1666666666666667 0.1666666666666667)", 
-   "portable_id": "0000000", 
+   "name": "Unit 1-0",
+   "simple": "MULTIPOLYGON (((0.0000000000000000 0.0000000000000000, 0.3333333333333333 0.0000000000000000, 0.3333333333333333 0.3333333333333333, 0.0000000000000000 0.3333333333333333, 0.0000000000000000 0.0000000000000000)))",
+   "center": "POINT (0.1666666666666667 0.1666666666666667)",
+   "portable_id": "0000000",
    "geolevel": [1003],
-   "geom": "MULTIPOLYGON (((0.0000000000000000 0.0000000000000000, 0.3333333333333333 0.0000000000000000, 0.3333333333333333 0.3333333333333333, 0.0000000000000000 0.3333333333333333, 0.0000000000000000 0.0000000000000000)))", 
-   "child": null, 
+   "geom": "MULTIPOLYGON (((0.0000000000000000 0.0000000000000000, 0.3333333333333333 0.0000000000000000, 0.3333333333333333 0.3333333333333333, 0.0000000000000000 0.3333333333333333, 0.0000000000000000 0.0000000000000000)))",
+   "child": null,
    "tree_code": "0000000"
   }
- }, 
+ },
  {
-  "pk": 1002, 
-  "model": "redistricting.geounit", 
+  "pk": 1002,
+  "model": "redistricting.geounit",
   "fields": {
-   "name": "Unit 1-1", 
-   "simple": "MULTIPOLYGON (((0.3333333333333333 0.0000000000000000, 0.6666666666666666 0.0000000000000000, 0.6666666666666666 0.3333333333333333, 0.3333333333333333 0.3333333333333333, 0.3333333333333333 0.0000000000000000)))", 
-   "center": "POINT (0.4999999999999999 0.1666666666666667)", 
-   "portable_id": "0000001", 
+   "name": "Unit 1-1",
+   "simple": "MULTIPOLYGON (((0.3333333333333333 0.0000000000000000, 0.6666666666666666 0.0000000000000000, 0.6666666666666666 0.3333333333333333, 0.3333333333333333 0.3333333333333333, 0.3333333333333333 0.0000000000000000)))",
+   "center": "POINT (0.4999999999999999 0.1666666666666667)",
+   "portable_id": "0000001",
    "geolevel": [1003],
-   "geom": "MULTIPOLYGON (((0.3333333333333333 0.0000000000000000, 0.6666666666666666 0.0000000000000000, 0.6666666666666666 0.3333333333333333, 0.3333333333333333 0.3333333333333333, 0.3333333333333333 0.0000000000000000)))", 
-   "child": null, 
+   "geom": "MULTIPOLYGON (((0.3333333333333333 0.0000000000000000, 0.6666666666666666 0.0000000000000000, 0.6666666666666666 0.3333333333333333, 0.3333333333333333 0.3333333333333333, 0.3333333333333333 0.0000000000000000)))",
+   "child": null,
    "tree_code": "0000001"
   }
- }, 
+ },
  {
-  "pk": 1003, 
-  "model": "redistricting.geounit", 
+  "pk": 1003,
+  "model": "redistricting.geounit",
   "fields": {
-   "name": "Unit 1-2", 
-   "simple": "MULTIPOLYGON (((0.6666666666666666 0.0000000000000000, 1.0000000000000000 0.0000000000000000, 1.0000000000000000 0.3333333333333333, 0.6666666666666666 0.3333333333333333, 0.6666666666666666 0.0000000000000000)))", 
-   "center": "POINT (0.8333333333333334 0.1666666666666667)", 
-   "portable_id": "0000002", 
+   "name": "Unit 1-2",
+   "simple": "MULTIPOLYGON (((0.6666666666666666 0.0000000000000000, 1.0000000000000000 0.0000000000000000, 1.0000000000000000 0.3333333333333333, 0.6666666666666666 0.3333333333333333, 0.6666666666666666 0.0000000000000000)))",
+   "center": "POINT (0.8333333333333334 0.1666666666666667)",
+   "portable_id": "0000002",
    "geolevel": [1003],
-   "geom": "MULTIPOLYGON (((0.6666666666666666 0.0000000000000000, 1.0000000000000000 0.0000000000000000, 1.0000000000000000 0.3333333333333333, 0.6666666666666666 0.3333333333333333, 0.6666666666666666 0.0000000000000000)))", 
-   "child": null, 
+   "geom": "MULTIPOLYGON (((0.6666666666666666 0.0000000000000000, 1.0000000000000000 0.0000000000000000, 1.0000000000000000 0.3333333333333333, 0.6666666666666666 0.3333333333333333, 0.6666666666666666 0.0000000000000000)))",
+   "child": null,
    "tree_code": "0000002"
   }
- }, 
+ },
  {
-  "pk": 1004, 
-  "model": "redistricting.geounit", 
+  "pk": 1004,
+  "model": "redistricting.geounit",
   "fields": {
-   "name": "Unit 1-3", 
-   "simple": "MULTIPOLYGON (((0.0000000000000000 0.3333333333333333, 0.3333333333333333 0.3333333333333333, 0.3333333333333333 0.6666666666666666, 0.0000000000000000 0.6666666666666666, 0.0000000000000000 0.3333333333333333)))", 
-   "center": "POINT (0.1666666666666667 0.4999999999999999)", 
-   "portable_id": "0000003", 
+   "name": "Unit 1-3",
+   "simple": "MULTIPOLYGON (((0.0000000000000000 0.3333333333333333, 0.3333333333333333 0.3333333333333333, 0.3333333333333333 0.6666666666666666, 0.0000000000000000 0.6666666666666666, 0.0000000000000000 0.3333333333333333)))",
+   "center": "POINT (0.1666666666666667 0.4999999999999999)",
+   "portable_id": "0000003",
    "geolevel": [1003],
-   "geom": "MULTIPOLYGON (((0.0000000000000000 0.3333333333333333, 0.3333333333333333 0.3333333333333333, 0.3333333333333333 0.6666666666666666, 0.0000000000000000 0.6666666666666666, 0.0000000000000000 0.3333333333333333)))", 
-   "child": null, 
+   "geom": "MULTIPOLYGON (((0.0000000000000000 0.3333333333333333, 0.3333333333333333 0.3333333333333333, 0.3333333333333333 0.6666666666666666, 0.0000000000000000 0.6666666666666666, 0.0000000000000000 0.3333333333333333)))",
+   "child": null,
    "tree_code": "0000003"
   }
- }, 
+ },
  {
-  "pk": 1005, 
-  "model": "redistricting.geounit", 
+  "pk": 1005,
+  "model": "redistricting.geounit",
   "fields": {
-   "name": "Unit 1-4", 
-   "simple": "MULTIPOLYGON (((0.3333333333333333 0.3333333333333333, 0.6666666666666666 0.3333333333333333, 0.6666666666666666 0.6666666666666666, 0.3333333333333333 0.6666666666666666, 0.3333333333333333 0.3333333333333333)))", 
-   "center": "POINT (0.4999999999999999 0.4999999999999999)", 
-   "portable_id": "0000004", 
+   "name": "Unit 1-4",
+   "simple": "MULTIPOLYGON (((0.3333333333333333 0.3333333333333333, 0.6666666666666666 0.3333333333333333, 0.6666666666666666 0.6666666666666666, 0.3333333333333333 0.6666666666666666, 0.3333333333333333 0.3333333333333333)))",
+   "center": "POINT (0.4999999999999999 0.4999999999999999)",
+   "portable_id": "0000004",
    "geolevel": [1003],
-   "geom": "MULTIPOLYGON (((0.3333333333333333 0.3333333333333333, 0.6666666666666666 0.3333333333333333, 0.6666666666666666 0.6666666666666666, 0.3333333333333333 0.6666666666666666, 0.3333333333333333 0.3333333333333333)))", 
-   "child": null, 
+   "geom": "MULTIPOLYGON (((0.3333333333333333 0.3333333333333333, 0.6666666666666666 0.3333333333333333, 0.6666666666666666 0.6666666666666666, 0.3333333333333333 0.6666666666666666, 0.3333333333333333 0.3333333333333333)))",
+   "child": null,
    "tree_code": "0000004"
   }
- }, 
+ },
  {
-  "pk": 1006, 
-  "model": "redistricting.geounit", 
+  "pk": 1006,
+  "model": "redistricting.geounit",
   "fields": {
-   "name": "Unit 1-5", 
-   "simple": "MULTIPOLYGON (((0.6666666666666666 0.3333333333333333, 1.0000000000000000 0.3333333333333333, 1.0000000000000000 0.6666666666666666, 0.6666666666666666 0.6666666666666666, 0.6666666666666666 0.3333333333333333)))", 
-   "center": "POINT (0.8333333333333334 0.4999999999999999)", 
-   "portable_id": "0000005", 
+   "name": "Unit 1-5",
+   "simple": "MULTIPOLYGON (((0.6666666666666666 0.3333333333333333, 1.0000000000000000 0.3333333333333333, 1.0000000000000000 0.6666666666666666, 0.6666666666666666 0.6666666666666666, 0.6666666666666666 0.3333333333333333)))",
+   "center": "POINT (0.8333333333333334 0.4999999999999999)",
+   "portable_id": "0000005",
    "geolevel": [1003],
-   "geom": "MULTIPOLYGON (((0.6666666666666666 0.3333333333333333, 1.0000000000000000 0.3333333333333333, 1.0000000000000000 0.6666666666666666, 0.6666666666666666 0.6666666666666666, 0.6666666666666666 0.3333333333333333)))", 
-   "child": null, 
+   "geom": "MULTIPOLYGON (((0.6666666666666666 0.3333333333333333, 1.0000000000000000 0.3333333333333333, 1.0000000000000000 0.6666666666666666, 0.6666666666666666 0.6666666666666666, 0.6666666666666666 0.3333333333333333)))",
+   "child": null,
    "tree_code": "0000005"
   }
- }, 
+ },
  {
-  "pk": 1007, 
-  "model": "redistricting.geounit", 
+  "pk": 1007,
+  "model": "redistricting.geounit",
   "fields": {
-   "name": "Unit 1-6", 
-   "simple": "MULTIPOLYGON (((0.0000000000000000 0.6666666666666666, 0.3333333333333333 0.6666666666666666, 0.3333333333333333 1.0000000000000000, 0.0000000000000000 1.0000000000000000, 0.0000000000000000 0.6666666666666666)))", 
-   "center": "POINT (0.1666666666666667 0.8333333333333334)", 
-   "portable_id": "0000006", 
+   "name": "Unit 1-6",
+   "simple": "MULTIPOLYGON (((0.0000000000000000 0.6666666666666666, 0.3333333333333333 0.6666666666666666, 0.3333333333333333 1.0000000000000000, 0.0000000000000000 1.0000000000000000, 0.0000000000000000 0.6666666666666666)))",
+   "center": "POINT (0.1666666666666667 0.8333333333333334)",
+   "portable_id": "0000006",
    "geolevel": [1003],
-   "geom": "MULTIPOLYGON (((0.0000000000000000 0.6666666666666666, 0.3333333333333333 0.6666666666666666, 0.3333333333333333 1.0000000000000000, 0.0000000000000000 1.0000000000000000, 0.0000000000000000 0.6666666666666666)))", 
-   "child": null, 
+   "geom": "MULTIPOLYGON (((0.0000000000000000 0.6666666666666666, 0.3333333333333333 0.6666666666666666, 0.3333333333333333 1.0000000000000000, 0.0000000000000000 1.0000000000000000, 0.0000000000000000 0.6666666666666666)))",
+   "child": null,
    "tree_code": "0000006"
   }
- }, 
+ },
  {
-  "pk": 1008, 
-  "model": "redistricting.geounit", 
+  "pk": 1008,
+  "model": "redistricting.geounit",
   "fields": {
-   "name": "Unit 1-7", 
-   "simple": "MULTIPOLYGON (((0.3333333333333333 0.6666666666666666, 0.6666666666666666 0.6666666666666666, 0.6666666666666666 1.0000000000000000, 0.3333333333333333 1.0000000000000000, 0.3333333333333333 0.6666666666666666)))", 
-   "center": "POINT (0.4999999999999999 0.8333333333333334)", 
-   "portable_id": "0000007", 
+   "name": "Unit 1-7",
+   "simple": "MULTIPOLYGON (((0.3333333333333333 0.6666666666666666, 0.6666666666666666 0.6666666666666666, 0.6666666666666666 1.0000000000000000, 0.3333333333333333 1.0000000000000000, 0.3333333333333333 0.6666666666666666)))",
+   "center": "POINT (0.4999999999999999 0.8333333333333334)",
+   "portable_id": "0000007",
    "geolevel": [1003],
-   "geom": "MULTIPOLYGON (((0.3333333333333333 0.6666666666666666, 0.6666666666666666 0.6666666666666666, 0.6666666666666666 1.0000000000000000, 0.3333333333333333 1.0000000000000000, 0.3333333333333333 0.6666666666666666)))", 
-   "child": null, 
+   "geom": "MULTIPOLYGON (((0.3333333333333333 0.6666666666666666, 0.6666666666666666 0.6666666666666666, 0.6666666666666666 1.0000000000000000, 0.3333333333333333 1.0000000000000000, 0.3333333333333333 0.6666666666666666)))",
+   "child": null,
    "tree_code": "0000007"
   }
- }, 
+ },
  {
-  "pk": 1009, 
-  "model": "redistricting.geounit", 
+  "pk": 1009,
+  "model": "redistricting.geounit",
   "fields": {
-   "name": "Unit 1-8", 
-   "simple": "MULTIPOLYGON (((0.6666666666666666 0.6666666666666666, 1.0000000000000000 0.6666666666666666, 1.0000000000000000 1.0000000000000000, 0.6666666666666666 1.0000000000000000, 0.6666666666666666 0.6666666666666666)))", 
-   "center": "POINT (0.8333333333333333 0.8333333333333333)", 
-   "portable_id": "0000008", 
+   "name": "Unit 1-8",
+   "simple": "MULTIPOLYGON (((0.6666666666666666 0.6666666666666666, 1.0000000000000000 0.6666666666666666, 1.0000000000000000 1.0000000000000000, 0.6666666666666666 1.0000000000000000, 0.6666666666666666 0.6666666666666666)))",
+   "center": "POINT (0.8333333333333333 0.8333333333333333)",
+   "portable_id": "0000008",
    "geolevel": [1003],
-   "geom": "MULTIPOLYGON (((0.6666666666666666 0.6666666666666666, 1.0000000000000000 0.6666666666666666, 1.0000000000000000 1.0000000000000000, 0.6666666666666666 1.0000000000000000, 0.6666666666666666 0.6666666666666666)))", 
-   "child": null, 
+   "geom": "MULTIPOLYGON (((0.6666666666666666 0.6666666666666666, 1.0000000000000000 0.6666666666666666, 1.0000000000000000 1.0000000000000000, 0.6666666666666666 1.0000000000000000, 0.6666666666666666 0.6666666666666666)))",
+   "child": null,
    "tree_code": "0000008"
   }
- }, 
+ },
  {
-  "pk": 1001, 
-  "model": "redistricting.characteristic", 
+  "pk": 1001,
+  "model": "redistricting.characteristic",
   "fields": {
-   "geounit": 1001, 
-   "percentage": null, 
-   "number": "0.0000", 
+   "geounit": 1001,
+   "percentage": null,
+   "number": "0.0000",
    "subject": 1001
   }
- }, 
+ },
  {
-  "pk": 1002, 
-  "model": "redistricting.characteristic", 
+  "pk": 1002,
+  "model": "redistricting.characteristic",
   "fields": {
-   "geounit": 1002, 
-   "percentage": null, 
-   "number": "1.0000", 
+   "geounit": 1002,
+   "percentage": null,
+   "number": "1.0000",
    "subject": 1001
   }
- }, 
+ },
  {
-  "pk": 1003, 
-  "model": "redistricting.characteristic", 
+  "pk": 1003,
+  "model": "redistricting.characteristic",
   "fields": {
-   "geounit": 1003, 
-   "percentage": null, 
-   "number": "2.0000", 
+   "geounit": 1003,
+   "percentage": null,
+   "number": "2.0000",
    "subject": 1001
   }
- }, 
+ },
  {
-  "pk": 1004, 
-  "model": "redistricting.characteristic", 
+  "pk": 1004,
+  "model": "redistricting.characteristic",
   "fields": {
-   "geounit": 1004, 
-   "percentage": null, 
-   "number": "0.0000", 
+   "geounit": 1004,
+   "percentage": null,
+   "number": "0.0000",
    "subject": 1001
   }
- }, 
+ },
  {
-  "pk": 1005, 
-  "model": "redistricting.characteristic", 
+  "pk": 1005,
+  "model": "redistricting.characteristic",
   "fields": {
-   "geounit": 1005, 
-   "percentage": null, 
-   "number": "1.0000", 
+   "geounit": 1005,
+   "percentage": null,
+   "number": "1.0000",
    "subject": 1001
   }
- }, 
+ },
  {
-  "pk": 1006, 
-  "model": "redistricting.characteristic", 
+  "pk": 1006,
+  "model": "redistricting.characteristic",
   "fields": {
-   "geounit": 1006, 
-   "percentage": null, 
-   "number": "2.0000", 
+   "geounit": 1006,
+   "percentage": null,
+   "number": "2.0000",
    "subject": 1001
   }
- }, 
+ },
  {
-  "pk": 1007, 
-  "model": "redistricting.characteristic", 
+  "pk": 1007,
+  "model": "redistricting.characteristic",
   "fields": {
-   "geounit": 1007, 
-   "percentage": null, 
-   "number": "0.0000", 
+   "geounit": 1007,
+   "percentage": null,
+   "number": "0.0000",
    "subject": 1001
   }
- }, 
+ },
  {
-  "pk": 1008, 
-  "model": "redistricting.characteristic", 
+  "pk": 1008,
+  "model": "redistricting.characteristic",
   "fields": {
-   "geounit": 1008, 
-   "percentage": null, 
-   "number": "1.0000", 
+   "geounit": 1008,
+   "percentage": null,
+   "number": "1.0000",
    "subject": 1001
   }
- }, 
+ },
  {
-  "pk": 1009, 
-  "model": "redistricting.characteristic", 
+  "pk": 1009,
+  "model": "redistricting.characteristic",
   "fields": {
-   "geounit": 1009, 
-   "percentage": null, 
-   "number": "2.0000", 
+   "geounit": 1009,
+   "percentage": null,
+   "number": "2.0000",
    "subject": 1001
   }
- }, 
+ },
  {
-  "pk": 820, 
-  "model": "redistricting.characteristic", 
+  "pk": 820,
+  "model": "redistricting.characteristic",
   "fields": {
-   "geounit": 1001, 
-   "percentage": null, 
-   "number": "26.0000", 
+   "geounit": 1001,
+   "percentage": null,
+   "number": "26.0000",
    "subject": 1002
   }
- }, 
+ },
  {
-  "pk": 821, 
-  "model": "redistricting.characteristic", 
+  "pk": 821,
+  "model": "redistricting.characteristic",
   "fields": {
-   "geounit": 1002, 
-   "percentage": null, 
-   "number": "25.0000", 
+   "geounit": 1002,
+   "percentage": null,
+   "number": "25.0000",
    "subject": 1002
   }
- }, 
+ },
  {
-  "pk": 822, 
-  "model": "redistricting.characteristic", 
+  "pk": 822,
+  "model": "redistricting.characteristic",
   "fields": {
-   "geounit": 1003, 
-   "percentage": null, 
-   "number": "24.0000", 
+   "geounit": 1003,
+   "percentage": null,
+   "number": "24.0000",
    "subject": 1002
   }
- }, 
+ },
  {
-  "pk": 823, 
-  "model": "redistricting.characteristic", 
+  "pk": 823,
+  "model": "redistricting.characteristic",
   "fields": {
-   "geounit": 1004, 
-   "percentage": null, 
-   "number": "26.0000", 
+   "geounit": 1004,
+   "percentage": null,
+   "number": "26.0000",
    "subject": 1002
   }
- }, 
+ },
  {
-  "pk": 824, 
-  "model": "redistricting.characteristic", 
+  "pk": 824,
+  "model": "redistricting.characteristic",
   "fields": {
-   "geounit": 1005, 
-   "percentage": null, 
-   "number": "25.0000", 
+   "geounit": 1005,
+   "percentage": null,
+   "number": "25.0000",
    "subject": 1002
   }
- }, 
+ },
  {
-  "pk": 825, 
-  "model": "redistricting.characteristic", 
+  "pk": 825,
+  "model": "redistricting.characteristic",
   "fields": {
-   "geounit": 1006, 
-   "percentage": null, 
-   "number": "24.0000", 
+   "geounit": 1006,
+   "percentage": null,
+   "number": "24.0000",
    "subject": 1002
   }
- }, 
+ },
  {
-  "pk": 826, 
-  "model": "redistricting.characteristic", 
+  "pk": 826,
+  "model": "redistricting.characteristic",
   "fields": {
-   "geounit": 1007, 
-   "percentage": null, 
-   "number": "26.0000", 
+   "geounit": 1007,
+   "percentage": null,
+   "number": "26.0000",
    "subject": 1002
   }
- }, 
+ },
  {
-  "pk": 827, 
-  "model": "redistricting.characteristic", 
+  "pk": 827,
+  "model": "redistricting.characteristic",
   "fields": {
-   "geounit": 1008, 
-   "percentage": null, 
-   "number": "25.0000", 
+   "geounit": 1008,
+   "percentage": null,
+   "number": "25.0000",
    "subject": 1002
   }
- }, 
+ },
  {
-  "pk": 828, 
-  "model": "redistricting.characteristic", 
+  "pk": 828,
+  "model": "redistricting.characteristic",
   "fields": {
-   "geounit": 1009, 
-   "percentage": null, 
-   "number": "24.0000", 
+   "geounit": 1009,
+   "percentage": null,
+   "number": "24.0000",
    "subject": 1002
   }
- }, 
+ },
  {
-  "pk": 1001, 
-  "model": "redistricting.plan", 
+  "pk": 1001,
+  "model": "redistricting.plan",
   "fields": {
-   "edited": "2011-03-05 22:08:27", 
-   "is_shared": false, 
-   "created": "2011-03-02 12:41:31", 
-   "description": "", 
-   "is_template": false, 
-   "is_valid": false, 
-   "version": 0, 
-   "owner": 1, 
-   "legislative_body": 1001, 
-   "min_version": 0, 
-   "processing_state": 0, 
+   "edited": "2011-03-05 22:08:27",
+   "is_shared": false,
+   "created": "2011-03-02 12:41:31",
+   "description": "",
+   "is_template": false,
+   "is_valid": false,
+   "version": 0,
+   "owner": 1,
+   "legislative_body": 1001,
+   "min_version": 0,
+   "processing_state": 0,
    "name": "testPlan"
   }
- }, 
+ },
  {
-  "pk": 1002, 
-  "model": "redistricting.plan", 
+  "pk": 1002,
+  "model": "redistricting.plan",
   "fields": {
-   "edited": "2011-03-05 22:08:27", 
-   "is_shared": false, 
-   "created": "2011-03-03 21:11:26", 
-   "description": "", 
-   "is_template": false, 
-   "is_valid": false, 
-   "version": 0, 
-   "owner": 1, 
-   "legislative_body": 1001, 
-   "min_version": 0, 
-   "processing_state": 0, 
+   "edited": "2011-03-05 22:08:27",
+   "is_shared": false,
+   "created": "2011-03-03 21:11:26",
+   "description": "",
+   "is_template": false,
+   "is_valid": false,
+   "version": 0,
+   "owner": 1,
+   "legislative_body": 1001,
+   "min_version": 0,
+   "processing_state": 0,
    "name": "testPlan2"
   }
- }, 
+ },
  {
-  "pk": 10000, 
-  "model": "redistricting.district", 
+  "pk": 10000,
+  "model": "redistricting.district",
   "fields": {
    "short_label": "1",
-   "long_label": "District 1", 
+   "long_label": "District 1",
    "simple": "GEOMETRYCOLLECTION EMPTY",
-   "district_id": 1, 
-   "is_locked": false, 
-   "version": 0, 
-   "geom": "MULTIPOLYGON EMPTY",  
+   "district_id": 1,
+   "is_locked": false,
+   "version": 0,
+   "geom": "MULTIPOLYGON EMPTY", 
    "plan": 1001,
    "num_members": 1
   }
- }, 
+ },
  {
-  "pk": 10001, 
-  "model": "redistricting.district", 
+  "pk": 10001,
+  "model": "redistricting.district",
   "fields": {
    "short_label": "1",
-   "long_label": "District 1", 
+   "long_label": "District 1",
    "simple": "GEOMETRYCOLLECTION EMPTY",
-   "district_id": 1, 
-   "is_locked": false, 
-   "version": 0, 
-   "geom": "MULTIPOLYGON EMPTY", 
+   "district_id": 1,
+   "is_locked": false,
+   "version": 0,
+   "geom": "MULTIPOLYGON EMPTY",
    "plan": 1002,
    "num_members": 1
   }
- }, 
+ },
  {
-  "pk": 10002, 
-  "model": "redistricting.district", 
+  "pk": 10002,
+  "model": "redistricting.district",
   "fields": {
    "short_label": "2",
-   "long_label": "District 2", 
+   "long_label": "District 2",
    "simple": "GEOMETRYCOLLECTION EMPTY",
-   "district_id": 2, 
-   "is_locked": false, 
-   "version": 0, 
+   "district_id": 2,
+   "is_locked": false,
+   "version": 0,
    "geom": "MULTIPOLYGON EMPTY",
    "plan": 1001,
    "num_members": 1
   }
- }, 
+ },
  {
-  "pk": 10003, 
-  "model": "redistricting.district", 
+  "pk": 10003,
+  "model": "redistricting.district",
   "fields": {
    "short_label": "2",
-   "long_label": "District 2", 
-   "simple": "GEOMETRYCOLLECTION EMPTY", 
-   "district_id": 2, 
-   "is_locked": false, 
-   "version": 0, 
-   "geom": "MULTIPOLYGON EMPTY", 
+   "long_label": "District 2",
+   "simple": "GEOMETRYCOLLECTION EMPTY",
+   "district_id": 2,
+   "is_locked": false,
+   "version": 0,
+   "geom": "MULTIPOLYGON EMPTY",
    "plan": 1002,
    "num_members": 1
   }
- }, 
+ },
  {
-  "pk": 1, 
-  "model": "auth.user", 
+  "pk": 1,
+  "model": "auth.user",
   "fields": {
-   "username": "test_user", 
-   "first_name": "", 
-   "last_name": "", 
-   "is_active": true, 
-   "is_superuser": true, 
-   "is_staff": true, 
-   "last_login": "2011-03-03 19:31:10", 
-   "groups": [], 
-   "user_permissions": [], 
-   "password": "pbkdf2_sha256$36000$3WsLYrzuARfX$2Up8rItCX/5VGIwDR/hvCsX53awyRnEo2VDQIwFGlXI=", 
-   "email": "", 
+   "username": "test_user",
+   "first_name": "",
+   "last_name": "",
+   "is_active": true,
+   "is_superuser": true,
+   "is_staff": true,
+   "last_login": "2011-03-03 19:31:10",
+   "groups": [],
+   "user_permissions": [],
+   "password": "pbkdf2_sha256$36000$3WsLYrzuARfX$2Up8rItCX/5VGIwDR/hvCsX53awyRnEo2VDQIwFGlXI=",
+   "email": "",
    "date_joined": "2011-03-02 12:41:31"
   }
  }

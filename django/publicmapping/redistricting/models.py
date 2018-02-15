@@ -4473,7 +4473,7 @@ def configure_views():
                     'geolevel_id': geolevel.id
                 })
                 logger.debug('Created %s view ...',
-                            get_featuretype_name(geolevel.name, subject.name))
+                             get_featuretype_name(geolevel.name, subject.name))
 
 
 def get_featuretype_name(geolevel_name, subject_name=None):
@@ -4484,7 +4484,6 @@ def get_featuretype_name(geolevel_name, subject_name=None):
         return 'demo_%s_none' % geolevel_name
     else:
         return 'demo_%s_%s' % (geolevel_name, subject_name)
-
 
 
 # Enable tagging of districts by registering them with the tagging module
