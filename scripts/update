@@ -24,6 +24,17 @@ function run_migrations() {
         exec -T django ./manage.py migrate
 }
 
+function write_settings() {
+    # Write config_settings to the filesystem so it doesn't get
+    # overwritten by docker-compose volume mounts
+    docker-compose run --rm --entrypoint "bash -c" django \
+        "python -m district_builder_config.generate_settings \
+            config/config.xsd \
+            config/config.xml \
+            publicmapping/config_settings.py"
+
+}
+
 if [ "${BASH_SOURCE[0]}" = "${0}" ]
 then
     if [ "${1:-}" = "--help" ]
@@ -31,6 +42,7 @@ then
         usage
     else
         build_containers
+        write_settings
         docker-compose up -d postgres django
         run_migrations
     fi
