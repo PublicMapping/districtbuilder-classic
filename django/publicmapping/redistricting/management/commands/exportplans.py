@@ -89,7 +89,7 @@ class Command(BaseCommand):
                                   (p.id, p.name))
             if options.get('export_type') == 'index':
                 # Write each plan to a zipped index file in /tmp
-                f = DistrictIndexFile.plan2index(p)
+                f = DistrictIndexFile.plan2index(p.id)
             elif options.get('export_type') == 'shape':
                 # Write each plan to a zipped shape file in /tmp
                 f = DistrictShapeFile.plan2shape(p)

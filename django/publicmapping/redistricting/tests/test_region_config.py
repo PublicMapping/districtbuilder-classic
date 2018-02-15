@@ -5,7 +5,7 @@ from redistricting.models import *
 
 from redistricting.management.commands.setup import Command
 from redistricting.config import ConfigImporter
-from redistricting import StoredConfig
+from district_builder_config import StoredConfig
 
 
 class RegionConfigTest(BaseTestCase):

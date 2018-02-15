@@ -680,13 +680,13 @@ class Geounit(models.Model):
             and Geometry fields populated.
         """
         if not boundary and inside:
-            # there are 0 geounits inside a non-existant boundary
+            # there are 0 geounits inside a non-existent boundary
             return []
 
         # Make sure the geolevel is a number
         geolevel = int(geolevel)
         levels = legislative_body.get_geolevels()
-        base_geolevel = levels[len(levels) - 1]
+        base_geolevel = levels[-1]
         selection = None
         units = []
         searching = False
@@ -728,7 +728,7 @@ class Geounit(models.Model):
                 results = Geounit.objects.filter(q_ids, q_geom)
 
                 logger.debug('Found %d geounits in boundary at level %s',
-                             len(results), level)
+                             results.count(), level)
                 units += list(results)
 
                 # if we're at the base level, and haven't collected any
@@ -4485,7 +4485,7 @@ def get_featuretype_name(geolevel_name, subject_name=None):
     else:
         return 'demo_%s_%s' % (geolevel_name, subject_name)
 
-    
+
 
 # Enable tagging of districts by registering them with the tagging module
 register(District)

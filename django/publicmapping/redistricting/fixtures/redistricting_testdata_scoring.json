@@ -57,7 +57,7 @@
   "pk": 1001, 
   "model": "redistricting.scorefunction", 
   "fields": {
-   "calculator": "publicmapping.redistricting.calculators.SumValues", 
+   "calculator": "redistricting.calculators.SumValues", 
    "is_planscore": true, 
    "name": "Population Sum"
   }
@@ -66,7 +66,7 @@
   "pk": 1002, 
   "model": "redistricting.scorefunction", 
   "fields": {
-   "calculator": "publicmapping.redistricting.calculators.Percent", 
+   "calculator": "redistricting.calculators.Percent", 
    "is_planscore": true, 
    "name": "Percentage Points" 
   }
@@ -75,7 +75,7 @@
   "pk": 1003, 
   "model": "redistricting.scorefunction", 
   "fields": {
-   "calculator": "publicmapping.redistricting.calculators.Schwartzberg", 
+   "calculator": "redistricting.calculators.Schwartzberg", 
    "is_planscore": false, 
    "name": "Compactness" 
   }
@@ -84,7 +84,7 @@
   "pk": 1004, 
   "model": "redistricting.scorefunction", 
   "fields": {
-   "calculator": "publicmapping.redistricting.calculators.Contiguity", 
+   "calculator": "redistricting.calculators.Contiguity", 
    "is_planscore": false, 
    "name": "Contiguity" 
   }
@@ -93,7 +93,7 @@
   "pk": 1006, 
   "model": "redistricting.scorefunction", 
   "fields": {
-   "calculator": "publicmapping.redistricting.calculators.Percent", 
+   "calculator": "redistricting.calculators.Percent", 
    "is_planscore": false, 
    "name": "Percentage" 
   }
@@ -102,7 +102,7 @@
   "pk": 1005, 
   "model": "redistricting.scorefunction", 
   "fields": {
-   "calculator": "publicmapping.redistricting.calculators.SumValues", 
+   "calculator": "redistricting.calculators.SumValues", 
    "is_planscore": false, 
    "name": "Sum" 
   }

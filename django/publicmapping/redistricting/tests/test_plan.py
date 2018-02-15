@@ -455,12 +455,11 @@ class PlanTestCase(BaseTestCase):
         self.plan.add_geounits(self.district1.district_id, dist1ids,
                                self.geolevels[0].id, self.plan.version)
 
-        plan = Plan.objects.get(pk=self.plan.id)
-        archive = DistrictIndexFile.plan2index(plan)
-        zin = zipfile.ZipFile(archive.name, "r")
-        strz = zin.read(plan.name + ".csv")
+        archive = DistrictIndexFile.plan2index(self.plan.id)
+        zin = zipfile.ZipFile(archive, "r")
+        strz = zin.read(self.plan.name + ".csv")
         zin.close()
-        os.remove(archive.name)
+        os.remove(archive)
         self.assertEqual(1053, len(strz),
                          'Index file was the wrong length: %d' % len(strz))
 
@@ -509,11 +508,11 @@ class PlanTestCase(BaseTestCase):
         plan.save()
 
         # export
-        archive = DistrictIndexFile.plan2index(plan)
-        zin = zipfile.ZipFile(archive.name, "r")
+        archive = DistrictIndexFile.plan2index(plan.id)
+        zin = zipfile.ZipFile(archive, "r")
         strz = zin.read(plan.name + ".csv")
         zin.close()
-        os.remove(archive.name)
+        os.remove(archive)
         self.assertEqual(5994, len(strz),
                          'Index file was the wrong length: %d' % len(strz))
 

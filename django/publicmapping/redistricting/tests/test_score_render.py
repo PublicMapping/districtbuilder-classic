@@ -229,7 +229,7 @@ class ScoreRenderTestCase(BaseTestCase):
             template="sp_template2.html")
         # Create two functions, one with an arg and one without
         function = ScoreFunction(
-            calculator="publicmapping.redistricting.calculators.SumValues",
+            calculator="redistricting.calculators.SumValues",
             name="My Fresh Calc",
             is_planscore=False)
 
@@ -321,7 +321,7 @@ class ScoreRenderTestCase(BaseTestCase):
             template="sp_template1.html",
             cssclass="split_panel")
         function = ScoreFunction(
-            calculator="publicmapping.redistricting.calculators.SplitCounter",
+            calculator="redistricting.calculators.SplitCounter",
             name="splits_test",
             is_planscore=True)
         geolevel = self.plan.legislative_body.get_geolevels()[0]

@@ -172,11 +172,11 @@ class MultiMemberTestCase(BaseTestCase):
         """
         self.set_multi()
 
-        archive = DistrictIndexFile.plan2index(self.plan)
-        zin = zipfile.ZipFile(archive.name, "r")
+        archive = DistrictIndexFile.plan2index(self.plan.pk)
+        zin = zipfile.ZipFile(archive, "r")
         strz = zin.read(self.plan.name + ".csv")
         zin.close()
-        os.remove(archive.name)
+        os.remove(archive)
         self.assertTrue(strz.count(','), 36)
 
     def test_multi_range(self):
