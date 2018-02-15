@@ -28,15 +28,8 @@ Author:
 """
 
 from decimal import Decimal
-from django.contrib.gis.gdal import (
-    DataSource,
-    SpatialReference
-)
-from django.contrib.gis.geos import (
-    MultiPolygon,
-    LineString,
-    MultiLineString
-)
+from django.contrib.gis.gdal import (DataSource, SpatialReference)
+from django.contrib.gis.geos import (MultiPolygon, LineString, MultiLineString)
 from django.contrib.auth.models import User
 from django.core.cache import caches
 from django.core.management import call_command
@@ -47,16 +40,9 @@ from django.utils.translation import ugettext as _, activate
 from os.path import exists
 from lxml.etree import parse, XSLT
 from redistricting.config import Utils, SpatialUtils
-from redistricting.models import (
-    Geolevel,
-    Geounit,
-    Subject,
-    Characteristic,
-    LegislativeBody,
-    Plan,
-    ProcessingState,
-    configure_views
-)
+from redistricting.models import (Geolevel, Geounit, Subject, Characteristic,
+                                  LegislativeBody, Plan, ProcessingState,
+                                  configure_views)
 from redistricting.config import ConfigImporter
 from district_builder_config import StoredConfig
 from redistricting.tasks import DistrictIndexFile
@@ -435,8 +421,8 @@ ERROR:
 
             ds = DataSource(shapefile.get('path'))
 
-            logger.info('Importing from %s, %d of %d shapefiles...', ds,
-                        h + 1, len(config['shapefiles']))
+            logger.info('Importing from %s, %d of %d shapefiles...', ds, h + 1,
+                        len(config['shapefiles']))
 
             lyr = ds[0]
             logger.info('%d objects in shapefile', len(lyr))
@@ -466,7 +452,8 @@ ERROR:
                     logger.info('%2.0f%% .. ', progress * 100)
 
                 levels = [level]
-                for region, filter_list in config['region_filters'].iteritems():
+                for region, filter_list in config[
+                        'region_filters'].iteritems():
                     # Check for applicability of the function by examining the config
                     geolevel_xpath = '/DistrictBuilder/GeoLevels/GeoLevel[@name="%s"]' % config[
                         'geolevel']
@@ -487,8 +474,7 @@ ERROR:
                     name=shape_name,
                     geolevel__in=levels,
                     portable_id=shape_portable_id,
-                    tree_code=shape_tree_code
-                )
+                    tree_code=shape_tree_code)
                 should_create = prefetch.count() == 0
                 if should_create:
                     try:
@@ -534,8 +520,7 @@ ERROR:
                             simple=simple,
                             center=center,
                             portable_id=shape_portable_id,
-                            tree_code=shape_tree_code
-                        )
+                            tree_code=shape_tree_code)
                         g.save()
                         g.geolevel = levels
                         g.save()
@@ -554,8 +539,11 @@ ERROR:
                     # If we created a new Geounit, we can let this function know that it doesn't
                     # need to check for existing Characteristics, which will speed things up
                     # significantly.
-                    self.set_geounit_characteristic(g, subject_objects, feat,
-                                                    updates_possible=not should_create)
+                    self.set_geounit_characteristic(
+                        g,
+                        subject_objects,
+                        feat,
+                        updates_possible=not should_create)
 
             logger.info('100%')
 
@@ -593,7 +581,11 @@ ERROR:
 
             logger.info('100%')
 
-    def set_geounit_characteristic(self, g, subject_objects, feat, updates_possible=True):
+    def set_geounit_characteristic(self,
+                                   g,
+                                   subject_objects,
+                                   feat,
+                                   updates_possible=True):
         to_be_inserted = []
         for attr, obj in subject_objects.iteritems():
             if attr.endswith('_by_id'):
@@ -610,8 +602,8 @@ ERROR:
                 denominator_field = subject_objects[
                     '%s_by_id' % obj.percentage_denominator.name]
                 denominator_value = Decimal(str(
-                    feat.get(denominator_field)
-                )).quantize(Decimal('000000.0000', 'ROUND_DOWN'))
+                    feat.get(denominator_field))).quantize(
+                        Decimal('000000.0000', 'ROUND_DOWN'))
                 if denominator_value > 0:
                     percentage = value / denominator_value
 
@@ -628,8 +620,9 @@ ERROR:
                     except:
                         c.number = '0.0'
                         c.save()
-                        logger.info('Failed to set value "%s" to %d in feature "%s"',
-                                    attr, feat.get(attr), g.name)
+                        logger.info(
+                            'Failed to set value "%s" to %d in feature "%s"',
+                            attr, feat.get(attr), g.name)
                         logger.info(traceback.format_exc())
             if should_create:
                 to_be_inserted.append(
@@ -637,9 +630,7 @@ ERROR:
                         subject=obj,
                         geounit=g,
                         number=value,
-                        percentage=percentage
-                    )
-                )
+                        percentage=percentage))
         if to_be_inserted:
             Characteristic.objects.bulk_create(to_be_inserted)
 

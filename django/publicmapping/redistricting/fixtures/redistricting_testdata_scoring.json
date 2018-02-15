@@ -1,180 +1,180 @@
 [
  {
-  "pk": 1001, 
-  "model": "redistricting.scoredisplay", 
+  "pk": 1001,
+  "model": "redistricting.scoredisplay",
   "fields": {
    "owner": 1,
-   "legislative_body": 1001, 
-   "cssclass": "the_display", 
-   "is_page": true, 
+   "legislative_body": 1001,
+   "cssclass": "the_display",
+   "is_page": true,
    "title": "TestScoreDisplay",
    "name": ""
   }
- }, 
+ },
  {
-  "pk": 1002, 
-  "model": "redistricting.scoredisplay", 
+  "pk": 1002,
+  "model": "redistricting.scoredisplay",
   "fields": {
    "owner": 1,
-   "legislative_body": 1001, 
-   "cssclass": "", 
-   "is_page": false, 
+   "legislative_body": 1001,
+   "cssclass": "",
+   "is_page": false,
    "title": "TestScoreDisplay2",
    "name": ""
   }
- }, 
+ },
  {
-  "pk": 1001, 
-  "model": "redistricting.scorepanel", 
+  "pk": 1001,
+  "model": "redistricting.scorepanel",
   "fields": {
-   "title": "TestScorePanel1", 
-   "is_ascending": true, 
-   "template": "sp_template1.html", 
-   "position": 1, 
-   "cssclass": "panel1", 
-   "type": "plan", 
+   "title": "TestScorePanel1",
+   "is_ascending": true,
+   "template": "sp_template1.html",
+   "position": 1,
+   "cssclass": "panel1",
+   "type": "plan",
    "displays": [1001],
    "score_functions": [1001,1002],
    "name": ""
   }
- }, 
+ },
  {
-  "pk": 1003, 
-  "model": "redistricting.scorepanel", 
+  "pk": 1003,
+  "model": "redistricting.scorepanel",
   "fields": {
-   "title": "TestScorePanel2", 
-   "is_ascending": true, 
-   "template": "sp_template2.html", 
-   "position": 1, 
-   "cssclass": "panel2", 
-   "type": "district", 
+   "title": "TestScorePanel2",
+   "is_ascending": true,
+   "template": "sp_template2.html",
+   "position": 1,
+   "cssclass": "panel2",
+   "type": "district",
    "displays": [1002],
    "score_functions": [1003,1004],
    "name": ""
   }
- }, 
+ },
  {
-  "pk": 1001, 
-  "model": "redistricting.scorefunction", 
+  "pk": 1001,
+  "model": "redistricting.scorefunction",
   "fields": {
-   "calculator": "redistricting.calculators.SumValues", 
-   "is_planscore": true, 
+   "calculator": "redistricting.calculators.SumValues",
+   "is_planscore": true,
    "name": "Population Sum"
   }
- }, 
+ },
  {
-  "pk": 1002, 
-  "model": "redistricting.scorefunction", 
+  "pk": 1002,
+  "model": "redistricting.scorefunction",
   "fields": {
-   "calculator": "redistricting.calculators.Percent", 
-   "is_planscore": true, 
-   "name": "Percentage Points" 
+   "calculator": "redistricting.calculators.Percent",
+   "is_planscore": true,
+   "name": "Percentage Points"
   }
- }, 
+ },
  {
-  "pk": 1003, 
-  "model": "redistricting.scorefunction", 
+  "pk": 1003,
+  "model": "redistricting.scorefunction",
   "fields": {
-   "calculator": "redistricting.calculators.Schwartzberg", 
-   "is_planscore": false, 
-   "name": "Compactness" 
+   "calculator": "redistricting.calculators.Schwartzberg",
+   "is_planscore": false,
+   "name": "Compactness"
   }
- }, 
+ },
  {
-  "pk": 1004, 
-  "model": "redistricting.scorefunction", 
+  "pk": 1004,
+  "model": "redistricting.scorefunction",
   "fields": {
-   "calculator": "redistricting.calculators.Contiguity", 
-   "is_planscore": false, 
-   "name": "Contiguity" 
+   "calculator": "redistricting.calculators.Contiguity",
+   "is_planscore": false,
+   "name": "Contiguity"
   }
- }, 
+ },
  {
-  "pk": 1006, 
-  "model": "redistricting.scorefunction", 
+  "pk": 1006,
+  "model": "redistricting.scorefunction",
   "fields": {
-   "calculator": "redistricting.calculators.Percent", 
-   "is_planscore": false, 
-   "name": "Percentage" 
+   "calculator": "redistricting.calculators.Percent",
+   "is_planscore": false,
+   "name": "Percentage"
   }
- }, 
+ },
  {
-  "pk": 1005, 
-  "model": "redistricting.scorefunction", 
+  "pk": 1005,
+  "model": "redistricting.scorefunction",
   "fields": {
-   "calculator": "redistricting.calculators.SumValues", 
-   "is_planscore": false, 
-   "name": "Sum" 
+   "calculator": "redistricting.calculators.SumValues",
+   "is_planscore": false,
+   "name": "Sum"
   }
- }, 
+ },
  {
-  "pk": 1003, 
-  "model": "redistricting.scoreargument", 
+  "pk": 1003,
+  "model": "redistricting.scoreargument",
   "fields": {
-   "function": 1002, 
-   "type": "subject", 
-   "argument": "denominator", 
+   "function": 1002,
+   "type": "subject",
+   "argument": "denominator",
    "value": "TestSubject2"
   }
- }, 
+ },
  {
-  "pk": 1001, 
-  "model": "redistricting.scoreargument", 
+  "pk": 1001,
+  "model": "redistricting.scoreargument",
   "fields": {
-   "function": 1001, 
-   "type": "subject", 
-   "argument": "value1", 
+   "function": 1001,
+   "type": "subject",
+   "argument": "value1",
    "value": "TestSubject"
   }
- }, 
+ },
  {
-  "pk": 1002, 
-  "model": "redistricting.scoreargument", 
+  "pk": 1002,
+  "model": "redistricting.scoreargument",
   "fields": {
-   "function": 1002, 
-   "type": "subject", 
-   "argument": "numerator", 
+   "function": 1002,
+   "type": "subject",
+   "argument": "numerator",
    "value": "TestSubject"
   }
- }, 
+ },
  {
-  "pk": 1004, 
-  "model": "redistricting.scoreargument", 
+  "pk": 1004,
+  "model": "redistricting.scoreargument",
   "fields": {
-   "function": 1006, 
-   "type": "subject", 
-   "argument": "numerator", 
+   "function": 1006,
+   "type": "subject",
+   "argument": "numerator",
    "value": "TestSubject"
   }
- }, 
+ },
  {
-  "pk": 1005, 
-  "model": "redistricting.scoreargument", 
+  "pk": 1005,
+  "model": "redistricting.scoreargument",
   "fields": {
-   "function": 1006, 
-   "type": "subject", 
-   "argument": "denominator", 
+   "function": 1006,
+   "type": "subject",
+   "argument": "denominator",
    "value": "TestSubject2"
   }
- }, 
+ },
  {
-  "pk": 1006, 
-  "model": "redistricting.scoreargument", 
+  "pk": 1006,
+  "model": "redistricting.scoreargument",
   "fields": {
-   "function": 1005, 
-   "type": "subject", 
-   "argument": "value1", 
+   "function": 1005,
+   "type": "subject",
+   "argument": "value1",
    "value": "TestSubject"
   }
- }, 
+ },
  {
-  "pk": 1007, 
-  "model": "redistricting.scoreargument", 
+  "pk": 1007,
+  "model": "redistricting.scoreargument",
   "fields": {
-   "function": 1005, 
-   "type": "subject", 
-   "argument": "value2", 
+   "function": 1005,
+   "type": "subject",
+   "argument": "value2",
    "value": "TestSubject2"
   }
  }
-] 
+]

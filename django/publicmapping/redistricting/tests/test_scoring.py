@@ -445,15 +445,15 @@ class ScoringTestCase(BaseTestCase):
         # test nested sum
         score = sumSumPlanFunction.score(self.plan)
         self.assertEqual(
-            num_districts ** 2, score['value'],
+            num_districts**2, score['value'],
             'sumSumPlanFunction was incorrect: %d' % score['value'])
 
         # test a list of plans
         score = sumSumPlanFunction.score([self.plan, self.plan])
-        self.assertEqual(num_districts ** 2, score[0]['value'],
+        self.assertEqual(num_districts**2, score[0]['value'],
                          'sumSumPlanFunction was incorrect for first plan: %d'
                          % score[0]['value'])
-        self.assertEqual(num_districts ** 2, score[1]['value'],
+        self.assertEqual(num_districts**2, score[1]['value'],
                          'sumSumPlanFunction was incorrect for second plan: %d'
                          % score[1]['value'])
 

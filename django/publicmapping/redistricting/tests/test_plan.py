@@ -1023,7 +1023,8 @@ class PlanTestCase(BaseTestCase):
             totals[subject] = total['number__sum']
         total_geom = enforce_multi(
             District.objects.filter(plan=self.plan,
-                                    district_id__gt=0).aggregate(Collect('geom'))['geom__collect'],
+                                    district_id__gt=0).aggregate(
+                                        Collect('geom'))['geom__collect'],
             collapse=True)
 
         # Paste them all together now

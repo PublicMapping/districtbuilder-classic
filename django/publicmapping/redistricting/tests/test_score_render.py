@@ -97,14 +97,12 @@ class ScoreRenderTestCase(BaseTestCase):
             template.close()
 
             markup = panel.render(districts)
-            expected = (
-                'District 1:86.83%<img class="yes-contiguous" '
-                'src="/static/images/icon-check.png">'
-                'District 2:86.83%<img class="yes-contiguous" '
-                'src="/static/images/icon-check.png">'
-                'Unassigned:0.00%<img class="yes-contiguous" '
-                'src="/static/images/icon-check.png">'
-            )
+            expected = ('District 1:86.83%<img class="yes-contiguous" '
+                        'src="/static/images/icon-check.png">'
+                        'District 2:86.83%<img class="yes-contiguous" '
+                        'src="/static/images/icon-check.png">'
+                        'Unassigned:0.00%<img class="yes-contiguous" '
+                        'src="/static/images/icon-check.png">')
             self.assertEqual(
                 expected, markup,
                 'The markup for districts was incorrect. (e:"%s", a:"%s")' %
@@ -187,14 +185,12 @@ class ScoreRenderTestCase(BaseTestCase):
         template.close()
 
         markup = display.render(self.plan)
-        expected = (
-            'District 1:86.83%<img class="yes-contiguous" '
-            'src="/static/images/icon-check.png">'
-            'District 2:86.83%<img class="yes-contiguous" '
-            'src="/static/images/icon-check.png">'
-            'Unassigned:0.00%<img class="yes-contiguous" '
-            'src="/static/images/icon-check.png">'
-        )
+        expected = ('District 1:86.83%<img class="yes-contiguous" '
+                    'src="/static/images/icon-check.png">'
+                    'District 2:86.83%<img class="yes-contiguous" '
+                    'src="/static/images/icon-check.png">'
+                    'Unassigned:0.00%<img class="yes-contiguous" '
+                    'src="/static/images/icon-check.png">')
         self.assertEqual(expected, markup,
                          'The markup was incorrect. (e:"%s", a:"%s")' %
                          (expected, markup))
@@ -203,14 +199,12 @@ class ScoreRenderTestCase(BaseTestCase):
             self.plan.get_districts_at_version(
                 self.plan.version, include_geom=False))
 
-        expected = (
-            'District 1:86.83%<img class="yes-contiguous" '
-            'src="/static/images/icon-check.png">'
-            'District 2:86.83%<img class="yes-contiguous" '
-            'src="/static/images/icon-check.png">'
-            'Unassigned:0.00%<img class="yes-contiguous" '
-            'src="/static/images/icon-check.png">'
-        )
+        expected = ('District 1:86.83%<img class="yes-contiguous" '
+                    'src="/static/images/icon-check.png">'
+                    'District 2:86.83%<img class="yes-contiguous" '
+                    'src="/static/images/icon-check.png">'
+                    'Unassigned:0.00%<img class="yes-contiguous" '
+                    'src="/static/images/icon-check.png">')
         self.assertEqual(expected, markup,
                          'The markup was incorrect. (e:"%s", a:"%s")' %
                          (expected, markup))
@@ -343,8 +337,7 @@ class ScoreRenderTestCase(BaseTestCase):
             '<td>Unit 1-3</td></tr><tr><td>District 1</td><td>Unit 1-4</td>'
             '</tr><tr><td>District 1</td><td>Unit 1-6</td></tr><tr>'
             '<td>District 1</td><td>Unit 1-7</td></tr><tr><td>District 5</td>'
-            '<td>Unit 1-4</td></tr></tbody></table></div></div>\']'
-        ) % p1.name
+            '<td>Unit 1-4</td></tr></tbody></table></div></div>\']') % p1.name
 
         tplfile = settings.TEMPLATES[0]['DIRS'][0] + '/' + panel.template
         template = open(tplfile, 'w')
