@@ -372,7 +372,7 @@ def scoreplan(request, planid):
         try:
             score = ComputedPlanScore.compute(criteria.function, plan)
         except:
-            logger.debug(traceback.format_exc())
+            logger.exception('Failed to compute plan score')
 
         if not score or not score['value']:
             status['success'] = False
