@@ -615,7 +615,7 @@ class PolsbyPopper(CalculatorBase):
     """
     Calculator for the Polsby-Popper measure of compactness.
 
-    The Polsby-Popper measure of campactness measures the area of a circle
+    The Polsby-Popper measure of compactness measures the area of a circle
     with the same perimeter as a district compared to area of the district.
 
     This calculator will calculate either the compactness score of a single
