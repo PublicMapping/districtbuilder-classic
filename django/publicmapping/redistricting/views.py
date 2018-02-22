@@ -558,7 +558,8 @@ def commonplan(request, planid):
     bodies = LegislativeBody.objects.all().order_by('region__sort_key',
                                                     'sort_key')
     l_bodies = [
-        b for b in bodies if b in [
+        b for b in bodies
+        if b in [
             sd.legislative_body
             for sd in ScoreDisplay.objects.filter(is_page=True)
         ]
@@ -1888,7 +1889,8 @@ def get_unlocked_simple_geometries(request, planid):
 
             # Create a union of locked geometries
             districts = [
-                d.id for d in plan.get_districts_at_version(
+                d.id
+                for d in plan.get_districts_at_version(
                     version, include_geom=True) if d.is_locked
             ]
             locked = District.objects.filter(id__in=districts).aggregate(
@@ -1963,9 +1965,9 @@ def get_statistics(request, planid):
         return HttpResponse(
             json.dumps(status), content_type='application/json', status=500)
 
-    if 'version' in request.GET:
+    if 'version' in request.POST:
         try:
-            version = int(request.GET['version'])
+            version = int(request.POST['version'])
         except:
             version = plan.version
     else:
@@ -1979,7 +1981,7 @@ def get_statistics(request, planid):
         status['message'] = _('Unable to get Demographics ScoreDisplay')
         status['exception'] = traceback.format_exc()
 
-    if 'displayId' in request.GET:
+    if 'displayId' in request.POST:
         try:
             display = ScoreDisplay.objects.get(pk=request.POST['displayId'])
         except:
