@@ -1130,7 +1130,7 @@ class SpatialUtils:
             if not self._rest_config(
                     'DELETE',
                     '/geoserver/rest/layers/%s.json' % ft_cfg['name']):
-                logger.debug("Could not delete layer %s", ft_cfg['name'])
+                logger.warn("Could not delete layer %s", ft_cfg['name'])
                 continue
 
             # Delete the feature type
@@ -1202,9 +1202,8 @@ class SpatialUtils:
         )
         resp.raise_for_status()
 
-
         # Create our namespace
-        namespace_url = '/geoserver/rest/namespaces'
+        namespace_url = 'http://%s:%s/geoserver/rest/namespaces' % (self.host, self.port)
         namespace_obj = {'namespace': {'prefix': self.ns, 'uri': self.nshref}}
         if self._check_spatial_resource(namespace_url, self.ns, namespace_obj):
             logger.debug('Created namespace "%s"' % self.ns)
@@ -1219,7 +1218,11 @@ class SpatialUtils:
             )
             return False
 
-        data_store_url = '/geoserver/rest/workspaces/%s/datastores' % self.ns
+        data_store_url = 'http://%s:%s/geoserver/rest/workspaces/%s/datastores' % (
+            self.host,
+            self.port,
+            self.ns
+        )
         data_store_name = 'PostGIS'
 
         data_store_obj = {
@@ -1459,7 +1462,7 @@ class SpatialUtils:
         try:
             # add the district intervals
             intervals = self.store.filter_nodes(
-                '//ScoreFunction[@calculator="publicmapping.redistricting.calculators.Interval"]'
+                '//ScoreFunction[@calculator="redistricting.calculators.Interval"]'
             )
             for interval in intervals:
                 subject_name = interval.xpath('SubjectArgument')[0].get('ref')
@@ -1540,8 +1543,8 @@ class SpatialUtils:
                     lbody_name + '_' + subject_name,
                     doc.as_sld(pretty_print=True))
 
-        except Exception as ex:
-            logger.debug(traceback.format_exc())
+        except Exception:
+            logger.warn(traceback.format_exc())
             logger.warn('LegislativeBody intervals are not configured.')
 
         logger.info("Geoserver configuration complete.")
@@ -1562,8 +1565,8 @@ class SpatialUtils:
         @keyword alias: Optional. The new feature type is an alias for this names feature type.
         @returns: A flag indicating if the feature type was successfully created.
         """
-        feature_type_url = '/geoserver/rest/workspaces/%s/datastores/%s/featuretypes' % (
-            self.ns, data_store_name)
+        feature_type_url = 'http://%s:%s/geoserver/rest/workspaces/%s/datastores/%s/featuretypes' % (
+            self.host, self.port, self.ns, data_store_name)
 
         feature_type_obj = SpatialUtils.feature_template(
             feature_type_name, alias=alias, attributes=attributes)
@@ -1752,7 +1755,7 @@ class SpatialUtils:
         }
 
         # Create the styles for the demographic layers
-        style_url = '/geoserver/rest/styles'
+        style_url = 'http://%s:%s/geoserver/rest/styles' % (self.host, self.port)
 
         # Get or create the spatial style
         return self._check_spatial_resource(style_url, nsfeaturetype,
