@@ -313,6 +313,7 @@
           <div id="upload_selection" class="middlecolumn" >
               <label>{% trans "Upload a District Index file:" %}</label>
               <form method="POST" enctype="multipart/form-data" action="/districtmapping/plan/upload/" id="frmUpload">
+                {% csrf_token %}
                 <input type="file" id="indexFile" name="indexFile"/>
                 {% ifnotequal bodies|length 1 %}
                 <div>

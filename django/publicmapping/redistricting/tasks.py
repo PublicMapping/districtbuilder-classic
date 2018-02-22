@@ -44,6 +44,7 @@ from fiona import crs
 
 import sld_generator as generator
 from django.conf import settings
+from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.gis.geos import GeometryCollection
 from django.contrib.sites.models import Site
@@ -148,7 +149,7 @@ class DistrictIndexFile():
     def index2plan(name,
                    body,
                    filename,
-                   owner=None,
+                   owner_id=None,
                    template=False,
                    purge=False,
                    email=None,
@@ -174,6 +175,7 @@ class DistrictIndexFile():
                 translated to this language (provided message files have
                 been completed).
         """
+        owner = User.objects.get(pk=owner_id)
         prev_lang = None
         if not language is None:
             prev_lang = get_language()

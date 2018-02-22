@@ -971,7 +971,7 @@ def uploadfile(request):
             request.POST['txtNewName'],
             request.POST['legislativeBody'],
             filename,
-            owner=request.user,
+            owner_id=request.user.pk,
             template=False,
             purge=True,
             email=request.POST['userEmail'],
