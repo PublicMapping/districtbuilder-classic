@@ -1963,9 +1963,9 @@ def get_statistics(request, planid):
         return HttpResponse(
             json.dumps(status), content_type='application/json', status=500)
 
-    if 'version' in request.GET:
+    if 'version' in request.POST:
         try:
-            version = int(request.GET['version'])
+            version = int(request.POST['version'])
         except:
             version = plan.version
     else:
@@ -1979,7 +1979,7 @@ def get_statistics(request, planid):
         status['message'] = _('Unable to get Demographics ScoreDisplay')
         status['exception'] = traceback.format_exc()
 
-    if 'displayId' in request.GET:
+    if 'displayId' in request.POST:
         try:
             display = ScoreDisplay.objects.get(pk=request.POST['displayId'])
         except:
