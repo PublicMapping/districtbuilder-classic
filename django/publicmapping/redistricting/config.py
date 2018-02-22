@@ -1903,7 +1903,7 @@ class SpatialUtils:
             sld.write(body)
             sld.close()
 
-            logger.debug('Saved "%s" style file' % dest)
+            logger.info('Saved "%s" style file' % dest)
 
             return True
         except Exception as ex:
