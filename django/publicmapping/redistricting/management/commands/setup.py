@@ -602,8 +602,7 @@ ERROR:
                 denominator_field = subject_objects[
                     '%s_by_id' % obj.percentage_denominator.name]
                 denominator_value = Decimal(str(
-                    feat.get(denominator_field))).quantize(
-                        Decimal('000000.0000', 'ROUND_DOWN'))
+                    feat.get(denominator_field))).quantize(Decimal('000000.0000', 'ROUND_DOWN'))
                 if denominator_value > 0:
                     percentage = value / denominator_value
 
@@ -723,7 +722,7 @@ ERROR:
                 plan_name,
                 legislative_body.id,
                 path,
-                owner=admin,
+                owner_id=admin.pk,
                 template=True,
                 purge=False,
                 email=None,
