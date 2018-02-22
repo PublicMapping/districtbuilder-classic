@@ -141,7 +141,7 @@ class Utils:
 
         try:
             qset.delete()
-        except Exception as e:
+        except Exception:
             logger.info('Could not delete sessions.')
             return False
 
@@ -428,7 +428,7 @@ class ConfigImporter:
                 denominator_name = denominator_name.lower()[:50]
                 try:
                     denominator = Subject.objects.get(name=denominator_name)
-                except Exception as ex:
+                except Exception:
                     logger.info('Subject "%s" was not found.',
                                 denominator_name)
                     raise
@@ -1330,7 +1330,7 @@ class SpatialUtils:
                         layername='none')
 
                     self.write_style(geolevel.name + '_none', sld_content)
-                except Exception as ex:
+                except Exception:
                     logger.error(traceback.format_exc())
                     # Have to return here, since there's no guarantee sld_content is defined
                     return False
@@ -1374,7 +1374,7 @@ class SpatialUtils:
 
                     self.write_style(geolevel.name + '_boundaries',
                                      sld_content)
-                except Exception as ex:
+                except Exception:
                     logger.error(traceback.format_exc())
 
                 if self.set_style(featuretype_name, sld_content):
@@ -1415,7 +1415,7 @@ class SpatialUtils:
 
                     self.write_style(geolevel.name + '_' + subject.name,
                                      sld_content)
-                except Exception as ex:
+                except Exception:
                     logger.error(traceback.format_exc())
 
                 if self.set_style(featuretype_name, sld_content):
@@ -1734,7 +1734,7 @@ class SpatialUtils:
                 return None
 
             return json.loads(response)
-        except Exception as ex:
+        except Exception:
             return None
 
     def create_style(self, featuretype):
@@ -1909,7 +1909,7 @@ class SpatialUtils:
             logger.info('Saved "%s" style file' % dest)
 
             return True
-        except Exception as ex:
+        except Exception:
             logger.warn('Could not save "%s" style' % dest)
             return False
 
