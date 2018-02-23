@@ -1129,20 +1129,19 @@ class SpatialUtils:
 
         settings = requests.get(
             'http://geoserver.internal.districtbuilder.com:8080/geoserver/rest/settings.json',
-            headers=self.headers['default']
-        ).json()
+            headers=self.headers['default']).json()
 
         settings['global']['proxyBaseUrl'] = 'http://localhost:8080/geoserver'
 
         resp = requests.put(
             'http://geoserver.internal.districtbuilder.com:8080/geoserver/rest/settings',
             json=settings,
-            headers=self.headers['default']
-        )
+            headers=self.headers['default'])
         resp.raise_for_status()
 
         # Create our namespace
-        namespace_url = 'http://%s:%s/geoserver/rest/namespaces' % (self.host, self.port)
+        namespace_url = 'http://%s:%s/geoserver/rest/namespaces' % (self.host,
+                                                                    self.port)
         namespace_obj = {'namespace': {'prefix': self.ns, 'uri': self.nshref}}
         if self._check_spatial_resource(namespace_url, self.ns, namespace_obj):
             logger.debug('Created namespace "%s"' % self.ns)
@@ -1158,10 +1157,7 @@ class SpatialUtils:
             return False
 
         data_store_url = 'http://%s:%s/geoserver/rest/workspaces/%s/datastores' % (
-            self.host,
-            self.port,
-            self.ns
-        )
+            self.host, self.port, self.ns)
         data_store_name = 'PostGIS'
 
         data_store_obj = {
@@ -1621,8 +1617,11 @@ class SpatialUtils:
         """
         try:
             resp = requests.get(
-                url, headers=self.headers['default'], params={'quietOnNotFound': True}
-            )
+                url,
+                headers=self.headers['default'],
+                params={
+                    'quietOnNotFound': True
+                })
             resp.raise_for_status()
             return resp.status_code == 200
         except requests.exceptions.RequestException:
@@ -1704,7 +1703,8 @@ class SpatialUtils:
         }
 
         # Create the styles for the demographic layers
-        style_url = 'http://%s:%s/geoserver/rest/styles' % (self.host, self.port)
+        style_url = 'http://%s:%s/geoserver/rest/styles' % (self.host,
+                                                            self.port)
 
         # Get or create the spatial style
         return self._check_spatial_resource(style_url, nsfeaturetype,
