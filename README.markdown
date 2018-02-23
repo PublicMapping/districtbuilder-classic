@@ -23,7 +23,6 @@ Ansible 2.2
 $ # Copy config and make any necessary edits
 $ cp django/publicmapping/config/config.dist.xml django/publicmapping/config/config.xml
 $ # Copy .env file and add passwords
-$ # NOTE: Leave MAP_SERVER_ADMIN_PASSWORD the same for now
 $ cp .env.sample .env
 $ ./scripts/setup
 $ vagrant ssh

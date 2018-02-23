@@ -1021,6 +1021,9 @@ class SpatialUtils:
         @keyword store: Optional L{StoredConfig} that contains configuration settings.
         @keyword config: Optional configuration settings.
         """
+        # Hardcode the user name to the default since the API doesn't provide a
+        # way to change it.
+        MAP_SERVER_ADMIN_USER = 'admin'
         if store is not None:
             self.store = store
 
@@ -1032,7 +1035,7 @@ class SpatialUtils:
             self.ns = mapconfig.get('ns')
             self.nshref = mapconfig.get('nshref')
 
-            user_pass = '%s:%s' % (os.getenv('MAP_SERVER_ADMIN_USER'),
+            user_pass = '%s:%s' % (MAP_SERVER_ADMIN_USER,
                                    os.getenv('MAP_SERVER_ADMIN_PASSWORD'))
         elif isinstance(config, dict):
             try:
@@ -1042,7 +1045,7 @@ class SpatialUtils:
                 self.ns = config['ns']
                 self.nshref = config['nshref']
 
-                user_pass = '%s:%s' % (os.getenv('MAP_SERVER_ADMIN_USER'),
+                user_pass = '%s:%s' % (MAP_SERVER_ADMIN_USER,
                                        os.getenv('MAP_SERVER_ADMIN_PASSWORD'))
             except:
                 logger.error(
