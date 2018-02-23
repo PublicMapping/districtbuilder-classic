@@ -120,3 +120,12 @@ echo "Starting geoserver..."
 echo "GEOSERVER DATA DIR is $GEOSERVER_DATA_DIR"
 
 exec sh bin/startup.sh
+
+echo "Attempting to set a new admin password..."
+echo "Note that this assumes the current password is the default"
+
+curl -X PUT http://localhost:${WEB_APP_PORT}/geoserver/rest/security/self/password \
+  -u admin:geoserver \
+  -H "accept: application/json" \
+  -H "content-type: application/json" \
+  -d "{\"newPassword\": \"${MAP_SERVER_ADMIN_PASSWORD}\"}"
