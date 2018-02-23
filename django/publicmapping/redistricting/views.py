@@ -298,7 +298,8 @@ def copyplan(request, planid):
     newname = p.name + " " + str(random.random())
     if (request.method == "POST"):
         newname = request.POST["name"][0:200]
-        shared = request.POST.get("shared", False)
+        shared = request.POST.get("shared",
+                                  False) and request.POST["shared"] == "true"
 
     plan_copy = Plan.objects.filter(
         name=newname, owner=request.user, legislative_body=p.legislative_body)
