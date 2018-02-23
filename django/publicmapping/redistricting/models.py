@@ -4361,11 +4361,10 @@ class ComputedPlanScore(models.Model):
                 version=plan_version,
                 defaults=defaults)
 
-        except Exception, ex:
-            logger.info(
+        except:
+            logger.exception(
                 'Could not retrieve nor create ComputedPlanScore for plan %d',
                 plan.id)
-            logger.debug('Reason:', ex)
             return None
 
         if created:
