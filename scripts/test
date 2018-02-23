@@ -30,9 +30,9 @@ then
         if which shellcheck &>/dev/null; then
             echo "Linting STRTA scripts"
             find ./scripts -type f -print0 | xargs -0 -r shellcheck
-            docker-compose up -d postgres django
-            test_django_app
         fi
+        docker-compose up -d postgres django
+        test_django_app
     fi
     exit
 fi
