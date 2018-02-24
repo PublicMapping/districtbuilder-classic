@@ -1,15 +1,23 @@
 services:
   - docker
-
+env:
+  global:
+  - secure: IGCVQAaPbhBW47WUGtlOftOpPM7yIz3jk61niBmtF/ACIO9m8Y7KU2+Rl3MwM+4xGv4v0py9kpqAjk7FPCS6PCGA2pUpjMFuXiX7Dfh5Gsy1C0E/j2fvoTkOXkuterw0BcIwi7epymoY4aA8X0GinzuJ1B3sLJXqX8wfH49PSW0=
+  - secure: HgBnUcWY+L4XCzSBmg1JqCkMeN+5yoA23XTdTbJ0N5K8YXUpzP58FoYkwbhd5sjdnkcSr+2gnGzzxCQ9yxqiD0S78omjYPVurGntwGFdRjy9tATNpWbFqk9sViDX8ge+jx3+DYDIutXvZPZwrS4gkShHrByZrkQJvQTFBjwWkPQ=
 install:
-  - cp .env.sample .env
-  - sed -i 's/WEB_APP_PASSWORD=/WEB_APP_PASSWORD=travis/' .env
-  - sed -i 's/ADMIN_PASSWORD=/ADMIN_PASSWORD=admin/' .env
-  - sed -i 's/DATABASE_PASSWORD=/DATABASE_PASSWORD=district_builder/' .env
-  - sed -i 's/KEY_VALUE_STORE_PASSWORD=/KEY_VALUE_STORE_PASSWORD=redis/' .env
-  - sed -i 's/MAP_SERVER_ADMIN_PASSWORD=/MAP_SERVER_ADMIN_PASSWORD=geoserver/' .env
-  - cp django/publicmapping/config/config.dist.xml django/publicmapping/config/config.xml
-  - ./scripts/update
-
+- cp .env.sample .env
+- sed -i 's/WEB_APP_PASSWORD=/WEB_APP_PASSWORD=travis/' .env
+- sed -i 's/ADMIN_PASSWORD=/ADMIN_PASSWORD=admin/' .env
+- sed -i 's/DATABASE_PASSWORD=/DATABASE_PASSWORD=district_builder/' .env
+- sed -i 's/KEY_VALUE_STORE_PASSWORD=/KEY_VALUE_STORE_PASSWORD=redis/' .env
+- sed -i 's/MAP_SERVER_ADMIN_PASSWORD=/MAP_SERVER_ADMIN_PASSWORD=geoserver/' .env
+- cp django/publicmapping/config/config.dist.xml django/publicmapping/config/config.xml
+- "./scripts/update"
 script:
-  - ./scripts/test
+- "./scripts/cibuild"
+deploy:
+  - provider: script
+    script: "scripts/deploy"
+    on:
+      repo: PublicMapping/DistrictBuilder
+      branch: master
