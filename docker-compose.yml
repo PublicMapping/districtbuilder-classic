@@ -34,7 +34,7 @@ services:
       - "${WEB_APP_PORT}:${WEB_APP_PORT}"
     volumes:
       - ./django/publicmapping/static/:/opt/static/
-      - ./sld:/opt/sld/
+      - sld:/opt/sld/
       - reports:/opt/reports
     depends_on:
       - django
@@ -91,7 +91,7 @@ services:
     env_file:
       - .env
     volumes:
-      - sld/:/data/sld
+      - sld:/data/sld
     ports:
       - "${MAP_SERVER_PORT}:${WEB_APP_PORT}"
     links:

@@ -10,3 +10,4 @@ deployment/ansible/roles/azavea.*
 sld
 geoserver/data_dir
 data
+config_settings.py
