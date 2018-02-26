@@ -23,6 +23,7 @@ VOLUME $GEOSERVER_DATA_DIR
 
 COPY ./jetty.xml $GEOSERVER_DIR/etc/jetty.xml
 COPY ./geoserver-startup.sh $GEOSERVER_HOME/bin/geoserver-startup.sh
+COPY ./change_admin_password.sh $GEOSERVER_HOME/bin/change_admin_password.sh
 
 WORKDIR $GEOSERVER_HOME
 
