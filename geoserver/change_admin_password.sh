@@ -6,7 +6,7 @@
 # This nees to be reset to provide some minimum level of security.
 # -----------------------------------------------------------------------------
 
-echo "Attempting to set a new admin password..."
+echo "Attempting to set a new Geoserver admin password..."
 echo "Note that this assumes the current password is the default ('geoserver')"
 
 # Sometimes geoserver is not ready to receive API calls for whatever reason.
