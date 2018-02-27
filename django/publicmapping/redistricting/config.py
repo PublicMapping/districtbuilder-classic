@@ -1083,73 +1083,9 @@ class SpatialUtils:
 
         @returns: A flag indicating if the configuration was purged successfully.
         """
-        # get the workspace
-        ws_cfg = self._read_config(
-            '/geoserver/rest/workspaces/%s.json' % self.ns,
-            'Could not get workspace %s.' % self.ns)
-        if ws_cfg is None:
-            logger.debug("%s configuration could not be fetched.", self.ns)
-            return True
-
-        # get the data stores in the workspace
-        wsds_cfg = self._read_config(
-            ws_cfg['workspace']['dataStores'],
-            'Could not get data stores in workspace %s' %
-            ws_cfg['workspace']['name'])
-        if wsds_cfg is None:
-            logger.debug(
-                "Workspace '%s' datastore configuration could not be fetched.",
-                self.ns)
-            return False
-
-        # get the data source configuration
-        ds_cfg = self._read_config(
-            wsds_cfg['dataStores']['dataStore'][0]['href'],
-            "Could not get datastore configuration for '%s'" %
-            wsds_cfg['dataStores']['dataStore'][0]['name'])
-        if ds_cfg is None:
-            logger.debug("Datastore configuration could not be fetched.")
-            return False
-
-        # get all the feature types in the data store
-        fts_cfg = self._read_config(
-            ds_cfg['dataStore']['featureTypes'] + '?list=all',
-            "Could not get feature types in datastore '%s'" %
-            wsds_cfg['dataStores']['dataStore'][0]['name'])
-        if fts_cfg is None:
-            logger.debug(
-                "Data store '%s' feature type configuration could not be fetched.",
-                wsds_cfg['dataStores']['dataStore'][0]['name'])
-            return False
-
-        if 'featureType' not in fts_cfg['featureTypes']:
-            fts_cfg['featureTypes'] = {'featureType': []}
-
-        for ft_cfg in fts_cfg['featureTypes']['featureType']:
-            # Delete the layer
-            if not self._rest_config(
-                    'DELETE',
-                    '/geoserver/rest/layers/%s.json' % ft_cfg['name']):
-                logger.warn("Could not delete layer %s", ft_cfg['name'])
-                continue
-
-            # Delete the feature type
-            if self._rest_config('DELETE', ft_cfg['href']):
-                logger.debug("Deleted feature type '%s'", ft_cfg['name'])
-            else:
-                logger.debug("Could not delete feature type '%s'",
-                             ft_cfg['name'])
-
-        # now that the data store is empty, delete it
+        # Delete workspace
         if not self._rest_config(
-                'DELETE', wsds_cfg['dataStores']['dataStore'][0]['href']):
-            logger.debug("Could not delete datastore %s",
-                         wsds_cfg['dataStores']['dataStore'][0]['name'])
-            return False
-
-        # now that the workspace is empty, delete it
-        if not self._rest_config(
-                'DELETE', '/geoserver/rest/workspaces/%s.json' % self.ns):
+                'DELETE', '/geoserver/rest/workspaces/%s.json?recurse=true' % self.ns):
             logger.debug("Could not delete workspace %s", self.ns)
             return False
 
