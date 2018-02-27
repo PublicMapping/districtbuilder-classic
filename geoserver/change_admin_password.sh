@@ -2,8 +2,8 @@
 # -----------------------------------------------------------------------------
 # Attempt to reset the admin user's password.
 #
-# By default, the admin username is 'admin` and the password is 'geoserver'.
-# This nees to be reset to provide some minimum level of security.
+# By default, the admin username is 'admin' and the password is 'geoserver'.
+# This needs to be reset to provide some minimum level of security.
 # -----------------------------------------------------------------------------
 
 echo "Attempting to set a new Geoserver admin password..."
