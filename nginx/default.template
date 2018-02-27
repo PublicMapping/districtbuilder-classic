@@ -10,6 +10,9 @@ server {
   listen ${WEB_APP_PORT};
   server_name localhost;
 
+  # Long timeouts are necessary for extended split reports
+  proxy_read_timeout 300s;
+
   location / {
     proxy_pass http://web;
     client_max_body_size 20M;

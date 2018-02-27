@@ -59,6 +59,7 @@ services:
       - "--log-level=debug"
       - "--access-logfile=-"
       - "--error-logfile=-"
+      - "--timeout=300"
       - "-kgevent"
       - "publicmapping.wsgi"
     links:
