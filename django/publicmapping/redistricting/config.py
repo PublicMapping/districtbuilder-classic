@@ -1252,26 +1252,25 @@ class SpatialUtils:
             return False
 
         # Create the feature types and their styles
-
-        geolevel_fields = [
-            x for x in Geolevel._meta.fields
-            if x.get_internal_type() != 'ForeignKey'
-        ]
-        geolevel_attrs = [{
-            'name': field.name,
-            'binding': SpatialUtils.get_binding(field)
-        } for field in geolevel_fields]
-
         subject_attrs = [
             {'name': 'name', 'binding': 'java.lang.String'},
-            {'name': 'geom', 'binding': 'java.lang.String'},
-            {'name': 'geolevel_id', 'binding': 'com.vividsolutions.jts.geom.MultiPolygon'},
+            {'name': 'geom', 'binding': 'com.vividsolutions.jts.geom.MultiPolygon'},
+            {'name': 'geolevel_id', 'binding': 'java.lang.Integer'},
             {'name': 'number', 'binding': 'java.lang.Double'},
             {'name': 'percentage', 'binding': 'java.lang.Double'},
         ]
 
         if self.create_featuretype(
-                'identify_geounit', attributes=geolevel_attrs):
+            'identify_geounit',
+            attributes=[
+                {'name': 'name', 'binding': 'java.lang.String'},
+                {'name': 'geolevel_id', 'binding': 'java.lang.Integer'},
+                {'name': 'geom', 'binding': 'com.vividsolutions.jts.geom.MultiPolygon'},
+                {'name': 'number', 'binding': 'java.lang.Double'},
+                {'name': 'percentage', 'binding': 'java.lang.Double'},
+                {'name': 'subject_id', 'binding': 'java.lang.Integer'}
+            ]
+        ):
             logger.debug('Created feature type "identify_geounit"')
         else:
             logger.warn('Could not create "identify_geounit" feature type')
@@ -1282,21 +1281,32 @@ class SpatialUtils:
                 continue
 
             if self.create_featuretype(
-                    'simple_%s' % geolevel.name, attributes=geolevel_attrs):
+                'simple_%s' % geolevel.name,
+                attributes=[
+                    {'name': 'name', 'binding': 'java.lang.String'},
+                    {'name': 'geolevel_id', 'binding': 'java.lang.Integer'},
+                    {'name': 'geom', 'binding': 'com.vividsolutions.jts.geom.MultiPolygon'}
+                ]
+            ):
                 logger.debug(
                     'Created "simple_%s" feature type' % geolevel.name)
             else:
                 logger.warn('Could not create "simple_%s" simple feature type'
                             % geolevel.name)
 
-            if self.create_featuretype(
-                    'simple_district_%s' % geolevel.name,
-                    attributes=geolevel_attrs):
+            simple_district_attrs = [
+                {'name': 'district_id', 'binding': 'java.lang.Integer'},
+                {'name': 'plan_id', 'binding': 'java.lang.Integer'},
+                {'name': 'legislative_body_id', 'binding': 'java.lang.Integer'},
+                {'name': 'geom', 'binding': 'com.vividsolutions.jts.geom.MultiPolygon'}
+            ]
+            if self.create_featuretype('simple_district_%s' % geolevel.name,
+                                       attributes=simple_district_attrs):
                 logger.debug('Created "simple_district_%s" feature type' %
                              geolevel.name)
             else:
                 logger.warn(
-                    'Colud not create "simple_district_%s" simple district feature type'
+                    'Could not create "simple_district_%s" simple district feature type'
                     % geolevel.name)
 
             all_subjects = Subject.objects.all().order_by('sort_key')
@@ -1309,7 +1319,7 @@ class SpatialUtils:
                         featuretype_name,
                         alias=get_featuretype_name(geolevel.name,
                                                    subject.name),
-                        attributes=geolevel_attrs):
+                        attributes=subject_attrs):
                     logger.debug(
                         'Created "%s" feature type' % featuretype_name)
                 else:
@@ -1352,7 +1362,7 @@ class SpatialUtils:
                         featuretype_name,
                         alias=get_featuretype_name(geolevel.name,
                                                    subject.name),
-                        attributes=geolevel_attrs):
+                        attributes=subject_attrs):
                     logger.debug(
                         'Created "%s" feature type' % featuretype_name)
                 else:
@@ -1449,7 +1459,7 @@ class SpatialUtils:
         if self.create_featuretype(
                 'simple_district',
                 alias='simple_district_%s' % geolevel.name,
-                attributes=geolevel_attrs):
+                attributes=simple_district_attrs):
             logger.debug('Created "simple_district" feature type')
         else:
             logger.warn('Could not create "simple_district" feature type')
