@@ -1605,13 +1605,11 @@ div#map_settings_content {
     position: absolute;
     top: 110px;
     right: 280px;
-	min-width: 140px;
+    min-width: 140px;
     background-color: #272727;
     color: #fff;
     border: 1px solid #666666;
     padding: 8px 11px;
-    opacity: 0.9;
-    filter: alpha(opacity=90);
     overflow-y: hidden;
     overflow-x: hidden;
     -moz-box-shadow: 2px 2px 2px #888888;
