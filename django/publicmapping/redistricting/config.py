@@ -1021,29 +1021,21 @@ class SpatialUtils:
         @keyword store: Optional L{StoredConfig} that contains configuration settings.
         @keyword config: Optional configuration settings.
         """
+        self.host = os.getenv('MAP_SERVER_HOST')
+        self.port = os.getenv('WEB_APP_PORT')
+
         if store is not None:
             self.store = store
 
             mapconfig = self.store.get_mapserver()
 
-            self.host = os.getenv('MAP_SERVER_HOST')
-            self.port = os.getenv('WEB_APP_PORT')
-
             self.ns = mapconfig.get('ns')
             self.nshref = mapconfig.get('nshref')
 
-            user_pass = '%s:%s' % (os.getenv('MAP_SERVER_ADMIN_USER'),
-                                   os.getenv('MAP_SERVER_ADMIN_PASSWORD'))
         elif isinstance(config, dict):
             try:
-                self.host = os.getenv('MAP_SERVER_HOST')
-                self.port = os.getenv('WEB_APP_PORT')
-
                 self.ns = config['ns']
                 self.nshref = config['nshref']
-
-                user_pass = '%s:%s' % (os.getenv('MAP_SERVER_ADMIN_USER'),
-                                       os.getenv('MAP_SERVER_ADMIN_PASSWORD'))
             except:
                 logger.error(
                     'SpatialUtils is missing a required key in the settings dictionary.'
@@ -1056,8 +1048,13 @@ class SpatialUtils:
             )
             raise Exception()
 
-        if self.host == '':
-            self.host = os.getenv('MAP_SERVER_HOST')
+        self.origin = 'http://%s:%s/geoserver' % (self.host, self.port)
+
+        # Hardcode the admin user name to the default since the API doesn't
+        # provide a way to easily change it.
+        admin_user = 'admin'
+        admin_password = os.getenv('MAP_SERVER_ADMIN_PASSWORD')
+        user_pass = '%s:%s' % (admin_user, admin_password)
 
         auth = 'Basic %s' % base64.b64encode(user_pass)
         self.headers = {
@@ -1119,27 +1116,23 @@ class SpatialUtils:
 
         @returns: A flag indicating if geoserver was configured correctly.
         """
-
         # Set the Geoserver proxy base url
         # This is necessary for geoserver to know where to look for its internal
         # resources like its copy of openlayers and other things
-
         settings = requests.get(
-            'http://geoserver.internal.districtbuilder.com:8080/geoserver/rest/settings.json',
-            headers=self.headers['default']
-        ).json()
+            '%s/rest/settings.json' % self.origin,
+            headers=self.headers['default']).json()
 
-        settings['global']['proxyBaseUrl'] = 'http://localhost:8080/geoserver'
+        settings['global']['proxyBaseUrl'] = self.origin
 
         resp = requests.put(
-            'http://geoserver.internal.districtbuilder.com:8080/geoserver/rest/settings',
+            '%s/rest/settings' % self.origin,
             json=settings,
-            headers=self.headers['default']
-        )
+            headers=self.headers['default'])
         resp.raise_for_status()
 
         # Create our namespace
-        namespace_url = 'http://%s:%s/geoserver/rest/namespaces' % (self.host, self.port)
+        namespace_url = '%s/rest/namespaces' % self.origin
         namespace_obj = {'namespace': {'prefix': self.ns, 'uri': self.nshref}}
         if self._check_spatial_resource(namespace_url, self.ns, namespace_obj):
             logger.debug('Created namespace "%s"' % self.ns)
@@ -1154,11 +1147,8 @@ class SpatialUtils:
             )
             return False
 
-        data_store_url = 'http://%s:%s/geoserver/rest/workspaces/%s/datastores' % (
-            self.host,
-            self.port,
-            self.ns
-        )
+        data_store_url = '%s/rest/workspaces/%s/datastores' % (self.origin,
+                                                               self.ns)
         data_store_name = 'PostGIS'
 
         data_store_obj = {
@@ -1511,8 +1501,8 @@ class SpatialUtils:
         @keyword alias: Optional. The new feature type is an alias for this names feature type.
         @returns: A flag indicating if the feature type was successfully created.
         """
-        feature_type_url = 'http://%s:%s/geoserver/rest/workspaces/%s/datastores/%s/featuretypes' % (
-            self.host, self.port, self.ns, data_store_name)
+        feature_type_url = '%s/rest/workspaces/%s/datastores/%s/featuretypes' % (
+            self.origin, self.ns, data_store_name)
 
         feature_type_obj = SpatialUtils.feature_template(
             feature_type_name, alias=alias, attributes=attributes)
@@ -1618,8 +1608,11 @@ class SpatialUtils:
         """
         try:
             resp = requests.get(
-                url, headers=self.headers['default'], params={'quietOnNotFound': True}
-            )
+                url,
+                headers=self.headers['default'],
+                params={
+                    'quietOnNotFound': True
+                })
             resp.raise_for_status()
             return resp.status_code == 200
         except requests.exceptions.RequestException:
@@ -1701,7 +1694,7 @@ class SpatialUtils:
         }
 
         # Create the styles for the demographic layers
-        style_url = 'http://%s:%s/geoserver/rest/styles' % (self.host, self.port)
+        style_url = '%s/rest/styles' % self.origin
 
         # Get or create the spatial style
         return self._check_spatial_resource(style_url, nsfeaturetype,

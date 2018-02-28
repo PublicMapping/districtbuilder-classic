@@ -35,6 +35,11 @@ function write_settings() {
 
 }
 
+function change_geoserver_admin_password() {
+    docker-compose \
+        exec -T geoserver ./bin/change_admin_password.sh
+}
+
 if [ "${BASH_SOURCE[0]}" = "${0}" ]
 then
     if [ "${1:-}" = "--help" ]
@@ -43,8 +48,9 @@ then
     else
         build_containers
         write_settings
-        docker-compose up -d postgres django
+        docker-compose up -d postgres django geoserver
         run_migrations
+        change_geoserver_admin_password
     fi
     exit
 fi
