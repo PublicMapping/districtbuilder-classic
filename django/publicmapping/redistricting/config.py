@@ -1189,6 +1189,7 @@ class SpatialUtils:
         if self.create_featuretype(
             'identify_geounit',
             attributes=[
+                {'name': 'id', 'binding': 'java.lang.Integer'},
                 {'name': 'name', 'binding': 'java.lang.String'},
                 {'name': 'geolevel_id', 'binding': 'java.lang.Integer'},
                 {'name': 'geom', 'binding': 'com.vividsolutions.jts.geom.MultiPolygon'},

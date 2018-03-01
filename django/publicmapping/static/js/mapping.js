@@ -1699,13 +1699,13 @@ function mapinit(srs,maxExtent) {
         if (evt.keyCode == KEYCODE_ESC) {
             selection.removeFeatures(selection.features);
 
-            $('#assign_district').val('-1');               
+            $('#assign_district').val('-1');
             dragdropControl.deactivate();
             dragdropControl.resumeTool.activate();
         }
-    }
+    };
 
-    // A callback to create a popup window on the map after a peice
+    // A callback to create a popup window on the map after a piece
     // of geography is selected.
     var idFeature = function(e) {
         var snapto = getSnapLayer().layer;
@@ -1726,91 +1726,103 @@ function mapinit(srs,maxExtent) {
         var tipFeature = e.features[0];
         for (var glvl = maxGeolevel; glvl >= minGeolevel; glvl--) {
             for (var feat = 0; feat < e.features.length; feat++) {
-                if (e.features[feat].data.geolevel_id == glvl) {
+                if (parseInt(e.features[feat].data.geolevel_id) === glvl) {
                     crumbs[e.features[feat].data.id] = e.features[feat].data.name;
-                }
-
-                if (e.features[feat].data.geolevel_id == minGeolevel &&
-                    glvl == minGeolevel) {
-                    tipFeature = e.features[feat];
-                    for (var demo = 0; demo < DEMOGRAPHICS.length; demo++) {
-                        if (e.features[feat].data.subject_id == DEMOGRAPHICS[demo].id) {
-                            var text = DEMOGRAPHICS[demo].text;
-                            text = DB.util.startsWith(text, '% ') ? text.substr(2) : text;
-                            ctics.push({ lbl: text, val:parseFloat(e.features[feat].data.number) });
+                    if (glvl === minGeolevel) {
+                        tipFeature = e.features[feat];
+                        for (var demo = 0; demo < DEMOGRAPHICS.length; demo++) {
+                            if (parseInt(tipFeature.data.subject_id) === DEMOGRAPHICS[demo].id) {
+                                var text = DEMOGRAPHICS[demo].text;
+                                text = DB.util.startsWith(text, '% ') ? text.substr(2) : text;
+                                ctics.push({ lbl: text, val:parseFloat(tipFeature.data.number) });
+                            }
                         }
                     }
                 }
             }
         }
 
-        tipdiv.style.display = 'none';
+        // Now, get the full version, with geometry included, so that we can calculate the centroid
+        idProtocol.read({
+            filter: new OpenLayers.Filter.Comparison({
+                type: OpenLayers.Filter.Comparison.EQUAL_TO,
+                value: tipFeature.data.id,
+                property: 'id'
+            }),
+            maxFeatures: 1,
+            callback: function(resp) {
+                tipFeature = resp.features[0];
+                tipdiv.style.display = 'none';
 
-        // Clear out the map tip div
-        $(tipdiv).find('.demographic').remove();
- 
-        // sort the characteristics alphabetically by label
-        ctics = $(ctics).sort(function(a, b) { return a.lbl > b.lbl; });
+                // Clear out the map tip div
+                $(tipdiv).find('.demographic').remove();
 
-        // truncate the breadcrumbs into a single string
-        var place = [];
-        for (var key in crumbs) {
-            place.push(crumbs[key]);
-        }
-        place = place.join(' / ');
+                // sort the characteristics alphabetically by label
+                ctics = $(ctics).sort(function(a, b) { return a.lbl > b.lbl; });
 
-        var centroid = tipFeature.geometry.getCentroid();
-        var lonlat = new OpenLayers.LonLat( centroid.x, centroid.y );
-        var pixel = olmap.getPixelFromLonLat(lonlat);
-        $(tipdiv).find('h1').text(place);
-        var select = $('#districtby')[0];
-        var value = parseInt(tipFeature.attributes.number, 10);
-
-        if (ctics.length > 0) {
-            $(ctics).each(function(i, obj) {
-                try {
-                    var demographic = $('<div class="demographic"/>').html(obj.lbl + ': ' + Math.round(obj.val).toLocaleString());
-                    $(tipdiv).append(demographic);
-                } catch (exception) {
-                    // too many characteristics
+                // truncate the breadcrumbs into a single string
+                var place = [];
+                for (var key in crumbs) {
+                    place.push(crumbs[key]);
                 }
-            });
+                place = place.join(' / ');
 
-            var halfWidth = tipdiv.clientWidth/2;
-            var halfHeight = tipdiv.clientHeight/2;
-            if (pixel.x < halfWidth) { 
-                pixel.x = halfWidth;
-            }
-            else if (pixel.x > olmap.div.clientWidth - halfWidth) {
-                pixel.x = olmap.div.clientWidth - halfWidth;
-            }
-            if (pixel.y < halfHeight) {
-                pixel.y = halfHeight;
-            }
-            else if (pixel.y > (olmap.div.clientHeight-29) - halfHeight) {
-                pixel.y = (olmap.div.clientHeight-29) - halfHeight;
-            }
+                var centroid = tipFeature.geometry.getCentroid();
+                var lonlat = new OpenLayers.LonLat( centroid.x, centroid.y );
+                var pixel = olmap.getPixelFromLonLat(lonlat);
+                $(tipdiv).find('h1').text(place);
+                var select = $('#districtby')[0];
+                var value = parseInt(tipFeature.attributes.number, 10);
 
-            tipdiv.style.left = (pixel.x - halfWidth) + 'px';
-            tipdiv.style.top = (pixel.y - halfHeight) + 'px';
-            tipdiv.style.display = 'block';
-        } else {
-            $("<div>Couldn't retrieve demographic info for that geounit. " +
-                    "Please select another.</div>").dialog({
-                title: 'No demographics available',
-                resizable: false,
-                modal: true
-            });
-        }
-                
+                if (ctics.length > 0) {
+                    $(ctics).each(function(i, obj) {
+                        try {
+                            var demographic = $('<div class="demographic"/>').html(
+                                obj.lbl + ': ' + Math.round(obj.val).toLocaleString()
+                            );
+                            $(tipdiv).append(demographic);
+                        } catch (exception) {
+                            // too many characteristics
+                        }
+                    });
 
-        if (tipdiv.pending) {
-            clearTimeout(tipdiv.timeout);
-            tipdiv.pending = false;
-        }
+                    var halfWidth = tipdiv.clientWidth/2;
+                    var halfHeight = tipdiv.clientHeight/2;
+                    if (pixel.x < halfWidth) { 
+                        pixel.x = halfWidth;
+                    }
+                    else if (pixel.x > olmap.div.clientWidth - halfWidth) {
+                        pixel.x = olmap.div.clientWidth - halfWidth;
+                    }
+                    if (pixel.y < halfHeight) {
+                        pixel.y = halfHeight;
+                    }
+                    else if (pixel.y > (olmap.div.clientHeight-29) - halfHeight) {
+                        pixel.y = (olmap.div.clientHeight-29) - halfHeight;
+                    }
 
-        // hide the other tip
-        districtIdDiv.style.display = 'none';
+                    tipdiv.style.left = (pixel.x - halfWidth) + 'px';
+                    tipdiv.style.top = (pixel.y - halfHeight) + 'px';
+                    tipdiv.style.display = 'block';
+                } else {
+                    $("<div>Couldn't retrieve demographic info for that geounit. " +
+                            "Please select another.</div>").dialog({
+                        title: 'No demographics available',
+                        resizable: false,
+                        modal: true
+                    });
+                }
+
+                if (tipdiv.pending) {
+                    clearTimeout(tipdiv.timeout);
+                    tipdiv.pending = false;
+                }
+
+                // hide the other tip
+                districtIdDiv.style.display = 'none';
+            }
+        });
+
     };
 
     // A callback for feature selection in different controls.
@@ -3165,12 +3177,57 @@ IdGeounit = OpenLayers.Class(OpenLayers.Control.GetFeature, {
             {click: this.selectClick}, this.handlerOptions.click || {});
     },
 
+    // This is unfortunately basically a copy-paste from the OpenLayers source code, but I couldn't
+    // figure out any other way to pass the propertyNames option to the protocol.
+    request: function(bounds, options) {
+        options = options || {};
+        var filter = new OpenLayers.Filter.Spatial({
+            type: this.filterType,
+            value: bounds
+        });
+
+        // Set the cursor to "wait" to tell the user we're working.
+        OpenLayers.Element.addClass(this.map.viewPortDiv, "olCursorWait");
+
+        var response = this.protocol.read({
+            maxFeatures: options.single == true ? this.maxFeatures : undefined,
+            filter: filter,
+            // Limit to non-geom properties so that we don't get back a multi-megabyte response
+            propertyNames: ['id', 'name', 'percentage', 'number', 'geolevel_id', 'subject_id'],
+            callback: function(result) {
+                if(result.success()) {
+                    if(result.features.length) {
+                        if(options.single == true) {
+                            this.selectBestFeature(result.features,
+                                bounds.getCenterLonLat(), options);
+                        } else {
+                            this.select(result.features);
+                        }
+                    } else if(options.hover) {
+                        this.hoverSelect();
+                    } else {
+                        this.events.triggerEvent("clickout");
+                        if(this.clickout) {
+                            this.unselectAll();
+                        }
+                    }
+                }
+                // Reset the cursor.
+                OpenLayers.Element.removeClass(this.map.viewPortDiv, "olCursorWait");
+            },
+            scope: this
+        });
+        if(options.hover == true) {
+            this.hoverResponse = response;
+        }
+    },
+
     selectClick: function(evt) {
         // Set the cursor to "wait" to tell the user we're working on their click.
         OpenLayers.Element.addClass(this.map.viewPortDiv, "olCursorWait");
-                        
+
         var bounds = this.pixelToBounds(evt.xy);
-                                        
+
         this.setModifiers(evt);
         this.request(bounds, {single: false});
     },
