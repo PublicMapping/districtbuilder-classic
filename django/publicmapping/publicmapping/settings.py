@@ -216,6 +216,8 @@ EMAIL_HOST = os.getenv('MAILER_HOST')
 EMAIL_PORT = os.getenv('MAILER_PORT')
 EMAIL_HOST_USER = os.getenv('MAILER_USER')
 EMAIL_HOST_PASSWORD = os.getenv('MAILER_PASSWORD')
+EMAIL_USE_TLS = os.getenv('MAILER_USE_TLS_OR_SSL', '').lower() == 'tls'
+EMAIL_USE_SSL = os.getenv('MAILER_USE_TLS_OR_SSL', '').lower() == 'ssl'
 
 MEDIA_ROOT = '/usr/src/app/site-media/'
 
