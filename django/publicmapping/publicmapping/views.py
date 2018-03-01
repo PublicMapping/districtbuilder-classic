@@ -36,7 +36,7 @@ from django.views.decorators.cache import cache_control
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
 from django.shortcuts import render
-from django.template import loader, Context, RequestContext
+from django.template import loader, RequestContext
 from hashlib import sha1
 from django.utils.translation import ugettext as _, get_language
 import json
@@ -267,7 +267,7 @@ def emailpassword(user):
             'abcdefghjkmnopqrstuvwxyzABCDEFGHJKMNOPQRSTUVWXYZ023456789!@#$%^&*()-_=+'
         ) for i in range(8)
     ])
-    context = Context({'user': user, 'new_password': newpw})
+    context = {'user': user, 'new_password': newpw}
     template = loader.get_template('forgottenpassword.email')
 
     try:
