@@ -210,11 +210,14 @@ MAP_SERVER = os.getenv('MAP_SERVER_HOST')
 MAP_SERVER_USER = os.getenv('MAP_SERVER_ADMIN_USER')
 MAP_SERVER_PASS = os.getenv('MAP_SERVER_ADMIN_PASSWORD')
 
-# TODO: Make sending email work
-EMAIL_HOST = 'localhost'
-EMAIL_PORT = 25
-EMAIL_HOST_USER = ''
-EMAIL_HOST_PASSWORD = ''
+if DEBUG:
+    # Print emails to the console
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+EMAIL_HOST = os.getenv('MAILER_HOST')
+EMAIL_PORT = os.getenv('MAILER_PORT')
+EMAIL_HOST_USER = os.getenv('MAILER_USER')
+EMAIL_HOST_PASSWORD = os.getenv('MAILER_PASSWORD')
 
 MEDIA_ROOT = '/usr/src/app/site-media/'
 
