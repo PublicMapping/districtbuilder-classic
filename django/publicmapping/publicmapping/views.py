@@ -318,9 +318,16 @@ def forgotpassword(request):
             user = User.objects.get(email__exact=email)
             status['mode'] = 'sending'
             status['success'] = emailpassword(user)
-        except:
+        except User.DoesNotExist:
+            logger.info('Email not found: %s' % email)
             status['field'] = 'email'
             status['message'] = 'Invalid email address. Please try again.'
+            status['success'] = False
+        except:
+            logger.exception('Error sending password reset email')
+            status[
+                'message'] = 'An error occurred sending password reset email'
+            status['success'] = False
     else:
         status['field'] = 'both'
         status['message'] = 'Missing username or email.'
