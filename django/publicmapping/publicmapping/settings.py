@@ -27,12 +27,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('WEB_APP_PASSWORD')
 
-ADMINS = (
-    (
-        os.getenv('ADMIN_USER'),
-        os.getenv('ADMIN_EMAIL'),
-    )
-)
+ADMINS = ((
+    os.getenv('ADMIN_USER'),
+    os.getenv('ADMIN_EMAIL'),
+))
 
 MANAGERS = ADMINS
 
@@ -240,5 +238,7 @@ try:
     from publicmapping.config_settings import *
 except ImportError:
     logger = logging.getLogger(__name__)
-    logger.error('Could not find config_settings; double-check the README for missed setup steps')
+    logger.error(
+        'Could not find config_settings; double-check the README for missed setup steps'
+    )
     raise
