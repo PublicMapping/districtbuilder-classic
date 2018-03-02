@@ -15,7 +15,8 @@ Vagrant.configure(2) do |config|
       rsync__exclude: [".git/",
                        "reports/",
                        "geoserver/data_dir/",
-                       "django/publicmapping/publicmapping/config_settings.py"],
+                       "django/publicmapping/publicmapping/config_settings.py",
+                       "django/publicmapping/locale/"],
       rsync__args: ["--verbose", "--archive", "--delete", "-z", "--links"]
 
   config.vm.provider :virtualbox do |vb|
