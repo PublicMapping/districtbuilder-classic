@@ -548,7 +548,7 @@ class ConfigImporter:
                         )])
                     po.add_or_update(
                         msgid=u'%s long description' % attributes['name'],
-                        msgstr='',
+                        msgstr=geolevel.get('ref') or '',
                         occurs=[(
                             os.path.abspath(self.store.datafile),
                             geolevel.sourceline,
