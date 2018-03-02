@@ -36,7 +36,7 @@ from django.views.decorators.cache import cache_control
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
 from django.shortcuts import render
-from django.template import loader, Context, RequestContext
+from django.template import loader, RequestContext
 from hashlib import sha1
 from django.utils.translation import ugettext as _, get_language
 import json
@@ -267,7 +267,7 @@ def emailpassword(user):
             'abcdefghjkmnopqrstuvwxyzABCDEFGHJKMNOPQRSTUVWXYZ023456789!@#$%^&*()-_=+'
         ) for i in range(8)
     ])
-    context = Context({'user': user, 'new_password': newpw})
+    context = {'user': user, 'new_password': newpw}
     template = loader.get_template('forgottenpassword.email')
 
     try:
@@ -318,9 +318,16 @@ def forgotpassword(request):
             user = User.objects.get(email__exact=email)
             status['mode'] = 'sending'
             status['success'] = emailpassword(user)
-        except:
+        except User.DoesNotExist:
+            logger.info('Email not found: %s' % email)
             status['field'] = 'email'
             status['message'] = 'Invalid email address. Please try again.'
+            status['success'] = False
+        except:
+            logger.exception('Error sending password reset email')
+            status[
+                'message'] = 'An error occurred sending password reset email'
+            status['success'] = False
     else:
         status['field'] = 'both'
         status['message'] = 'Missing username or email.'

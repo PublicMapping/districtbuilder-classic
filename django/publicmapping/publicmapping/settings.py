@@ -27,12 +27,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('WEB_APP_PASSWORD')
 
-ADMINS = (
-    (
-        os.getenv('ADMIN_USER'),
-        os.getenv('ADMIN_EMAIL'),
-    )
-)
+ADMINS = ((
+    os.getenv('ADMIN_USER'),
+    os.getenv('ADMIN_EMAIL'),
+))
 
 MANAGERS = ADMINS
 
@@ -210,11 +208,16 @@ MAP_SERVER = os.getenv('MAP_SERVER_HOST')
 MAP_SERVER_USER = os.getenv('MAP_SERVER_ADMIN_USER')
 MAP_SERVER_PASS = os.getenv('MAP_SERVER_ADMIN_PASSWORD')
 
-# TODO: Make sending email work
-EMAIL_HOST = 'localhost'
-EMAIL_PORT = 25
-EMAIL_HOST_USER = ''
-EMAIL_HOST_PASSWORD = ''
+if DEBUG:
+    # Print emails to the console
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+EMAIL_HOST = os.getenv('MAILER_HOST')
+EMAIL_PORT = os.getenv('MAILER_PORT')
+EMAIL_HOST_USER = os.getenv('MAILER_USER')
+EMAIL_HOST_PASSWORD = os.getenv('MAILER_PASSWORD')
+EMAIL_USE_TLS = os.getenv('MAILER_USE_TLS_OR_SSL', '').lower() == 'tls'
+EMAIL_USE_SSL = os.getenv('MAILER_USE_TLS_OR_SSL', '').lower() == 'ssl'
 
 MEDIA_ROOT = '/usr/src/app/site-media/'
 
@@ -237,5 +240,7 @@ try:
     from publicmapping.config_settings import *
 except ImportError:
     logger = logging.getLogger(__name__)
-    logger.error('Could not find config_settings; double-check the README for missed setup steps')
+    logger.error(
+        'Could not find config_settings; double-check the README for missed setup steps'
+    )
     raise
