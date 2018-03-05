@@ -504,18 +504,14 @@ def commonplan(request, planid):
     study_area_extent = None
 
     if len(levels) > 0:
-        study_area_extent = reduce(
-            lambda x, y: x.union(y),
-            [x.simple for x in levels[0].geounit_set.all()])
+        study_area_extent = levels[0].calc_extent()
     else:
         # The geolevels with higher indexes are larger geography
         # Cycle through legislative bodies, since they may be in different regions
         for lb in LegislativeBody.objects.all():
             biglevel = lb.get_geolevels()[0]
             if biglevel.geounit_set.count() > 0:
-                study_area_extent = reduce(
-                    lambda x, y: x.union(y),
-                    [x.simple for x in biglevel.geounit_set.all()])
+                study_area_extent = biglevel.calc_extent()
                 break
 
     for level in levels:
@@ -623,7 +619,7 @@ def commonplan(request, planid):
         'reporting_template':
         reporting_template,
         'study_area_extent':
-        list(study_area_extent.extent),
+        study_area_extent,
         'has_leaderboard':
         len(ScoreDisplay.objects.filter(is_page=True)) > 0,
         'calculator_reports':

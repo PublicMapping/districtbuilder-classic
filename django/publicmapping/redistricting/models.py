@@ -34,7 +34,7 @@ from django.contrib.gis.db import models
 from django.contrib.gis.geos import (MultiPolygon, Polygon, GEOSGeometry,
                                      GEOSException, GeometryCollection, Point)
 from django.contrib.gis.db.models.query import GeoQuerySet
-from django.contrib.gis.db.models import Collect
+from django.contrib.gis.db.models import Collect, Extent
 from django.contrib.auth.models import User
 from django.db.models import Sum, Max, Q, Count
 from django.db.models.signals import pre_save, post_save, m2m_changed
@@ -556,6 +556,15 @@ class Geolevel(BaseModel):
                      geomods, nummods)
 
         return True
+
+    def calc_extent(self):
+        """
+        Returns the extent (list of four floats) of the geounits belonging to this geolevel
+        """
+        extent = self.geounit_set.aggregate(Extent('simple'))['simple__extent']
+
+        # Convert the 4-tuple returned by the query to a list
+        return list(extent)
 
 
 class LegislativeLevel(models.Model):
