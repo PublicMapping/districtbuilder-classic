@@ -2,7 +2,7 @@
 FROM openjdk:8-jre-slim
 
 ENV GEOSERVER_VERSION 2.11.2
-ENV GEOSERVER_ZIP_URL http://sourceforge.net/projects/geoserver/files/GeoServer/${GEOSERVER_VERSION}/geoserver-${GEOSERVER_VERSION}-bin.zip
+ENV GEOSERVER_ZIP_URL https://s3.amazonaws.com/district-builder-global-artifacts-us-east-1/deps/geoserver-${GEOSERVER_VERSION}-bin.zip
 
 ENV GEOSERVER_DIR /usr/share
 ENV GEOSERVER_EXT_DIR $GEOSERVER_DIR/geoserver-$GEOSERVER_VERSION/webapps/geoserver/WEB-INF/lib
