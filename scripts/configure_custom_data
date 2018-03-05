@@ -1,0 +1,60 @@
+#!/bin/bash
+set -e
+
+if [[ -n "${DB_DEBUG}" ]]; then
+    set -x
+fi
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+function usage() {
+
+    echo -n \
+"Usage: $(basename "$0") [shapefile_data.zip] [config.xml]
+
+Configure the application with demo data
+"
+}
+
+function copy_data() {
+    echo "Creating directory to download data into in django container"
+    docker-compose \
+        exec -T django mkdir -p /data
+
+    echo "Copying shapefile"
+    docker-compose \
+        exec -T django \
+        cp "${dataPath}" /data/districtbuilder_data.zip
+}
+
+function recreate_database() {
+    echo "Drop district_builder database"
+    docker-compose \
+        exec -T postgres gosu postgres dropdb --if-exists district_builder
+
+    echo "Create district_builder database"
+    docker-compose \
+        exec -T postgres gosu postgres createdb district_builder
+
+    echo "Running migrations"
+    docker-compose \
+        exec -T django ./manage.py migrate
+}
+
+if [ "${BASH_SOURCE[0]}" = "${0}" ]
+then
+    if [ "${1:-}" = "--help" ]
+    then
+        usage
+    elif [ -z "$1" ]
+    then
+        usage
+    else
+        dataPath="/data/${1}"
+        configPath="config/${2:-config.xml}"
+        docker-compose up -d postgres django
+        copy_data
+        recreate_database
+        "${DIR}/load_configured_data" "${configPath}"
+    fi
+    exit
+fi
