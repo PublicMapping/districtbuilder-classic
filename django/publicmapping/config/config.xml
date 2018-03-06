@@ -1,0 +1,360 @@
+<DistrictBuilder>
+    <LegislativeBodies>
+        <LegislativeBody id="congress" name="Congressional" short_label="%(district_id)s"
+            long_label="District %(district_id)s" maxdistricts="18" sort_key="1" members="Districts"/>
+        <LegislativeBody id="community" name="Community Map" short_label="%(district_id)s"
+            long_label="Community %(district_id)s" maxdistricts="999" is_community="true" sort_key="4" members="Communities"/>
+    </LegislativeBodies>
+
+    <Regions>
+        <Region id="pa" name="pa" label="Pennsylvania" description="The Commonwealth of Pennsylvania" sort_key="1">
+            <LegislativeBodies>
+                <LegislativeBody ref="congress" />
+                <LegislativeBody ref="community" />
+            </LegislativeBodies>
+
+            <GeoLevels>
+                <GeoLevel ref="municipality" />
+            </GeoLevels>
+        </Region>
+    </Regions>
+
+    <Subjects>
+        <Subject id="poptot" field="TOTAL_POP" name="Total Population"
+                 short_name="Total Pop." displayed="true" sortkey="1" default="true" />
+        <Subject id="pophisp" field="HISPANIC" name="Total Hispanic/Latino Population"
+                 short_name="Hispanic" displayed="false" sortkey="2" />
+        <Subject id="popwnh" field="WHITE_NH" name="Total White Population"
+                 short_name="White" displayed="false" sortkey="3" />
+        <Subject id="popblk" field="BLACK_NH" name="Total Black Population"
+                 short_name="Black" displayed="false" sortkey="4" />
+        <Subject id="popnam" field="AI_AN_NH" name="Total American Indian/Alaskan Native"
+                 short_name="Nat Amer" displayed="false" sortkey="5" />
+        <Subject id="popasn" field="ASIAN_NH" name="Total Asian Population"
+                 short_name="As Amer" displayed="false" sortkey="6" />
+        <Subject id="poppild" field="HAW_OPI_NH" name="Total Native Hawaiian/Pacific Islander"
+                 short_name="Pac Isldr" displayed="false" sortkey="7" />
+        <Subject id="popoth" field="OTHER_NH" name="Total Other Race"
+                 short_name="Other" displayed="false" sortkey="8" />
+        <Subject id="poptwo" field="TWO_MORE" name="Total Two or more races"
+                 short_name="Two+" displayed="false" sortkey="9" />
+        <Subject id="vap" field="TOT18O_POP" name="Total Population 18 years and older (voting age)"
+                 short_name="Voters" displayed="false" sortkey="10" />
+        <Subject id="vapwnh" field="O18WHITE" name="18 years and older, white alone"
+                 short_name="Wht Votng Age" displayed="false" sortkey="11" percentage_denominator="vap" />
+        <Subject id="vaphisp" field="O18HISPAN" name="18 years and older, hispanic"
+                 short_name="Hisp. VAP" displayed="false" sortkey="12" percentage_denominator="vap" />
+        <Subject id="vapblk" field="O18BLACK" name="18 years and older, Black or African American"
+                 short_name="Black VAP" displayed="false" sortkey="13" percentage_denominator="vap" />
+        <Subject id="vapnam" field="O18AI_AN" name="18 years and older, American Indian and Alaska Native alone"
+                 short_name="Nat Amer VAP" displayed="false" sortkey="14" percentage_denominator="vap" />
+        <Subject id="vapasn" field="O18ASIAN" name="18 years and older, Asian alone"
+                 short_name="As Amer VAP" displayed="false" sortkey="15" percentage_denominator="vap" />
+        <Subject id="vappild" field="N18NHI_PI" name="18 years and older, Native Hawaiian and Other Pacific Islander"
+                 short_name="Pac Isldr VAP" displayed="false" sortkey="16" percentage_denominator="vap" />
+        <Subject id="vapoth" field="O18_SOR" name="18 years and older, Some Other Race alone"
+                 short_name="Other VAP" displayed="false" sortkey="17" percentage_denominator="vap" />
+        <Subject id="vaptwo" field="O18_2MORE" name="18 years and older, Two or More Races"
+                 short_name="Two+ VAP" displayed="false" sortkey="18" percentage_denominator="vap" />
+        <Subject id="prison" field="CFPOP" name="Prison population"
+                 short_name="Prison Pop." displayed="false" sortkey="19" />
+        <Subject id="ageu18" field="U18_POP" name="Age - under 18"
+                 short_name="Under 18" displayed="false" sortkey="20" />
+        <Subject id="age1824" field="A18_24_POP" name="Age - 18-24"
+                 short_name="18-24" displayed="false" sortkey="21" />
+        <Subject id="age2534" field="A25_34_POP" name="Age - 25-34"
+                 short_name="25-34" displayed="false" sortkey="22" />
+        <Subject id="age3549" field="A35_49_POP" name="Age - 35-49"
+                 short_name="35-49" displayed="false" sortkey="23" />
+        <Subject id="age5064" field="A50_64_POP" name="Age - 50-64"
+                 short_name="50-64" displayed="false" sortkey="24" />
+        <Subject id="age65o" field="A650_POP" name="Age - 65 and over"
+                 short_name="65+" displayed="false" sortkey="25" />
+    </Subjects>
+
+    <Scoring>
+        <ScoreFunctions>
+            <ScoreFunction id="district_schwartzberg" type="district"
+                calculator="redistricting.calculators.Schwartzberg"
+                label="Compactness" user_selectable="true">
+                <LegislativeBody ref="congress"/>
+            </ScoreFunction>
+
+            <ScoreFunction id="district_convexhullratio" type="district"
+                calculator="redistricting.calculators.ConvexHullRatio"
+                label="Convex Hull Ratio" user_selectable="true">
+                <LegislativeBody ref="congress"/>
+            </ScoreFunction>
+
+            <ScoreFunction id="district_contiguous" type="district"
+                calculator="redistricting.calculators.Contiguity"
+                label="Contiguous" user_selectable="true">
+                <LegislativeBody ref="congress"/>
+            </ScoreFunction>
+
+            <ScoreFunction id="plan_contiguous" type="plan"
+                calculator="redistricting.calculators.SumValues"
+                label="Contiguous">
+                <ScoreArgument name="value1" ref="district_contiguous"/>
+            </ScoreFunction>
+
+            <ScoreFunction id="plan_congress_noncontiguous" type="plan"
+                calculator="redistricting.calculators.Contiguity"
+                label="Contiguous">
+                <Argument name="target" value="18" />
+            </ScoreFunction>
+
+            <ScoreFunction id="congressional_population" type="district"
+                label="Tot Pop" user_selectable="true"
+                description="Population interval calculator for congressional."
+                calculator="redistricting.calculators.Interval">
+                <SubjectArgument name="subject" ref="poptot" />
+                <Argument name="target" value="705688" />
+                <Argument name="bound1" value=".005" />
+                <Argument name="bound2" value=".01" />
+                <LegislativeBody ref="congress" />
+            </ScoreFunction>
+
+            <!-- Leaderboard functions -->
+            <ScoreFunction id="congress_plan_count_districts" type="plan"
+                calculator="redistricting.calculators.CountDistricts"
+                label="Count Districts"
+                description="The number of districts in a Congressional redistricting plan must be 18.">
+                <Argument name="target" value="18" />
+            </ScoreFunction>
+
+            <ScoreFunction id="congress_plan_equipopulation_validation" type="plan"
+                calculator="redistricting.calculators.Equipopulation"
+                label="Target Pop. (705,688)"
+                description="The population of each Congressional district must be 705,688 +/- 0.5%.">
+                <Argument name="min" value="702160"/>
+                <Argument name="max" value="709216"/>
+                <SubjectArgument name="value" ref="poptot"/>
+                <Argument name="validation" value="1"/>
+            </ScoreFunction>
+
+            <ScoreFunction id="congress_plan_equipopulation_summary" type="plan"
+                calculator="redistricting.calculators.Equipopulation"
+                label="Target Pop. (705,688)"
+                description="The population of each Congressional district must be 705,688 +/- 0.5%.">
+                <Argument name="min" value="702160"/>
+                <Argument name="max" value="709216"/>
+                <SubjectArgument name="value" ref="poptot"/>
+                <Argument name="target" value="18"/>
+            </ScoreFunction>
+
+            <ScoreFunction id="plan_all_municipalities_assigned" type="plan"
+                calculator="redistricting.calculators.AllBlocksAssigned"
+                label="All Municipalities Assigned"
+                description="All municipalities in the plan must be assigned.">
+            </ScoreFunction>
+
+            <ScoreFunction id="plan_all_contiguous" type="plan"
+                calculator="redistricting.calculators.AllContiguous"
+                label="All Contiguous"
+                description="Contiguity means that every part of a district must be reachable from every other part without crossing the district&apos;s borders. All districts within a plan must be contiguous.">
+            </ScoreFunction>
+
+            <ScoreFunction id="plan_schwartzberg" type="plan"
+                calculator="redistricting.calculators.Schwartzberg"
+                label="Average Compactness"
+                description="The competition is using the &apos;Inverse Schwartzberg&apos; compactness measure. This measure is a ratio of the circumference of the circle whose area is equal to the area of the district to the perimeter of the district." >
+            </ScoreFunction>
+
+            <ScoreFunction id="district_poptot" type="district"
+                calculator="redistricting.calculators.SumValues"
+                user_selectable="true" label="Total Population">
+                <SubjectArgument name="value1" ref="poptot" />
+                <LegislativeBody ref="community"/>
+            </ScoreFunction>
+
+            <ScoreFunction id="district_comments" type="district"
+                calculator="redistricting.calculators.Comments"
+                user_selectable="false" label="Comments">
+                <LegislativeBody ref="community"/>
+            </ScoreFunction>
+
+            <!-- Calculator Reports configuration -->
+            <ScoreFunction id="report_score_total_population_congress" type="district"
+                calculator="redistricting.reportcalculators.Population"
+                label="Total Population" >
+                <LegislativeBody ref="congress"/>
+                <SubjectArgument name="value" ref="poptot" />
+                <Argument name="min" value="702160" />
+                <Argument name="max" value="709216" />
+            </ScoreFunction>
+
+            <ScoreFunction id="report_score_compactness_lw" type="district"
+                calculator="redistricting.reportcalculators.Compactness"
+                label="Length/Width" >
+                <LegislativeBody ref="congress"/>
+                <Argument name="comptype" value="LengthWidth" />
+            </ScoreFunction>
+
+            <ScoreFunction id="report_score_compactness_sc" type="district"
+                calculator="redistricting.reportcalculators.Compactness"
+                label="Schwartzberg" >
+                <LegislativeBody ref="congress"/>
+                <Argument name="comptype" value="Schwartzberg" />
+            </ScoreFunction>
+
+            <ScoreFunction id="report_score_compactness_ro" type="district"
+                calculator="redistricting.reportcalculators.Compactness"
+                label="Roeck" >
+                <LegislativeBody ref="congress"/>
+                <Argument name="comptype" value="Roeck" />
+            </ScoreFunction>
+
+            <ScoreFunction id="report_score_unassigned" type="plan"
+                calculator="redistricting.reportcalculators.Unassigned"
+                label="Unassigned Municipalities" >
+                <LegislativeBody ref="congress"/>
+            </ScoreFunction>
+        </ScoreFunctions>
+
+        <ScorePanels>
+            <ScorePanel id="panel_compact_all" type="plan" position="1"
+                title="Schwartzberg" template="leaderboard_panel_all.html"
+                is_ascending="false">
+                <Score ref="plan_schwartzberg" />
+            </ScorePanel>
+            <ScorePanel id="panel_compact_mine" type="plan" position="1"
+                title="Schwartzberg" template="leaderboard_panel_mine.html"
+                is_ascending="false">
+                <Score ref="plan_schwartzberg" />
+            </ScorePanel>
+
+            <!-- Summary above all sidebar panels -->
+            <ScorePanel id="congressional_panel_summary" type="plan_summary" position="1"
+                title="Plan Summary" cssclass="plan_summary congressional" template="plan_summary.html">
+                <Score ref="congress_plan_equipopulation_summary"/>
+                <Score ref="plan_congress_noncontiguous"/>
+            </ScorePanel>
+
+            <!-- Basic Information -->
+            <ScorePanel id="congressional_panel_info" type="district" position="2"
+                title="Basic Information" cssclass="district_basic_info congressional"
+                template="basic_information.html">
+                <Score ref="congressional_population" />
+                <Score ref="district_contiguous" />
+                <Score ref="district_schwartzberg" />
+            </ScorePanel>
+
+            <!-- Community Comments -->
+            <ScorePanel id="community_panel_comments" type="district" position="2"
+                title="Plan Comments" cssclass="district_comments community"
+                template="plan_comments.html">
+                <Score ref="district_comments" />
+            </ScorePanel>
+
+            <!-- Demographics -->
+            <ScorePanel id="community_panel_demo" type="district" position="2"
+                title="Demographics" cssclass="district_demographics community"
+                template="communities.html">
+                <Score ref="district_poptot" />
+            </ScorePanel>
+
+            <!-- Calculator Reports configuration -->
+            <ScorePanel id="report_panel_population" type="district" position="2"
+                title="Population" template="report_panel.html" cssclass="reports population" >
+                <Score ref="report_score_total_population_congress" />
+            </ScorePanel>
+
+            <ScorePanel id="report_panel_compactness" type="district" position="1"
+                title="Compactness" template="report_panel.html" cssclass="reports compactness">
+                <Score ref="report_score_compactness_sc" />
+                <Score ref="report_score_compactness_lw" />
+                <Score ref="report_score_compactness_ro" />
+            </ScorePanel>
+
+            <ScorePanel id="report_panel_spatial" type="plan" position="5"
+                title="Spatial Analysis" template="report_panel_plan_with_count.html" cssclass="reports spatial">
+                <Score ref="report_score_unassigned" />
+            </ScorePanel>
+        </ScorePanels>
+
+        <ScoreDisplays>
+            <ScoreDisplay id="congress_leader_all" legislativebodyref="congress" type="leaderboard"
+                title="Congressional Leaderboard - All" cssclass="leaderboard congress">
+                <ScorePanel ref="panel_compact_all" />
+            </ScoreDisplay>
+            <ScoreDisplay id="congress_leader_mine" legislativebodyref="congress" type="leaderboard"
+                title="Congressional Leaderboard - Mine" cssclass="leaderboard congress">
+                <ScorePanel ref="panel_compact_mine" />
+            </ScoreDisplay>
+
+             <!-- Sidebar configuration -->
+            <ScoreDisplay id="congress_sidebar_basic" legislativebodyref="congress" type="sidebar" title="Basic Information" cssclass="basic_information">
+                <ScorePanel ref="congressional_panel_summary" />
+                <ScorePanel ref="congressional_panel_info" />
+            </ScoreDisplay>
+
+            <ScoreDisplay id="congress_sidebar_demo" legislativebodyref="congress" type="sidebar" title="Demographics" cssclass="demographics">
+                <ScorePanel ref="congressional_panel_summary" />
+                <ScorePanel ref="congressional_panel_info" />
+            </ScoreDisplay>
+
+            <ScoreDisplay id="community_sidebar_demo" legislativebodyref="community" type="sidebar" title="Demographics" cssclass="demographics">
+                <ScorePanel ref="community_panel_demo" />
+            </ScoreDisplay>
+
+            <ScoreDisplay id="community_sidebar_comments" legislativebodyref="community" type="sidebar" title="Community Mapping" cssclass="demographics">
+                <ScorePanel ref="community_panel_comments" />
+            </ScoreDisplay>
+
+            <!-- Calculator Reports configuration -->
+            <ScoreDisplay id="congress_reports" legislativebodyref="congress" type="reports"
+                title="Congressional Reports" cssclass="reports congress">
+                <ScorePanel ref="report_panel_population" />
+                <ScorePanel ref="report_panel_compactness" />
+                <ScorePanel ref="report_panel_spatial" />
+            </ScoreDisplay>
+        </ScoreDisplays>
+    </Scoring>
+
+    <Validation>
+        <Criteria legislativebodyref="congress">
+            <Criterion id="congress-equipop" name="Equipopulation - Congress"
+                description="&lt;p&gt;Your plan does not meet the competition criteria for Equipopulation:&lt;/p&gt;&lt;p&gt;The population of each Congressional district must be 705,688 +/- 0.5%.&lt;/p&gt;">
+                <Score ref="congress_plan_equipopulation_validation" />
+            </Criterion>
+            <Criterion id="congress-contiguous" name="AllContiguous - Congress"
+                description="&lt;p&gt;Your plan does not meet the competition criteria for Contiguity&lt;/p&gt;&lt;p&gt;Every part of a district must be reachable from every other part without crossing the district's borders. All districts within a plan must be contiguous.">
+                <Score ref="plan_all_contiguous" />
+            </Criterion>
+            <Criterion id="congress-district-count" name="CountDistricts - Congress" description="">
+                <Score ref="congress_plan_count_districts" />
+            </Criterion>
+            <Criterion id="congress-assigned" name="AllMunicipalitiesAssigned - Congress" description="">
+                <Score ref="plan_all_municipalities_assigned" />
+            </Criterion>
+        </Criteria>
+    </Validation>
+
+    <GeoLevels>
+      <GeoLevel id="municipality" name="municipality" label="municipality" min_zoom="0" sort_key="1" tolerance="250">
+          <Shapefile path="/data/pa_3785.shp">
+              <Fields>
+                  <Field name="NAME_WARD" type="name"/>
+                  <Field name="GEOID" type="portable"/>
+              </Fields>
+          </Shapefile>
+      </GeoLevel>
+    </GeoLevels>
+
+    <Project sessionquota="5" sessiontimeout="15">
+        <Internationalization timezone="US/Eastern" default="en">
+            <Language code="en" label="English" />
+            <Language code="es" label="Spanish" />
+        </Internationalization>
+        <Redistricting>
+            <MapServer
+                ns="pmp"
+                nshref="https://github.com/PublicMapping/"
+                maxfeatures="100" />
+            <Upload maxsize="5300"/>
+            <FixUnassigned minpercent="99" comparatorsubject="poptot" />
+        </Redistricting>
+        <Mailer />
+    </Project>
+</DistrictBuilder>
