@@ -34,9 +34,11 @@ If you want to get DistrictBuilder up and running quickly with demo data, you ca
 $ ./scripts/configure_va_demo
 ```
 
-Otherwise, you'll need to provide your own shapefiles and config.xml file, and then run
+Otherwise, you'll need to provide your own shapefiles and config.xml file. Put your zipped shapefile in
+a `data` directory at the project root, put your `config.xml` in `django/publicmapping/config/` 
+and then run
 ```bash
-$ ./scripts/load_configured_data
+$ ./scripts/configure_custom_data <shapefile-name.zip>
 ```
 
 More detailed instructions on loading your own data can be found below.

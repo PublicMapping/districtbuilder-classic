@@ -50,6 +50,7 @@ services:
       - ./django/publicmapping/:/usr/src/app/
       - reports:/opt/reports
       - sld:/opt/sld
+      - ./data/:/data/
     entrypoint: /usr/local/bin/gunicorn
     command:
       - "--workers=2"
