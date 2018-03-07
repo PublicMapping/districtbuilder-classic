@@ -1,0 +1,68 @@
+---
+# tasks file for districtbuilder.app-server
+- name: Disable ECS Agent
+  service: name=ecs state=stopped
+
+- name: Configure DistrictBuilder service
+  template: src="{{ item.src }}" dest="{{ item.dest }}"
+  with_items:
+    - { src: "logrotate.conf.j2", dest: "/etc/logrotate.d/district-builder" }
+    - { src: "district-builder.service.j2", dest: "/etc/init/district-builder.conf" }
+  notify:
+    - Restart DistrictBuilder
+
+- name: Install docker-compose
+  pip: name=docker-compose version="{{ docker_compose_version }}" state=present
+
+- name: Create App Files
+  file: path="{{ item.path }}" state="{{ item.state }}" mode="{{ item.mode }}" owner="{{ ansible_user }}"
+  with_items:
+    - { 
+        path: "{{ districtbuilder_app_home }}/scripts",
+        state: "directory",
+        mode: "0755"
+      }
+    - {
+        path: "{{ districtbuilder_app_home }}/config_settings.py",
+        state: "touch",
+        mode: "0644"
+    }
+
+- name: Create docker-compose configuration
+  template: src="{{ item.src }}" dest="{{ item.dest }}"
+  with_items:
+    - { src: "docker-compose.yml.j2", dest: "{{ districtbuilder_app_home }}/docker-compose.yml" }
+    - { src: "env.conf.j2", dest: "{{ districtbuilder_app_home }}/.env" }
+  notify:
+    - Restart DistrictBuilder
+
+- name: Copy user config, if present
+  copy: src="{{ user_data_dir }}/config.xml" dest="{{ districtbuilder_app_home }}/config.xml"
+  when: districtbuilder_user_config_file
+
+- name: Copy DistrictBuilder data & provisioning scripts
+  copy: src="{{ item.name }}" dest="{{ item.path }}" mode="{{ item.mode }}" owner="{{ ansible_user }}"
+  with_items:
+    - { 
+        name: "{{ user_data_dir }}/districtbuilder_data.zip",
+        path: "{{ districtbuilder_app_home }}/districtbuilder_data.zip",
+        mode: "0644"
+      }
+    - { 
+        name: "{{ deployment_scripts_dir }}",
+        path: "{{ districtbuilder_app_home }}/",
+        mode: "0755"
+      }
+
+- name: Update settings, run migrations, update geoserver password
+  command: "{{ item }}"
+  args:
+    chdir: "{{ districtbuilder_app_home }}"
+  with_items:
+    - docker-compose pull
+    - docker-compose run --rm --entrypoint "bash -c" django "python -m district_builder_config.generate_settings config/config.xsd config/config.xml publicmapping/config_settings.py"
+    - docker-compose up -d django
+    - docker-compose exec -T django ./manage.py migrate
+    - docker-compose exec -T geoserver ./bin/change_admin_password.sh
+  notify:
+    - Restart DistrictBuilder

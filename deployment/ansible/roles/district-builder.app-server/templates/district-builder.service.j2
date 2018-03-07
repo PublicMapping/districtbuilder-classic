@@ -1,0 +1,17 @@
+author "Taylor Nation <tnation@azavea.com>"
+description "DistrictBuilder Application Server"
+
+start on (filesystem and started docker)
+stop on stopping docker
+
+console output
+
+respawn
+
+chdir {{ districtbuilder_app_home }}
+
+exec /usr/local/bin/docker-compose up --no-recreate --no-color 2>&1 | tee -a /var/log/district-builder.log | logger -t "[district-builder]"
+
+post-stop script
+  /usr/local/bin/docker-compose down
+end script
