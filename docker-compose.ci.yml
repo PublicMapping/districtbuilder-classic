@@ -8,6 +8,17 @@ services:
     image: quay.io/azavea/districtbuilder-geoserver:${GIT_COMMIT}
   terraform:
     image: quay.io/azavea/terraform:0.10.8
+    working_dir: /usr/local/src
+    entrypoint: bash
+    environment:
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_REGION=${AWS_REGION:-us-east-1}
+      - DB_DEBUG=1
+      - DISTRICTBUILDER_SETTINGS_BUCKET=${DISTRICTBUILDER_SETTINGS_BUCKET:-districtbuilder-staging-config-us-east-1}
+      - IMAGE_VERSION=${IMAGE_VERSION:-latest}
+      - DB_STATE=${DB_STATE:-pa}
+      - DB_SETTINGS_BUCKET=${DB_SETTINGS_BUCKET:-districtbuilder-staging-config-us-east-1}
     volumes:
       - ./:/usr/local/src
       - ~/.ssh:/root/.ssh

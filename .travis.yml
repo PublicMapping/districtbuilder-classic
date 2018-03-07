@@ -1,10 +1,14 @@
+language: python
 services:
-  - docker
+- docker
+
 env:
   global:
-  - secure: IGCVQAaPbhBW47WUGtlOftOpPM7yIz3jk61niBmtF/ACIO9m8Y7KU2+Rl3MwM+4xGv4v0py9kpqAjk7FPCS6PCGA2pUpjMFuXiX7Dfh5Gsy1C0E/j2fvoTkOXkuterw0BcIwi7epymoY4aA8X0GinzuJ1B3sLJXqX8wfH49PSW0=
-  - secure: HgBnUcWY+L4XCzSBmg1JqCkMeN+5yoA23XTdTbJ0N5K8YXUpzP58FoYkwbhd5sjdnkcSr+2gnGzzxCQ9yxqiD0S78omjYPVurGntwGFdRjy9tATNpWbFqk9sViDX8ge+jx3+DYDIutXvZPZwrS4gkShHrByZrkQJvQTFBjwWkPQ=
+  - secure: VwsVdxe6MbcaP2aZiwJ16yj4TYEFVcOsc0OZaQ8V1EuZTD7GpbLBu6lnfibcX0wQM16s2By8iAMd1kMUzQ23EWccJChA9vzzhw+10ab13/fVqVoMoruBDNdKMWOjTGvvdaks58FP0CtcbkghGgXcLID/XOKYFJkNrUhBZBzq/KNTjAlDWhxmqUy7OnN4JDUsVl5Yt5/VjoD504b+KCReBT5uxUpdjHzEsZhRDlZDcAZmeVCI300Oqq7xdsQ5lJEPteuO+T5Nmnt8+iK+/65/4mLvi1ct81faBCVrSqomfFz1WNhVc7oGBFoAT1U39j43EgyjWVyvPp8IjyiwaFVa2uDJeYjq3Ew1/j2mJTzBez/d02eZI9fSHb6HKARjyjrMQYm3RiI0VDg28ArWCppyHtKNNSsPBklL2r26djBLBNPdHOx6GJXutoQtfDzP0r/DgsN0HE8rPjR7nTscNiUFVvyl1RDN0uv7at3iNG6cY7ZACalpNgRf/ZHWBqKksXqiKcZMyFeObYR+DWXxkY0sJqmpOr9kMx68KLDh+7Gb2qp5eMk1GpMoWhXIBuSh6JdjWJ6m8Zr4BLhBEBZFabhROzVxo38KL5X4/dr4r9WSP8k0SBEPjQ5IFkCOGNOBbRbFL2k6uvfNeNXvLDiRmtD6kVrXkRhl0xLwWdSSNpoxKN0=
+  - secure: gf2hLF72aLwAY+lto+Gn8LZTFWlndNMRa9j9WLSMcVsoh1+NgzR+Ja7aVba3MKrD8SmIfHkHPWNdflF3Peg6h6LjwWs4Eq4rpkNZGH4Ofw59kHXfpsK9kooo2WvQiuqfKCv0gjUC9IThiVhufG1RmMhe8o9pDVsed7OCGixumlh8v9zT452o9r5prx/bP90ChfcMJI32SX7qqEyGDNLahOFjTIbGOpFm3todn59VBhPz6xvGRhTDGeHnqsFQ9cyqjo856SxKlYJc90MwxAxc+D7KGl7RbO7p78AzyZlHG9PAvvoy2vWZhHmZgevsLutY37+1GkuZgOePrfukyID3IuWNRlUyucAr2l/IntKryOaDnLraRuf5nddMcUyXXEn9xlYWWEE86HpK9k1eZXIeP60oFOCejzXhLSBgd6TnRoEhmXYCtzMelFR7g6lWVwyAlIAlznb3kCiaRqHfT9OwKPj6u6h6JytpaMCMEQYw7umeU5V4W6OMnSO8RMHb1EznSI/yFNr8ok2ETsJjmlGFXfkmAWigXmIq7Gar78JF/gxtt8nG8rYWN+vk9nBpcDWF8fxOUpi+TZPgJbD6Xao+afzbtRn9mPSRBvKq2v7uGMc1nOFHcmZp2C4Se4I2dqtvgbuIrFSUDj4qwF1WG2NNurHnzfBEpPnreibZMl5JFig=
+  - AWS_DEFAULT_REGION=us-east-1
 install:
+- pip install awscli
 - cp .env.sample .env
 - sed -i 's/WEB_APP_PASSWORD=/WEB_APP_PASSWORD=travis/' .env
 - sed -i 's/ADMIN_PASSWORD=/ADMIN_PASSWORD=admin/' .env
@@ -12,11 +16,30 @@ install:
 - sed -i 's/KEY_VALUE_STORE_PASSWORD=/KEY_VALUE_STORE_PASSWORD=redis/' .env
 - sed -i 's/MAP_SERVER_ADMIN_PASSWORD=/MAP_SERVER_ADMIN_PASSWORD=geoserver/' .env
 - "./scripts/update"
+- aws s3 cp s3://global-districtbuilder-data-us-east-1/pa/pa_3785_census.zip ./data/districtbuilder_data.zip
 script:
 - "./scripts/cibuild"
+before_deploy:
+- mkdir -p ~/.ssh
+- openssl aes-256-cbc -K $encrypted_76b7bce7d5ba_key -iv $encrypted_76b7bce7d5ba_iv
+  -in district-builder.pem.enc -out district-builder.pem -d
+- mv district-builder.pem ~/.ssh
+- cp django/publicmapping/config/config.xml deployment/user-data/config.xml
+- mv ./data/districtbuilder_data.zip deployment/user-data/
+>>>>>>> 3b4bb4b3... fixup! Deploy to staging from Travis
 deploy:
-  - provider: script
-    script: "scripts/deploy"
-    on:
-      repo: PublicMapping/DistrictBuilder
-      branch: master
+- provider: script
+  skip_cleanup: true
+  script: scripts/deploy
+  on:
+    repo: azavea/district-builder-dtl-pa
+    branch: master
+- provider: script
+  skip_cleanup: true
+  script: scripts/deploy
+  on:
+    repo: azavea/district-builder-dtl-pa
+    branch: develop
+after_deploy:
+- git clean -fdx
+- rm -f ~/.ssh/district-builder.pem

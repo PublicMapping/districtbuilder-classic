@@ -25,6 +25,10 @@ then
     # Publish containers
     "${DIR}/cipublish"
 
+    # Run deployments
+    IMAGE_VERSION="${TRAVIS_COMMIT:0:7}" docker-compose -f docker-compose.ci.yml run --rm terraform ./scripts/infra plan | grep -v "password"
+    IMAGE_VERSION="${TRAVIS_COMMIT:0:7}" docker-compose -f docker-compose.ci.yml run --rm terraform ./scripts/infra apply | grep -v "password"
+
     fi
     exit
 fi
