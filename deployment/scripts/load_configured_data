@@ -52,7 +52,6 @@ then
         usage
     else
         configPath=${1:-config/config.xml}
-        docker-compose up -d postgres django
         load_configured_data
     fi
     exit
