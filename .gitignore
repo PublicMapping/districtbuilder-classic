@@ -11,3 +11,6 @@ sld
 geoserver/data_dir
 data
 config_settings.py
+deployment/ansible/roles/district-builder.app-server/defaults/main.yml
+deployment/user-data
+deployment/ansible/inventory
