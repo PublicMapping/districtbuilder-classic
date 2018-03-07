@@ -1,0 +1,62 @@
+#!/bin/bash
+
+set -e
+
+if [[ -n "${DB_DEBUG}" ]]; then
+    set -x
+fi
+
+set -u
+
+DIR="$(dirname "$0")"
+TERRAFORM_DIR="${DIR}/../deployment/terraform"
+
+function usage() {
+    echo -n \
+"Usage: $(basename "$0") COMMAND OPTION[S]
+Execute Terraform subcommands with remote state management.
+"
+}
+
+if [ "${BASH_SOURCE[0]}" = "${0}" ]; then
+    if [ "${1:-}" = "--help" ]; then
+        usage
+    else
+        if [[ -n "${DISTRICTBUILDER_SETTINGS_BUCKET}" ]]; then
+
+            pushd "${TERRAFORM_DIR}"
+
+            aws s3 cp "s3://${DISTRICTBUILDER_SETTINGS_BUCKET}/terraform/terraform.tfvars" "${DISTRICTBUILDER_SETTINGS_BUCKET}.tfvars"
+
+            echo
+            echo "Attempting to deploy application version [${IMAGE_VERSION}]..."
+            echo "-----------------------------------------------------"
+            echo
+
+            case "${1}" in
+                plan)
+                    rm -rf .terraform terraform.tfstate*
+                    terraform init \
+                              -backend-config="bucket=${DISTRICTBUILDER_SETTINGS_BUCKET}" \
+                              -backend-config="key=terraform/state"
+                    terraform plan \
+                              -var-file="${DISTRICTBUILDER_SETTINGS_BUCKET}.tfvars" \
+                              -var="districtbuilder_image_version=\"${IMAGE_VERSION}\"" \
+                              -out="${DISTRICTBUILDER_SETTINGS_BUCKET}.tfplan"
+                    ;;
+                apply)
+                    terraform apply "${DISTRICTBUILDER_SETTINGS_BUCKET}.tfplan"
+                    ;;
+                *)
+                    echo "ERROR: I don't have support for that Terraform subcommand!"
+                    exit 1
+                    ;;
+            esac
+
+            popd
+        else
+            echo "ERROR: No DISTRICTBUILDER_SETTINGS_BUCKET variable defined."
+            exit 1
+        fi
+    fi
+fi
