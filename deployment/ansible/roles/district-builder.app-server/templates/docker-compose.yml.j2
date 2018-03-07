@@ -1,0 +1,106 @@
+version: "3.3"
+services:
+  redis:
+    container_name: districtbuilder-redis
+    env_file:
+      - .env
+    image: redis:3.2-alpine
+    command: redis-server --requirepass ${KEY_VALUE_STORE_PASSWORD}
+    ports:
+     - "${KEY_VALUE_STORE_PORT}:${KEY_VALUE_STORE_PORT}"
+
+  nginx:
+    container_name: districtbuilder-nginx
+    env_file:
+      - .env
+    image: quay.io/azavea/districtbuilder-nginx:{{ districtbuilder_image_version }}
+    ports:
+      - "${WEB_APP_PORT}:${WEB_APP_PORT}"
+    volumes:
+      - sld:/opt/sld/
+      - reports:/opt/reports
+    depends_on:
+      - django
+
+  django:
+    container_name: districtbuilder-django
+    env_file:
+      - .env
+    image: quay.io/azavea/districtbuilder-app:{{ districtbuilder_image_version }}
+    expose:
+      - "${WEB_APP_PORT}"
+    volumes:
+      - reports:/opt/reports
+      - sld:/opt/sld
+      - {{ districtbuilder_app_home}}/districtbuilder_data.zip:/data/districtbuilder_data.zip
+      - {{ districtbuilder_app_home}}/config_settings.py:/usr/src/app/publicmapping/config_settings.py
+{% if districtbuilder_user_config_file %}
+      - {{ districtbuilder_app_home}}/config.xml:/usr/src/app/config/config.xml
+{% endif %}
+    entrypoint: /usr/local/bin/gunicorn
+    command:
+      - "--workers=2"
+      - "--timeout=60"
+      - "--bind=0.0.0.0:${WEB_APP_PORT}"
+      - "--reload"
+      - "--log-level=debug"
+      - "--access-logfile=-"
+      - "--error-logfile=-"
+      - "-kgevent"
+      - "publicmapping.wsgi"
+    links:
+      - redis:${KEY_VALUE_STORE_HOST}
+      - geoserver:${MAP_SERVER_HOST}
+
+  celery:
+    container_name: districtbuilder-celery
+    image: quay.io/azavea/districtbuilder-app:{{ districtbuilder_image_version }}
+    env_file:
+      - .env
+    volumes:
+      - reports:/opt/reports
+      - {{ districtbuilder_app_home}}/config_settings.py:/usr/src/app/publicmapping/config_settings.py
+{% if districtbuilder_user_config_file %}
+      - {{ districtbuilder_app_home}}/config.xml:/usr/src/app/config/config.xml
+{% endif %}
+    entrypoint: /usr/local/bin/celery
+    command:
+      - "worker"
+      - "--app=publicmapping"
+      - "--uid=reporter"
+      - "--loglevel=INFO"
+      - "--without-mingle"
+    links:
+      - redis:${KEY_VALUE_STORE_HOST}
+
+  geoserver:
+    container_name: districtbuilder-geoserver
+    image: quay.io/azavea/districtbuilder-geoserver:{{ districtbuilder_image_version }}
+    env_file:
+      - .env
+    volumes:
+      - sld:/data/sld
+    ports:
+      - "${MAP_SERVER_PORT}:${WEB_APP_PORT}"
+
+  languages:
+    container_name: districtbuilder-languages
+    image: quay.io/azavea/districtbuilder-app:{{ districtbuilder_image_version }}
+    env_file:
+      - .env
+    entrypoint: /usr/local/bin/python
+    command:
+      - "manage.py"
+      - "makelanguagefiles"
+    depends_on:
+      - django
+    volumes:
+      - {{ districtbuilder_app_home}}/config_settings.py:/usr/src/app/publicmapping/config_settings.py
+{% if districtbuilder_user_config_file %}
+      - {{ districtbuilder_app_home}}/config.xml:/usr/src/app/config/config.xml
+{% endif %}
+
+volumes:
+  reports:
+  data:
+  sld:
