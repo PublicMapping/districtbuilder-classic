@@ -32,11 +32,9 @@ services:
     volumes:
       - reports:/opt/reports
       - sld:/opt/sld
-      - {{ districtbuilder_app_home}}/districtbuilder_data.zip:/data/districtbuilder_data.zip
-      - {{ districtbuilder_app_home}}/config_settings.py:/usr/src/app/publicmapping/config_settings.py
-{% if districtbuilder_user_config_file %}
-      - {{ districtbuilder_app_home}}/config.xml:/usr/src/app/config/config.xml
-{% endif %}
+      - {{ districtbuilder_app_home}}/user-data/districtbuilder_data.zip:/data/districtbuilder_data.zip
+      - {{ districtbuilder_app_home}}/user-data/config_settings.py:/usr/src/app/publicmapping/config_settings.py
+      - {{ districtbuilder_app_home}}/user-data/config.xml:/usr/src/app/config/config.xml
     entrypoint: /usr/local/bin/gunicorn
     command:
       - "--workers=2"
@@ -59,10 +57,8 @@ services:
       - .env
     volumes:
       - reports:/opt/reports
-      - {{ districtbuilder_app_home}}/config_settings.py:/usr/src/app/publicmapping/config_settings.py
-{% if districtbuilder_user_config_file %}
-      - {{ districtbuilder_app_home}}/config.xml:/usr/src/app/config/config.xml
-{% endif %}
+      - {{ districtbuilder_app_home}}/user-data/config_settings.py:/usr/src/app/publicmapping/config_settings.py
+      - {{ districtbuilder_app_home}}/user-data/config.xml:/usr/src/app/config/config.xml
     entrypoint: /usr/local/bin/celery
     command:
       - "worker"
@@ -95,10 +91,8 @@ services:
     depends_on:
       - django
     volumes:
-      - {{ districtbuilder_app_home}}/config_settings.py:/usr/src/app/publicmapping/config_settings.py
-{% if districtbuilder_user_config_file %}
-      - {{ districtbuilder_app_home}}/config.xml:/usr/src/app/config/config.xml
-{% endif %}
+      - {{ districtbuilder_app_home}}/user-data/config_settings.py:/usr/src/app/publicmapping/config_settings.py
+      - {{ districtbuilder_app_home}}/user-data/config.xml:/usr/src/app/config/config.xml
 
 volumes:
   reports:
