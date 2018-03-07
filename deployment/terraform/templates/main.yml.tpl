@@ -9,11 +9,10 @@
 # Location of config.xml, districtbuilder_data.zip
 user_data_dir: "{{ playbook_dir }}/../user-data/"
 deployment_scripts_dir: "{{ playbook_dir }}/../scripts"
+docker_compose_version: "1.16.*"
 
 districtbuilder_app_home: "/opt/district-builder"
-
 districtbuilder_image_version: ${image_version}
-districtbuilder_user_config_file: true
 districtbuilder_web_app_password: ${web_app_password}
 districtbuilder_admin_user: ${admin_user}
 districtbuilder_admin_email: ${admin_email}
