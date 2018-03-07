@@ -10,3 +10,4 @@ services:
     image: quay.io/azavea/terraform:0.10.8
     volumes:
       - ./:/usr/local/src
+      - ~/.ssh:/root/.ssh
