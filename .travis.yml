@@ -1,9 +1,11 @@
 services:
-  - docker
+- docker
 env:
   global:
   - secure: IGCVQAaPbhBW47WUGtlOftOpPM7yIz3jk61niBmtF/ACIO9m8Y7KU2+Rl3MwM+4xGv4v0py9kpqAjk7FPCS6PCGA2pUpjMFuXiX7Dfh5Gsy1C0E/j2fvoTkOXkuterw0BcIwi7epymoY4aA8X0GinzuJ1B3sLJXqX8wfH49PSW0=
   - secure: HgBnUcWY+L4XCzSBmg1JqCkMeN+5yoA23XTdTbJ0N5K8YXUpzP58FoYkwbhd5sjdnkcSr+2gnGzzxCQ9yxqiD0S78omjYPVurGntwGFdRjy9tATNpWbFqk9sViDX8ge+jx3+DYDIutXvZPZwrS4gkShHrByZrkQJvQTFBjwWkPQ=
+  - secure: ZtiP7tz+wmIHTzMHoBu6zm0yY02xRAJHwC37/jDbkkmEAxN4WqDGqYRH7acmsfeaWnuiyeBR1pT+yYRfuqKtEVju8s40nHSB1IT5FWHYlFNBRLKxEGKtChEPhtH8C9tfWYfhstal1+paac57tTsIGIRcmTRDwM+Z37qulWWAlYA=
+  - secure: VuyX3iVEe+vufr4o4+dVooyZ8kk3Vv68g0aGFWysJCuvwlvM1oFwuc4MfybfXmHr433Unxn5DtbHyeeyRuOG9KTdcKlE6ESsxzuiF4RI+CVz8FbjE5tmQXbGsVTkNASYFOLyppLv5d7Wu93Phu7cJYzBOYbcN7winTBRDl9/5KI=
 install:
 - cp .env.sample .env
 - sed -i 's/WEB_APP_PASSWORD=/WEB_APP_PASSWORD=travis/' .env
@@ -15,9 +17,26 @@ install:
 - "./scripts/update"
 script:
 - "./scripts/cibuild"
+before_deploy:
+- mkdir -p ~/.ssh
+- openssl aes-256-cbc -K $encrypted_c49e2c465c08_key -iv $encrypted_c49e2c465c08_iv
+  -in district-builder.pem.enc -out "district-builder.pem" -d
+- mv district-builder.pem ~/.ssh
+- wget -q -O deployment/user-data/districtbuilder_data.zip https://s3.amazonaws.com/districtbuilderdata/VA_data.zip
+- mv django/publicmapping/config/config.xml deployment/user-data/config.xml
 deploy:
   - provider: script
+    skip_cleanup: true
     script: "scripts/deploy"
     on:
       repo: PublicMapping/DistrictBuilder
       branch: master
+  - provider: script
+    skip_cleanup: true
+    script: "scripts/deploy"
+    on:
+      repo: PublicMapping/DistrictBuilder
+      branch: develop
+after_deploy:
+- git clean -fdx
+- rm -f ~/.ssh/district-builder.pem
