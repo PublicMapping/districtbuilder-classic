@@ -2,6 +2,41 @@
 # VPC Security Group Resources
 #
 
+locals {
+  external_cidr_block_chunks = "${chunklist(var.bastion_external_access_cidr_block, 40)}"
+}
+
+resource "aws_security_group" "bastion_external_ssh_ingress" {
+  count = "${var.environment == "Staging" ? length(local.external_cidr_block_chunks) : 0}"
+
+  vpc_id = "${module.vpc.id}"
+
+  tags {
+    Name        = "sgBastion"
+    Project     = "${var.project}"
+    Environment = "${var.environment}"
+    State       = "${var.state_name}"
+  }
+}
+
+resource "aws_security_group_rule" "bastion_external_ssh_ingress" {
+  count = "${var.environment == "Staging" ? length(local.external_cidr_block_chunks) : 0}"
+
+  type              = "ingress"
+  from_port         = 22
+  to_port           = 22
+  protocol          = "tcp"
+  cidr_blocks       = ["${local.external_cidr_block_chunks[count.index]}"]
+  security_group_id = "${aws_security_group.bastion_external_ssh_ingress.*.id[count.index]}"
+}
+
+resource "aws_network_interface_sg_attachment" "bastion_external_ssh_ingress" {
+  count = "${var.environment == "Staging" ? length(local.external_cidr_block_chunks) : 0}"
+
+  security_group_id    = "${aws_security_group.bastion_external_ssh_ingress.*.id[count.index]}"
+  network_interface_id = "${module.vpc.bastion_network_interface_id}"
+}
+
 #
 # Bastion Security Group Resources
 #
@@ -10,7 +45,7 @@ resource "aws_security_group_rule" "bastion_ssh_ingress" {
   from_port         = "22"
   to_port           = "22"
   protocol          = "TCP"
-  cidr_blocks       = "${concat(list(var.external_access_cidr_block), var.bastion_external_access_cidr_block)}"
+  cidr_blocks       = ["${var.external_access_cidr_block}"]
   security_group_id = "${module.vpc.bastion_security_group_id}"
 }
 
