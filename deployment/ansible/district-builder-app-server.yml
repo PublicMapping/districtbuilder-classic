@@ -1,4 +1,4 @@
-- hosts: app-server
+- hosts: localhost
   become: True
 
   # Add pip packages to root user PATH

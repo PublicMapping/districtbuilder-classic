@@ -34,6 +34,26 @@ data "aws_ami" "ecs_ami" {
   }
 }
 
+data "template_file" "ansible_variables" {
+  template = "${file("templates/main.yml.tpl")}"
+
+  vars {
+    image_version      = "${var.districtbuilder_image_version}"
+    web_app_password   = "${var.districtbuilder_web_app_password}"
+    admin_user         = "${var.districtbuilder_admin_user}"
+    admin_email        = "${var.districtbuilder_admin_email}"
+    admin_password     = "${var.districtbuilder_admin_password}"
+    database_name      = "${var.rds_database_name}"
+    database_password  = "${var.rds_database_password}"
+    database_user      = "${var.rds_database_username}"
+    redis_password     = "${var.districtbuilder_redis_password}"
+    geoserver_password = "${var.districtbuilder_geoserver_password}"
+    mailer_host        = "${var.districtbuilder_mailer_host}"
+    mailer_user        = "${var.districtbuilder_mailer_user}"
+    mailer_password    = "${var.districtbuilder_mailer_password}"
+  }
+}
+
 resource "aws_instance" "app_server" {
   ami = "${data.aws_ami.ecs_ami.id}"
 

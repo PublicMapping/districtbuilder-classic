@@ -1,4 +1,10 @@
 #!/bin/bash
+
+#
+# If you add a step to this file, be sure to also update the
+# Ansible deployment tasks in
+# deployment/ansible/roles/district-builder.app-server/tasks/main.yml
+
 set -e
 
 if [[ -n "${DB_DEBUG}" ]]; then

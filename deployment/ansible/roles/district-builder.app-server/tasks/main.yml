@@ -15,18 +15,19 @@
   pip: name=docker-compose version="{{ docker_compose_version }}" state=present
 
 - name: Create App Files
-  file: path="{{ item.path }}" state="{{ item.state }}" mode="{{ item.mode }}" owner="{{ ansible_user }}"
+  file: path="{{ item.path }}" state="{{ item.state }}" mode="{{ item.mode }}" owner="{{ ansible_user }}" recurse="{{ item.recurse | default(omit) }}"
   with_items:
     - { 
         path: "{{ districtbuilder_app_home }}/scripts",
         state: "directory",
-        mode: "0755"
+        mode: "0755",
+        recurse: true
       }
     - {
-        path: "{{ districtbuilder_app_home }}/config_settings.py",
+        path: "{{ districtbuilder_app_home }}/user-data/config_settings.py",
         state: "touch",
         mode: "0644"
-    }
+      }
 
 - name: Create docker-compose configuration
   template: src="{{ item.src }}" dest="{{ item.dest }}"
@@ -35,24 +36,6 @@
     - { src: "env.conf.j2", dest: "{{ districtbuilder_app_home }}/.env" }
   notify:
     - Restart DistrictBuilder
-
-- name: Copy user config, if present
-  copy: src="{{ user_data_dir }}/config.xml" dest="{{ districtbuilder_app_home }}/config.xml"
-  when: districtbuilder_user_config_file
-
-- name: Copy DistrictBuilder data & provisioning scripts
-  copy: src="{{ item.name }}" dest="{{ item.path }}" mode="{{ item.mode }}" owner="{{ ansible_user }}"
-  with_items:
-    - { 
-        name: "{{ user_data_dir }}/districtbuilder_data.zip",
-        path: "{{ districtbuilder_app_home }}/districtbuilder_data.zip",
-        mode: "0644"
-      }
-    - { 
-        name: "{{ deployment_scripts_dir }}",
-        path: "{{ districtbuilder_app_home }}/",
-        mode: "0755"
-      }
 
 - name: Update settings, run migrations, update geoserver password
   command: "{{ item }}"
