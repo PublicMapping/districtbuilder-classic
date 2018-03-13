@@ -34,6 +34,7 @@ services:
     volumes:
       - reports:/opt/reports
       - sld:/opt/sld
+      - tmp:/tmp
     entrypoint: /usr/local/bin/gunicorn
     command:
       - "--workers=2"
@@ -57,6 +58,7 @@ services:
       - .env
     volumes:
       - reports:/opt/reports
+      - tmp:/tmp
     entrypoint: /usr/local/bin/celery
     command:
       - "worker"
@@ -94,3 +96,4 @@ volumes:
   reports:
   data:
   sld:
+  tmp:
