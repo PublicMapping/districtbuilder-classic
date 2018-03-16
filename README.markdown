@@ -129,7 +129,7 @@ Once you are happy with your changes, the next step is to get them out of the VM
 You can use the command `vagrant ssh-config` to find the host, port, user, and identity file -- all of which you will need to copy the files over -- and then run:
 
 ```
-scp -i <IdentityFile> -P <Port> -r <User>@<Host>:/vagrant/django/publicmapping/locale/ django/publicmapping/locale/
+scp -i <IdentityFile> -P <Port> -r <User>@<Host>:/vagrant/django/publicmapping/locale/ django/publicmapping/
 ```
 
 You can then verify the translations are correct and commit those files.
