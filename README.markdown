@@ -117,6 +117,23 @@ that the script executes:
 - `-l`: generate language files. This step ensures that the files necessary for internationalization
   are present in the django container.
 
+Translations
+------------
+
+DistrictBuilder uses a Django application called [Rosetta](https://github.com/mbi/django-rosetta) to do translations.
+
+To do translations in a given language, make sure the server is running (`./scripts/server`) and go to `/admin` to log in as an admin (the admin username and password are defined in `.env`). Once logged in, go to `/rosetta`. You should see the different languages available and the paths of the files that correspond to each language. If you make a translation and save, you should see your changes in that file in the `django` container and on the VM. If you restart the server, your translations will be visible in DistrictBuilder.
+
+Once you are happy with your changes, the next step is to get them out of the VM and onto the host so they can be saved in source control.
+
+You can use the command `vagrant ssh-config` to find the host, port, user, and identity file -- all of which you will need to copy the files over -- and then run:
+
+```
+scp -i <IdentityFile> -P <Port> -r <User>@<Host>:/vagrant/django/publicmapping/locale/ django/publicmapping/
+```
+
+You can then verify the translations are correct and commit those files.
+
 Support
 -------
 
