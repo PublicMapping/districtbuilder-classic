@@ -50,13 +50,13 @@
                  short_name="Nat Amer VAP" displayed="false" sortkey="14" percentage_denominator="vap" />
         <Subject id="vapasn" field="O18ASIAN" name="18 years and older, Asian alone"
                  short_name="As Amer VAP" displayed="false" sortkey="15" percentage_denominator="vap" />
-        <Subject id="vappild" field="N18NHI_PI" name="18 years and older, Native Hawaiian and Other Pacific Islander"
+        <Subject id="vappild" field="O18NHI_PI" name="18 years and older, Native Hawaiian and Other Pacific Islander"
                  short_name="Pac Isldr VAP" displayed="false" sortkey="16" percentage_denominator="vap" />
         <Subject id="vapoth" field="O18_SOR" name="18 years and older, Some Other Race alone"
                  short_name="Other VAP" displayed="false" sortkey="17" percentage_denominator="vap" />
         <Subject id="vaptwo" field="O18_2MORE" name="18 years and older, Two or More Races"
                  short_name="Two+ VAP" displayed="false" sortkey="18" percentage_denominator="vap" />
-        <Subject id="prison" field="CFPOP" name="Prison population"
+        <Subject id="prison" field="CF_POP" name="Prison population"
                  short_name="Prison Pop." displayed="false" sortkey="19" />
         <Subject id="ageu18" field="U18_POP" name="Age - under 18"
                  short_name="Under 18" displayed="false" sortkey="20" />
@@ -68,7 +68,7 @@
                  short_name="35-49" displayed="false" sortkey="23" />
         <Subject id="age5064" field="A50_64_POP" name="Age - 50-64"
                  short_name="50-64" displayed="false" sortkey="24" />
-        <Subject id="age65o" field="A650_POP" name="Age - 65 and over"
+        <Subject id="age65o" field="A65O_POP" name="Age - 65 and over"
                  short_name="65+" displayed="false" sortkey="25" />
     </Subjects>
 
@@ -113,6 +113,205 @@
                 <Argument name="bound1" value=".005" />
                 <Argument name="bound2" value=".01" />
                 <LegislativeBody ref="congress" />
+            </ScoreFunction>
+
+            <!-- District score functions -->
+            <ScoreFunction id="district_vapblk_percent" type="district"
+                calculator="redistricting.calculators.Percent"
+                label="Black VAP">
+                <SubjectArgument name="numerator" ref="vapblk" />
+                <SubjectArgument name="denominator" ref="vap" />
+                <LegislativeBody ref="congress"/>
+                <LegislativeBody ref="community"/>
+            </ScoreFunction>
+
+            <ScoreFunction id="district_vapblk_thresh" type="district"
+                calculator="redistricting.calculators.Threshold"
+                label="Black VAP Threshold">
+                <ScoreArgument name="value" ref="district_vapblk_percent" />
+                <Argument name="threshold" value="0.5" />
+            </ScoreFunction>
+
+            <ScoreFunction id="district_vaphisp_percent" type="district"
+                calculator="redistricting.calculators.Percent"
+                label="His. VAP">
+                <SubjectArgument name="numerator" ref="vaphisp" />
+                <SubjectArgument name="denominator" ref="vap" />
+                <LegislativeBody ref="congress"/>
+                <LegislativeBody ref="community"/>
+            </ScoreFunction>
+
+            <ScoreFunction id="district_vap_thresh" type="district"
+                calculator="redistricting.calculators.Threshold"
+                label="His. VAP Threshold">
+                <ScoreArgument name="value" ref="district_vaphisp_percent" />
+                <Argument name="threshold" value="0.5" />
+            </ScoreFunction>
+
+            <ScoreFunction id="district_vapasn_percent" type="district"
+                calculator="redistricting.calculators.Percent"
+                label="Asian VAP">
+                <SubjectArgument name="numerator" ref="vapasn" />
+                <SubjectArgument name="denominator" ref="vap" />
+                <LegislativeBody ref="congress"/>
+                <LegislativeBody ref="community"/>
+            </ScoreFunction>
+
+            <ScoreFunction id="district_vapasn_thresh" type="district"
+                calculator="redistricting.calculators.Threshold"
+                label="Asian VAP Threshold">
+                <ScoreArgument name="value" ref="district_vapasn_percent" />
+                <Argument name="threshold" value="0.5" />
+            </ScoreFunction>
+
+            <ScoreFunction id="district_vapwnh_percent" type="district"
+                calculator="redistricting.calculators.Percent"
+                label="White VAP">
+                <SubjectArgument name="numerator" ref="vapwnh" />
+                <SubjectArgument name="denominator" ref="vap" />
+                <LegislativeBody ref="congress"/>
+                <LegislativeBody ref="community"/>
+            </ScoreFunction>
+
+            <ScoreFunction id="district_vapwnh_thresh" type="district"
+                calculator="redistricting.calculators.Threshold"
+                label="White VAP Threshold">
+                <ScoreArgument name="value" ref="district_vapwnh_percent" />
+                <Argument name="threshold" value="0.5" />
+            </ScoreFunction>
+
+            <ScoreFunction id="district_vapnam_percent" type="district"
+                calculator="redistricting.calculators.Percent"
+                label="Nat. Amer. VAP">
+                <SubjectArgument name="numerator" ref="vapnam" />
+                <SubjectArgument name="denominator" ref="vap" />
+                <LegislativeBody ref="congress"/>
+                <LegislativeBody ref="community"/>
+            </ScoreFunction>
+
+            <ScoreFunction id="district_vapnam_thresh" type="district"
+                calculator="redistricting.calculators.Threshold"
+                label="Nat. Amer. VAP Threshold">
+                <ScoreArgument name="value" ref="district_vapnam_percent" />
+                <Argument name="threshold" value="0.5" />
+            </ScoreFunction>
+
+            <ScoreFunction id="district_vappild_percent" type="district"
+                calculator="redistricting.calculators.Percent"
+                label="Pac. Isldr. VAP">
+                <SubjectArgument name="numerator" ref="vappild" />
+                <SubjectArgument name="denominator" ref="vap" />
+                <LegislativeBody ref="congress"/>
+                <LegislativeBody ref="community"/>
+            </ScoreFunction>
+
+            <ScoreFunction id="district_vappild_thresh" type="district"
+                calculator="redistricting.calculators.Threshold"
+                label="Pac. Isldr. VAP Threshold">
+                <ScoreArgument name="value" ref="district_vappild_percent" />
+                <Argument name="threshold" value="0.5" />
+            </ScoreFunction>
+
+            <ScoreFunction id="district_vapoth_percent" type="district"
+                calculator="redistricting.calculators.Percent"
+                label="Other VAP">
+                <SubjectArgument name="numerator" ref="vapoth" />
+                <SubjectArgument name="denominator" ref="vap" />
+                <LegislativeBody ref="congress"/>
+                <LegislativeBody ref="community"/>
+            </ScoreFunction>
+
+            <ScoreFunction id="district_vapoth_thresh" type="district"
+                calculator="redistricting.calculators.Threshold"
+                label="Other VAP Threshold">
+                <ScoreArgument name="value" ref="district_vapoth_percent" />
+                <Argument name="threshold" value="0.5" />
+            </ScoreFunction>
+
+            <ScoreFunction id="district_vaptwo_percent" type="district"
+                calculator="redistricting.calculators.Percent"
+                label="Two+ Races VAP">
+                <SubjectArgument name="numerator" ref="vaptwo" />
+                <SubjectArgument name="denominator" ref="vap" />
+                <LegislativeBody ref="congress"/>
+                <LegislativeBody ref="community"/>
+            </ScoreFunction>
+
+            <ScoreFunction id="district_vaptwo_thresh" type="district"
+                calculator="redistricting.calculators.Threshold"
+                label="Two+ Races VAP Threshold">
+                <ScoreArgument name="value" ref="district_vaptwo_percent" />
+                <Argument name="threshold" value="0.5" />
+            </ScoreFunction>
+
+            <ScoreFunction id="district_prison_percent" type="district"
+                calculator="redistricting.calculators.Percent"
+                label="Incarcerated">
+                <SubjectArgument name="numerator" ref="prison" />
+                <SubjectArgument name="denominator" ref="vap" />
+                <LegislativeBody ref="congress"/>
+                <LegislativeBody ref="community"/>
+            </ScoreFunction>
+
+            <ScoreFunction id="district_prison_thresh" type="district"
+                calculator="redistricting.calculators.Threshold"
+                label="Incarcerated Threshold">
+                <ScoreArgument name="value" ref="district_prison_percent" />
+                <Argument name="threshold" value="0.5" />
+            </ScoreFunction>
+
+            <ScoreFunction id="district_ageu18_percent" type="district"
+                calculator="redistricting.calculators.Percent"
+                label="Under 18">
+                <SubjectArgument name="numerator" ref="ageu18" />
+                <SubjectArgument name="denominator" ref="poptot" />
+                <LegislativeBody ref="congress"/>
+                <LegislativeBody ref="community"/>
+            </ScoreFunction>
+
+            <ScoreFunction id="district_age1824_percent" type="district"
+                calculator="redistricting.calculators.Percent"
+                label="18-24">
+                <SubjectArgument name="numerator" ref="age1824" />
+                <SubjectArgument name="denominator" ref="poptot" />
+                <LegislativeBody ref="congress"/>
+                <LegislativeBody ref="community"/>
+            </ScoreFunction>
+
+            <ScoreFunction id="district_age2534_percent" type="district"
+                calculator="redistricting.calculators.Percent"
+                label="25-34">
+                <SubjectArgument name="numerator" ref="age2534" />
+                <SubjectArgument name="denominator" ref="poptot" />
+                <LegislativeBody ref="congress"/>
+                <LegislativeBody ref="community"/>
+            </ScoreFunction>
+
+            <ScoreFunction id="district_age3549_percent" type="district"
+                calculator="redistricting.calculators.Percent"
+                label="35-49">
+                <SubjectArgument name="numerator" ref="age3549" />
+                <SubjectArgument name="denominator" ref="poptot" />
+                <LegislativeBody ref="congress"/>
+                <LegislativeBody ref="community"/>
+            </ScoreFunction>
+
+            <ScoreFunction id="district_age5064_percent" type="district"
+                calculator="redistricting.calculators.Percent"
+                label="50-64">
+                <SubjectArgument name="numerator" ref="age5064" />
+                <SubjectArgument name="denominator" ref="poptot" />
+                <LegislativeBody ref="congress"/>
+                <LegislativeBody ref="community"/>
+            </ScoreFunction>
+
+            <ScoreFunction id="district_age65o_percent" type="district"
+                calculator="redistricting.calculators.Percent"
+                label="65+">
+                <SubjectArgument name="numerator" ref="age65o" />
+                <SubjectArgument name="denominator" ref="poptot" />
+                <LegislativeBody ref="congress"/>
+                <LegislativeBody ref="community"/>
             </ScoreFunction>
 
             <!-- Leaderboard functions -->
@@ -213,11 +412,13 @@
         </ScoreFunctions>
 
         <ScorePanels>
+            <!-- Leaderboard -->
             <ScorePanel id="panel_compact_all" type="plan" position="1"
                 title="Schwartzberg" template="leaderboard_panel_all.html"
                 is_ascending="false">
                 <Score ref="plan_schwartzberg" />
             </ScorePanel>
+
             <ScorePanel id="panel_compact_mine" type="plan" position="1"
                 title="Schwartzberg" template="leaderboard_panel_mine.html"
                 is_ascending="false">
@@ -252,6 +453,14 @@
                 title="Demographics" cssclass="district_demographics community"
                 template="communities.html">
                 <Score ref="district_poptot" />
+            </ScorePanel>
+
+            <ScorePanel id="congressional_panel_demo" type="district" position="2"
+                title="Demographics" cssclass="district_demographics congressional"
+                template="demographics.html">
+                <Score ref="district_vapblk_percent" />
+                <Score ref="district_vaphisp_percent" />
+                <Score ref="district_vapasn_percent" />
             </ScorePanel>
 
             <!-- Calculator Reports configuration -->
@@ -291,7 +500,7 @@
 
             <ScoreDisplay id="congress_sidebar_demo" legislativebodyref="congress" type="sidebar" title="Demographics" cssclass="demographics">
                 <ScorePanel ref="congressional_panel_summary" />
-                <ScorePanel ref="congressional_panel_info" />
+                <ScorePanel ref="congressional_panel_demo" />
             </ScoreDisplay>
 
             <ScoreDisplay id="community_sidebar_demo" legislativebodyref="community" type="sidebar" title="Demographics" cssclass="demographics">
