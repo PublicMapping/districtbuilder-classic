@@ -955,6 +955,7 @@ def uploadfile(request):
                 filename = '%s%s' % (dest.name, '.zip')
             else:
                 filename = dest.name
+            os.chmod(filename, 0664)
 
         except Exception as ex:
             logger.error('Could not save uploaded file')
