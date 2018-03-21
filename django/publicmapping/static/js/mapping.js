@@ -152,6 +152,9 @@ function init() {
 
 // Timer used to distinguish between single and double clicks
 var clickTimer = null;
+// Min and max geolevels used for filtering requests to Geoserver
+// and for display of demographic info popup.
+var geolevelRange;
 
 /**
  * Toggles the highlighting of a district
@@ -1705,19 +1708,28 @@ function mapinit(srs,maxExtent) {
         }
     };
 
-    // A callback to create a popup window on the map after a piece
-    // of geography is selected.
-    var idFeature = function(e) {
-        var snapto = getSnapLayer().layer;
-
+    var getMinMaxGeolevels = function(snapToLayer) {
         // get the range of geolevels
         var maxGeolevel = 0, minGeolevel = 9999;
         for (var i = 0; i < SNAP_LAYERS.length; i++) {
-            if (snapto == 'simple_' + SNAP_LAYERS[i].level) {
+            if (snapToLayer == 'simple_' + SNAP_LAYERS[i].level) {
                 minGeolevel = SNAP_LAYERS[i].geolevel;
             }
             maxGeolevel = Math.max(maxGeolevel, SNAP_LAYERS[i].geolevel);
         }
+
+        return {
+            'min': minGeolevel,
+            'max': maxGeolevel
+        }
+    };
+
+    // A callback to create a popup window on the map after a piece
+    // of geography is selected.
+    var idFeature = function(e) {
+        var minGeolevel = geolevelRange.min;
+        var maxGeolevel = geolevelRange.max;
+
         // get the breadcrumbs to this geounit, starting at the
         // largest area (lowest geolevel) first, down to the
         // most specific geolevel
@@ -2742,6 +2754,8 @@ function mapinit(srs,maxExtent) {
             $('#map').trigger('draw_highlighted_districts');
         }
 
+        geolevelRange = getMinMaxGeolevels(snap.layer);
+
         changingSnap = false;
     };
 
@@ -3181,17 +3195,36 @@ IdGeounit = OpenLayers.Class(OpenLayers.Control.GetFeature, {
     // figure out any other way to pass the propertyNames option to the protocol.
     request: function(bounds, options) {
         options = options || {};
-        var filter = new OpenLayers.Filter.Spatial({
+        var spatialFilter = new OpenLayers.Filter.Spatial({
             type: this.filterType,
             value: bounds
         });
+        var minGeolevelFilter = new OpenLayers.Filter.Comparison({
+            type: OpenLayers.Filter.Comparison.GREATER_THAN_OR_EQUAL_TO,
+            value: geolevelRange.min,
+            property: 'geolevel_id'
+        });
+        var maxGeolevelFilter = new OpenLayers.Filter.Comparison({
+            type: OpenLayers.Filter.Comparison.LESS_THAN_OR_EQUAL_TO,
+            value: geolevelRange.max,
+            property: 'geolevel_id'
+        });
+        var filters = new OpenLayers.Filter.Logical({
+            type: OpenLayers.Filter.Logical.AND,
+            filters: [
+                spatialFilter,
+                minGeolevelFilter,
+                maxGeolevelFilter
+            ]
+        });
+
 
         // Set the cursor to "wait" to tell the user we're working.
         OpenLayers.Element.addClass(this.map.viewPortDiv, "olCursorWait");
 
         var response = this.protocol.read({
             maxFeatures: options.single == true ? this.maxFeatures : undefined,
-            filter: filter,
+            filter: filters,
             // Limit to non-geom properties so that we don't get back a multi-megabyte response
             propertyNames: ['id', 'name', 'percentage', 'number', 'geolevel_id', 'subject_id'],
             callback: function(result) {
