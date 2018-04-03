@@ -1,15 +1,6 @@
-resource "aws_security_group" "app_server" {
-  vpc_id = "${module.vpc.id}"
-
-  name = "sgAppServer"
-
-  tags {
-    Environment = "${var.environment}"
-    Project     = "${var.project}"
-    State       = "${var.state_name}"
-  }
-}
-
+#
+# EC2 resources
+#
 data "aws_ami" "ecs_ami" {
   most_recent = true
 
@@ -43,9 +34,9 @@ data "template_file" "ansible_variables" {
     admin_user         = "${var.districtbuilder_admin_user}"
     admin_email        = "${var.districtbuilder_admin_email}"
     admin_password     = "${var.districtbuilder_admin_password}"
-    database_name      = "${var.rds_database_name}"
-    database_password  = "${var.rds_database_password}"
-    database_user      = "${var.rds_database_username}"
+    database_name      = "${var.districtbuilder_database_name}"
+    database_user      = "${data.terraform_remote_state.core.rds_username}"
+    database_password  = "${data.terraform_remote_state.core.rds_password}"
     redis_password     = "${var.districtbuilder_redis_password}"
     geoserver_password = "${var.districtbuilder_geoserver_password}"
     mailer_host        = "${var.districtbuilder_mailer_host}"
@@ -57,18 +48,18 @@ data "template_file" "ansible_variables" {
 resource "aws_instance" "app_server" {
   ami = "${data.aws_ami.ecs_ami.id}"
 
+  iam_instance_profile                 = "${data.terraform_remote_state.core.app_server_instance_profile}"
   instance_initiated_shutdown_behavior = "stop"
   instance_type                        = "${var.app_server_instance_type}"
-  key_name                             = "${var.aws_key_name}"
+  key_name                             = "${data.terraform_remote_state.core.app_server_key_name}"
   monitoring                           = true
-  availability_zone                    = "${var.app_server_availability_zone}"
-  subnet_id                            = "${module.vpc.private_subnet_ids[0]}"
-  vpc_security_group_ids               = ["${aws_security_group.app_server.id}"]
+  subnet_id                            = "${data.terraform_remote_state.core.public_subnet_ids[0]}"
+  vpc_security_group_ids               = ["${data.terraform_remote_state.core.app_server_security_group_id}"]
 
   tags {
+    Name        = "AppServer"
     Project     = "${var.project}"
     Environment = "${var.environment}"
-    State       = "${var.state_name}"
   }
 
   provisioner "remote-exec" {
@@ -90,27 +81,16 @@ resource "aws_instance" "app_server" {
       user        = "ec2-user"
       private_key = "${file(pathexpand("~/.ssh/district-builder.pem"))}"
 
-      bastion_host        = "${module.vpc.bastion_hostname}"
-      bastion_user        = "ubuntu"
+      bastion_host        = "${data.terraform_remote_state.core.bastion_hostname}"
+      bastion_user        = "ec2-user"
       bastion_private_key = "${file(pathexpand("~/.ssh/district-builder.pem"))}"
     }
   }
 }
 
 resource "null_resource" "provision_app_server" {
-  depends_on = [
-    "data.template_file.ansible_variables",
-    "aws_instance.app_server",
-    "aws_security_group_rule.bastion_ssh_ingress",
-  ]
-
   triggers {
     uuid = "${uuid()}"
-  }
-
-  provisioner "local-exec" {
-    interpreter = ["/bin/bash", "-cex"]
-    command     = "aws ec2 wait instance-running --instance-ids=${aws_instance.app_server.id} --region=${var.aws_region}"
   }
 
   provisioner "file" {
@@ -123,8 +103,8 @@ resource "null_resource" "provision_app_server" {
       user        = "ec2-user"
       private_key = "${file(pathexpand("~/.ssh/district-builder.pem"))}"
 
-      bastion_host        = "${module.vpc.bastion_hostname}"
-      bastion_user        = "ubuntu"
+      bastion_host        = "${data.terraform_remote_state.core.bastion_hostname}"
+      bastion_user        = "ec2-user"
       bastion_private_key = "${file(pathexpand("~/.ssh/district-builder.pem"))}"
     }
   }
@@ -139,8 +119,8 @@ resource "null_resource" "provision_app_server" {
       user        = "ec2-user"
       private_key = "${file(pathexpand("~/.ssh/district-builder.pem"))}"
 
-      bastion_host        = "${module.vpc.bastion_hostname}"
-      bastion_user        = "ubuntu"
+      bastion_host        = "${data.terraform_remote_state.core.bastion_hostname}"
+      bastion_user        = "ec2-user"
       bastion_private_key = "${file(pathexpand("~/.ssh/district-builder.pem"))}"
     }
   }
@@ -155,8 +135,8 @@ resource "null_resource" "provision_app_server" {
       user        = "ec2-user"
       private_key = "${file(pathexpand("~/.ssh/district-builder.pem"))}"
 
-      bastion_host        = "${module.vpc.bastion_hostname}"
-      bastion_user        = "ubuntu"
+      bastion_host        = "${data.terraform_remote_state.core.bastion_hostname}"
+      bastion_user        = "ec2-user"
       bastion_private_key = "${file(pathexpand("~/.ssh/district-builder.pem"))}"
     }
   }
@@ -171,8 +151,8 @@ resource "null_resource" "provision_app_server" {
       user        = "ec2-user"
       private_key = "${file(pathexpand("~/.ssh/district-builder.pem"))}"
 
-      bastion_host        = "${module.vpc.bastion_hostname}"
-      bastion_user        = "ubuntu"
+      bastion_host        = "${data.terraform_remote_state.core.bastion_hostname}"
+      bastion_user        = "ec2-user"
       bastion_private_key = "${file(pathexpand("~/.ssh/district-builder.pem"))}"
     }
   }
@@ -187,8 +167,8 @@ resource "null_resource" "provision_app_server" {
       user        = "ec2-user"
       private_key = "${file(pathexpand("~/.ssh/district-builder.pem"))}"
 
-      bastion_host        = "${module.vpc.bastion_hostname}"
-      bastion_user        = "ubuntu"
+      bastion_host        = "${data.terraform_remote_state.core.bastion_hostname}"
+      bastion_user        = "ec2-user"
       bastion_private_key = "${file(pathexpand("~/.ssh/district-builder.pem"))}"
     }
   }
@@ -206,93 +186,14 @@ resource "null_resource" "provision_app_server" {
       user        = "ec2-user"
       private_key = "${file(pathexpand("~/.ssh/district-builder.pem"))}"
 
-      bastion_host        = "${module.vpc.bastion_hostname}"
-      bastion_user        = "ubuntu"
+      bastion_host        = "${data.terraform_remote_state.core.bastion_hostname}"
+      bastion_user        = "ec2-user"
       bastion_private_key = "${file(pathexpand("~/.ssh/district-builder.pem"))}"
     }
   }
-}
 
-resource "aws_security_group" "app_server_alb" {
-  vpc_id = "${module.vpc.id}"
-
-  name = "sgALBAppServer"
-
-  tags {
-    Environment = "${var.environment}"
-    Project     = "${var.project}"
-    State       = "${var.state_name}"
-  }
-}
-
-resource "aws_alb" "app_server" {
-  name = "alb${var.environment}AppServer"
-
-  security_groups = [
-    "${aws_security_group.app_server_alb.id}",
+  depends_on = [
+    "data.template_file.ansible_variables",
+    "aws_instance.app_server",
   ]
-
-  subnets = ["${module.vpc.public_subnet_ids}"]
-
-  tags {
-    Name        = "albAppServer"
-    Project     = "${var.project}"
-    Environment = "${var.environment}"
-    State       = "${var.state_name}"
-  }
-}
-
-resource "aws_alb_target_group" "app_server_http" {
-  name = "tg${var.environment}HTTPAppServer"
-
-  health_check {
-    healthy_threshold   = "3"
-    interval            = "60"
-    matcher             = "200"
-    protocol            = "HTTP"
-    timeout             = "3"
-    path                = "/"
-    unhealthy_threshold = "2"
-  }
-
-  port     = "8080"
-  protocol = "HTTP"
-  vpc_id   = "${module.vpc.id}"
-
-  tags {
-    Name        = "tg${var.environment}HTTPAppServer"
-    Project     = "${var.project}"
-    Environment = "${var.environment}"
-    State       = "${var.state_name}"
-  }
-}
-
-resource "aws_alb_target_group_attachment" "app_server" {
-  target_group_arn = "${aws_alb_target_group.app_server_http.arn}"
-  target_id        = "${aws_instance.app_server.id}"
-  port             = 8080
-}
-
-resource "aws_alb_listener" "api_server_http" {
-  load_balancer_arn = "${aws_alb.app_server.id}"
-  port              = "80"
-  protocol          = "HTTP"
-
-  default_action {
-    target_group_arn = "${aws_alb_target_group.app_server_http.id}"
-    type             = "forward"
-  }
-}
-
-resource "aws_alb_listener" "api_server_https" {
-  load_balancer_arn = "${aws_alb.app_server.id}"
-  port              = "443"
-  protocol          = "HTTPS"
-
-  certificate_arn = "${var.ssl_certificate_arn}"
-
-  default_action {
-    target_group_arn = "${aws_alb_target_group.app_server_http.id}"
-    type             = "forward"
-  }
 }
