@@ -1,55 +1,26 @@
 #
 # Public DNS resources
 #
-
-resource "aws_route53_zone" "external" {
-  name = "${var.route53_public_zone_name}"
+data "aws_route53_zone" "external" {
+  zone_id = "${data.terraform_remote_state.core.public_hosted_zone_id}"
 }
 
-resource "aws_route53_record" "bastion" {
-  zone_id = "${aws_route53_zone.external.zone_id}"
-  name    = "bastion.${var.route53_public_zone_name}"
+resource "aws_route53_record" "origin" {
+  zone_id = "${data.aws_route53_zone.external.zone_id}"
+  name    = "origin.${lower(var.state)}.${data.aws_route53_zone.external.name}"
   type    = "CNAME"
   ttl     = "300"
-
-  records = ["${module.vpc.bastion_hostname}"]
+  records = ["${aws_instance.app_server.public_dns}"]
 }
 
-resource "aws_route53_record" "app_server_alb" {
-  zone_id = "${aws_route53_zone.external.zone_id}"
-  name    = "app.${var.route53_public_zone_name}"
+resource "aws_route53_record" "app" {
+  zone_id = "${data.aws_route53_zone.external.zone_id}"
+  name    = "${lower(var.state)}.${data.aws_route53_zone.external.name}"
   type    = "A"
 
   alias {
-    name                   = "${lower(aws_alb.app_server.dns_name)}"
-    zone_id                = "${aws_alb.app_server.zone_id}"
-    evaluate_target_health = true
+    name                   = "${aws_cloudfront_distribution.cdn.domain_name}"
+    zone_id                = "${aws_cloudfront_distribution.cdn.hosted_zone_id}"
+    evaluate_target_health = false
   }
-}
-
-resource "aws_route53_zone" "internal" {
-  name   = "${var.route53_private_zone_name}"
-  vpc_id = "${module.vpc.id}"
-}
-
-#
-# Private DNS resources
-#
-
-resource "aws_route53_record" "app_server" {
-  zone_id = "${aws_route53_zone.internal.zone_id}"
-  name    = "app-server.${var.route53_private_zone_name}"
-  type    = "A"
-  ttl     = "10"
-
-  records = ["${aws_instance.app_server.private_ip}"]
-}
-
-resource "aws_route53_record" "database" {
-  zone_id = "${aws_route53_zone.internal.zone_id}"
-  name    = "postgres.${var.route53_private_zone_name}"
-  type    = "CNAME"
-  ttl     = "10"
-
-  records = ["${module.database.hostname}"]
 }

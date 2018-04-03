@@ -22,14 +22,14 @@ if [ "${BASH_SOURCE[0]}" = "${0}" ]; then
     if [ "${1:-}" = "--help" ]; then
         usage
     else
-        if [[ -n "${DISTRICTBUILDER_SETTINGS_BUCKET}" ]]; then
+        if [[ -n "${DB_SETTINGS_BUCKET}" ]]; then
 
             pushd "${TERRAFORM_DIR}"
 
-            aws s3 cp "s3://${DISTRICTBUILDER_SETTINGS_BUCKET}/terraform/terraform.tfvars" "${DISTRICTBUILDER_SETTINGS_BUCKET}.tfvars"
+            aws s3 cp "s3://${DB_SETTINGS_BUCKET}/terraform/${DB_STATE}/terraform.tfvars" "${DB_SETTINGS_BUCKET}.tfvars"
 
             echo
-            echo "Attempting to deploy application version [${IMAGE_VERSION}]..."
+            echo "Attempting to deploy application version [${IMAGE_VERSION}] for state ${DB_STATE}..."
             echo "-----------------------------------------------------"
             echo
 
@@ -37,15 +37,16 @@ if [ "${BASH_SOURCE[0]}" = "${0}" ]; then
                 plan)
                     rm -rf .terraform terraform.tfstate*
                     terraform init \
-                              -backend-config="bucket=${DISTRICTBUILDER_SETTINGS_BUCKET}" \
-                              -backend-config="key=terraform/state"
+                              -backend-config="bucket=${DB_SETTINGS_BUCKET}" \
+                              -backend-config="key=terraform/${DB_STATE}/state"
                     terraform plan \
-                              -var-file="${DISTRICTBUILDER_SETTINGS_BUCKET}.tfvars" \
+                              -var-file="${DB_SETTINGS_BUCKET}.tfvars" \
                               -var="districtbuilder_image_version=\"${IMAGE_VERSION}\"" \
-                              -out="${DISTRICTBUILDER_SETTINGS_BUCKET}.tfplan"
+                              -var="state=\"${DB_STATE}\"" \
+                              -out="${DB_SETTINGS_BUCKET}.tfplan"
                     ;;
                 apply)
-                    terraform apply "${DISTRICTBUILDER_SETTINGS_BUCKET}.tfplan"
+                    terraform apply "${DB_SETTINGS_BUCKET}.tfplan"
                     ;;
                 *)
                     echo "ERROR: I don't have support for that Terraform subcommand!"
@@ -55,7 +56,7 @@ if [ "${BASH_SOURCE[0]}" = "${0}" ]; then
 
             popd
         else
-            echo "ERROR: No DISTRICTBUILDER_SETTINGS_BUCKET variable defined."
+            echo "ERROR: No DB_SETTINGS_BUCKET variable defined."
             exit 1
         fi
     fi
