@@ -37,10 +37,10 @@
                 {% endif %}/></td>
             </tr>
             <tr>
-                <td colspan="2"><span class="recommended">{% trans "An email address is recommended to recover a forgotten password" %}</span></td>
+                <td colspan="2"><span class="recommended">{% trans "An email address is required. This email will be used for password recovery." %}</span></td>
             </tr>
             <tr>
-                <td class="fname">{% trans "Email Address" %}</td>
+                <td class="fname">{% trans "Email Address" %} *</td>
                 <td><input id="email" name="email" class="field" maxlength="75"
                 {% if is_registered %}
                     value="{{ userinfo.email }}"
