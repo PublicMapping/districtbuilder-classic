@@ -135,6 +135,15 @@ $(function(){
             passwordhint.addClass('field');
             passwordhint.removeClass('error');
         }
+        if (email.val() == '') {
+            email.removeClass('field');
+            email.addClass('error');
+            return false;
+        }
+        else {
+            email.addClass('field');
+            email.removeClass('error');
+        }
         if ($.trim(email.val()) != '') {
             if (!(email.val().match(/^([\w\-\.\+])+\@([\w\-\.])+\.([A-Za-z]{2,4})$/))) {
                 email.removeClass('field');
