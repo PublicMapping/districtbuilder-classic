@@ -19,8 +19,8 @@
    Purpose:
        This script file creates the map and controls all behaviors of the
        editing tools.
-   
-   Author: 
+
+   Author:
         Andrew Jennings, David Zwarg
 */
 
@@ -32,7 +32,7 @@
  * @param extents The extents of the layer -- must be used for GeoWebCache.
  */
 
-/* 
+/*
  * Get the value of the "Show Layer by:" dropdown.
  */
 
@@ -49,7 +49,7 @@ function getShowBy() {
 function getDistrictBy() {
     var sel = $('#districtby');
     var elem = $($('option', sel)[sel[0].selectedIndex]);
-    return { 
+    return {
         by: parseInt(elem.attr('value'),10),
         name: elem.attr('name')
     };
@@ -69,11 +69,11 @@ function getPlanVersion() {
 function doMapStyling() {
     $('#OpenLayers\\.Control\\.PanZoomBar_3_panup').addClass('olControlPan olControlPanUpItemInactive');
     $('#OpenLayers\\.Control\\.PanZoomBar_3_panright').addClass('olControlPan olControlPanRightItemInactive');
-    $('#OpenLayers\\.Control\\.PanZoomBar_3_pandown').addClass('olControlPan olControlPanDownItemInactive');    
+    $('#OpenLayers\\.Control\\.PanZoomBar_3_pandown').addClass('olControlPan olControlPanDownItemInactive');
     $('#OpenLayers\\.Control\\.PanZoomBar_3_panleft').addClass('olControlPan olControlPanLeftItemInactive');
-    $('#OpenLayers\\.Control\\.PanZoomBar_3_zoomin').addClass('olControlZoom olControlZoomInInactive');   
-    $('#OpenLayers\\.Control\\.PanZoomBar_3_zoomout').addClass('olControlZoom olControlZoomOutInactive'); 
-    $('#OpenLayers\\.Control\\.PanZoomBar_3_OpenLayers\\.Map_5').addClass('olControlZoom olControlZoomGrabInactive'); 
+    $('#OpenLayers\\.Control\\.PanZoomBar_3_zoomin').addClass('olControlZoom olControlZoomInInactive');
+    $('#OpenLayers\\.Control\\.PanZoomBar_3_zoomout').addClass('olControlZoom olControlZoomOutInactive');
+    $('#OpenLayers\\.Control\\.PanZoomBar_3_OpenLayers\\.Map_5').addClass('olControlZoom olControlZoomGrabInactive');
     $('#OpenLayers_Control_PanZoomBar_ZoombarOpenLayers\\.Map_5').addClass('olControlZoom olControlZoomBarInactive');
 }
 
@@ -94,12 +94,12 @@ function initializeResizeFix() {
             vp.style.height = (window.document.body.clientHeight - 150) + 'px';
         }
     };
-   
+
     resizemap();
     window.onresize = resizemap;
 }
 
-/* 
+/*
  * Create a div for tooltips on the map itself; this is used
  * when the info tool is activated.
  */
@@ -166,7 +166,7 @@ function toggleDistrict(district_id) {
         $(this).trigger('toggle_highlighting', [ district_id ]);
         clickTimer = null;
     }, 200);
-    
+
     // needed for multiple click events on a single element
     return true;
 }
@@ -294,13 +294,13 @@ function mapinit(srs,maxExtent) {
                     maxZoomLevel: maxZoomLevel,
                     projection: projection,
                     sphericalMercator: true,
-                    maxExtent: maxExtent    
+                    maxExtent: maxExtent
                 };
 
                 types = {
                     aerial: VEMapStyle.Aerial,
                     hybrid: VEMapStyle.Hybrid,
-                    road: VEMapStyle.Road 
+                    road: VEMapStyle.Road
                 };
 
                 options.type = types[mapType];
@@ -320,7 +320,7 @@ function mapinit(srs,maxExtent) {
 
                 types = {
                     aerial: G_SATELLITE_MAP,
-                    hybrid: G_HYBRID_MAP, 
+                    hybrid: G_HYBRID_MAP,
                     road: G_NORMAL_MAP
                 };
 
@@ -351,9 +351,9 @@ function mapinit(srs,maxExtent) {
                 }
 
                 var options = {
-                    resolutions: resolutions,                        
+                    resolutions: resolutions,
                     tileOrigin: new OpenLayers.LonLat(layerInfo.tileInfo.origin.x , layerInfo.tileInfo.origin.y),
-                    maxExtent: maxExtent,                        
+                    maxExtent: maxExtent,
                     projection: projection,
                     minZoomLevel: minZoomLevel
                 };
@@ -431,7 +431,7 @@ function mapinit(srs,maxExtent) {
         button.click(function() {
             olmap.setBaseLayer(layer);
         });
-           
+
         container.append(button);
     });
 
@@ -449,7 +449,7 @@ function mapinit(srs,maxExtent) {
             title: gettext('Fixing Unassigned'),
             escapeOnClose: false,
             resizable:false,
-            open: function() { $(".ui-dialog-titlebar-close", $(this).parent()).hide(); }                    
+            open: function() { $(".ui-dialog-titlebar-close", $(this).parent()).hide(); }
         });
 
         $.ajax({
@@ -527,19 +527,19 @@ function mapinit(srs,maxExtent) {
                     if (data.splits.length === 0) {
                         $('<div />').text(gettext('This plan contains no splits.')).dialog({
                             modal: true, autoOpen: true, title: gettext('No Splits Found'), resizable:false
-                        });                
+                        });
                     }
                 } else {
                     $('<div />').text(gettext('Error encountered while querying for splits: ') + data.message).dialog({
                         modal: true, autoOpen: true, title: gettext('Error'), resizable:false
-                    });                
+                    });
                 }
             },
             error: function(xhr, textStatus, error) {
-                waitDialog.remove();                        
+                waitDialog.remove();
                 $('<div />').text(gettext('Error encountered while querying for splits: ') + textStatus).dialog({
                     modal: true, autoOpen: true, title: gettext('Error'), resizable:false
-                });                
+                });
             }
         });
 
@@ -565,7 +565,7 @@ function mapinit(srs,maxExtent) {
         var featureName = NAMESPACE + ':' + layer.level + '_boundaries';
         layers.push(createLayer( layerName, featureName, srs, maxExtent, true, false, false ));
 
-    } 
+    }
 
     // The strategy for loading the districts. This is effectively
     // a manual refresh, with no automatic reloading of district
@@ -637,11 +637,11 @@ function mapinit(srs,maxExtent) {
             }
         }
 
-        return { 
-            layer: min_layer.layer, 
+        return {
+            layer: min_layer.layer,
             level: min_layer.level,
             name: min_layer.level,
-            display: min_layer.long_description, 
+            display: min_layer.long_description,
             geolevel: min_layer.geolevel
         };
     }
@@ -697,7 +697,7 @@ function mapinit(srs,maxExtent) {
             filters: filters
         });
     };
-    
+
     // A vector layer that holds all the districts in
     // the current plan.
     var districtLayer = new OpenLayers.Layer.Vector(
@@ -741,22 +741,22 @@ function mapinit(srs,maxExtent) {
         styleMap: new OpenLayers.StyleMap({
             "default": new OpenLayers.Style(
                 OpenLayers.Util.applyDefaults(
-                    { 
-                        fill: true, 
+                    {
+                        fill: true,
                         fillOpacity: 0.0,
-                        strokeColor: '#ffff00', 
-                        strokeWidth: 3 
-                    }, 
+                        strokeColor: '#ffff00',
+                        strokeWidth: 3
+                    },
                     OpenLayers.Feature.Vector.style["default"]
                 )
             ),
             "select":  new OpenLayers.Style(
                 OpenLayers.Util.applyDefaults(
-                    { 
-                        fill: true, 
+                    {
+                        fill: true,
                         fillColor: '#fdB913',
                         strokeColor: '#fdB913'
-                    }, 
+                    },
                     OpenLayers.Feature.Vector.style["select"]
                 )
             ),
@@ -861,7 +861,7 @@ function mapinit(srs,maxExtent) {
             // The rest of this function is exactly the same as the original
             options = options || {};
             OpenLayers.Element.addClass(this.map.viewPortDiv, "olCursorWait");
-        
+
             this.protocol.read({
                 filter: filter,
                 callback: function(result) {
@@ -883,7 +883,7 @@ function mapinit(srs,maxExtent) {
                     }
                     OpenLayers.Element.removeClass(this.map.viewPortDiv, "olCursorWait");
                 },
-                scope: this                        
+                scope: this
             });
         }
     };
@@ -949,7 +949,7 @@ function mapinit(srs,maxExtent) {
             $('#map').trigger('style_changed', [null, referenceLayerId]);
             return;
         }
-            
+
         var layer = olmap.getLayersByName(referenceLayerId);
         if (layer.length == 0) {
             hideCurrentReferenceLayer();
@@ -1228,7 +1228,7 @@ function mapinit(srs,maxExtent) {
     };
 
     // Create a polygon select control for free-form selections.
-    var polyControl = new OpenLayers.Control.DrawFeature( 
+    var polyControl = new OpenLayers.Control.DrawFeature(
         selection,
         OpenLayers.Handler.Polygon,
         {
@@ -1244,7 +1244,7 @@ function mapinit(srs,maxExtent) {
                 newOpts.featureType = getSnapLayer().layer;
                 getControl.protocol = new OpenLayers.Protocol.HTTP( newOpts );
                 extendReadForCSRF(getControl.protocol);
-                
+
                 getControl.protocol.read({
                     filter: getVersionAndSubjectFilters(maxExtent, feature.geometry),
                     callback: function(rsp){
@@ -1253,7 +1253,7 @@ function mapinit(srs,maxExtent) {
                         selection.removeFeatures([lasso]);
 
                         if (!(append || subtract)){
-                            // if this is a new lasso, remove all the 
+                            // if this is a new lasso, remove all the
                             // old selected features
                             selection.removeFeatures(selection.features);
                         }
@@ -1302,7 +1302,7 @@ function mapinit(srs,maxExtent) {
                 // Show a dialog asking to unmerge
                 // to combine with unassigned
                 var buttons = [
-                    { 
+                    {
                         text: gettext('OK'),
                         click: function() {
                             $(this).dialog('close');
@@ -1323,7 +1323,7 @@ function mapinit(srs,maxExtent) {
                                         $('#map').trigger('version_changed', [data.version, updateAssignments]);
                                     } else {
                                         $('<div class="error" />').attr('title', gettext('Sorry'))
-                                            .text(gettext('Unable to combine districts: ') + 
+                                            .text(gettext('Unable to combine districts: ') +
                                             data.message ).dialog({
                                                 modal: true,
                                                 autoOpen: true,
@@ -1342,7 +1342,7 @@ function mapinit(srs,maxExtent) {
                 ];
 
                 $('<div id="unassign_district" />').text(
-                        gettext('Would you like to unassign the geography in ') + 
+                        gettext('Would you like to unassign the geography in ') +
                         feature.attributes.name + '?').dialog({
                     resizable: false,
                     modal: true,
@@ -1366,7 +1366,7 @@ function mapinit(srs,maxExtent) {
 
                     var leftOffset = $(districtIdDiv).width() + 15;
                     var topOffset = $(districtIdDiv).height() + 15;
-                    if (pixel.x < leftOffset) { 
+                    if (pixel.x < leftOffset) {
                         pixel.x = leftOffset;
                     }
                     else if (pixel.x > olmap.div.clientWidth - leftOffset) {
@@ -1410,7 +1410,7 @@ function mapinit(srs,maxExtent) {
         if (xhr.status == 200 && data.success) {
             if ($('#id_district_pk').val() == '0') {
                 var mode = data.success ? 'select' : 'error';
-                for (var i = 0; i < selection.features.length; i++) { 
+                for (var i = 0; i < selection.features.length; i++) {
                     selection.drawFeature(selection.features[i], mode);
                 }
             }
@@ -1422,7 +1422,7 @@ function mapinit(srs,maxExtent) {
             var updateAssignments = true;
             $('#map').trigger('version_changed', [data.version,updateAssignments]);
             $('#working').dialog('close');
-            OpenLayers.Element.removeClass(olmap.viewPortDiv,'olCursorWait'); 
+            OpenLayers.Element.removeClass(olmap.viewPortDiv,'olCursorWait');
         }
         else {
             infoErrorCallback(xhr, textStatus, gettext('Sorry, your information could not be saved. Please try again later.'));
@@ -1457,7 +1457,7 @@ function mapinit(srs,maxExtent) {
                 $('#id_typelist').append(newopt);
             }
         }
-        
+
         var url = '/districtmapping/plan/' + PLAN_ID + '/district/';
 
         if ($('#id_district_pk').val() == '0') {
@@ -1549,7 +1549,7 @@ function mapinit(srs,maxExtent) {
                     var type = types[i].trim();
                     for (var j = 0; j < opts.length; j++) {
                         exists = exists ||
-                            (type.toLowerCase() == 
+                            (type.toLowerCase() ==
                              opts[j].value.toLowerCase());
                     }
                     if (!exists) {
@@ -1573,8 +1573,8 @@ function mapinit(srs,maxExtent) {
                     for(var i = 0; i < opts.length; i++) {
                         var selected = false;
                         for (var j = 0; j < keytypes.length; j++) {
-                            selected = selected || 
-                                (opts[i].value.toLowerCase() == 
+                            selected = selected ||
+                                (opts[i].value.toLowerCase() ==
                                  keytypes[j].trim().toLowerCase());
                         }
                         if (selected) {
@@ -1677,7 +1677,7 @@ function mapinit(srs,maxExtent) {
             onComplete: function(feature, pixel) {
                 var ll = olmap.getLonLatFromPixel(pixel);
                 var pt = new OpenLayers.Geometry.Point(ll.lon, ll.lat);
-                
+
                 if (pointInFeatures(pt, districtLayer)) {
                     var dfeat = { data:{ district_id: $('#assign_district').val() } };
                     assignOnSelect(dfeat);
@@ -1685,7 +1685,7 @@ function mapinit(srs,maxExtent) {
                 else {
                     selection.removeFeatures(selection.features);
 
-                    $('#assign_district').val('-1');               
+                    $('#assign_district').val('-1');
                     dragdropControl.deactivate();
                     dragdropControl.resumeTool.activate();
                 }
@@ -1788,7 +1788,7 @@ function mapinit(srs,maxExtent) {
 
                     var halfWidth = tipdiv.clientWidth/2;
                     var halfHeight = tipdiv.clientHeight/2;
-                    if (pixel.x < halfWidth) { 
+                    if (pixel.x < halfWidth) {
                         pixel.x = halfWidth;
                     }
                     else if (pixel.x > olmap.div.clientWidth - halfWidth) {
@@ -1835,8 +1835,8 @@ function mapinit(srs,maxExtent) {
 
     /*
     * This will return the maps's truly visible bounds; if the info
-    * tabs on the right are up, that's the usual map bounds. If the 
-    * info tabs are showing, it's the visible area of the map to the 
+    * tabs on the right are up, that's the usual map bounds. If the
+    * info tabs are showing, it's the visible area of the map to the
     * left of those tabs
     */
     var getVisibleBounds = function() {
@@ -1854,12 +1854,12 @@ function mapinit(srs,maxExtent) {
         }
         return undefined;
     }
-    
+
     /*
     * This method is useful to determine whether an item is visible
-    * to the user - pass in the bounds from getVisibleBounds if the 
+    * to the user - pass in the bounds from getVisibleBounds if the
     * info tabs are showing
-    */ 
+    */
     var featureOnScreen = function(feature, bounds) {
         try {
             if (bounds && feature.geometry) {
@@ -1874,14 +1874,14 @@ function mapinit(srs,maxExtent) {
 
     // Connect the featuresSelected callback above to the featureselected
     // events in the point and rectangle control.
-    getControl.events.register('featuresselected', 
+    getControl.events.register('featuresselected',
         getControl,
         featuresSelected);
-    boxControl.events.register('featuresselected', 
-        boxControl, 
+    boxControl.events.register('featuresselected',
+        boxControl,
         featuresSelected);
-    idControl.events.register('featuresselected', 
-        idControl, 
+    idControl.events.register('featuresselected',
+        idControl,
         idFeature);
 
     // A callback for deselecting features from different controls.
@@ -1891,11 +1891,11 @@ function mapinit(srs,maxExtent) {
 
     // Connect the featureUnselected callback above to the featureunselected
     // events in the point and rectangle control.
-    getControl.events.register('featureunselected', 
-        this, 
+    getControl.events.register('featureunselected',
+        this,
         featureUnselected);
-    boxControl.events.register('featureunselected', 
-        this, 
+    boxControl.events.register('featureunselected',
+        this,
         featureUnselected);
 
     // Connect a method for indicating work when the district layer
@@ -1907,7 +1907,7 @@ function mapinit(srs,maxExtent) {
     /**
      * Generic compute average function designed to compute averages of features
      * from a list of items.
-     * 
+     *
      * @param {array} features list of objects with a feature to compute average from
      * @param {string} featureName attribute to calculate average from item
      */
@@ -1934,7 +1934,7 @@ function mapinit(srs,maxExtent) {
         };
 
         return compute;
-        
+
     })();
 
     var updatingAssigned = false;
@@ -1965,10 +1965,10 @@ function mapinit(srs,maxExtent) {
                     .append('<option value="-1">-- ' + gettext('Select One') + ' --</option>')
                     .append('<option value="0">' + gettext('Unassigned') + '</option>');
 
-                // get the maximum version of all districts. If walking 
-                // backward, it may be possible that the version you 
+                // get the maximum version of all districts. If walking
+                // backward, it may be possible that the version you
                 // requested (let's say you requested version 3 of a plan)
-                // doesn't have any districts. This will happen if a user 
+                // doesn't have any districts. This will happen if a user
                 // performs many undo steps, then edits the plan. In this
                 // case, the maximum version will be LESS than the version
                 // requested.
@@ -2004,9 +2004,9 @@ function mapinit(srs,maxExtent) {
 
                 // ensures that '-- Select One --' is selected
                 $('#assign_district').val(-1);
-                
+
                 if (assignMode == 'anchor') {
-                    // ONLY IF the district exists, and is in the option 
+                    // ONLY IF the district exists, and is in the option
                     // list will this change the current selection in the
                     // dropdown
                     $('#assign_district').val(currentDist);
@@ -2018,17 +2018,17 @@ function mapinit(srs,maxExtent) {
                 }
 
                 // set the version cursor to the max version. In situations
-                // where there has been an edit on an undo, the version 
-                // cursor in not continuous across all versions of the 
+                // where there has been an edit on an undo, the version
+                // cursor in not continuous across all versions of the
                 // plan.
                 var cursor = $('#history_cursor');
                 if (version != max_version) {
                     // Purge all versions that are in the history that are
-                    // missing. You can get here after editing a plan for 
-                    // a while, then performing some undos, then editing 
-                    // again. You will be bumped up to the latest version 
-                    // of the plan, but there will be 'phantom' versions 
-                    // between the undo version basis and the current 
+                    // missing. You can get here after editing a plan for
+                    // a while, then performing some undos, then editing
+                    // again. You will be bumped up to the latest version
+                    // of the plan, but there will be 'phantom' versions
+                    // between the undo version basis and the current
                     // plan version.
                     while (version > max_version && version >= 0) {
                         delete PLAN_HISTORY[version--];
@@ -2047,14 +2047,14 @@ function mapinit(srs,maxExtent) {
         });
     };
 
-    // Connect an event to the district layer that updates the 
+    // Connect an event to the district layer that updates the
     // list of possible districts to assign to.
     // TODO: this doesn't account for districts with null geometries
     // which will not come back from the WFS query
     var updateLevel = getSnapLayer().geolevel;
     var updateDistrictScores = function(){
         var geolevel = getSnapLayer().geolevel;
-        if (selection.features.length > 0 && 
+        if (selection.features.length > 0 &&
             (geolevel != updateLevel || selection.features[0].renderIntent == 'select')) {
             updateLevel = geolevel;
             selection.removeFeatures(selection.features);
@@ -2066,7 +2066,7 @@ function mapinit(srs,maxExtent) {
                 dragdropControl.resumeTool.activate();
             }
         }
-        
+
         var sorted = districtLayer.features.slice(0,districtLayer.features.length);
         sorted.sort(function(a,b){
             return a.attributes.name > b.attributes.name;
@@ -2081,7 +2081,7 @@ function mapinit(srs,maxExtent) {
         OpenLayers.Element.removeClass(olmap.viewPortDiv, 'olCursorWait');
     };
 
-    // When the navigate map tool is clicked, disable all the 
+    // When the navigate map tool is clicked, disable all the
     // controls except the navigation control.
     $('.navigate_map_tool').click(function(evt){
         var active = olmap.getControlsBy('active',true);
@@ -2169,7 +2169,7 @@ function mapinit(srs,maxExtent) {
         assignMode = null;
         $('#assign_district').val(-1);
     });
-    
+
     // When the single pick tool is clicked, disable all the
     // controls except for the single pick tool.
     $('#single_drawing_tool').click(function(evt){
@@ -2218,7 +2218,7 @@ function mapinit(srs,maxExtent) {
     });
 
     // When the assignment tool is clicked, disable all the
-    // controls except for the assignment tool.  
+    // controls except for the assignment tool.
     $('#dragdrop_tool').click(function(evt){
         var me = $(this);
         var selectionAlready = false;
@@ -2350,7 +2350,7 @@ function mapinit(srs,maxExtent) {
             var userStyle = getDefaultStyle(sld,getShowBy());
 
             // the legend title should match what is displayed in the thematic map dropdown
-            // (which already takes care of translation). this used to be set to the title 
+            // (which already takes care of translation). this used to be set to the title
             // within the SLD, but that causes hard-to-solve translation issues.
             $('#legend_title').empty().append($('#showby').find(':selected').text());
 
@@ -2391,7 +2391,7 @@ function mapinit(srs,maxExtent) {
                     break;
                 }
             }
-            $('#map').trigger('style_changed', [userStyle, vislayers]); 
+            $('#map').trigger('style_changed', [userStyle, vislayers]);
         };
 
         var getLockedRules = function() {
@@ -2419,23 +2419,23 @@ function mapinit(srs,maxExtent) {
                     value: true
                 })
             }));
-        
+
             return rules;
         };
 
         var callbackDistrict = function(sld) {
             var userStyle = getDefaultStyle(sld,getDistrictBy().name);
             var newStyle = new OpenLayers.Style(districtStyle, {
-                title: userStyle.title, 
+                title: userStyle.title,
                 rules: userStyle.rules.concat(getLockedRules())
             });
-            $('#map').trigger('style_changed', [newStyle, districtLayer.name]); 
+            $('#map').trigger('style_changed', [newStyle, districtLayer.name]);
          };
 
         var callbackContiguity = function() {
             var newOptions = OpenLayers.Util.extend({}, districtStyle);
             var fill = $('.farover').first().css('background-color');
-            
+
             var rules = [
                 new OpenLayers.Rule({
                     title: 'Non-contiguous',
@@ -2480,9 +2480,9 @@ function mapinit(srs,maxExtent) {
             $('#map').trigger('style_changed', [newStyle, districtLayer.name]);
         };
 
-        /** 
-         * Function that handles styling of choropleths for district scores that 
-         * are continuous. 
+        /**
+         * Function that handles styling of choropleths for district scores that
+         * are continuous.
          *
          * Currently used for compactness and adjacency scores.
          *
@@ -2495,8 +2495,8 @@ function mapinit(srs,maxExtent) {
 
             var newOptions = OpenLayers.Util.extend({}, districtStyle);
             var computedAvg = computeAvg(districtLayer.features, featureName);
-            var upper = computedAvg.mean + (computedAvg.deviation) * scalingConstant;  
-            var lower = computedAvg.mean - (computedAvg.deviation) * scalingConstant; 
+            var upper = computedAvg.mean + (computedAvg.deviation) * scalingConstant;
+            var lower = computedAvg.mean - (computedAvg.deviation) * scalingConstant;
             var highestColor = $('.farover').first().css('background-color');
             var lowestColor = $('.farunder').first().css('background-color');
 
@@ -2506,7 +2506,7 @@ function mapinit(srs,maxExtent) {
                     filter: new OpenLayers.Filter.Comparison({
                         type: OpenLayers.Filter.Comparison.LESS_THAN,
                         property: featureName,
-                        value: lower 
+                        value: lower
                     }),
                     symbolizer: {
                         fillColor: lowestColor,
@@ -2537,7 +2537,7 @@ function mapinit(srs,maxExtent) {
                     filter: new OpenLayers.Filter.Comparison({
                         type: OpenLayers.Filter.Comparison.GREATER_THAN,
                         property: featureName,
-                        value: upper 
+                        value: upper
                     }),
                     symbolizer: {
                         fillColor: highestColor,
@@ -2588,7 +2588,7 @@ function mapinit(srs,maxExtent) {
             for (var i = 0; i < SNAP_LAYERS.length; i++) {
                 isSnap = isSnap || (SNAP_LAYERS[i].level == snap);
             }
-            
+
             var callback = isSnap ? callbackSnap : callbackDistrict;
 
             if (styleUrl in styleCache) {
@@ -2637,7 +2637,7 @@ function mapinit(srs,maxExtent) {
 
         return row;
     };
-    
+
     var updateDistrictStyles = function() {
         var distDisplay = getDistrictBy();
         var lbody = $('#district_legend tbody');
@@ -2717,7 +2717,7 @@ function mapinit(srs,maxExtent) {
         var layers = olmap.getLayersByName(layername);
 
         newOpts.featureType = snap.layer;
-        getControl.protocol = 
+        getControl.protocol =
             boxControl.protocol = new OpenLayers.Protocol.HTTP( newOpts );
         setThematicLayer(layers[0]);
         doMapStyling();
@@ -2786,7 +2786,7 @@ function mapinit(srs,maxExtent) {
             var dff = districtLayer.filter.filters;
             var sameSubj = false;
             for (var i = 0; i < dff.length && !sameSubj; i++) {
-                if (dff[i].property == 'subject'&& 
+                if (dff[i].property == 'subject'&&
                     dff[i].subject == dby.by) {
                     sameSubj = true;
                 }
@@ -2864,7 +2864,7 @@ function mapinit(srs,maxExtent) {
 
     // Storage for districts that are to be highlighted
     var highlightedDistricts = [];
-    
+
     /**
      * Highlights districts -- both in district row, and on map
      */
@@ -2935,9 +2935,9 @@ function mapinit(srs,maxExtent) {
     // Bind to events that need refreshes
     $(this).bind('toggle_highlighting', toggleDistrictHighlighting);
     $(this).bind('zoom_to_district', zoomToDistrictExtent);
-        
+
     /*
-    * Ask the user for a new district name, then assign the current 
+    * Ask the user for a new district name, then assign the current
     * selection to the new district upon successful creation of the
     * district
     */
@@ -2947,7 +2947,7 @@ function mapinit(srs,maxExtent) {
             return;
         }
 
-        // Once we have the district name, post a request to the 
+        // Once we have the district name, post a request to the
         // server to create it in the DB
         var createDistrict = function(district_id, district_label) {
             var geolevel_id = selection.features[0].attributes.geolevel_id;
@@ -2970,9 +2970,9 @@ function mapinit(srs,maxExtent) {
                 },
                 success: function(data, textStatus, xhr) {
                     var mode = data.success ? 'select' : 'error';
-                    for (var i = 0; i < selection.features.length; i++) { 
+                    for (var i = 0; i < selection.features.length; i++) {
                         selection.drawFeature(selection.features[i], mode);
-                    } 
+                    }
 
                     if (!data.success && 'redirect' in data) {
                         window.location.href = data.redirect;
@@ -2985,7 +2985,7 @@ function mapinit(srs,maxExtent) {
 
                     $('#working').dialog('close');
                     $('#assign_district').val('-1');
-                    OpenLayers.Element.removeClass(olmap.viewPortDiv,'olCursorWait'); 
+                    OpenLayers.Element.removeClass(olmap.viewPortDiv,'olCursorWait');
                 }
             });
         };
@@ -3023,21 +3023,21 @@ function mapinit(srs,maxExtent) {
                 {
                     label: gettext('OK'),
                     text: gettext('OK'),
-                    click: function() { 
+                    click: function() {
                         var did, dname;
                         var dinfo = $('#newdistrictname').val().split(';');
                         did = dinfo[0];
                         dname = dinfo[1];
                         createDistrict(did, dname);
-                        $(this).dialog("close"); 
-                        $('#newdistrictdialog').remove(); 
+                        $(this).dialog("close");
+                        $('#newdistrictdialog').remove();
                     }
                 },{
                     label: gettext('Cancel'),
                     text: gettext('Cancel'),
-                    click: function() { 
-                        $(this).dialog("close"); 
-                        $('#newdistrictdialog').remove(); 
+                    click: function() {
+                        $(this).dialog("close");
+                        $('#newdistrictdialog').remove();
                         $('#assign_district').val('-1');
                     }
                 }
@@ -3071,7 +3071,7 @@ function mapinit(srs,maxExtent) {
 
     /*
     * After the map has finished moving, this method updates the jQuery
-    * data attributes of the geography and demographics tables if 
+    * data attributes of the geography and demographics tables if
     * different districts are now visible
     */
     olmap.prevVisibleDistricts = '';
@@ -3099,7 +3099,7 @@ function mapinit(srs,maxExtent) {
 
     $('#map').bind('resort_by_visibility', sortByVisibility);
     $('#map').bind('draw_highlighted_districts', drawHighlightedDistricts);
-   
+
     // triggering this event here will configure the map to correspond
     // with the initial dropdown values (jquery will set them to different
     // values than the default on a reload). A desirable side effect is
@@ -3123,7 +3123,7 @@ function mapinit(srs,maxExtent) {
         tipdiv.style.display = 'none';
     });
     olmap.events.register('moveend', olmap, sortByVisibility);
-    
+
     // Add the listeners for editing whenever a base layer is changed
     // or the zoom level is changed
     olmap.events.register('changebaselayer', olmap, changeSnapLayer);
@@ -3168,11 +3168,11 @@ IdGeounit = OpenLayers.Class(OpenLayers.Control.GetFeature, {
         options.handlerOptions = options.handlerOptions || {};
 
         OpenLayers.Control.prototype.initialize.apply(this, [options]);
-        
+
         this.features = {};
 
         this.handlers = {};
-        
+
         this.handlers.click = new OpenLayers.Handler.Click(this,
             {click: this.selectClick}, this.handlerOptions.click || {});
     },
@@ -3235,10 +3235,10 @@ IdGeounit = OpenLayers.Class(OpenLayers.Control.GetFeature, {
     CLASS_NAME: 'IdGeounit'
 });
 
-GlobalZoom = OpenLayers.Class(OpenLayers.Control, { 
+GlobalZoom = OpenLayers.Class(OpenLayers.Control, {
   // DOM Elements
-    
-    /** 
+
+    /**
      * Property: controlDiv
      * {DOMElement}
      */
@@ -3246,7 +3246,7 @@ GlobalZoom = OpenLayers.Class(OpenLayers.Control, {
 
     /*
      * Constructor: GlobalZoom
-     * 
+     *
      * Parameters:
      * options - {Object}
      */
@@ -3255,18 +3255,18 @@ GlobalZoom = OpenLayers.Class(OpenLayers.Control, {
     },
 
     /**
-     * APIMethod: destroy 
-     */    
+     * APIMethod: destroy
+     */
     destroy: function() {
         OpenLayers.Event.stopObservingElement(this.controlDiv);
         OpenLayers.Control.prototype.destroy.apply(this, arguments);
     },
 
-    /** 
+    /**
      * Method: setMap
      *
      * Properties:
-     * map - {<OpenLayers.Map>} 
+     * map - {<OpenLayers.Map>}
      */
     setMap: function(map) {
         OpenLayers.Control.prototype.setMap.apply(this, arguments);
@@ -3289,34 +3289,34 @@ GlobalZoom = OpenLayers.Class(OpenLayers.Control, {
      * Method: draw
      *
      * Returns:
-     * {DOMElement} A reference to the DIV DOMElement containing the 
+     * {DOMElement} A reference to the DIV DOMElement containing the
      *     switcher tabs.
-     */  
+     */
     draw: function() {
         OpenLayers.Control.prototype.draw.apply(this);
 
         this.loadContents();
 
         // populate div with current info
-        this.redraw();    
+        this.redraw();
 
         return this.div;
     },
-    
-    /** 
+
+    /**
      * Method: redraw
      * Goes through and takes the current state of the Map and rebuilds the
-     *     control to display that state. Groups base layers into a 
+     *     control to display that state. Groups base layers into a
      *     radio-button group and lists each data layer with a checkbox.
      *
-     * Returns: 
+     * Returns:
      * {DOMElement} A reference to the DIV DOMElement containing the control
-     */  
+     */
     redraw: function() {
         return this.div;
     },
 
-    /** 
+    /**
      * Method: loadContents
      * Set up the labels and divs for the control
      */
@@ -3324,18 +3324,18 @@ GlobalZoom = OpenLayers.Class(OpenLayers.Control, {
 
         //configure main div
 
-        OpenLayers.Event.observe(this.div, "click", 
+        OpenLayers.Event.observe(this.div, "click",
             OpenLayers.Function.bindAsEventListener(
                 this.onZoomToExtent, this) );
 
-        // layers list div        
+        // layers list div
         this.controlDiv = document.createElement("div");
         this.controlDiv.id = this.id + "_controlDiv";
         OpenLayers.Element.addClass(this.controlDiv, "controlDiv");
 
         this.div.appendChild(this.controlDiv);
     },
-    
+
     CLASS_NAME: "GlobalZoom"
 });
 
@@ -3352,7 +3352,7 @@ OpenLayers.Layer.SphericalMercator.initMercatorParameters = function() {
 };
 
 // Modify the OSM layer to add support for minZoomLevel
-OpenLayers.Layer.XYZ = OpenLayers.Class(OpenLayers.Layer.XYZ, {     
+OpenLayers.Layer.XYZ = OpenLayers.Class(OpenLayers.Layer.XYZ, {
     initialize: function(name, url, options) {
         var minZoom = 0;
         if (options.minZoomLevel) {
