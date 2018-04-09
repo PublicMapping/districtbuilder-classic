@@ -3429,7 +3429,7 @@ def create_unassigned_district(sender, **kwargs):
             all_geom = joined_shape
 
         if plan.district_set.count() > 0:
-            taken = MultiPolygon(
+            taken = GeometryCollection(
                 [x.geom.unary_union for x in plan.district_set.all()])
             unassigned.geom = enforce_multi(all_geom.difference(taken))
             unassigned.simplify()  # implicit save
