@@ -47,7 +47,7 @@ from django.template.loader import render_to_string
 from django_comments.models import Comment
 from django.contrib.contenttypes.models import ContentType
 from django.template.defaultfilters import title
-from redistricting.calculators import Schwartzberg, Contiguity, SumValues
+from redistricting.calculators import PolsbyPopper, Contiguity, SumValues
 from tagging.models import TaggedItem, Tag
 from tagging.registry import register
 from datetime import datetime
@@ -1679,8 +1679,8 @@ class Plan(models.Model):
 
         # Grab ScoreFunctions so we can use cached scores for districts if they exist
         computed_district_score = ComputedDistrictScore()
-        schwartzberg_function = ScoreFunction.objects.get(
-            name='district_schwartzberg')
+        polsbypopper_function = ScoreFunction.objects.get(
+            name='district_polsbypopper')
         contiguity_function = ScoreFunction.objects.get(
             name='district_contiguous')
 
@@ -1692,7 +1692,7 @@ class Plan(models.Model):
 
         for district in qset:
             computed_compactness = computed_district_score.compute(
-                schwartzberg_function, district=district)
+                polsbypopper_function, district=district)
             computed_contiguity = computed_district_score.compute(
                 contiguity_function, district=district)
 
