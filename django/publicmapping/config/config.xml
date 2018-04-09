@@ -602,6 +602,7 @@
             <MapServer
                 ns="pmp"
                 nshref="https://github.com/PublicMapping/"
+                basemaps="osm-road,arc-road,arc-topo,arc-dark"
                 maxfeatures="500" />
             <Upload maxsize="5300"/>
             <FixUnassigned minpercent="99" comparatorsubject="poptot" />
