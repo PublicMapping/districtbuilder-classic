@@ -74,8 +74,8 @@
 
     <Scoring>
         <ScoreFunctions>
-            <ScoreFunction id="district_schwartzberg" type="district"
-                calculator="redistricting.calculators.Schwartzberg"
+            <ScoreFunction id="district_polsbypopper" type="district"
+                calculator="redistricting.calculators.PolsbyPopper"
                 label="Compactness" user_selectable="true">
                 <LegislativeBody ref="congress"/>
             </ScoreFunction>
@@ -98,7 +98,7 @@
                 <ScoreArgument name="value1" ref="district_contiguous"/>
             </ScoreFunction>
 
-            <ScoreFunction id="plan_congress_noncontiguous" type="plan"
+            <ScoreFunction id="congress_plan_noncontiguous" type="plan"
                 calculator="redistricting.calculators.Contiguity"
                 label="Contiguous">
                 <Argument name="target" value="18" />
@@ -354,10 +354,17 @@
                 description="Contiguity means that every part of a district must be reachable from every other part without crossing the district&apos;s borders. All districts within a plan must be contiguous.">
             </ScoreFunction>
 
-            <ScoreFunction id="plan_schwartzberg" type="plan"
-                calculator="redistricting.calculators.Schwartzberg"
+            <ScoreFunction id="congress_plan_polsbypopper" type="plan"
+                calculator="redistricting.calculators.PolsbyPopper"
                 label="Average Compactness"
-                description="The competition is using the &apos;Inverse Schwartzberg&apos; compactness measure. This measure is a ratio of the circumference of the circle whose area is equal to the area of the district to the perimeter of the district." >
+                description="The competition is using the &apos;Polsby-Popper&apos; compactness measure. This measure is a ratio of the area of a circle with the same perimeter as a district to the area of the district." >
+            </ScoreFunction>
+
+            <ScoreFunction id="congress_plan_equivalence" type="plan"
+                calculator="redistricting.calculators.Equivalence"
+                label="Equal Population"
+                description="The Equipopulation score is the difference between the district with the highest population and the district with the lowest population.">
+                <SubjectArgument name="value" ref="poptot" />
             </ScoreFunction>
 
             <ScoreFunction id="district_poptot" type="district"
@@ -397,6 +404,13 @@
                 <Argument name="comptype" value="Schwartzberg" />
             </ScoreFunction>
 
+            <ScoreFunction id="report_score_compactness_pp" type="district"
+                calculator="redistricting.reportcalculators.Compactness"
+                label="Polsby-Popper" >
+                <LegislativeBody ref="congress"/>
+                <Argument name="comptype" value="PolsbyPopper" />
+            </ScoreFunction>
+
             <ScoreFunction id="report_score_compactness_ro" type="district"
                 calculator="redistricting.reportcalculators.Compactness"
                 label="Roeck" >
@@ -414,31 +428,45 @@
         <ScorePanels>
             <!-- Leaderboard -->
             <ScorePanel id="panel_compact_all" type="plan" position="1"
-                title="Schwartzberg" template="leaderboard_panel_all.html"
+                title="Compactness" template="leaderboard_panel_all.html"
                 is_ascending="false">
-                <Score ref="plan_schwartzberg" />
+                <Score ref="congress_plan_polsbypopper" />
             </ScorePanel>
 
             <ScorePanel id="panel_compact_mine" type="plan" position="1"
-                title="Schwartzberg" template="leaderboard_panel_mine.html"
+                title="Compactness" template="leaderboard_panel_mine.html"
                 is_ascending="false">
-                <Score ref="plan_schwartzberg" />
+                <Score ref="congress_plan_polsbypopper" />
+            </ScorePanel>
+
+            <ScorePanel id="panel_equivalence_all" type="plan" position="2"
+                title="Equal Population" template="leaderboard_panel_all.html"
+                is_ascending="false">
+                <Score ref="congress_plan_equivalence" />
+            </ScorePanel>
+
+            <ScorePanel id="panel_equivalence_mine" type="plan" position="2"
+                title="Equal Population" template="leaderboard_panel_mine.html"
+                is_ascending="false">
+                <Score ref="congress_plan_equivalence" />
             </ScorePanel>
 
             <!-- Summary above all sidebar panels -->
             <ScorePanel id="congressional_panel_summary" type="plan_summary" position="1"
                 title="Plan Summary" cssclass="plan_summary congressional" template="plan_summary.html">
                 <Score ref="congress_plan_equipopulation_summary"/>
-                <Score ref="plan_congress_noncontiguous"/>
+                <Score ref="congress_plan_noncontiguous"/>
+                <Score ref="congress_plan_polsbypopper"/>
+                <Score ref="congress_plan_equivalence"/>
             </ScorePanel>
 
             <!-- Basic Information -->
-            <ScorePanel id="congressional_panel_info" type="district" position="2"
+            <ScorePanel id="congressional_panel_info" type="district" position="1"
                 title="Basic Information" cssclass="district_basic_info congressional"
                 template="basic_information.html">
                 <Score ref="congressional_population" />
                 <Score ref="district_contiguous" />
-                <Score ref="district_schwartzberg" />
+                <Score ref="district_polsbypopper" />
             </ScorePanel>
 
             <!-- Community Comments -->
@@ -471,6 +499,7 @@
 
             <ScorePanel id="report_panel_compactness" type="district" position="1"
                 title="Compactness" template="report_panel.html" cssclass="reports compactness">
+                <Score ref="report_score_compactness_pp" />
                 <Score ref="report_score_compactness_sc" />
                 <Score ref="report_score_compactness_lw" />
                 <Score ref="report_score_compactness_ro" />
@@ -486,10 +515,12 @@
             <ScoreDisplay id="congress_leader_all" legislativebodyref="congress" type="leaderboard"
                 title="Congressional Leaderboard - All" cssclass="leaderboard congress">
                 <ScorePanel ref="panel_compact_all" />
+                <ScorePanel ref="panel_equivalence_all" />
             </ScoreDisplay>
             <ScoreDisplay id="congress_leader_mine" legislativebodyref="congress" type="leaderboard"
                 title="Congressional Leaderboard - Mine" cssclass="leaderboard congress">
                 <ScorePanel ref="panel_compact_mine" />
+                <ScorePanel ref="panel_equivalence_mine" />
             </ScoreDisplay>
 
              <!-- Sidebar configuration -->
@@ -541,17 +572,28 @@
     </Validation>
 
     <GeoLevels>
-      <GeoLevel id="municipality" name="municipality" label="municipality" min_zoom="0" sort_key="1" tolerance="250">
-          <Shapefile path="/data/pa_3785.shp">
+      <GeoLevel id="municipality" name="municipality" label="municipality" min_zoom="0" sort_key="1" tolerance="25">
+          <Shapefile path="/data/pa_3785_cleaned.shp">
               <Fields>
                   <Field name="NAME_WARD" type="name"/>
-                  <Field name="GEOID" type="portable"/>
+                  <Field name="NAMEWARDID" type="portable"/>
               </Fields>
           </Shapefile>
       </GeoLevel>
     </GeoLevels>
 
-    <Project sessionquota="5" sessiontimeout="15">
+    <Templates>
+        <Template name="Old Congressional">
+            <LegislativeBody ref="congress"/>
+            <Blockfile path="/data/pa-congress-old.csv" />
+        </Template>
+        <Template name="New Congressional">
+            <LegislativeBody ref="congress"/>
+            <Blockfile path="/data/pa-congress-new.csv" />
+        </Template>
+    </Templates>
+
+    <Project sessionquota="5000" sessiontimeout="15">
         <Internationalization timezone="US/Eastern" default="en">
             <Language code="en" label="English" />
             <Language code="es" label="Spanish" />
@@ -560,7 +602,7 @@
             <MapServer
                 ns="pmp"
                 nshref="https://github.com/PublicMapping/"
-                maxfeatures="100" />
+                maxfeatures="500" />
             <Upload maxsize="5300"/>
             <FixUnassigned minpercent="99" comparatorsubject="poptot" />
         </Redistricting>
