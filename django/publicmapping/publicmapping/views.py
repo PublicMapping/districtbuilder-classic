@@ -131,12 +131,6 @@ def userregister(request):
                 status['message'] = 'name exists'
                 return HttpResponse(json.dumps(status))
 
-            email_exists = email != '' and User.objects.filter(
-                email__exact=email)
-            if email_exists:
-                status['message'] = 'email exists'
-                return HttpResponse(json.dumps(status))
-
             try:
                 User.objects.create_user(username, email, password)
             except Exception as error:
