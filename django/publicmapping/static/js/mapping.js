@@ -350,7 +350,7 @@ function mapinit(srs,maxExtent) {
                     resolutions.push(layerInfo.tileInfo.lods[i].resolution);
                 }
 
-                var options = {
+                options = {
                     resolutions: resolutions,
                     tileOrigin: new OpenLayers.LonLat(layerInfo.tileInfo.origin.x , layerInfo.tileInfo.origin.y),
                     maxExtent: maxExtent,
@@ -358,9 +358,18 @@ function mapinit(srs,maxExtent) {
                     minZoomLevel: minZoomLevel
                 };
 
-                // Only road type is supported for now.
-                if (mapType === 'road') {
-                    var url = window.location.protocol + "//services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer";
+                types = {
+                    topo: "World_Topo_Map",
+                    road: "World_Street_Map",
+                    dark: "Canvas/World_Dark_Gray_Base"
+                };
+
+                var typeId = types[mapType];
+                if (typeId) {
+                    var url = window.location.protocol +
+                        "//services.arcgisonline.com/ArcGIS/rest/services/" +
+                        typeId +
+                        "/MapServer";
                     return new OpenLayers.Layer.ArcGISCache(layerName, url, options);
                 }
                 break;
@@ -374,7 +383,9 @@ function mapinit(srs,maxExtent) {
     var mapTypes = {
         aerial: { label: gettext('Satellite') },
         hybrid: { label: gettext('Hybrid') },
-        road: { label: gettext('Road') }
+        road: { label: gettext('Road') },
+        topo: { label: gettext('Topo') },
+        dark: { label: gettext('Dark') }
     };
 
     // Construct each layer, and assign a label.
