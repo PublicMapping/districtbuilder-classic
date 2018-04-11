@@ -461,7 +461,7 @@
             </ScorePanel>
 
             <!-- Basic Information -->
-            <ScorePanel id="congressional_panel_info" type="district" position="1"
+            <ScorePanel id="congressional_panel_info" type="district" position="2"
                 title="Basic Information" cssclass="district_basic_info congressional"
                 template="basic_information.html">
                 <Score ref="congressional_population" />
