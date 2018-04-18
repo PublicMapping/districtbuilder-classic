@@ -73,3 +73,16 @@ ubuntu@bastion.example.com $ ssh ec2-user@app-server.internal.example.com
 $ ec2-user@app-server $ cd /opt/district-builder
 $ ec2-user@app-server:/opt/district-builder $ ./scripts/load_configured_data
 ```
+
+#### Administering Geoserver
+To administer Geoserver in staging, you may experience a port re-routing issue. For example, after logging in to
+
+https://va.districtbuilder.azavea.com/geoserver/web/
+
+you will be perpetually re-routed to port 8080 and will have to remove the port from the URL to load the next page.
+
+As a workaround, you can instead access
+
+http://origin.va.districtbuilder.azavea.com:8080/geoserver
+
+This is the origin for CloudFront and does not have the re-routing issue.
