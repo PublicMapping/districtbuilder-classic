@@ -8,14 +8,31 @@ fi
 
 set -u
 
-DIR="$(dirname "$0")"
-TERRAFORM_DIR="${DIR}/../deployment/terraform"
+DIR="$(readlink -f "$(dirname "$0")")"
+PROJECT_ROOT=$(dirname "${DIR}")
+DEPLOYMENT_ROOT="${PROJECT_ROOT}/deployment"
+TERRAFORM_DIR="${DEPLOYMENT_ROOT}/terraform"
 
 function usage() {
     echo -n \
 "Usage: $(basename "$0") COMMAND OPTION[S]
 Execute Terraform subcommands with remote state management.
 "
+}
+
+function test_docker_endpoint () {
+  curl -is "https://origin.${DB_STATE}.districtbuilder.azavea.com:2476/info" \
+    --cert "${HOME}/.docker/cert.pem" \
+    --key "${HOME}/.docker/key.pem" \
+    --cacert "${HOME}/.docker/ca.pem" | grep "200 OK"
+}
+
+function wait_for_docker() {
+
+  while ! test_docker_endpoint;
+  do
+    test_docker_endpoint
+  done
 }
 
 if [ "${BASH_SOURCE[0]}" = "${0}" ]; then
@@ -41,12 +58,34 @@ if [ "${BASH_SOURCE[0]}" = "${0}" ]; then
                               -backend-config="key=terraform/${DB_STATE}/state"
                     terraform plan \
                               -var-file="${DB_SETTINGS_BUCKET}.tfvars" \
-                              -var="districtbuilder_image_version=\"${IMAGE_VERSION}\"" \
                               -var="state=\"${DB_STATE}\"" \
                               -out="${DB_SETTINGS_BUCKET}.tfplan"
                     ;;
                 apply)
+
                     terraform apply "${DB_SETTINGS_BUCKET}.tfplan"
+
+                    pushd "${PROJECT_ROOT}"
+
+                    echo "Configuring TLS for Docker..."
+                    aws s3 cp "s3://${DB_SETTINGS_BUCKET}/terraform/${DB_STATE}/.env" "${PROJECT_ROOT}/.env"
+
+                    mkdir -p "/root/.docker"
+                    aws s3 cp "s3://${DB_SETTINGS_BUCKET}/docker_certs/client/client.zip" "client.zip"
+                    unzip -od "/root/.docker" "client.zip"
+                    rm "client.zip"
+
+                    export DOCKER_TLS_VERIFY=1
+                    export DOCKER_HOST="origin.${DB_STATE}.districtbuilder.azavea.com:2476"
+                    export DOCKER_CERT_PATH="/root/.docker"
+
+                    set +e
+                    wait_for_docker
+                    set -e
+
+                    GIT_COMMIT="${IMAGE_VERSION}" ./scripts/update --production
+                    GIT_COMMIT="${IMAGE_VERSION}" ./scripts/server --production
+                    popd
                     ;;
                 *)
                     echo "ERROR: I don't have support for that Terraform subcommand!"

@@ -16,14 +16,14 @@ install:
 - cp django/publicmapping/config/config.dist.xml django/publicmapping/config/config.xml
 - "./scripts/update"
 script:
-- "./scripts/cibuild"
+- "./scripts/test"
 before_deploy:
 - mkdir -p ~/.ssh
 - openssl aes-256-cbc -K $encrypted_c49e2c465c08_key -iv $encrypted_c49e2c465c08_iv
   -in district-builder.pem.enc -out "district-builder.pem" -d
 - mv district-builder.pem ~/.ssh
 - wget -q -O deployment/user-data/districtbuilder_data.zip https://s3.amazonaws.com/districtbuilderdata/VA_data.zip
-- mv django/publicmapping/config/config.xml deployment/user-data/config.xml
+- cp django/publicmapping/config/config.xml deployment/user-data/config.xml
 deploy:
   - provider: script
     skip_cleanup: true

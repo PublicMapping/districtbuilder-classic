@@ -36,8 +36,6 @@ variable "districtbuilder_redis_password" {}
 
 variable "districtbuilder_geoserver_password" {}
 
-variable "districtbuilder_image_version" {}
-
 variable "districtbuilder_mailer_host" {}
 
 variable "districtbuilder_mailer_user" {}
