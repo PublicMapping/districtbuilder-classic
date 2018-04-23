@@ -1,0 +1,64 @@
+version: "3.3"
+services:
+  redis:
+    container_name: districtbuilder-redis
+    restart: on-failure
+    logging:
+      driver: syslog
+      options:
+        tag: districtbuilder-redis
+
+  nginx:
+    image: districtbuilder-nginx:${GIT_COMMIT:-latest}
+    container_name: districtbuilder-nginx
+    restart: on-failure
+    logging:
+      driver: syslog
+      options:
+        tag: districtbuilder-nginx
+
+  django:
+    image: districtbuilder-django:${GIT_COMMIT:-latest}
+    container_name: districtbuilder-django
+    restart: on-failure
+    volumes:
+      - /opt/district-builder/user-data/districtbuilder_data.zip:/data/districtbuilder_data.zip
+      - /opt/district-builder/user-data/config_settings.py:/usr/src/app/publicmapping/config_settings.py
+      - /opt/district-builder/user-data/config.xml:/usr/src/app/config/config.xml
+    logging:
+      driver: syslog
+      options:
+        tag: districtbuilder-django
+
+  celery:
+    image: districtbuilder-celery:${GIT_COMMIT:-latest}
+    container_name: districtbuilder-celery
+    restart: on-failure
+    volumes:
+      - /opt/district-builder/user-data/config_settings.py:/usr/src/app/publicmapping/config_settings.py
+      - /opt/district-builder/user-data/config.xml:/usr/src/app/config/config.xml
+    logging:
+      driver: syslog
+      options:
+        tag: districtbuilder-celery
+
+  geoserver:
+    image: districtbuilder-geoserver:${GIT_COMMIT:-latest}
+    container_name: districtbuilder-geoserver
+    restart: on-failure
+    logging:
+      driver: syslog
+      options:
+        tag: districtbuilder-geoserver
+
+  languages:
+    image: districtbuilder-languages:${GIT_COMMIT:-latest}
+    container_name: districtbuilder-languages
+    restart: on-failure
+    volumes:
+      - /opt/district-builder/user-data/config_settings.py:/usr/src/app/publicmapping/config_settings.py
+      - /opt/district-builder/user-data/config.xml:/usr/src/app/config/config.xml
+    logging:
+      driver: syslog
+      options:
+        tag: districtbuilder-languages
