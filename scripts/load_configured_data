@@ -5,6 +5,13 @@ if [[ -n "${DB_DEBUG}" ]]; then
     set -x
 fi
 
+if [[ -n "${GIT_COMMIT}" ]]; then
+  GIT_COMMIT="${GIT_COMMIT:0-7}"
+else
+  GIT_COMMIT=$(git rev-parse --short HEAD)
+fi
+
+
 function usage() {
 
     echo -n \
@@ -52,7 +59,18 @@ then
         usage
     else
         configPath=${1:-config/config.xml}
-        docker-compose up -d postgres django
+        if [ "${1:-}" = "--production" ]
+        then
+          # Make these environment variables available
+          # to docker-compose in production.
+          export COMPOSE_FILE="docker-compose.yml:docker-compose.production.yml"
+          export GIT_COMMIT
+
+          DATA_CONTAINERS=("django")
+        else
+          DATA_CONTAINERS=("postgres" "django")
+        fi
+        docker-compose up -d "${DATA_CONTAINERS[@]}"
         load_configured_data
     fi
     exit

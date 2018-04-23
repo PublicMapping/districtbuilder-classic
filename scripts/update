@@ -1,14 +1,15 @@
 #!/bin/bash
 
-#
-# If you add a step to this file, be sure to also update the
-# Ansible deployment tasks in
-# deployment/ansible/roles/district-builder.app-server/tasks/main.yml
-
 set -e
 
 if [[ -n "${DB_DEBUG}" ]]; then
     set -x
+fi
+
+if [[ -n "${GIT_COMMIT}" ]]; then
+  GIT_COMMIT="${GIT_COMMIT:0:7}"
+else
+  GIT_COMMIT=$(git rev-parse --short HEAD)
 fi
 
 function usage() {
@@ -52,9 +53,23 @@ then
     then
         usage
     else
+        if [ "${1:-}" = "--production" ]
+        then
+          # Make these environment variables available
+          # to docker-compose in production.
+          export COMPOSE_FILE="docker-compose.yml:docker-compose.production.yml"
+          export GIT_COMMIT
+
+          # There's no django container in production
+          MIGRATION_CONTAINERS=("django" "geoserver")
+
+        else
+          MIGRATION_CONTAINERS=("postgres" "django" "geoserver")
+        fi
+
         build_containers
         write_settings
-        docker-compose up -d postgres django geoserver
+        docker-compose up -d "${MIGRATION_CONTAINERS[@]}"
         run_migrations
         change_geoserver_admin_password
     fi

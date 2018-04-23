@@ -1,13 +1,9 @@
 version: "3.3"
 services:
-  nginx:
-    image: quay.io/azavea/districtbuilder-nginx:${GIT_COMMIT}
-  django:
-    image: quay.io/azavea/districtbuilder-app:${GIT_COMMIT}
-  geoserver:
-    image: quay.io/azavea/districtbuilder-geoserver:${GIT_COMMIT}
   terraform:
-    image: quay.io/azavea/terraform:0.10.8
+    build:
+      context: ./deployment
+      dockerfile: Dockerfile
     working_dir: /usr/local/src
     entrypoint: bash
     environment:

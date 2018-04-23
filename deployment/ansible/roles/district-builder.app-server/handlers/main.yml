@@ -1,7 +1,0 @@
----
-# handlers file for districtbuilder.app-server
-- name: Restart DistrictBuilder
-  service: name=district-builder state=restarted
-
-- name: Restart Docker
-  service: name=docker state=restarted

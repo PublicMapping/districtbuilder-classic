@@ -1,0 +1,40 @@
+version: "3.3"
+services:
+  postgres:
+    image: quay.io/azavea/postgis:2.2-postgres9.5-slim
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_DB=${DATABASE_DATABASE}
+      - POSTGRES_USER=${DATABASE_USER}
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+    healthcheck:
+      test: ["CMD-SHELL", "PGPASSWORD=${DATABASE_PASSWORD}", "pg_isready", "-U", "${DATABASE_USER}"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+
+  nginx:
+    volumes:
+      - ./django/publicmapping/static/:/opt/static/
+
+  django:
+    volumes:
+      - ./django/publicmapping/:/usr/src/app/
+      - ./data/:/data/
+    links:
+      - postgres:${DATABASE_HOST}
+
+  celery:
+    volumes:
+      - ./django/publicmapping/:/usr/src/app/
+    links:
+      - postgres:${DATABASE_HOST}
+
+  geoserver:
+    links:
+      - postgres:${DATABASE_HOST}
+
+  languages:
+    volumes:
+      - ./django/publicmapping/:/usr/src/app/

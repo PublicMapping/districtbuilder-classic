@@ -19,7 +19,7 @@ install:
 - "./scripts/update"
 - aws s3 cp s3://global-districtbuilder-data-us-east-1/pa/pa_3785_census.zip ./data/districtbuilder_data.zip
 script:
-- "./scripts/cibuild"
+- "./scripts/test"
 before_deploy:
 - mkdir -p ~/.ssh
 - openssl aes-256-cbc -K $encrypted_76b7bce7d5ba_key -iv $encrypted_76b7bce7d5ba_iv
