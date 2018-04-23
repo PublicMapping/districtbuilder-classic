@@ -607,6 +607,6 @@
             <Upload maxsize="5300"/>
             <FixUnassigned minpercent="99" comparatorsubject="poptot" />
         </Redistricting>
-        <Mailer />
+        <Mailer submission_email="info+drawthelinespadev@azavea.com" />
     </Project>
 </DistrictBuilder>
