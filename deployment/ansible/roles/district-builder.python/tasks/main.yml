@@ -1,0 +1,4 @@
+---
+- name: Install LocustIO
+  pip: name=locustio version={{ locustio_version }}
+
