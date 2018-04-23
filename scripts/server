@@ -1,5 +1,14 @@
 #!/bin/bash
-set -eu
+set -e
+
+if [[ -n "${GIT_COMMIT}" ]];
+then
+  GIT_COMMIT="${GIT_COMMIT:0:7}"
+else
+  GIT_COMMIT=$(git rev-parse --short HEAD)
+fi
+
+set -u
 
 function usage() {
     echo -n \
@@ -14,6 +23,12 @@ then
     if [ "${1:-}" = "--help" ]
     then
         usage
+    elif [ "${1:-}" = "--production" ]
+    then
+        GIT_COMMIT="${GIT_COMMIT}" docker-compose \
+            -f docker-compose.yml \
+            -f docker-compose.production.yml \
+            up -d --remove-orphans
     else
         docker-compose up --remove-orphans
     fi

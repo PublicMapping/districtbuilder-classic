@@ -18,7 +18,7 @@ install:
 - "./scripts/update"
 - aws s3 cp s3://global-districtbuilder-data-us-east-1/pa/pa_3785_census.zip ./data/districtbuilder_data.zip
 script:
-- "./scripts/cibuild"
+- "./scripts/test"
 before_deploy:
 - mkdir -p ~/.ssh
 - openssl aes-256-cbc -K $encrypted_76b7bce7d5ba_key -iv $encrypted_76b7bce7d5ba_iv
@@ -26,7 +26,6 @@ before_deploy:
 - mv district-builder.pem ~/.ssh
 - cp django/publicmapping/config/config.xml deployment/user-data/config.xml
 - mv ./data/districtbuilder_data.zip deployment/user-data/
->>>>>>> 3b4bb4b3... fixup! Deploy to staging from Travis
 deploy:
 - provider: script
   skip_cleanup: true

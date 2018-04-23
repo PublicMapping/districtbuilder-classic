@@ -1,19 +1,5 @@
 version: "3.3"
 services:
-  postgres:
-    env_file:
-      - .env
-    environment:
-      - POSTGRES_DB=${DATABASE_DATABASE}
-      - POSTGRES_USER=${DATABASE_USER}
-      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
-    image: quay.io/azavea/postgis:2.2-postgres9.5-slim
-    healthcheck:
-      test: ["CMD-SHELL", "PGPASSWORD=${DATABASE_PASSWORD}", "pg_isready", "-U", "${DATABASE_USER}"]
-      interval: 15s
-      timeout: 5s
-      retries: 3
-
   redis:
     env_file:
       - .env
@@ -33,7 +19,6 @@ services:
     ports:
       - "${WEB_APP_PORT}:${WEB_APP_PORT}"
     volumes:
-      - ./django/publicmapping/static/:/opt/static/
       - sld:/opt/sld/
       - reports:/opt/reports
     depends_on:
@@ -47,10 +32,8 @@ services:
     expose:
       - "${WEB_APP_PORT}"
     volumes:
-      - ./django/publicmapping/:/usr/src/app/
       - reports:/opt/reports
       - sld:/opt/sld
-      - ./data/:/data/
     entrypoint: /usr/local/bin/gunicorn
     command:
       - "--workers=2"
@@ -64,7 +47,6 @@ services:
       - "-kgevent"
       - "publicmapping.wsgi"
     links:
-      - postgres:${DATABASE_HOST}
       - redis:${KEY_VALUE_STORE_HOST}
       - geoserver:${MAP_SERVER_HOST}
 
@@ -74,7 +56,6 @@ services:
     env_file:
       - .env
     volumes:
-      - ./django/publicmapping/:/usr/src/app/
       - reports:/opt/reports
     entrypoint: /usr/local/bin/celery
     command:
@@ -84,7 +65,6 @@ services:
       - "--loglevel=INFO"
       - "--without-mingle"
     links:
-      - postgres:${DATABASE_HOST}
       - redis:${KEY_VALUE_STORE_HOST}
 
   geoserver:
@@ -97,16 +77,12 @@ services:
       - sld:/data/sld
     ports:
       - "${MAP_SERVER_PORT}:${WEB_APP_PORT}"
-    links:
-      - postgres:${DATABASE_HOST}
 
   languages:
     build:
       context: ./django/publicmapping
     env_file:
       - .env
-    volumes:
-      - ./django/publicmapping/:/usr/src/app/
     entrypoint: /usr/local/bin/python
     command:
       - "manage.py"

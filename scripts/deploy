@@ -5,8 +5,6 @@ if [[ -n "${DB_DEBUG}" ]]; then
     set -x
 fi
 
-DIR="$(dirname "${0}")"
-
 function usage() {
     echo -n \
 "Usage: $(basename "$0")
@@ -21,9 +19,6 @@ then
     then
         usage
     else
-
-    # Publish containers
-    "${DIR}/cipublish"
 
     # Run deployments
     IMAGE_VERSION="${TRAVIS_COMMIT:0:7}" docker-compose -f docker-compose.ci.yml run --rm terraform ./scripts/infra plan | grep -v "password"
