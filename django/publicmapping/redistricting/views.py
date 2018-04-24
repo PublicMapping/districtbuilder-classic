@@ -624,9 +624,7 @@ def commonplan(request, planid):
         len(ScoreDisplay.objects.filter(is_page=True)) > 0,
         'calculator_reports':
         json.dumps(calculator_reports),
-        'allow_email_submissions': ('EMAIL_SUBMISSION' in settings.__members__
-                                    if hasattr(settings, '__members__') else
-                                    False),
+        'allow_email_submissions': hasattr(settings, 'EMAIL_SUBMISSION'),
         'tags':
         tags,
         'site':
