@@ -801,11 +801,28 @@
                       </script>
                  <ul class="share-buttons">
                   <li class="twitter-tweet">
-                    <a href="https://twitter.com/share" class="twitter-share-button" data-count="horizontal">
-                      {% trans "Tweet" %}
-                    </a>
-                    <script type="text/javascript" src="https://platform.twitter.com/widgets.js"></script>
                   </li>
+                    <script type="text/javascript" src="https://platform.twitter.com/widgets.js"></script>
+                    <script>
+                        // Hack to get the Twitter button to load properly
+                        function createTwitterButton() {
+                            var twitterLinkContainer = document.querySelector('.twitter-tweet');
+                            if (twitterLinkContainer.children.length === 0) {
+                                // Create new anchor tag with appropriate attributes
+                                var twitterLink = document.createElement('a');
+                                twitterLink.href = "https://twitter.com/intent/tweet";
+                                twitterLink.className = "twitter-share-button";
+                                twitterLink.setAttribute("data-text", "{% trans "Shared map tweet text" %}");
+                                twitterLink.setAttribute("data-hashtags", "redistricting");
+                                twitterLink.innerHTML = "{% trans "Tweet" %}";
+                                // Insert into container
+                                var twitterLinkContainer = document.querySelector('.twitter-tweet');
+                                twitterLinkContainer.appendChild(twitterLink);
+                                // Tell Twitter library to load new widget
+                                twttr.widgets.load(twitterLinkContainer);
+                            }
+                        }
+                    </script>
 
                   <li class="facebook-like">
                     <div id="fb-root"></div>
@@ -1191,6 +1208,7 @@ Include the markup for the account management panel.
         $('#steps').tabs({ show: function(event, ui) {
             if ($(this).tabs('option', 'selected') == 3) {
                 exportIndexFile.init();
+                createTwitterButton();
             }
         }});
 
