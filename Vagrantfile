@@ -27,6 +27,9 @@ Vagrant.configure(2) do |config|
   # Nginx
   config.vm.network :forwarded_port, guest: 8080, host: 8080
 
+  # LocustIO (web interface for load testing tool)
+  config.vm.network :forwarded_port, guest: 8089, host: 8089
+
   # Change working directory to /vagrant upon session start.
   config.vm.provision "shell", inline: <<SCRIPT
     if ! grep -q "cd /vagrant" "/home/vagrant/.bashrc"; then
