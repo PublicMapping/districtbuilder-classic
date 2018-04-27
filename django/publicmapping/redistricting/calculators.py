@@ -667,7 +667,12 @@ class PolsbyPopper(CalculatorBase):
             compactness += 4 * pi * district.geom.area / perimeter / perimeter
             num += 1
 
-        self.result = {'value': compactness / num}
+        if num == 0:
+            val = 0
+        else:
+            val = compactness / num
+
+        self.result = {'value': val}
 
     def html(self):
         """
@@ -677,7 +682,7 @@ class PolsbyPopper(CalculatorBase):
         @return: A number formatted similar to "1.00%", or "n/a"
         """
         if not self.result is None and 'value' in self.result:
-            return self.percentage()
+            return '<span>%s</span>' % self.percentage()
         else:
             return _("n/a")
 
@@ -1486,7 +1491,8 @@ class Equivalence(CalculatorBase):
         @return: A string in the format of "1,000" or "n/a" if no result.
         """
         if not self.result is None and 'value' in self.result:
-            return self.template('{{ result.value|floatformat:0 }}')
+            return self.template(
+                '<span>{{ result.value|floatformat:0 }}</span>')
 
         return _('n/a')
 

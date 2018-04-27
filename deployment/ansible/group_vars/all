@@ -2,4 +2,4 @@
 
 shellcheck_version: "0.3.*"
 docker_compose_version: "1.16.*"
-pre_commit_version: "1.5.0"
+locustio_version: "0.8.1"

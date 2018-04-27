@@ -29,9 +29,9 @@ $ vagrant ssh
 $ ./scripts/update
 ```
 
-If you want to get DistrictBuilder up and running quickly with demo data, you can then run
+If you want to get DistrictBuilder up and running quickly with PA data, you can then run
 ```bash
-$ ./scripts/configure_va_demo
+$ ./scripts/configure_pa_data
 ```
 
 Otherwise, you'll need to provide your own shapefiles and config.xml file. Put your zipped shapefile in
@@ -71,12 +71,12 @@ From there, running `./scripts/update` builds containers. The rest of the setup 
 directly or indirectly through a setup management command. To get started, run
 `./scripts/setup`, followed by `vagrant ssh`, followed by `./scripts/update`.
  
-Then, run `./scripts/configure_va_demo`. It is not fast. Currently, it takes several hours, with the exact
+Then, run `./scripts/configure_pa_data`. It is not fast. Currently, it takes several hours, with the exact
 time depending on hardware. We are working on ways to improve the speed of loading data.
 
 The script will do several things
 
-- Fetch zipped shapefile data for Virginia into a specific location
+- Fetch zipped shapefile data for Pennsylvania into a specific location
 - Drop and recreate the `district_builder**
 - Run database migrations: create the relationships that data will be loaded into
 - Load shapes from shapefiles at different levels: create records for the shapes and characteristics

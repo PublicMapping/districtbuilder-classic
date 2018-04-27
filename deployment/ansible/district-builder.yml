@@ -10,3 +10,4 @@
     - { role: "azavea.python-security" }
     - { role: "district-builder.docker" }
     - { role: "district-builder.shellcheck" }
+    - { role: "district-builder.python" }

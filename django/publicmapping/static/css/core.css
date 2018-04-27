@@ -2673,3 +2673,15 @@ span.multi_val.invalid {
 
 .indented_swatch { width: 40px; }
 
+#email-share-button {
+  height: 20px;
+}
+
+#email-share-button > span {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+#email-share-img {
+  height: 18px;
+}

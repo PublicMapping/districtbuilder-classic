@@ -350,6 +350,32 @@
                 <td><input name="phone number" class="field required" maxlength="20" /></td>
             </tr>
             <tr>
+                <td class="fname">{% trans "County" %} *</td>
+                <td><input name="county" class="field required" maxlength="50" /></td>
+            </tr>
+            <tr>
+                <td class="fname">{% trans "Zip code" %} *</td>
+                <td><input name="zip" class="field required" maxlength="5" /></td>
+            </tr>
+            <tr>
+                <td class="fname">{% trans "Contest division" %} *</td>
+                <td>
+                    <select name="contest division" class="field required">
+                        <option value="youth">{% trans "Youth (Grades 5-12)" %}</option>
+                        <option value="higher-ed">{% trans "Higher Ed (Undergraduate, Graduate, Professional)" %}</option>
+                        <option value="adult">{% trans "Adult (Non-student)" %}</option>
+                    </select>
+            </tr>
+            <tr>
+                <td class="fname">{% trans "Region" %} *</td>
+                <td>
+                    <select name="region" class="field required">
+                        <option value="west">{% trans "West" %}</option>
+                        <option value="central">{% trans "Central" %}</option>
+                        <option value="east">{% trans "East" %}</option>
+                    </select>
+                </td>
+            <tr>
                 <td colspan="2" id="values_text_column">
                     {% trans "Values &ndash; tell us what values, considerations and trade-offs you made in your plan:" %}
                 </td>

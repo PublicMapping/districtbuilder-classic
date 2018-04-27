@@ -624,9 +624,7 @@ def commonplan(request, planid):
         len(ScoreDisplay.objects.filter(is_page=True)) > 0,
         'calculator_reports':
         json.dumps(calculator_reports),
-        'allow_email_submissions': ('EMAIL_SUBMISSION' in settings.__members__
-                                    if hasattr(settings, '__members__') else
-                                    False),
+        'allow_email_submissions': hasattr(settings, 'EMAIL_SUBMISSION'),
         'tags':
         tags,
         'site':
@@ -636,7 +634,9 @@ def commonplan(request, planid):
         'language_code':
         translation.get_language(),
         'LANGUAGES':
-        settings.LANGUAGES  # needed (as CAPS) for language chooser
+        settings.LANGUAGES,  # needed (as CAPS) for language chooser
+        'EMAIL_HOST_USER':
+        settings.EMAIL_HOST_USER
     }
 
 

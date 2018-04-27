@@ -88,6 +88,7 @@ def index(request):
                 'site': Site.objects.get_current(),
                 'language_code': get_language(),
                 'LANGUAGES': settings.LANGUAGES,
+                'EMAIL_HOST_USER': settings.EMAIL_HOST_USER,
             }))
 
 
@@ -129,12 +130,6 @@ def userregister(request):
             name_exists = User.objects.filter(username__exact=username)
             if name_exists:
                 status['message'] = 'name exists'
-                return HttpResponse(json.dumps(status))
-
-            email_exists = email != '' and User.objects.filter(
-                email__exact=email)
-            if email_exists:
-                status['message'] = 'email exists'
                 return HttpResponse(json.dumps(status))
 
             try:

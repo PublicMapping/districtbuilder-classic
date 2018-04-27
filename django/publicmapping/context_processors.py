@@ -30,17 +30,17 @@ def banner_image(request):
     """
     Add a banner_image variable to the template context.
 
-    This context processors has to be added to the 
+    This context processors has to be added to the
     TEMPLATE_CONTEXT_PROCESSORS dictionary in settings.py to be available.
 
-    Users will need to set a BANNER_IMAGE variable in settings.py that 
-    points to the URL path to the banner image.  The banner image 
+    Users will need to set a BANNER_IMAGE variable in settings.py that
+    points to the URL path to the banner image.  The banner image
     defaults to '/static/images/banner-home.png'
 
     @param request: The HttpRequest
     """
     context_dict = {}
-    if 'BANNER_IMAGE' in settings.__members__:
+    if hasattr(settings, 'BANNER_IMAGE'):
         context_dict['banner_image'] = settings.BANNER_IMAGE
     else:
         context_dict['banner_image'] = '/static/images/banner-home.png'
