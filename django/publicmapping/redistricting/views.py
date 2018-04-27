@@ -634,7 +634,9 @@ def commonplan(request, planid):
         'language_code':
         translation.get_language(),
         'LANGUAGES':
-        settings.LANGUAGES  # needed (as CAPS) for language chooser
+        settings.LANGUAGES,  # needed (as CAPS) for language chooser
+        'EMAIL_HOST_USER':
+        settings.EMAIL_HOST_USER
     }
 
 
