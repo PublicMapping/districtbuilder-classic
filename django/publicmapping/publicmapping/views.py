@@ -88,7 +88,6 @@ def index(request):
                 'site': Site.objects.get_current(),
                 'language_code': get_language(),
                 'LANGUAGES': settings.LANGUAGES,
-                'EMAIL_HOST_USER': settings.EMAIL_HOST_USER,
             }))
 
 
