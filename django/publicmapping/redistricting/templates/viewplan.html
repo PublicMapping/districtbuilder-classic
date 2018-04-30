@@ -804,7 +804,12 @@
                   </li>
                     <script type="text/javascript" src="https://platform.twitter.com/widgets.js"></script>
                     <script>
-                        // Hack to get the Twitter button to load properly
+                        // Hack to get the Twitter button to load properly.
+                        // If loaded immediately via regular HTML markup + Twitter script execution,
+                        // the iFrame that is loaded is 1x1 and the button itself has no width.
+                        // This is related to the eccentricities of Twitter's script running immediately
+                        // on a link with this parent element. Workaround is to load it dynamically
+                        // when the "Share" tab is clicked.
                         function createTwitterButton() {
                             var twitterLinkContainer = document.querySelector('.twitter-tweet');
                             if (twitterLinkContainer.children.length === 0) {
