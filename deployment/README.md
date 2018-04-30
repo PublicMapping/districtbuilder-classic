@@ -1,3 +1,5 @@
+# This README deals with an internal AWS deployment process. For more general instructions, see `Deployment` in the project [README](../README.markdown)
+
 # Amazon Web Services Deployment
 
 Amazon Web Services deployment is driven by [Terraform](https://terraform.io/), [Ansible](https://www.ansible.com/), and the [AWS Command Line Interface (CLI)](http://aws.amazon.com/cli/).
