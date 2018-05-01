@@ -123,7 +123,10 @@
 
         <ul class="share-buttons">
           <li class="twitter-tweet">
-            <a href="https://twitter.com/share" class="twitter-share-button" data-count="horizontal">
+            <a href="https://twitter.com/intent/tweet"
+              data-text="{% trans 'Homepage tweet text' %}"
+              data-hashtags="redistricting"
+              class="twitter-share-button">
               {% trans "Tweet" %}
             </a>
             <script type="text/javascript" src="https://platform.twitter.com/widgets.js"></script>
