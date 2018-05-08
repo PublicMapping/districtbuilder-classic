@@ -1219,7 +1219,9 @@ Include the markup for the account management panel.
         $('#steps').tabs({ show: function(event, ui) {
             if ($(this).tabs('option', 'selected') == 3) {
                 exportIndexFile.init();
-                createTwitterButton();
+                if (typeof createTwitterButton === "function") {
+                    createTwitterButton();
+                }
             }
         }});
 
