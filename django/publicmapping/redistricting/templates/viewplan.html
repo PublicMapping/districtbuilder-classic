@@ -37,7 +37,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=8" />
     <meta name="author" content="David Zwarg, Andrew Jennings, Kenny Shepard" />
     <meta name="copyright" content="&copy; 2010 Micah Altman, Michael McDonald"/>
-    <meta property="og:title" content="{% trans "Redistricting plan by DistrictBuilder" %}" />
+    <meta property="og:url" content="{{ request.build_absolute_uri }}" />
+    <meta property="og:title" content="{% trans "DistrictBuilder redistricting plan: " %}{{ plan.legislative_body.name|title }} - {{ plan.name}} - {{ user.username }}" />
+    <meta property="og:type" content="website" />
     <meta property="og:description" content="{% trans "DistrictBuilder is web-based, open source software for collaborative redistricting." %}" />
     <meta property="og:image" content="{% static 'images/db_sprite.png' %}" />
     <title>{% trans "Open Source District Mapping Tool" %}</title>
@@ -209,7 +211,7 @@
 
   </head>
   <body onload="init();" id="app">
-
+    {% include "facebook_sdk.html" %}
 
 
   <div id="steps" style="visibility: hidden;">
@@ -804,14 +806,20 @@
                   </li>
                     <script type="text/javascript" src="https://platform.twitter.com/widgets.js"></script>
                     <script>
-                        // Hack to get the Twitter button to load properly.
-                        // If loaded immediately via regular HTML markup + Twitter script execution,
-                        // the iFrame that is loaded is 1x1 and the button itself has no width.
-                        // This is related to the eccentricities of Twitter's script running immediately
-                        // on a link with this parent element. Workaround is to load it dynamically
-                        // when the "Share" tab is clicked.
-                        function createTwitterButton() {
+                        // Hack to get the Twitter and Facebook buttons to load properly.
+                        // If loaded immediately via regular HTML markup + script execution,
+                        // the iFrame that is loaded is 1x1 and the buttons have no width.
+                        // This is related to the eccentricities of the share buttons' scripts 
+                        // running immediately on a link with this parent element. The Twitter
+                        // workaround is to load it dynamically when the "Share" tab is clicked.
+                        // The Facebook button will recompute if the DOM structure changes, so this
+                        // introduces an artificial change on page load. This might work for Twitter
+                        // too, but hasn't been tested.
+                        function createShareButtons() {
                             var twitterLinkContainer = document.querySelector('.twitter-tweet');
+                            var fbLikeContainer = document.querySelector('.facebook-like');
+                            var emailContainer = document.querySelector('.email-share');
+                            emailContainer.parentNode.insertBefore(fbLikeContainer, emailContainer);
                             if (twitterLinkContainer.children.length === 0) {
                                 // Create new anchor tag with appropriate attributes
                                 var twitterLink = document.createElement('a');
@@ -829,16 +837,24 @@
                         }
                     </script>
 
-                  <li class="facebook-like">
-                    <div id="fb-root"></div>
-                    <script src="https://connect.facebook.net/en_US/all.js#xfbml=1"></script>
-                    <fb:like width="90" show_faces="false" action="like" layout="button_count"></fb:like>
-                  </li>
-
                   <li class="email-share">
                     <a id="email-share-link">
                       <button id="email-share-button"><img id="email-share-img" src="{% static 'images/icon-mail.png' %}"></button>
                     </a>
+                  </li>
+
+                  <li class="facebook-like">
+                    <div
+                      class="fb-share-button"
+                      data-href="{{ request.build_absolute_uri }}"
+                      data-layout="button_count"
+                      data-size="small"
+                      data-mobile-iframe="true">
+                        <a target="_blank"
+                          href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_url|urlencode }}&amp;src=sdkpreparse"
+                          class="fb-xfbml-parse-ignore">Share
+                        </a>
+                    </div>
                   </li>
 
                   <script type="text/javascript">
@@ -1219,8 +1235,8 @@ Include the markup for the account management panel.
         $('#steps').tabs({ show: function(event, ui) {
             if ($(this).tabs('option', 'selected') == 3) {
                 exportIndexFile.init();
-                if (typeof createTwitterButton === "function") {
-                    createTwitterButton();
+                if (typeof createShareButtons === "function") {
+                    createShareButtons();
                 }
             }
         }});
