@@ -686,7 +686,6 @@
     <Project sessionquota="5000" sessiontimeout="15">
         <Internationalization timezone="US/Eastern" default="en">
             <Language code="en" label="English" />
-            <Language code="es" label="Spanish" />
         </Internationalization>
         <Redistricting>
             <MapServer
