@@ -22,11 +22,11 @@ function load_configured_data() {
 
     echo "Loading shapefiles into database"
     docker-compose \
-        exec -T django ./manage.py setup "${configPath}" -g0 -g1 -g2
+        exec -T django ./manage.py setup "${configPath}" -g0 -g1
 
     echo "Nesting geolevels"
     docker-compose \
-        exec -T django ./manage.py setup "${configPath}" -n0 -n1 -n2
+        exec -T django ./manage.py setup "${configPath}" -n0 -n1
 
     echo "Creating template plans"
     docker-compose \
@@ -57,4 +57,3 @@ then
     fi
     exit
 fi
-

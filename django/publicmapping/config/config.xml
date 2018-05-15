@@ -14,7 +14,9 @@
             </LegislativeBodies>
 
             <GeoLevels>
-                <GeoLevel ref="municipality" />
+                <GeoLevel ref="tract">
+                   <GeoLevel ref="county" />
+                </GeoLevel>
             </GeoLevels>
         </Region>
     </Regions>
@@ -70,6 +72,12 @@
                  short_name="50-64" displayed="false" sortkey="24" />
         <Subject id="age65o" field="A65O_POP" name="Age - 65 and over"
                  short_name="65+" displayed="false" sortkey="25" />
+        <Subject id="votedem" field="SUM_D" name="Voted Democrat"
+                 short_name="Vote Dem" displayed="false" sortkey="26" />
+        <Subject id="voterep" field="SUM_R" name="Voted Republican"
+                 short_name="Vote Rep" displayed="false" sortkey="27" />
+        <Subject id="voteoth" field="SUM_O" name="Voted Other"
+                 short_name="Vote Oth" displayed="false" sortkey="28" />
     </Subjects>
 
     <Scoring>
@@ -260,6 +268,54 @@
                 <Argument name="threshold" value="0.5" />
             </ScoreFunction>
 
+            <ScoreFunction id="district_votedem_percent" type="district"
+                calculator="redistricting.calculators.Percent"
+                label="Voted Democrat">
+                <SubjectArgument name="numerator" ref="votedem" />
+                <SubjectArgument name="denominator" ref="vap" />
+                <LegislativeBody ref="congress"/>
+                <LegislativeBody ref="community"/>
+            </ScoreFunction>
+
+            <ScoreFunction id="district_votedem_thresh" type="district"
+                calculator="redistricting.calculators.Threshold"
+                label="Voted Democrat Threshold">
+                <ScoreArgument name="value" ref="district_votedem_percent" />
+                <Argument name="threshold" value="0.5" />
+            </ScoreFunction>
+
+            <ScoreFunction id="district_voterep_percent" type="district"
+                calculator="redistricting.calculators.Percent"
+                label="Voted Republican">
+                <SubjectArgument name="numerator" ref="voterep" />
+                <SubjectArgument name="denominator" ref="vap" />
+                <LegislativeBody ref="congress"/>
+                <LegislativeBody ref="community"/>
+            </ScoreFunction>
+
+            <ScoreFunction id="district_voterep_thresh" type="district"
+                calculator="redistricting.calculators.Threshold"
+                label="Voted Republican Threshold">
+                <ScoreArgument name="value" ref="district_voterep_percent" />
+                <Argument name="threshold" value="0.5" />
+            </ScoreFunction>
+
+            <ScoreFunction id="district_voteoth_percent" type="district"
+                calculator="redistricting.calculators.Percent"
+                label="Voted Other">
+                <SubjectArgument name="numerator" ref="voteoth" />
+                <SubjectArgument name="denominator" ref="vap" />
+                <LegislativeBody ref="congress"/>
+                <LegislativeBody ref="community"/>
+            </ScoreFunction>
+
+            <ScoreFunction id="district_voteoth_thresh" type="district"
+                calculator="redistricting.calculators.Threshold"
+                label="Voted Other Threshold">
+                <ScoreArgument name="value" ref="district_voteoth_percent" />
+                <Argument name="threshold" value="0.5" />
+            </ScoreFunction>
+
             <ScoreFunction id="district_ageu18_percent" type="district"
                 calculator="redistricting.calculators.Percent"
                 label="Under 18">
@@ -342,16 +398,24 @@
                 <Argument name="target" value="18"/>
             </ScoreFunction>
 
-            <ScoreFunction id="plan_all_municipalities_assigned" type="plan"
+            <ScoreFunction id="plan_all_tracts_assigned" type="plan"
                 calculator="redistricting.calculators.AllBlocksAssigned"
-                label="All Municipalities Assigned"
-                description="All municipalities in the plan must be assigned.">
+                label="All Tracts Assigned"
+                description="All tracts in the plan must be assigned.">
             </ScoreFunction>
 
             <ScoreFunction id="plan_all_contiguous" type="plan"
                 calculator="redistricting.calculators.AllContiguous"
                 label="All Contiguous"
                 description="Contiguity means that every part of a district must be reachable from every other part without crossing the district&apos;s borders. All districts within a plan must be contiguous.">
+            </ScoreFunction>
+
+            <ScoreFunction id="congress_plan_competitiveness" type="plan"
+                calculator="redistricting.calculators.Competitiveness"
+                label="Competitiveness"
+                description="Each plan&apos;s overall political competitiveness is determined by averaging each district.s &apos;partisan differential&apos;.  The partisan differential of each district is calculated by subtracting the Democratic &apos;partisan index&apos; from the Republican &apos;partisan index&apos;.&lt;br/&gt;&lt;br/&gt;&apos;Heavily&apos; competitive districts are districts with partisan differentials of less than or equal to 5%. &apos;Generally&apos; competitive districts are districts with partisan differentials of greater than 5% but less than 10%.">
+                <SubjectArgument name="democratic" ref="votedem" />
+                <SubjectArgument name="republican" ref="voterep" />
             </ScoreFunction>
 
             <ScoreFunction id="congress_plan_polsbypopper" type="plan"
@@ -420,7 +484,7 @@
 
             <ScoreFunction id="report_score_unassigned" type="plan"
                 calculator="redistricting.reportcalculators.Unassigned"
-                label="Unassigned Municipalities" >
+                label="Unassigned Tracts" >
                 <LegislativeBody ref="congress"/>
             </ScoreFunction>
         </ScoreFunctions>
@@ -449,6 +513,18 @@
                 title="Equal Population" template="leaderboard_panel_mine.html"
                 is_ascending="false">
                 <Score ref="congress_plan_equivalence" />
+            </ScorePanel>
+
+            <ScorePanel id="panel_competitiveness_all" type="plan" position="3"
+                title="Competitiveness" template="leaderboard_panel_all.html"
+                is_ascending="false">
+                <Score ref="congress_plan_competitiveness" />
+            </ScorePanel>
+
+            <ScorePanel id="panel_competitiveness_mine" type="plan" position="3"
+                title="Competitiveness" template="leaderboard_panel_mine.html"
+                is_ascending="false">
+                <Score ref="congress_plan_competitiveness" />
             </ScorePanel>
 
             <!-- Summary above all sidebar panels -->
@@ -516,11 +592,13 @@
                 title="Congressional Leaderboard - All" cssclass="leaderboard congress">
                 <ScorePanel ref="panel_compact_all" />
                 <ScorePanel ref="panel_equivalence_all" />
+                <ScorePanel ref="panel_competitiveness_all" />
             </ScoreDisplay>
             <ScoreDisplay id="congress_leader_mine" legislativebodyref="congress" type="leaderboard"
                 title="Congressional Leaderboard - Mine" cssclass="leaderboard congress">
                 <ScorePanel ref="panel_compact_mine" />
                 <ScorePanel ref="panel_equivalence_mine" />
+                <ScorePanel ref="panel_competitiveness_mine" />
             </ScoreDisplay>
 
              <!-- Sidebar configuration -->
@@ -565,19 +643,31 @@
             <Criterion id="congress-district-count" name="CountDistricts - Congress" description="">
                 <Score ref="congress_plan_count_districts" />
             </Criterion>
-            <Criterion id="congress-assigned" name="AllMunicipalitiesAssigned - Congress" description="">
-                <Score ref="plan_all_municipalities_assigned" />
+            <Criterion id="congress-assigned" name="AllTractsAssigned - Congress" description="">
+                <Score ref="plan_all_tracts_assigned" />
             </Criterion>
         </Criteria>
     </Validation>
 
     <GeoLevels>
-      <GeoLevel id="municipality" name="municipality" label="municipality" min_zoom="0" sort_key="1" tolerance="25">
-          <Shapefile path="/data/pa_3785_cleaned.shp">
+      <GeoLevel id="tract" name="tract" label="tract" min_zoom="2" sort_key="2" tolerance="5">
+          <Shapefile path="/data/tracts_3785.shp">
               <Fields>
-                  <Field name="NAME_WARD" type="name"/>
-                  <Field name="NAMEWARDID" type="portable"/>
+                  <Field name="TRACTCE" type="name"/>
+                  <Field name="GEOID" type="portable"/>
+                  <Field name="COUNTYFP" type="tree" pos="0" width="3"/>
+                  <Field name="GEOID" type="tree" pos="1" width="11"/>
               </Fields>
+          </Shapefile>
+      </GeoLevel>
+
+      <GeoLevel id="county" name="county" label="county" min_zoom="0" sort_key="1" tolerance="250">
+          <Shapefile path="/data/counties_3785.shp">
+              <Fields>
+                  <Field name="COUNTYFP" type="name" />
+                  <Field name="COUNTYFP" type="portable" />
+                  <Field name="COUNTYFP" type="tree" pos="0" width="3"/>
+            </Fields>
           </Shapefile>
       </GeoLevel>
     </GeoLevels>
