@@ -93,6 +93,7 @@ services:
     env_file:
       - .env
     volumes:
+      - data:/data
       - sld:/data/sld
     ports:
       - "${MAP_SERVER_PORT}:${WEB_APP_PORT}"
