@@ -374,6 +374,25 @@ function mapinit(srs,maxExtent) {
                 }
                 break;
 
+            case 'mapbox':
+                var mapboxUrl = window.location.protocol +
+                    "//api.mapbox.com/styles/v1/tgilcrest/cjfx0n99k069t2rq8tw784u2h/tiles/256/" +
+                    "${z}/${x}/${y}?access_token=" +
+                    "pk.eyJ1IjoidGdpbGNyZXN0IiwiYSI6ImNqZnd6d2pqMzBqc2MzMm53MGgybWltOXAifQ.I2v96bMX7g-XPckWlDwJ5Q";
+
+                options = {
+                    numZoomLevels: numZoomLevels,
+                    minZoomLevel: minZoomLevel,
+                    projection: projection,
+                    sphericalMercator: true,
+                    maxExtent: maxExtent
+                };
+
+                if (mapType === 'municipality') {
+                    return new OpenLayers.Layer.XYZ(layerName, [mapboxUrl], options);
+                }
+                break;
+
             default:
                 return null;
         }
@@ -385,7 +404,8 @@ function mapinit(srs,maxExtent) {
         hybrid: { label: gettext('Hybrid') },
         road: { label: gettext('Road') },
         topo: { label: gettext('Topo') },
-        dark: { label: gettext('Dark') }
+        dark: { label: gettext('Dark') },
+        municipality: { label: gettext('Municipality') }
     };
 
     // Construct each layer, and assign a label.
