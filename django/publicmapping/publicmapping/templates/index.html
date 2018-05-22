@@ -73,6 +73,12 @@
             openusername = '{{ user.username }}',
             availsession = {% if sessionavail %}true{% else %}false{% endif %};
     </script>
+
+    <!-- Heap analytics snippet -->
+    <script type="text/javascript">
+      window.heap=window.heap||[],heap.load=function(e,t){window.heap.appid=e,window.heap.config=t=t||{};var r=t.forceSSL||"https:"===document.location.protocol,a=document.createElement("script");a.type="text/javascript",a.async=!0,a.src=(r?"https:":"http:")+"//cdn.heapanalytics.com/js/heap-"+e+".js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(a,n);for(var o=function(e){return function(){heap.push([e].concat(Array.prototype.slice.call(arguments,0)))}},p=["addEventProperties","addUserProperties","clearEventProperties","identify","resetIdentity","removeEventProperty","setEventProperties","track","unsetEventProperty"],c=0;c<p.length;c++)heap[p[c]]=o(p[c])};
+      heap.load("304904070");
+    </script>
   </head>
   <body id="static">
    <div class="static_wrap">
@@ -325,6 +331,9 @@
       <div class="attribution">
         <!-- Keep this on one line to avoid an underscore in Chrome -->
         <a target="_blank" href="http://www.districtbuilder.org"><img alt="{% trans "Powered By DistrictBuilder" %}" src="{% static 'images/db_sprite.png' %}"></a>
+
+        <!-- Heap badge program, see: https://heapanalytics.com/badge -->
+        <a href="https://heapanalytics.com/?utm_source=badge" rel="nofollow"><img style="width:108px;height:41px" src="//heapanalytics.com/img/badge.png" alt="Heap | Mobile and Web Analytics" /></a>
         <br>
         <span id="poweredbytext">
           {% trans "A project of" %}
