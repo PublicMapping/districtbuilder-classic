@@ -416,6 +416,15 @@
                 description="Each plan&apos;s overall political competitiveness is determined by averaging each district.s &apos;partisan differential&apos;.  The partisan differential of each district is calculated by subtracting the Democratic &apos;partisan index&apos; from the Republican &apos;partisan index&apos;.&lt;br/&gt;&lt;br/&gt;&apos;Heavily&apos; competitive districts are districts with partisan differentials of less than or equal to 5%. &apos;Generally&apos; competitive districts are districts with partisan differentials of greater than 5% but less than 10%.">
                 <SubjectArgument name="democratic" ref="votedem" />
                 <SubjectArgument name="republican" ref="voterep" />
+                <Argument name="target" value="18"/>
+            </ScoreFunction>
+
+            <ScoreFunction id="congress_plan_competitiveness_leaderboard" type="plan"
+                calculator="redistricting.calculators.Competitiveness"
+                label="Competitiveness"
+                description="Each plan&apos;s overall political competitiveness is determined by averaging each district.s &apos;partisan differential&apos;.  The partisan differential of each district is calculated by subtracting the Democratic &apos;partisan index&apos; from the Republican &apos;partisan index&apos;.&lt;br/&gt;&lt;br/&gt;&apos;Heavily&apos; competitive districts are districts with partisan differentials of less than or equal to 5%. &apos;Generally&apos; competitive districts are districts with partisan differentials of greater than 5% but less than 10%.">
+                <SubjectArgument name="democratic" ref="votedem" />
+                <SubjectArgument name="republican" ref="voterep" />
             </ScoreFunction>
 
             <ScoreFunction id="congress_plan_polsbypopper" type="plan"
@@ -518,13 +527,13 @@
             <ScorePanel id="panel_competitiveness_all" type="plan" position="3"
                 title="Competitiveness" template="leaderboard_panel_all.html"
                 is_ascending="false">
-                <Score ref="congress_plan_competitiveness" />
+                <Score ref="congress_plan_competitiveness_leaderboard" />
             </ScorePanel>
 
             <ScorePanel id="panel_competitiveness_mine" type="plan" position="3"
                 title="Competitiveness" template="leaderboard_panel_mine.html"
                 is_ascending="false">
-                <Score ref="congress_plan_competitiveness" />
+                <Score ref="congress_plan_competitiveness_leaderboard" />
             </ScorePanel>
 
             <!-- Summary above all sidebar panels -->
@@ -534,6 +543,7 @@
                 <Score ref="congress_plan_noncontiguous"/>
                 <Score ref="congress_plan_polsbypopper"/>
                 <Score ref="congress_plan_equivalence"/>
+                <Score ref="congress_plan_competitiveness"/>
             </ScorePanel>
 
             <!-- Basic Information -->

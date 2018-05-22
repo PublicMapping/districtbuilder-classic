@@ -1627,7 +1627,10 @@ class Competitiveness(CalculatorBase):
     This calculator only operates on Plans.
 
     This calculator requires three arguments: 'democratic', 'republican',
-        and 'range'
+        and 'range', and has one optional argument: 'target'.
+
+    If 'target' is set, the calculator will format the result to include
+        the target value in parenthesis after the calculated value.
     """
 
     def compute(self, **kwargs):
@@ -1675,6 +1678,17 @@ class Competitiveness(CalculatorBase):
                 fair += 1
 
         self.result = {'value': fair}
+        try:
+            target = self.get_value('target')
+            if target != None:
+                self.result = {
+                    'value': _('%(value)d (of %(target)s)') % {
+                        'value': fair,
+                        'target': target
+                    }
+                }
+        except:
+            pass
 
 
 class CountDistricts(CalculatorBase):
