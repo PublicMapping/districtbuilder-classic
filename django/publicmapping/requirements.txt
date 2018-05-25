@@ -5,6 +5,7 @@ gevent==1.2.2
 Django==1.11.10
 psycopg2==2.7.3
 celery[redis]==4.1.0
+kombu==4.1.0
 django-redis==4.8.0
 django-rosetta==0.7.13
 django-staticfiles==1.2.1
