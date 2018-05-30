@@ -130,6 +130,15 @@ that the script executes:
 
 ## Translations
 
+DistrictBuilder does translation ["the Django way"](https://docs.djangoproject.com/en/1.11/topics/i18n/translation/) via translation strings. The translation strings are extracted into message files (`.po`) which are compiled into `.mo` files which Django can then use. Both the `.po` and `.mo` files can be found at `django/publicmapping/locale/<LC>/LC_MESSAGES/`, though only `.po` files are committed to source control.
+
+There are two separate processes for generating translations, both of which are necessary for translated text to display properly in the web app:
+
+1. Compile translation strings for templates and Javascript via the `makelanguagefiles` setup command. This happens automatically whenever the web app is run via the `languages` container.
+1. Compile labels and descriptions from `config.xml`. This happens upon configuration when any setup command is run (eg. `./manage.py setup config/config.xml` from within `django` container).
+
+### Adding and Modifying Translations
+
 DistrictBuilder uses a Django application called [Rosetta](https://github.com/mbi/django-rosetta) to do translations.
 
 To do translations in a given language, make sure the server is running (`./scripts/server`) and go to `/admin` to log in as an admin (the admin username and password are defined in `.env`). Once logged in, go to `/rosetta`. You should see the different languages available and the paths of the files that correspond to each language. If you make a translation and save, you should see your changes in that file in the `django` container and on the VM. If you restart the server, your translations will be visible in DistrictBuilder.
