@@ -119,7 +119,6 @@
 
 
                                 "cd /projects/PublicMapping/DistrictBuilder/docs/", " &>> $LOG\n",
-                                "cp config.dist.xml config.xml", " &>> $LOG\n",
                                 "echo -e '1191c1191\n<         <Database name=\"YOUR-DATABASE-NAME\" user=\"publicmapping\" password=\"YOUR-DATABASE-PASSWORD\" host=\"OPTIONAL\"/>\n---\n>         <Database name=\"publicmapping\" user=\"publicmapping\" password=\"publicmapping\" host=\"localhost\"/>\n1214c1214\n<         <Admin user=\"ADMIN-USER-NAME\" email=\"ADMIN-EMAIL\" password=\"STRONG-PASSWORD\"/>\n---\n>         <Admin user=\"", { "Ref": "AdminUser" }, "\" email=\"", { "Ref": "AdminEmail" }, "\" password=\"", { "Ref": "AdminPassword" }, "\"/>\n1240c1240\n<                 adminuser=\"GEOSERVER-ADMIN-USER\" adminpass=\"GEOSERVER-ADMIN-PASS\" maxfeatures=\"100\" \n---\n>                 adminuser=\"admin\" adminpass=\"geoserver\" maxfeatures=\"100\" ' | patch config.xml", " &>> $LOG\n",
                                 "cd /projects/PublicMapping/DistrictBuilder/django/publicmapping", " &>> $LOG\n",
                                 "./setup.py ../../docs/config.xsd ../../docs/config.xml -v2 -d", " &>> $LOG\n",
