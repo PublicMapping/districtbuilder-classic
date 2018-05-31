@@ -37,7 +37,7 @@ MANAGERS = ADMINS
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', False)
 
-ALLOWED_HOSTS = [os.getenv('HOST')]
+ALLOWED_HOSTS = os.getenv('HOST').split(',')
 
 # Application definition
 
