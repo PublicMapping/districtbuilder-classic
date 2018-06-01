@@ -16,7 +16,8 @@ Vagrant.configure(2) do |config|
                        "reports/",
                        "geoserver/data_dir/",
                        "django/publicmapping/publicmapping/config_settings.py",
-                       "django/publicmapping/locale/*/*.mo"],
+                       "django/publicmapping/locale/**/*.mo",
+                       "django/publicmapping/locale/**/xmlconfig.po"],
       rsync__args: ["--verbose", "--archive", "--delete", "-z", "--links"]
 
   config.vm.provider :virtualbox do |vb|
