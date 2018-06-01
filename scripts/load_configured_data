@@ -5,13 +5,7 @@ if [[ -n "${DB_DEBUG}" ]]; then
     set -x
 fi
 
-if [[ -n "${GIT_COMMIT}" ]]; then
-  GIT_COMMIT="${GIT_COMMIT:0-7}"
-else
-  GIT_COMMIT="latest"
-fi
-
-set -u
+GIT_COMMIT=${GIT_COMMIT:0:7}
 
 
 function usage() {
