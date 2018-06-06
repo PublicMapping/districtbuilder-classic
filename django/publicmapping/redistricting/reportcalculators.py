@@ -29,7 +29,13 @@ Author:
 """
 
 from django.utils.translation import ugettext as _
-from redistricting.calculators import CalculatorBase, LengthWidthCompactness, Roeck, Schwartzberg
+from redistricting.calculators import (
+    CalculatorBase,
+    LengthWidthCompactness,
+    PolsbyPopper,
+    Roeck,
+    Schwartzberg,
+)
 
 
 class Population(CalculatorBase):
@@ -84,7 +90,7 @@ class Compactness(CalculatorBase):
     This calculator only operates on districts. It accepts one required
     argument: "comptype", which allows the specification of which type of
     compactness calculation will be performed. Currently available comptypes
-    are: 'LengthWidth', 'Roeck', and 'Schwartzberg'
+    are: 'LengthWidth', 'Roeck', 'Schwartzberg', and 'PolsbyPopper'
     """
 
     def compute(self, **kwargs):
@@ -98,8 +104,10 @@ class Compactness(CalculatorBase):
             calc = Roeck()
         elif comptype == 'Schwartzberg':
             calc = Schwartzberg()
+        elif comptype == 'PolsbyPopper':
+            calc = PolsbyPopper()
         else:
-            return
+            raise ValueError('Invalid compactness calculator')
 
         calc.compute(district=district)
         val = calc.result['value'] if calc.result else 0
