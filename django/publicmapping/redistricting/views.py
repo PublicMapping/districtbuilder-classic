@@ -2083,12 +2083,78 @@ def emaildistrictindexfile(request, planid):
         return HttpResponseForbidden()
 
     # Put in a celery task to create the file and send the emails
-    DistrictIndexFile.emailfile.delay(plan, request.user, request.POST,
-                                      translation.get_language())
+    #DistrictIndexFile.emailfile.delay(plan, request.user, request.POST,
+    #                                  translation.get_language())
     return HttpResponse(
         json.dumps({
             'success': True,
             'message': _('Task submitted')
+        }),
+        content_type='application/json')
+
+
+@unique_session_or_json_redirect
+def submit_plan(request, planid):
+    """Submits a plan by creating a copy and a PlanSubmission object"""
+    if request.method != 'POST':
+        return HttpResponseForbidden()
+
+    with transaction.atomic():
+        plan = Plan.objects.get(pk=planid)
+        if not can_copy(request.user, plan):
+            return HttpResponseForbidden()
+
+        # Copy the plan so that the Submission remains even if the plan is deleted
+        admin = User.objects.get(username='admin')
+        old_plan = Plan.objects.get(pk=planid)
+        plan.id = None
+        plan.owner = admin
+        plan.is_shared = False
+        plan.version = 0
+        # Plan names need to be unique by owner, so we have to add a random key
+        plan.name = _('Submission by: ') + old_plan.owner.username + ' ' + str(random.random())
+        plan.save()
+
+        districts = old_plan.get_districts_at_version(old_plan.version, include_geom=True)
+        for district in districts:
+            district_copy = copy.copy(district)
+
+            district_copy.id = None
+            district_copy.version = 0
+            district_copy.is_locked = False
+            district_copy.plan = plan
+
+            try:
+                district_copy.save()
+            except Exception as inst:
+                status["message"] = _("Could not save district copies")
+                status["exception"] = inst.message
+                return HttpResponse(
+                    json.dumps(status), content_type='application/json')
+
+            # clone the characteristics, comments, and tags from the original
+            # district to the copy
+            district_copy.clone_relations_from(district)
+        # Create submission with link to Plan
+        submission_form = PlanSubmissionForm(request.POST)
+        try:
+            submission = submission_form.save(commit=False)
+        except ValueError:
+            return HttpResponse(
+                json.dumps({
+                    'success': False,
+                    'message': submission_form.errors
+                }),
+                content_type='application/json',
+                status=400)
+
+        submission.plan = plan
+        submission.submitting_user = request.user
+        submission.save()
+    return HttpResponse(
+        json.dumps({
+            'success': True,
+            'message': _('Plan submitted successfully')
         }),
         content_type='application/json')
 

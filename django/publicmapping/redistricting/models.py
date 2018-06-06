@@ -2841,6 +2841,40 @@ class PlanForm(ModelForm):
         exclude = ['id']
 
 
+class PlanSubmission(models.Model):
+    """A user's submission of a plan to a contest"""
+    plan = models.ForeignKey(Plan)
+    submitting_user = models.ForeignKey(User)
+
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
+    email_address = models.EmailField()
+
+    team_member_names = models.CharField(max_length=500, blank=True)
+    team_name = models.CharField(max_length=100, blank=True)
+
+    # In (123) 456-7890 format, but this is just for human consumption so we don't need to validate
+    # formatting.
+    phone_number = models.CharField(max_length=14)
+    county = models.CharField(max_length=50)
+    zip_code = models.CharField(max_length=5)
+    contest_division = models.CharField(
+        choices=(
+            ('ADULT', 'Adult (non-student)'),
+            ('YOUTH', 'Youth (grades 5-12)'),
+            ('ACADM', 'Higher Ed (Undergraduate, graduate, professional'),
+        ),
+        max_length=5
+    )
+    values_statement = models.TextField(blank=True)
+
+
+class PlanSubmissionForm(ModelForm):
+    class Meta:
+        model = PlanSubmission
+        exclude = ['id', 'plan', 'submitting_user']
+
+
 class District(models.Model):
     """
     A collection of Geounits, aggregated together.
