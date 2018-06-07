@@ -42,7 +42,7 @@ emailplan = function(options) {
             title: gettext('Submit Final Plan to Contest'),
             autoOpen: false,
             modal: true,
-            width: 525,
+            width: 535,
             resizable: false,
             closable: true
         }, options);
