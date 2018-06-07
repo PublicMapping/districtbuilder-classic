@@ -249,13 +249,18 @@ tr.split_totals td, tr.separator_row td { background-color: #f0f0f0; font-weight
 .ui-dialog #email_plan_dialog tr {
   height: 40px;
 }
-.ui-dialog #email_plan_dialog input.field {
-  width: 250px;
+.ui-dialog #email_plan_dialog .field {
   border: 1px solid #DDDDDD;
   padding: 5px;
   border-radius: 4px;
   -moz-border-radius: 4px;
   -webkit-border-radius: 4px;
+}
+.ui-dialog #email_plan_dialog input.field {
+  width: 250px;
+}
+.ui-dialog #email_plan_dialog select.field {
+  width: 260px;
 }
 .ui-dialog #email_plan_dialog td#disclaimer_text_column {
   padding: 5px 10px;
@@ -266,7 +271,8 @@ tr.split_totals td, tr.separator_row td { background-color: #f0f0f0; font-weight
 }
 .ui-dialog #email_plan_dialog td.fname {
   padding-right: 20px;
-  width: 210px;
+  min-width: 210px;
   white-space: normal;
   line-height: 14px;
+  vertical-align: middle;
 }

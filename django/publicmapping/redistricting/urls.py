@@ -78,6 +78,8 @@ urlpatterns = [
         redistricting_views.getdistrictfile),
     url(r'plan/(?P<planid>\d*)/districtindexfilesend/$',
         redistricting_views.emaildistrictindexfile),
+    url(r'plan/(?P<planid>\d*)/contest-submit/$',
+        redistricting_views.submit_plan),
     url(r'plan/(?P<planid>\d*)/districtfilestatus/$',
         redistricting_views.getdistrictfilestatus),
     url(r'plan/(?P<planid>\d*)/statisticssets/$',
