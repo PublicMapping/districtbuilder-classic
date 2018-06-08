@@ -2149,6 +2149,7 @@ def submit_plan(request, planid):
                 status=400)
 
         submission.plan = plan
+        submission.submitted_plan_name = old_plan.name
         submission.submitting_user = request.user
         submission.save()
     return HttpResponse(

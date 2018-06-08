@@ -1,0 +1,68 @@
+{% load staticfiles %}
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <title>Draw The Lines PA</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'leaflet/leaflet.css' %}">
+    <script type="text/javascript" src="{% static 'leaflet/leaflet.js' %}"></script>
+    <style>
+      div.plan_summary span {
+        display: inline-block;
+        width: 120px;
+        text-align: right;
+        font-weight: normal;
+      }
+      div.plan_summary label {
+        display: inline-block;
+        width: 220px;
+        text-align: left;
+        font-weight: bold;
+        margin-left: 3px;
+      }
+      div.plan_summary h3 {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Draw The Lines PA</h1>
+    <h2>Submission Details</h2>
+    <div class="division">Division: {{ submission.get_contest_division_display }}</div>
+    <div class="plan-name">Map name: {{ submission.submitted_plan_name }}</div>
+    <div class="contestant-name">Contestant name: {{ submission.first_name }} {{ submission.last_name }}</div>
+    <div class="contestant-email">Email: {{ submission.email_address }}</div>
+    <div class="scores">
+      <h2>This Map's Metrics</h2>
+      {{ scores_html | safe }}
+    </div>
+    <div class="explanations">
+      <ul>
+        <li><a href="#">Compactness</a></li>
+        <li><a href="#">Equipopulation</a></li>
+        <li><a href="#">Competitiveness</a></li>
+        <li><a href="#">Splits</a></li>
+        <li><a href="#">Majority minority districts</a></li>
+      </ul>
+    </div>
+
+    <div id="leaflet" style="height: 600px; width: 600px"></div>
+
+    <div class="values-statement">
+      <h2>Essay</h2>
+      {{ submission.values_statement }}
+    </div>
+    <script type="text/javascript">
+      var layer = L.geoJSON({{ geojson|safe }});
+    </script>
+    <script type="text/javascript">
+      var map = L.map('leaflet');
+      L.tileLayer(
+        'https://api.mapbox.com/styles/v1/tgilcrest/cjfx0n99k069t2rq8tw784u2h/tiles/256/' +
+        '{z}/{x}/{y}?access_token=' +
+        'pk.eyJ1IjoidGdpbGNyZXN0IiwiYSI6ImNqZnd6d2pqMzBqc2MzMm53MGgybWltOXAifQ.I2v96bMX7g-XPckWlDwJ5Q'
+      ).addTo(map);
+      layer.addTo(map);
+      map.fitBounds(layer.getBounds());
+    </script>
+  </body>
+</html>

@@ -2845,6 +2845,7 @@ class PlanSubmission(models.Model):
     """A user's submission of a plan to a contest"""
     plan = models.ForeignKey(Plan)
     submitting_user = models.ForeignKey(User)
+    submitted_plan_name = models.CharField(max_length=255)
 
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
@@ -2872,7 +2873,7 @@ class PlanSubmission(models.Model):
 class PlanSubmissionForm(ModelForm):
     class Meta:
         model = PlanSubmission
-        exclude = ['id', 'plan', 'submitting_user']
+        exclude = ['id', 'plan', 'submitting_user', 'submitted_plan_name']
 
 
 class District(models.Model):
