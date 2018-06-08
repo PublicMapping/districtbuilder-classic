@@ -75,6 +75,10 @@ MIDDLEWARE = [
     'django.middleware.locale.LocaleMiddleware',
 ]
 
+SERIALIZATION_MODULES = {
+    "geojson": "django.contrib.gis.serializers.geojson",
+}
+
 ROOT_URLCONF = 'publicmapping.urls'
 
 TEMPLATES = [
