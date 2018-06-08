@@ -2548,7 +2548,7 @@ def statistics_sets(request, planid):
         admin_displays = ScoreDisplay.objects.filter(
             owner__is_superuser=True,
             legislative_body=plan.legislative_body,
-            name__in=admin_display_names)
+            name__in=admin_display_names).order_by('title')
 
         for admin_display in admin_displays:
             sets.append({
