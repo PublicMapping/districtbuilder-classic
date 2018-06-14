@@ -1,6 +1,7 @@
 import os.path
 import codecs
 
+from django.contrib.staticfiles.storage import staticfiles_storage
 from django.core.management.base import BaseCommand
 from django.core import serializers
 from django.template import loader
@@ -44,9 +45,13 @@ class Command(BaseCommand):
             geometry_field='geom',
             fields=('short_label', 'long_label')
         )
+        leaflet_css = staticfiles_storage.open('leaflet/leaflet.css').read()
+        leaflet_js = staticfiles_storage.open('leaflet/leaflet.js').read()
         context = dict(
             submission=submission,
             scores_html=scores_html,
+            leaflet_css=leaflet_css,
+            leaflet_js=leaflet_js,
             geojson=geojson
         )
 

@@ -3,8 +3,12 @@
 <html>
   <head>
     <title>Draw The Lines PA</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'leaflet/leaflet.css' %}">
-    <script type="text/javascript" src="{% static 'leaflet/leaflet.js' %}"></script>
+    <style>
+      {{ leaflet_css | safe }}
+    </style>
+    <script type="text/javascript">
+      {{ leaflet_js | safe }}
+    </script>
     <style>
       div.plan_summary span {
         display: inline-block;
