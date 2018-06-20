@@ -36,6 +36,12 @@ function run_migrations() {
         exec -T django ./manage.py migrate
 }
 
+function reconfigure() {
+    echo "Reconfigure"
+    docker-compose \
+        exec -T django ./manage.py setup config/config.xml
+}
+
 function write_settings() {
     # Write config_settings to the filesystem so it doesn't get
     # overwritten by docker-compose volume mounts
@@ -76,6 +82,7 @@ then
         write_settings
         docker-compose up -d "${MIGRATION_CONTAINERS[@]}"
         run_migrations
+        reconfigure
         change_geoserver_admin_password
     fi
     exit
