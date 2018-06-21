@@ -56,7 +56,11 @@
       {{ submission.values_statement }}
     </div>
     <script type="text/javascript">
-      var layer = L.geoJSON({{ geojson|safe }});
+      var layer = L.geoJSON({{ geojson|safe }}, {
+        onEachFeature: function (feature, layer) {
+          layer.bindTooltip(feature.properties.short_label, {permanent: true});
+        }
+      });
     </script>
     <script type="text/javascript">
       var map = L.map('leaflet');
