@@ -40,8 +40,12 @@ class Command(BaseCommand):
         scores_html = score_panel.render(submission.plan)
         GeoJSONSerializer = serializers.get_serializer('geojson')
         serializer = GeoJSONSerializer()
+        # is_unassigned is a property so we can't use queryset filtering
+        # The unassigned district is a catch-all for geounits that haven't been assigned to a real
+        # district. We don't want to display this on the submission map, so filter it out here.
+        districts = [d for d in submission.plan.district_set.all() if not d.is_unassigned]
         geojson = serializer.serialize(
-            submission.plan.district_set.all(),
+            districts,
             geometry_field='geom',
             fields=('short_label', 'long_label')
         )
