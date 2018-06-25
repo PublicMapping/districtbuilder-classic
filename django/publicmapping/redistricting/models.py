@@ -2869,6 +2869,93 @@ class PlanSubmission(models.Model):
     )
     values_statement = models.TextField(blank=True)
 
+    REGIONS = {
+        'Eastern': set([
+            'Bucks',
+            'Carbon',
+            'Chester',
+            'Delaware',
+            'Lackawanna',
+            'Lehigh',
+            'Luzerne',
+            'Monroe',
+            'Montgomery',
+            'Northampton',
+            'Philadelphia',
+            'Pike',
+            'Susquehanna',
+            'Wayne',
+            'Wyoming',
+        ]),
+        'Central': set([
+            'Adams',
+            'Bedford',
+            'Berks',
+            'Blair',
+            'Bradford',
+            'Cambria',
+            'Cameron',
+            'Centre',
+            'Clearfield',
+            'Clinton',
+            'Columbia',
+            'Cumberland',
+            'Dauphin',
+            'Elk',
+            'Franklin',
+            'Fulton',
+            'Huntingdon',
+            'Indiana',
+            'Jefferson',
+            'Juniata',
+            'Lancaster',
+            'Lebanon',
+            'Lycoming',
+            'McKean',
+            'Mifflin',
+            'Montour',
+            'Northumberland',
+            'Perry',
+            'Potter',
+            'Shuylkill',
+            'Snyder',
+            'Somerset',
+            'Sullivan',
+            'Tioga',
+            'Union',
+            'York',
+        ]),
+        'Western': set([
+            'Allegheny',
+            'Armstrong',
+            'Beaver',
+            'Butler',
+            'Clarion',
+            'Crawford',
+            'Erie',
+            'Fayette',
+            'Forest',
+            'Greene',
+            'Lawrence',
+            'Mercer',
+            'Venango',
+            'Warren',
+            'Washington',
+            'Westmoreland',
+        ]),
+    }
+
+    @property
+    def region(self):
+        for region in self.REGIONS.keys():
+            if self.county in self.REGIONS[region]:
+                return region
+        # The current most likely use case for this is in a batch process that exports submission
+        # reports, so instead of risking that plan breaking if a bad county sneaks in, just continue
+        # and echo the county so we still get usable data out.
+        print('Warning: Unknown county {} encountered'.format(self.county))
+        return 'Unknown ({})'.format(self.county)
+
 
 class PlanSubmissionForm(ModelForm):
     class Meta:
