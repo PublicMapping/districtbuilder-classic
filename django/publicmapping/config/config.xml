@@ -672,9 +672,9 @@
       </GeoLevel>
 
       <GeoLevel id="county" name="county" label="county" min_zoom="0" sort_key="1" tolerance="250">
-          <Shapefile path="/data/counties_3785.shp">
+          <Shapefile path="/data/counties_3785_names.shp">
               <Fields>
-                  <Field name="COUNTYFP" type="name" />
+                  <Field name="countyName" type="name" />
                   <Field name="COUNTYFP" type="portable" />
                   <Field name="COUNTYFP" type="tree" pos="0" width="3"/>
             </Fields>
