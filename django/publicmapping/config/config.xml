@@ -2,15 +2,12 @@
     <LegislativeBodies>
         <LegislativeBody id="congress" name="Congressional" short_label="%(district_id)s"
             long_label="District %(district_id)s" maxdistricts="18" sort_key="1" members="Districts"/>
-        <LegislativeBody id="community" name="Community Map" short_label="%(district_id)s"
-            long_label="Community %(district_id)s" maxdistricts="999" is_community="true" sort_key="4" members="Communities"/>
     </LegislativeBodies>
 
     <Regions>
         <Region id="pa" name="pa" label="Pennsylvania" description="The Commonwealth of Pennsylvania" sort_key="1">
             <LegislativeBodies>
                 <LegislativeBody ref="congress" />
-                <LegislativeBody ref="community" />
             </LegislativeBodies>
 
             <GeoLevels>
@@ -130,7 +127,6 @@
                 <SubjectArgument name="numerator" ref="vapblk" />
                 <SubjectArgument name="denominator" ref="vap" />
                 <LegislativeBody ref="congress"/>
-                <LegislativeBody ref="community"/>
             </ScoreFunction>
 
             <ScoreFunction id="district_vapblk_thresh" type="district"
@@ -146,7 +142,6 @@
                 <SubjectArgument name="numerator" ref="vaphisp" />
                 <SubjectArgument name="denominator" ref="vap" />
                 <LegislativeBody ref="congress"/>
-                <LegislativeBody ref="community"/>
             </ScoreFunction>
 
             <ScoreFunction id="district_vap_thresh" type="district"
@@ -162,7 +157,6 @@
                 <SubjectArgument name="numerator" ref="vapasn" />
                 <SubjectArgument name="denominator" ref="vap" />
                 <LegislativeBody ref="congress"/>
-                <LegislativeBody ref="community"/>
             </ScoreFunction>
 
             <ScoreFunction id="district_vapasn_thresh" type="district"
@@ -178,7 +172,6 @@
                 <SubjectArgument name="numerator" ref="vapwnh" />
                 <SubjectArgument name="denominator" ref="vap" />
                 <LegislativeBody ref="congress"/>
-                <LegislativeBody ref="community"/>
             </ScoreFunction>
 
             <ScoreFunction id="district_vapwnh_thresh" type="district"
@@ -194,7 +187,6 @@
                 <SubjectArgument name="numerator" ref="vapnam" />
                 <SubjectArgument name="denominator" ref="vap" />
                 <LegislativeBody ref="congress"/>
-                <LegislativeBody ref="community"/>
             </ScoreFunction>
 
             <ScoreFunction id="district_vapnam_thresh" type="district"
@@ -210,7 +202,6 @@
                 <SubjectArgument name="numerator" ref="vappild" />
                 <SubjectArgument name="denominator" ref="vap" />
                 <LegislativeBody ref="congress"/>
-                <LegislativeBody ref="community"/>
             </ScoreFunction>
 
             <ScoreFunction id="district_vappild_thresh" type="district"
@@ -226,7 +217,6 @@
                 <SubjectArgument name="numerator" ref="vapoth" />
                 <SubjectArgument name="denominator" ref="vap" />
                 <LegislativeBody ref="congress"/>
-                <LegislativeBody ref="community"/>
             </ScoreFunction>
 
             <ScoreFunction id="district_vapoth_thresh" type="district"
@@ -242,7 +232,6 @@
                 <SubjectArgument name="numerator" ref="vaptwo" />
                 <SubjectArgument name="denominator" ref="vap" />
                 <LegislativeBody ref="congress"/>
-                <LegislativeBody ref="community"/>
             </ScoreFunction>
 
             <ScoreFunction id="district_vaptwo_thresh" type="district"
@@ -258,7 +247,6 @@
                 <SubjectArgument name="numerator" ref="prison" />
                 <SubjectArgument name="denominator" ref="vap" />
                 <LegislativeBody ref="congress"/>
-                <LegislativeBody ref="community"/>
             </ScoreFunction>
 
             <ScoreFunction id="district_prison_thresh" type="district"
@@ -274,7 +262,6 @@
                 <SubjectArgument name="numerator" ref="votedem" />
                 <SubjectArgument name="denominator" ref="vap" />
                 <LegislativeBody ref="congress"/>
-                <LegislativeBody ref="community"/>
             </ScoreFunction>
 
             <ScoreFunction id="district_votedem_thresh" type="district"
@@ -290,7 +277,6 @@
                 <SubjectArgument name="numerator" ref="voterep" />
                 <SubjectArgument name="denominator" ref="vap" />
                 <LegislativeBody ref="congress"/>
-                <LegislativeBody ref="community"/>
             </ScoreFunction>
 
             <ScoreFunction id="district_voterep_thresh" type="district"
@@ -306,7 +292,6 @@
                 <SubjectArgument name="numerator" ref="voteoth" />
                 <SubjectArgument name="denominator" ref="vap" />
                 <LegislativeBody ref="congress"/>
-                <LegislativeBody ref="community"/>
             </ScoreFunction>
 
             <ScoreFunction id="district_voteoth_thresh" type="district"
@@ -322,7 +307,6 @@
                 <SubjectArgument name="numerator" ref="ageu18" />
                 <SubjectArgument name="denominator" ref="poptot" />
                 <LegislativeBody ref="congress"/>
-                <LegislativeBody ref="community"/>
             </ScoreFunction>
 
             <ScoreFunction id="district_age1824_percent" type="district"
@@ -331,7 +315,6 @@
                 <SubjectArgument name="numerator" ref="age1824" />
                 <SubjectArgument name="denominator" ref="poptot" />
                 <LegislativeBody ref="congress"/>
-                <LegislativeBody ref="community"/>
             </ScoreFunction>
 
             <ScoreFunction id="district_age2534_percent" type="district"
@@ -340,7 +323,6 @@
                 <SubjectArgument name="numerator" ref="age2534" />
                 <SubjectArgument name="denominator" ref="poptot" />
                 <LegislativeBody ref="congress"/>
-                <LegislativeBody ref="community"/>
             </ScoreFunction>
 
             <ScoreFunction id="district_age3549_percent" type="district"
@@ -349,7 +331,6 @@
                 <SubjectArgument name="numerator" ref="age3549" />
                 <SubjectArgument name="denominator" ref="poptot" />
                 <LegislativeBody ref="congress"/>
-                <LegislativeBody ref="community"/>
             </ScoreFunction>
 
             <ScoreFunction id="district_age5064_percent" type="district"
@@ -358,7 +339,6 @@
                 <SubjectArgument name="numerator" ref="age5064" />
                 <SubjectArgument name="denominator" ref="poptot" />
                 <LegislativeBody ref="congress"/>
-                <LegislativeBody ref="community"/>
             </ScoreFunction>
 
             <ScoreFunction id="district_age65o_percent" type="district"
@@ -367,7 +347,6 @@
                 <SubjectArgument name="numerator" ref="age65o" />
                 <SubjectArgument name="denominator" ref="poptot" />
                 <LegislativeBody ref="congress"/>
-                <LegislativeBody ref="community"/>
             </ScoreFunction>
 
             <!-- Leaderboard functions -->
@@ -438,19 +417,6 @@
                 label="Equal Population"
                 description="The Equipopulation score is the difference between the district with the highest population and the district with the lowest population.">
                 <SubjectArgument name="value" ref="poptot" />
-            </ScoreFunction>
-
-            <ScoreFunction id="district_poptot" type="district"
-                calculator="redistricting.calculators.SumValues"
-                user_selectable="true" label="Total Population">
-                <SubjectArgument name="value1" ref="poptot" />
-                <LegislativeBody ref="community"/>
-            </ScoreFunction>
-
-            <ScoreFunction id="district_comments" type="district"
-                calculator="redistricting.calculators.Comments"
-                user_selectable="false" label="Comments">
-                <LegislativeBody ref="community"/>
             </ScoreFunction>
 
             <!-- Calculator Reports configuration -->
@@ -555,20 +521,7 @@
                 <Score ref="district_polsbypopper" />
             </ScorePanel>
 
-            <!-- Community Comments -->
-            <ScorePanel id="community_panel_comments" type="district" position="2"
-                title="Plan Comments" cssclass="district_comments community"
-                template="plan_comments.html">
-                <Score ref="district_comments" />
-            </ScorePanel>
-
             <!-- Demographics -->
-            <ScorePanel id="community_panel_demo" type="district" position="2"
-                title="Demographics" cssclass="district_demographics community"
-                template="communities.html">
-                <Score ref="district_poptot" />
-            </ScorePanel>
-
             <ScorePanel id="congressional_panel_demo" type="district" position="2"
                 title="Demographics" cssclass="district_demographics congressional"
                 template="demographics.html">
@@ -620,14 +573,6 @@
             <ScoreDisplay id="congress_sidebar_demo" legislativebodyref="congress" type="sidebar" title="Demographics" cssclass="demographics">
                 <ScorePanel ref="congressional_panel_summary" />
                 <ScorePanel ref="congressional_panel_demo" />
-            </ScoreDisplay>
-
-            <ScoreDisplay id="community_sidebar_demo" legislativebodyref="community" type="sidebar" title="Demographics" cssclass="demographics">
-                <ScorePanel ref="community_panel_demo" />
-            </ScoreDisplay>
-
-            <ScoreDisplay id="community_sidebar_comments" legislativebodyref="community" type="sidebar" title="Community Mapping" cssclass="demographics">
-                <ScorePanel ref="community_panel_comments" />
             </ScoreDisplay>
 
             <!-- Calculator Reports configuration -->
