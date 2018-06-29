@@ -24,16 +24,16 @@
     <Subjects>
         <Subject id="poptot" field="TOTAL_POP" name="Total Population"
                  short_name="Total Pop." displayed="true" sortkey="1" default="true" />
-        <Subject id="pophisp" field="HISPANIC" name="Total Hispanic/Latino Population"
-                 short_name="Hispanic" displayed="false" sortkey="2" />
         <Subject id="popwnh" field="WHITE_NH" name="Total White Population"
-                 short_name="White" displayed="false" sortkey="3" />
+                 short_name="White" displayed="false" sortkey="2" />
         <Subject id="popblk" field="BLACK_NH" name="Total Black Population"
-                 short_name="Black" displayed="false" sortkey="4" />
-        <Subject id="popnam" field="AI_AN_NH" name="Total American Indian/Alaskan Native"
-                 short_name="Nat Amer" displayed="false" sortkey="5" />
+                 short_name="Black" displayed="false" sortkey="3" />
+        <Subject id="pophisp" field="HISPANIC" name="Total Hispanic/Latino Population"
+                 short_name="Hispanic" displayed="false" sortkey="4" />
         <Subject id="popasn" field="ASIAN_NH" name="Total Asian Population"
-                 short_name="As Amer" displayed="false" sortkey="6" />
+                 short_name="As Amer" displayed="false" sortkey="5" />
+        <Subject id="popnam" field="AI_AN_NH" name="Total American Indian/Alaskan Native"
+                 short_name="Nat Amer" displayed="false" sortkey="6" />        
         <Subject id="poppild" field="HAW_OPI_NH" name="Total Native Hawaiian/Pacific Islander"
                  short_name="Pac Isldr" displayed="false" sortkey="7" />
         <Subject id="popoth" field="OTHER_NH" name="Total Other Race"

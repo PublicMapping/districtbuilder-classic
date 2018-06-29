@@ -1788,8 +1788,19 @@ function mapinit(srs,maxExtent) {
                 // Clear out the map tip div
                 $(tipdiv).find('.demographic').remove();
 
+                // Hard-code sort order for characteristics
+                var CHARACTERISTICS_SORT_ORDER = [
+                    "Total Pop.",
+                    "White",
+                    "Black",
+                    "Hispanic",
+                    "As Amer"
+                ];
                 // sort the characteristics alphabetically by label
-                ctics = $(ctics).sort(function(a, b) { return a.lbl > b.lbl; });
+                ctics = $(ctics).sort(function(a, b) {
+                    return CHARACTERISTICS_SORT_ORDER.indexOf(a.lbl) >
+                        CHARACTERISTICS_SORT_ORDER.indexOf(b.lbl);
+                });
 
                 // truncate the breadcrumbs into a single string
                 var place = [];

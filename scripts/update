@@ -30,7 +30,7 @@ function run_migrations() {
 function reconfigure() {
     echo "Reconfigure"
     docker-compose \
-        exec -T django ./manage.py setup config/config.xml
+        exec -T django ./manage.py setup config/config.xml -f
 }
 
 function write_settings() {
