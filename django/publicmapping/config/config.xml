@@ -181,6 +181,14 @@
                 <Argument name="threshold" value="0.5" />
             </ScoreFunction>
 
+            <ScoreFunction id="district_vapnownh_thresh" type="district"
+                calculator="redistricting.calculators.Threshold"
+                label="Non-white VAP Threshold">
+                <ScoreArgument name="value" ref="district_vapwnh_percent" />
+                <Argument name="threshold" value="0.5" />
+                <Argument name="less_than" value="1" />
+            </ScoreFunction>
+
             <ScoreFunction id="district_vapnam_percent" type="district"
                 calculator="redistricting.calculators.Percent"
                 label="Nat. Amer. VAP">
@@ -406,6 +414,13 @@
                 <SubjectArgument name="republican" ref="voterep" />
             </ScoreFunction>
 
+            <ScoreFunction id="congress_plan_vapnownh_thresh" type="plan"
+                calculator="redistricting.calculators.SumValues"
+                label="Majority-Minority">
+                <ScoreArgument name="value1" ref="district_vapnownh_thresh" />
+                <Argument name="target" value="18"/>
+            </ScoreFunction>
+
             <ScoreFunction id="congress_plan_polsbypopper" type="plan"
                 calculator="redistricting.calculators.PolsbyPopper"
                 label="Average Compactness"
@@ -510,6 +525,7 @@
                 <Score ref="congress_plan_polsbypopper"/>
                 <Score ref="congress_plan_equivalence"/>
                 <Score ref="congress_plan_competitiveness"/>
+                <Score ref="congress_plan_vapnownh_thresh"/>
             </ScorePanel>
 
             <!-- Basic Information -->
