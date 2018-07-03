@@ -289,6 +289,8 @@ msgid ""
 "Deleting a %(object_name)s must <em>NOT</em> occur when regular users are "
 "editing plans."
 msgstr ""
+"Deleting a %(object_name)s must <em>NOT</em> occur when regular users are "
+"editing maps."
 
 #: publicmapping/templates/admin/redistricting/subject/delete_selected_confirmation.html:73
 #, python-format
@@ -945,7 +947,7 @@ msgstr ""
 
 #: redistricting/tasks.py:186
 msgid "Upload and import plan confirmation."
-msgstr ""
+msgstr "Upload and import map confirmation."
 
 #: redistricting/tasks.py:187
 msgid "Problem importing user uploaded file."
@@ -965,7 +967,7 @@ msgstr ""
 
 #: redistricting/tasks.py:345
 msgid "Plan couldn't be created. Be sure the plan name is unique."
-msgstr ""
+msgstr "Map couldn't be created. Be sure the map name is unique."
 
 #: redistricting/tasks.py:407
 msgid "Did not import row:"
@@ -989,7 +991,7 @@ msgstr ""
 
 #: redistricting/tasks.py:685 redistricting/views.py:2157
 msgid "Plan submitted successfully"
-msgstr ""
+msgstr "Map submitted successfully"
 
 #: redistricting/tasks.py:1137
 msgid "Error creating calculator report."
@@ -1064,7 +1066,7 @@ msgstr ""
 #: redistricting/templates/community_demographics.html:61
 #: redistricting/templates/demographics.html:64
 msgid "Sorry, there is no demographic data for this plan"
-msgstr ""
+msgstr "Sorry, there is no demographic data for this map"
 
 #: redistricting/templates/basic_information.html:68
 msgid "Stats Legend"
@@ -1277,22 +1279,24 @@ msgstr ""
 
 #: redistricting/templates/editplan.html:154
 msgid "Submit Final Plan to Contest"
-msgstr ""
+msgstr "Submit Final Map to Contest"
 
 #: redistricting/templates/editplan.html:155
 msgid ""
 "You can submit your completed plan to be considered for the contest by "
 "filling out this form."
 msgstr ""
+"You can submit your completed map to be considered for the contest by "
+"filling out this form."
 
 #: redistricting/templates/editplan.html:156
 #: redistricting/templates/editplan.html:396
 msgid "Submit Final Plan"
-msgstr ""
+msgstr "Submit Final Map"
 
 #: redistricting/templates/editplan.html:162
 msgid "Share Plan With All Users"
-msgstr ""
+msgstr "Share Map With All Users"
 
 #: redistricting/templates/editplan.html:163
 #, python-format
@@ -1302,6 +1306,10 @@ msgid ""
 "%(plan_text)s a unique name in order to share it. A copy of your current "
 "%(plan_text)s will be added to the \"Shared\" section of the plan chooser."
 msgstr ""
+"By sharing a copy of your %(plan_text)s below, you are making your "
+"%(plan_text)s available to all other users in the system. Give your "
+"%(plan_text)s a unique name in order to share it. A copy of your current "
+"%(plan_text)s will be added to the \"Shared\" section of the map chooser."
 
 #: redistricting/templates/editplan.html:165
 #, python-format
@@ -1336,7 +1344,7 @@ msgstr ""
 #: redistricting/templates/editplan.html:183
 #: redistricting/templates/editplan.html:195
 msgid "Verify and Submit Plan to Leaderboards"
-msgstr ""
+msgstr "Verify and Submit Map to Leaderboards"
 
 #: redistricting/templates/editplan.html:184
 msgid ""
@@ -1346,6 +1354,11 @@ msgid ""
 "\"unverified\" and you will need to re-verify it in order for it to again be "
 "considered for the leaderboards."
 msgstr ""
+"In order to be considered for placement on the leaderboards your map must "
+"meet the criteria for creating a legal redistricting map. Keep in mind that "
+"as soon as you edit a verified map, it will automatically become "
+"\"unverified\" and you will need to re-verify it in order for it to again be "
+"considered for the leaderboards."
 
 #: redistricting/templates/editplan.html:185
 msgid ""
@@ -1353,10 +1366,13 @@ msgid ""
 "plan with other users. Your plan title and user name will simply show up in "
 "the top ten lists (if your plan ranks in the top ten)."
 msgstr ""
+"By verifying your map, you are <em><strong>not</strong></em> sharing your "
+"map with other users. Your map title and user name will simply show up in "
+"the top ten lists (if your map ranks in the top ten)."
 
 #: redistricting/templates/editplan.html:187
 msgid "How to verify and submit your plan:"
-msgstr ""
+msgstr "How to verify and submit your map:"
 
 #: redistricting/templates/editplan.html:189
 msgid "Click the \"Verify and Submit to Leaderboards\" button."
@@ -1371,6 +1387,8 @@ msgid ""
 "Check the leaderboards to see if your plan ranks in any of the top ten score "
 "types."
 msgstr ""
+"Check the leaderboards to see if your map ranks in any of the top ten score "
+"types."
 
 #: redistricting/templates/editplan.html:206
 msgid ""
@@ -1387,6 +1405,11 @@ msgid ""
 "would like to remove districts from your plan, use the district unassign "
 "tool."
 msgstr ""
+"Choose districts to paste into your map.  A map has a maximum number of "
+"districts allowed by law.  If you would like to paste districts into a map, "
+"you must have fewer districts in your map than the maximum allowed.  If you "
+"would like to remove districts from your map, use the district unassign "
+"tool."
 
 #: redistricting/templates/editplan.html:212
 #, python-format
@@ -1437,12 +1460,16 @@ msgid ""
 "Your plan currently has <span id=\"multi_num_reps\" class=\"multi_val\"></"
 "span> representatives."
 msgstr ""
+"Your map currently has <span id=\"multi_num_reps\" class=\"multi_val\"></"
+"span> representatives."
 
 #: redistricting/templates/editplan.html:279
 msgid ""
 "Your plan currently has <span id=\"multi_num_dists\" class=\"multi_val\"></"
 "span> multi-member districts."
 msgstr ""
+"Your map currently has <span id=\"multi_num_dists\" class=\"multi_val\"></"
+"span> multi-member districts."
 
 #: redistricting/templates/editplan.html:282
 #: redistricting/templates/viewplan.html:407
@@ -1494,6 +1521,8 @@ msgid ""
 "Values &ndash; tell us what values, considerations and trade-offs you made "
 "in your plan:"
 msgstr ""
+"Values &ndash; tell us what values, considerations and trade-offs you made "
+"in your map:"
 
 #: redistricting/templates/editplan.html:384
 msgid ""
@@ -1508,6 +1537,16 @@ msgid ""
 "                    plan whenever feasible.\n"
 "                    "
 msgstr ""
+"\n"
+"                    By submitting a map for consideration, you are "
+"agreeing\n"
+"                    to have your map published in local news media outlets\n"
+"                    and have it presented to a legislative body. Unless\n"
+"                    you request otherwise, the project partners will "
+"attempt\n"
+"                    to include attribution (your name or team name) for the\n"
+"                    map whenever feasible.\n"
+"                    "
 
 #: redistricting/templates/editplan.html:418
 msgid "Community Info"
@@ -1549,7 +1588,7 @@ msgstr ""
 #: redistricting/templates/leaderboard_panel_all.html:46
 #: redistricting/templates/leaderboard_panel_mine.html:44
 msgid "Plan Name"
-msgstr ""
+msgstr "Map Name"
 
 #: redistricting/templates/leaderboard_panel_all.html:47
 #: redistricting/templates/leaderboard_panel_mine.html:45
@@ -1559,7 +1598,7 @@ msgstr ""
 #: redistricting/templates/leaderboard_panel_mine.html:36
 #: redistricting/templates/viewplan.html:312
 msgid "My Plans"
-msgstr ""
+msgstr "My Maps"
 
 #: redistricting/templates/plan_comments.html:10
 msgid "Edit"
@@ -1665,7 +1704,7 @@ msgstr ""
 
 #: redistricting/templates/viewplan.html:41
 msgid "DistrictBuilder redistricting plan: "
-msgstr ""
+msgstr "DistrictBuilder redistricting map: "
 
 #: redistricting/templates/viewplan.html:43
 msgid ""
@@ -1675,15 +1714,15 @@ msgstr ""
 
 #: redistricting/templates/viewplan.html:46
 msgid "Updated Plans from DistrictBuilder"
-msgstr ""
+msgstr "Updated Maps from DistrictBuilder"
 
 #: redistricting/templates/viewplan.html:47
 msgid "Recently Shared Plans from DistrictBuilder"
-msgstr ""
+msgstr "Recently Shared Maps from DistrictBuilder"
 
 #: redistricting/templates/viewplan.html:241
 msgid "Plan"
-msgstr ""
+msgstr "Map"
 
 #: redistricting/templates/viewplan.html:242
 msgid "Draw"
@@ -1711,7 +1750,7 @@ msgstr ""
 
 #: redistricting/templates/viewplan.html:284
 msgid "Choose a Plan. Start Drawing."
-msgstr ""
+msgstr "Choose a Map. Start Drawing."
 
 #: redistricting/templates/viewplan.html:294
 msgid "Select District Layer"
@@ -1721,7 +1760,7 @@ msgstr ""
 #: redistricting/templates/viewplan.html:307
 #: redistricting/templates/viewplan.html:1085
 msgid "Select Plan Type"
-msgstr ""
+msgstr "Select Map Type"
 
 #: redistricting/templates/viewplan.html:310
 msgid "Template"
@@ -1733,12 +1772,12 @@ msgstr ""
 
 #: redistricting/templates/viewplan.html:313
 msgid "Upload Plan"
-msgstr ""
+msgstr "Upload Map"
 
 #: redistricting/templates/viewplan.html:320
 #: redistricting/templates/viewplan.html:322
 msgid "Select Plan"
-msgstr ""
+msgstr "Select Map"
 
 #: redistricting/templates/viewplan.html:325
 msgid "Search"
@@ -1763,19 +1802,22 @@ msgid ""
 "confirmation when your plan has been uploaded. Your email will not be saved "
 "or shared."
 msgstr ""
+"Please enter your email address so DistrictBuilder can send you a "
+"confirmation when your map has been uploaded. Your email will not be saved "
+"or shared."
 
 #: redistricting/templates/viewplan.html:365
 #: redistricting/templates/viewplan.html:367
 msgid "Name Plan and Start Drawing:"
-msgstr ""
+msgstr "Name Map and Start Drawing:"
 
 #: redistricting/templates/viewplan.html:371
 msgid "Edit Selected Plan"
-msgstr ""
+msgstr "Edit Selected Map"
 
 #: redistricting/templates/viewplan.html:372
 msgid "Copy and Save Selected Plan"
-msgstr ""
+msgstr "Copy and Save Selected Map"
 
 #: redistricting/templates/viewplan.html:377
 msgid "Start Drawing"
@@ -1783,7 +1825,7 @@ msgstr ""
 
 #: redistricting/templates/viewplan.html:384
 msgid "Plan Details"
-msgstr ""
+msgstr "Map Details"
 
 #: redistricting/templates/viewplan.html:385
 msgid "User Name:"
@@ -1792,7 +1834,7 @@ msgstr ""
 #: redistricting/templates/viewplan.html:388
 #: redistricting/templates/viewplan.html:934
 msgid "Plan Name:"
-msgstr ""
+msgstr "Map Name:"
 
 #: redistricting/templates/viewplan.html:391
 msgid "Description:"
@@ -1961,6 +2003,9 @@ msgid ""
 "your redistricting plan.  After you've made your selections click \"Create "
 "and Preview Report\" to view the final report."
 msgstr ""
+"Select the map statistics you'd like included in a comprehensive report on "
+"your redistricting map.  After you've made your selections click \"Create "
+"and Preview Report\" to view the final report."
 
 #: redistricting/templates/viewplan.html:734
 msgid "Create and Preview New Report"
@@ -1972,11 +2017,11 @@ msgstr ""
 
 #: redistricting/templates/viewplan.html:757
 msgid "Top Ranked Users' Plans"
-msgstr ""
+msgstr "Top Ranked Users' Maps"
 
 #: redistricting/templates/viewplan.html:759
 msgid "My Ranked Plans"
-msgstr ""
+msgstr "My Ranked Maps"
 
 #: redistricting/templates/viewplan.html:785
 msgid "Select Legislative Body"
@@ -1989,12 +2034,13 @@ msgstr ""
 
 #: redistricting/templates/viewplan.html:822
 msgid "This plan has been shared"
-msgstr ""
+msgstr "This map has been shared"
 
 #: redistricting/templates/viewplan.html:823
 msgid ""
 "Anyone can view this plan by visiting the following URL in a web browser:"
 msgstr ""
+"Anyone can view this map by visiting the following URL in a web browser:"
 
 #: redistricting/templates/viewplan.html:852
 msgid "Shared map tweet text"
@@ -2002,11 +2048,11 @@ msgstr ""
 
 #: redistricting/templates/viewplan.html:885
 msgid "Redistricting plan by DistrictBuilder"
-msgstr ""
+msgstr "Redistricting map by DistrictBuilder"
 
 #: redistricting/templates/viewplan.html:894
 msgid "Plan File Export"
-msgstr ""
+msgstr "Map File Export"
 
 #: redistricting/templates/viewplan.html:895
 #, python-format
@@ -2030,7 +2076,7 @@ msgstr ""
 
 #: redistricting/templates/viewplan.html:945
 msgid "Please select a plan"
-msgstr ""
+msgstr "Please select a map"
 
 #: redistricting/templates/viewplan.html:959
 msgid "Currently Viewing:"
@@ -2038,7 +2084,7 @@ msgstr ""
 
 #: redistricting/templates/viewplan.html:988
 msgid "Plan not saved"
-msgstr ""
+msgstr "Map not saved"
 
 #: redistricting/templates/viewplan.html:993
 #: redistricting/templates/viewplan.html:994
@@ -2057,7 +2103,7 @@ msgstr ""
 
 #: redistricting/templates/viewplan.html:995
 msgid "Please wait. Plan is being validated. This may take a few minutes."
-msgstr ""
+msgstr "Please wait. Map is being validated. This may take a few minutes."
 
 #: redistricting/templates/viewplan.html:1019
 #, python-format
@@ -2094,7 +2140,7 @@ msgstr ""
 
 #: redistricting/templates/viewplan.html:1092
 msgid "Select Plan to Display as Reference Layer"
-msgstr ""
+msgstr "Select Map to Display as Reference Layer"
 
 #: redistricting/templates/viewplan.html:1097
 msgid "OK"
@@ -2232,7 +2278,7 @@ msgstr ""
 #: redistricting/views.py:250
 #, python-format
 msgid "User %(user)s doesn't have permission to unload this plan"
-msgstr ""
+msgstr "User %(user)s doesn't have permission to unload this map"
 
 #: redistricting/views.py:292
 #, python-format
@@ -2241,7 +2287,7 @@ msgstr ""
 
 #: redistricting/views.py:308
 msgid "You already have a plan named that. Please pick a unique name."
-msgstr ""
+msgstr "You already have a map named that. Please pick a unique name."
 
 #: redistricting/views.py:336 redistricting/views.py:2130
 msgid "Could not save district copies"
@@ -2261,22 +2307,22 @@ msgstr ""
 
 #: redistricting/views.py:633
 msgid "plan"
-msgstr ""
+msgstr "map"
 
 #: redistricting/views.py:899
 msgid "Couldn't save new plan"
-msgstr ""
+msgstr "Couldn't save new map"
 
 #: redistricting/views.py:1018 redistricting/views.py:1219
 #: redistricting/views.py:1285 redistricting/views.py:1358
 #: redistricting/views.py:1421 redistricting/views.py:1469
 msgid "No plan with the given id"
-msgstr ""
+msgstr "No map with the given id"
 
 #: redistricting/views.py:1023 redistricting/views.py:1474
 #: redistricting/views.py:1489
 msgid "User can't view the given plan"
-msgstr ""
+msgstr "User can't view the given map"
 
 #: redistricting/views.py:1028
 msgid "Information for report wasn't sent via POST"
@@ -2284,7 +2330,7 @@ msgstr ""
 
 #: redistricting/views.py:1046
 msgid "Plan report is ready."
-msgstr ""
+msgstr "Map report is ready."
 
 #: redistricting/views.py:1054
 msgid "Report is building."
@@ -2317,11 +2363,11 @@ msgstr ""
 #: redistricting/views.py:1224 redistricting/views.py:1290
 #: redistricting/views.py:1363 redistricting/views.py:1426
 msgid "User can't edit the given plan"
-msgstr ""
+msgstr "User can't edit the given map"
 
 #: redistricting/views.py:1231
 msgid "No districts selected to add to the given plan"
-msgstr ""
+msgstr "No districts selected to add to the given map"
 
 #: redistricting/views.py:1237
 #, python-format
@@ -2365,7 +2411,7 @@ msgstr ""
 
 #: redistricting/views.py:1485
 msgid "No other plan with the given id"
-msgstr ""
+msgstr "No other map with the given id"
 
 #: redistricting/views.py:1499
 #, python-format
@@ -2391,7 +2437,7 @@ msgstr ""
 
 #: redistricting/views.py:1551
 msgid "Plan does not exist."
-msgstr ""
+msgstr "Map does not exist."
 
 #: redistricting/views.py:1566
 msgid "No layers were provided."
@@ -2420,7 +2466,7 @@ msgstr ""
 
 #: redistricting/views.py:1692
 msgid "Plan or district does not exist."
-msgstr ""
+msgstr "Map or district does not exist."
 
 #: redistricting/views.py:1702
 #, python-format
@@ -2437,7 +2483,7 @@ msgstr ""
 
 #: redistricting/views.py:1762
 msgid "No plan exists with that ID."
-msgstr ""
+msgstr "No map exists with that ID."
 
 #: redistricting/views.py:1830
 msgid "Subject for districts is required."
@@ -2453,11 +2499,11 @@ msgstr ""
 
 #: redistricting/views.py:1944
 msgid "Invalid plan."
-msgstr ""
+msgstr "Invalid map."
 
 #: redistricting/views.py:1958
 msgid "Couldn't get geography info from the server. No plan with the given id."
-msgstr ""
+msgstr "Couldn't get geography info from the server. No map with the given id."
 
 #: redistricting/views.py:1976
 msgid "Unable to get Demographics ScoreDisplay"
@@ -2501,11 +2547,11 @@ msgstr ""
 
 #: redistricting/views.py:2452
 msgid "Updated plan attributes"
-msgstr ""
+msgstr "Updated map attributes"
 
 #: redistricting/views.py:2454
 msgid "Failed to save the changes to your plan"
-msgstr ""
+msgstr "Failed to save the changes to your map"
 
 #: redistricting/views.py:2459
 msgid "Cannot edit a plan you don't own."

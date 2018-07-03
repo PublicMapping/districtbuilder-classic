@@ -2,9 +2,9 @@
 <feed xmlns="http://www.w3.org/2005/Atom" 
       xmlns:georss="http://www.georss.org/georss" 
       xmlns:gml="http://www.opengis.net/gml">
-    <title>Recently Shared Plans from DistrictBuilder</title>
+    <title>Recently Shared Maps from DistrictBuilder</title>
  
-    <subtitle>The most recently shared plans by the community, powered by DistrictBuilder</subtitle>
+    <subtitle>The most recently shared maps by the community, powered by DistrictBuilder</subtitle>
     <link href="{% url 'share-feed' %}"/>
     <updated>{% now "c" %}</updated>
     <author>

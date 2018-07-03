@@ -20,7 +20,7 @@ msgstr ""
 #: redistricting/static/js/chooseplan.js:75
 #: redistricting/static/js/chooseplan.js:245
 msgid "View Plan"
-msgstr ""
+msgstr "View Map"
 
 #: redistricting/static/js/chooseplan.js:75
 #: redistricting/static/js/chooseplan.js:245
@@ -33,6 +33,8 @@ msgid ""
 "Thanks! Your file has been uploaded, and your plan is being constructed. "
 "When your plan is completely constructed, you will receive an email from us."
 msgstr ""
+"Thanks! Your file has been uploaded, and your map is being constructed. "
+"When your map is completely constructed, you will receive an email from us."
 
 #: redistricting/static/js/chooseplan.js:88
 msgid ""
@@ -40,6 +42,9 @@ msgid ""
 "converting it into a plan. Make sure the file is a zipped block equivalency "
 "file, and please try again."
 msgstr ""
+"We're sorry! Your file was transferred to us, but there was a problem "
+"converting it into a map. Make sure the file is a zipped block equivalency "
+"file, and please try again."
 
 #: redistricting/static/js/chooseplan.js:89
 msgid "Uploaded"
@@ -53,7 +58,7 @@ msgstr ""
 #: redistricting/static/js/chooseplan.js:138
 #: redistricting/static/js/chooseplan.js:147
 msgid "Choose a plan from the table first"
-msgstr ""
+msgstr "Choose a map from the table first"
 
 #: redistricting/static/js/chooseplan.js:155
 msgid "A name for the copied template is required"
@@ -73,7 +78,7 @@ msgstr ""
 
 #: redistricting/static/js/chooseplan.js:188
 msgid "Creating New Plan..."
-msgstr ""
+msgstr "Creating New Map..."
 
 #: redistricting/static/js/chooseplan.js:189
 msgid "Please standby while creating new plan ..."
@@ -103,7 +108,7 @@ msgstr ""
 #: redistricting/static/js/chooseplan.js:337
 #: redistricting/static/js/layerchooser.js:171
 msgid "Plan Name"
-msgstr ""
+msgstr "Map Name"
 
 #: redistricting/static/js/chooseplan.js:338
 #: redistricting/static/js/shareddistricts.js:141
@@ -145,11 +150,11 @@ msgstr ""
 
 #: redistricting/static/js/chooseplan.js:381
 msgid "Really delete plan: "
-msgstr ""
+msgstr "Really delete map: "
 
 #: redistricting/static/js/chooseplan.js:384
 msgid "Delete Plan"
-msgstr ""
+msgstr "Delete Map"
 
 #: redistricting/static/js/chooseplan.js:386
 #: redistricting/static/js/chooseplan.js:489
@@ -159,16 +164,16 @@ msgstr ""
 
 #: redistricting/static/js/chooseplan.js:390
 msgid "Please wait. Deleting plan."
-msgstr ""
+msgstr "Please wait. Deleting map."
 
 #: redistricting/static/js/chooseplan.js:391
 msgid "Deleting Plan"
-msgstr ""
+msgstr "Deleting Map"
 
 #: redistricting/static/js/chooseplan.js:406
 #: redistricting/static/js/chooseplan.js:415
 msgid "Error Deleting Plan"
-msgstr ""
+msgstr "Error Deleting Plan"
 
 #: redistricting/static/js/chooseplan.js:416
 msgid "Please try again later."
@@ -208,7 +213,7 @@ msgstr ""
 
 #: redistricting/static/js/chooseplan.js:717
 msgid "Upload Plan"
-msgstr ""
+msgstr "Upload Map"
 
 #: redistricting/static/js/chooseplan.js:746
 msgid "Click the button to view the map as a guest"
@@ -228,16 +233,16 @@ msgstr ""
 
 #: redistricting/static/js/emailplan.js:42
 msgid "Submit Final Plan to Contest"
-msgstr ""
+msgstr "Submit Final Map to Contest"
 
 #: redistricting/static/js/emailplan.js:99
 msgid "Please wait. Emailing plan."
-msgstr ""
+msgstr "Please wait. Emailing map."
 
 #: redistricting/static/js/emailplan.js:100
 #: redistricting/static/js/emailplan.js:112
 msgid "Emailing Plan"
-msgstr ""
+msgstr "Emailing Map"
 
 #: redistricting/static/js/emailplan.js:113
 msgid ""
@@ -245,6 +250,9 @@ msgid ""
 "confirmation email once it has completed successfully. This may take a few "
 "minutes."
 msgstr ""
+"Your map is in the process of being submitted. You will receive a "
+"confirmation email once it has completed successfully. This may take a few "
+"minutes."
 
 #: redistricting/static/js/emailplan.js:116
 #: redistricting/static/js/mapping.js:481
@@ -261,7 +269,7 @@ msgstr ""
 #: redistricting/static/js/emailplan.js:123
 #: redistricting/static/js/emailplan.js:132
 msgid "Error Emailing Plan"
-msgstr ""
+msgstr "Error Emailing Map"
 
 #: redistricting/static/js/emailplan.js:133
 msgid "Please try again later"
@@ -344,7 +352,7 @@ msgstr ""
 
 #: redistricting/static/js/mapping.js:538
 msgid "This plan contains no splits."
-msgstr ""
+msgstr "This map contains no splits."
 
 #: redistricting/static/js/mapping.js:539
 msgid "No Splits Found"
@@ -532,6 +540,10 @@ msgid ""
 "background, and the status will be updated when completed. Feel free to use "
 "the rest of the system in the meantime."
 msgstr ""
+"Data in the system has changed. This map needs to be reaggregated before it "
+"can be used. Click the button to begin reaggregation. This will run in the "
+"background, and the status will be updated when completed. Feel free to use "
+"the rest of the system in the meantime."
 
 #: redistricting/static/js/reaggregator.js:143
 msgid ""
@@ -539,6 +551,9 @@ msgid ""
 "it before it can be used. The status of the plan will be updated when "
 "reaggregation has completed."
 msgstr ""
+"Data in the system has changed. The owner of this map needs to reaggregate "
+"it before it can be used. The status of the map will be updated when "
+"reaggregation has completed."
 
 #: redistricting/static/js/reaggregator.js:151
 msgid "Reaggregation in progress"
@@ -550,6 +565,9 @@ msgid ""
 "reflect these changes. The plan will not be available until reaggregation "
 "has completed."
 msgstr ""
+"Data in the system has changed, and this map is currently reaggregating to "
+"reflect these changes. The map will not be available until reaggregation "
+"has completed."
 
 #: redistricting/static/js/reaggregator.js:166
 msgid "Unknown state"
@@ -557,7 +575,7 @@ msgstr ""
 
 #: redistricting/static/js/reaggregator.js:193
 msgid "Error reaggregating plan"
-msgstr ""
+msgstr "Error reaggregating map"
 
 #: redistricting/static/js/reports.js:148
 msgid "Please select one or more reports to be generated."
@@ -603,7 +621,7 @@ msgstr ""
 
 #: redistricting/static/js/shareddistricts.js:142
 msgid "Plan"
-msgstr ""
+msgstr "Map"
 
 #: redistricting/static/js/shareddistricts.js:199
 msgid "%(bodyMemberLongCap)s Name"
@@ -618,6 +636,8 @@ msgid ""
 "Your plan is at maximum capacity. Please delete a %(bodyMemberLong)s to "
 "enable pasting."
 msgstr ""
+"Your map is at maximum capacity. Please delete a %(bodyMemberLong)s to "
+"enable pasting."
 
 #: redistricting/static/js/shareddistricts.js:309
 msgid "2. Remove %(num_available_districts)s before submitting"
@@ -769,6 +789,7 @@ msgstr ""
 msgid ""
 "No plans have been submitted for this leaderboard. Please check back later."
 msgstr ""
+"No maps have been submitted for this leaderboard. Please check back later."
 
 #: static/js/ui.js:226 static/js/ui.js.c:256
 msgid "Validation Failed"
@@ -780,7 +801,7 @@ msgstr ""
 
 #: static/js/ui.js:239
 msgid "Update Leaderboards<br/>with Working Plan"
-msgstr ""
+msgstr "Update Leaderboards<br/>with Working Map"
 
 #: static/js/ui.js:271
 msgid "Download Scores<br/>as CSV"
@@ -800,7 +821,7 @@ msgstr ""
 
 #: static/js/ui.js:508
 msgid "Please enter a new name to publish your plan."
-msgstr ""
+msgstr "Please enter a new name to publish your map."
 
 #: static/js/ui.js:520
 msgid "Oops!"
