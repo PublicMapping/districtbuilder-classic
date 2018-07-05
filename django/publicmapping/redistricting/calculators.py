@@ -37,6 +37,7 @@ from django.template import Template, Context
 from decimal import Decimal
 from copy import copy
 import random
+import operator
 
 from django.db.models import Q
 import operator
@@ -804,21 +805,21 @@ class SumValues(CalculatorBase):
                 version, include_geom=False)
         elif 'list' in kwargs:
             lst = kwargs['list']
-            self.result = {'value': reduce(lambda x, y: x + y, lst)}
-            return
+            sumvals = sum(lst)
         else:
             return
 
-        sumvals = 0
+        if 'list' not in kwargs:
+            sumvals = 0
 
-        for district in districts:
-            argnum = 1
-            while ('value%d' % argnum) in self.arg_dict:
-                number = self.get_value('value%d' % argnum, district)
-                if not number is None:
-                    sumvals += number
+            for district in districts:
+                argnum = 1
+                while ('value%d' % argnum) in self.arg_dict:
+                    number = self.get_value('value%d' % argnum, district)
+                    if not number is None:
+                        sumvals += number
 
-                argnum += 1
+                    argnum += 1
 
         if self.get_value('target') is not None:
             target = self.get_value('target')
@@ -834,8 +835,12 @@ class SumValues(CalculatorBase):
         @return: The result wrapped in an HTML SPAN element: "<span>1</span>".
         """
         if not self.result is None and 'value' in self.result:
-            return self.template(
-                '<span>{{ result.value|floatformat:0 }}</span>')
+            if type(self.result['value']) == str:
+                return self.template(
+                    '<span>{{ result.value }}</span>')
+            else:
+                return self.template(
+                    '<span>{{ result.value|floatformat:0 }}</span>')
         return self.empty_html_result
 
 
@@ -929,16 +934,19 @@ class Threshold(CalculatorBase):
     """
     Determine a value, and indicate if it exceeds a threshold.
 
-    This calculator accepts two arguments: "value", and "threshold". The
-    result of this calculator is 1 or 0, to facilitate the combination of
-    scores. One example may be where the number of districts that exceed a
-    threshold are required.
+    This calculator accepts three arguments: "value", "threshold", and
+    "less_than". The result of this calculator is 1 or 0, to facilitate the
+    combination of scores. One example may be where the number of districts
+    that exceed a threshold are required.
 
-    If the value computed is less than or equal to the threshold, the
-    result value will be zero (0).
+    If the value computed is less than or equal to the threshold, the result
+    value will be zero (0).
 
-    If the value computed is greater than the threshold, the result value
-    will be one (1).
+    If the value computed is greater than the threshold, the result value will
+    be one (1).
+
+    The comparison operator defaults to "greater than" as described above but
+    it can be configured to be "less than" using the "less_than" flag.
 
     If this calculator is called with a plan, it will tally up the number
     of districts that exceed the designated threshold.
@@ -974,11 +982,18 @@ class Threshold(CalculatorBase):
         for district in districts:
             val = self.get_value('value', district)
             thr = self.get_value('threshold', district)
+            less_than = self.get_value('less_than', district)
 
             if val is None or thr is None:
                 continue
 
-            if float(val) > float(thr):
+            comparison_operator = (
+                operator.lt
+                if less_than is not None and less_than
+                else operator.gt
+            )
+
+            if comparison_operator(float(val), float(thr)):
                 count += 1
 
         self.result = {'value': count}
