@@ -10,9 +10,9 @@ Context:
 {% load i18n %}
 {% autoescape off %}
 {% trans "user name" %}: {{ user.username }}
-{% trans "plan id" %}:  {{ plan.pk }}
-{% trans "plan version" %}: {{ plan.version }}
-{% trans "plan name" %}: {{ plan.name }}
+{% trans "Plan id" %}:  {{ plan.pk }}
+{% trans "Plan version" %}: {{ plan.version }}
+{% trans "Plan Name" %}: {{ plan.name }}
 {% trans "legislative body" %}: {{ plan.legislative_body.name }}
 {% for key,value in post.items %}{{ key }}: {{ value }}
 {% endfor %}
