@@ -87,7 +87,7 @@ class Command(BaseCommand):
                 management.call_command(
                     'makemessages',
                     locale=[locale],
-                    extensions=['html', 'txt', 'email'],
+                    extensions=['html', 'txt', 'email', 'py'],
                     interactive=False,
                     verbosity=options.get('verbosity'),
                     ignore_patterns=['static/jquery/*.*'])

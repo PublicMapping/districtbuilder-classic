@@ -19,7 +19,7 @@ Context:
 {% trans "There was a problem importing a plan file from user" %} '{{ user.username }}'. {% trans "This user attempted to upload a file containing a plan but had some trouble.  The plan may have been imported." %}
 
 {% if plan %}
-{% trans "Plan name" %}: {{ plan.name }}
+{% trans "Plan Name" %}: {{ plan.name }}
 {% endif %}
 
 {% for error in errors %}
