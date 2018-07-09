@@ -1,0 +1,9 @@
+project = "District Builder"
+state = "My State"
+environment = "Staging"
+aws_region = "us-east-1"
+
+app_server_instance_type = "t2.small"
+ssl_certificate_arn = "arn:aws:acm:us-east-1:1234567891011:certificate/1a2b3c4d-a5b6-c7d8-e9f1-g2h3i4j5k6l"
+
+cdn_price_class = "PriceClass_100"
