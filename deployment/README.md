@@ -28,7 +28,7 @@ You'll need to generate an SSH Keypair using the AWS EC2 console. Download the p
 
 Before running `scripts/infra`, create an AWS S3 bucket to house the terraform remote state and configuration file. Make note of the bucket name, it will be the value of the `DB_SETTINGS_BUCKET` environment variable later on.
 
-You'll also need to create a `terraform.tfvars` file, which contains the configuration parameters for your infrastructure and application. You can see the available configuration options in [`sample.tfvars`](./terraform/sample.tfvars). Modify this file to suit your needs, and store it on S3 at `s3://${DB_SETTINGS_BUCKET}/terraform/terraform.tfvars`. Note that Application server configuration such as admin usernames and passwords are prefixed with `districtbuilder_` (i.e. `districtbuilder_admin_user`).
+You'll also need to create a `terraform.tfvars` file, which contains the configuration parameters for your infrastructure. You can see the available configuration options in [`sample.tfvars`](./terraform/sample.tfvars.example). Modify this file to suit your needs, and store it on S3 at `s3://${DB_SETTINGS_BUCKET}/terraform/${DB_STATE}/terraform.tfvars`, where `DB_STATE` is the lowercase 2-letter abbreviation for your state (i.e. `pa`, `va`).
 
 #### User Data
 
