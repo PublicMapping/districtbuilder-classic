@@ -1,19 +1,9 @@
 project = "District Builder"
 state = "My State"
 environment = "Staging"
+aws_region = "us-east-1"
 
-rds_database_username = "districtbuilder"
-rds_database_password = "districtbuilder"
-
+app_server_instance_type = "t2.small"
 ssl_certificate_arn = "arn:aws:acm:us-east-1:1234567891011:certificate/1a2b3c4d-a5b6-c7d8-e9f1-g2h3i4j5k6l"
 
-districtbuilder_database_name = "district_builder"
-districtbuilder_web_app_password = "password"
-districtbuilder_admin_user = "admin"
-districtbuilder_admin_email = "admin@example.com"
-districtbuilder_admin_password = "password"
-districtbuilder_redis_password = "password"
-districtbuilder_geoserver_password = "password"
-districtbuilder_mailer_host  = "localhost"
-districtbuilder_mailer_user  = "admin"
-districtbuilder_mailer_password  = "password"
+cdn_price_class = "PriceClass_100"
