@@ -619,7 +619,9 @@ function mapinit(srs,maxExtent) {
         fontSize: '10pt',
         fontFamily: 'Arial,Helvetica,sans-serif',
         fontWeight: '800',
-        labelAlign: 'cm'
+        labelAlign: 'cm',
+        labelOutlineColor: 'white',
+        labelOutlineWidth: '3'
     };
 
     // The style for the highlighted district layer
