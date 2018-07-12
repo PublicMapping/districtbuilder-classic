@@ -112,6 +112,9 @@ layerchooser = function(options) {
             _options.referenceLayerLabelsWrapper.toggle(DB.util.startsWith(selector.val(), "plan"))
         });
 
+        _options.referenceLayerSelect.val('geolevel.4');
+        _options.referenceLayerSelect.trigger('change');
+
         // Trigger event when the show reference layer labels checkbox changes
         _options.referenceLayerLabelsCheck.click(function() {
             _options.map.trigger('reference_layer_labels_checked', [$(this).is(':checked')]);
