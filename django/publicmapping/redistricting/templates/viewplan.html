@@ -1003,7 +1003,7 @@ Include the shared_districts markup if we're using the copy/paste tool
             </div>
 
 
-            <div class="dialog_step" {% if plan.is_community %}style="display: none;"{% endif %}>
+            <div class="dialog_step" style="display: none;">
                 <h2>2. {% trans "Choose District Thematic Map" %}</h2>
                 {% comment %}
 
@@ -1013,7 +1013,7 @@ Include the shared_districts markup if we're using the copy/paste tool
 
                 {% endcomment %}
                 <select id="districtby" class="indented fillwidth" autocomplete="off">
-                    <option value="0" name="None">{% trans "None" %}</option>
+                    <option value="0" name="None" selected="true">{% trans "None" %}</option>
                     <option value="-1" name="Compactness">{% trans "Compactness" %}</option>
                     <option value="-2" name="Contiguity">{% trans "Contiguity" %}</option>
                     {% if adjacency %}
@@ -1024,7 +1024,7 @@ Include the shared_districts markup if we're using the copy/paste tool
                     {% endif %}
                     {% for demo in demographics %}
                         {% if demo.isdisplayed == "true" %}
-                            <option value="{{ demo.id }}" name="{{ demo.value }}" {% if demo.isdefault == "true" %}selected="true"{% endif %}>
+                            <option value="{{ demo.id }}" name="{{ demo.value }}">
                                 {{ demo.text }}
                             </option>
                         {% endif %}
@@ -1033,7 +1033,7 @@ Include the shared_districts markup if we're using the copy/paste tool
             </div>
 
             <div class="dialog_step">
-              <h2>{% if plan.is_community %}2{% else %}3{% endif %}. {% trans "Choose a Reference Layer" %}</h2>
+              <h2>2. {% trans "Choose a Reference Layer" %}</h2>
               <select id="reference_layer_select" class="indented fillwidth" autocomplete="off">
                   <option value="None">{% trans "None" %}</option>
                   {% for snap in snaplayers %}
