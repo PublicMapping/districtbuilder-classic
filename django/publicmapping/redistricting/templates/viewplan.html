@@ -519,8 +519,14 @@
           </div>
 
           <div id="map_settings_content">
-             <div id="map_type_content_container"></div>
-            <div id="opacity_slider"></div>
+            <div>
+              <label>Opacity</label>
+              <div id="opacity_slider" style="display: inline-block; width: 50%;"></div>
+            </div>
+            <div>
+              <label>Basemap</label>
+              <div id="map_type_content_container" style="display: inline-block;"></div>
+            </div>
             <div id="reference_layer_id" class="layer_type_container">
                 <div id="reference_layer_label">{% trans "Reference Layer:" %}</div>
                 <div id="reference_layer_name">{% trans "None" %}</div>
