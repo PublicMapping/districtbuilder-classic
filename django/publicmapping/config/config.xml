@@ -29,52 +29,52 @@
                  short_name="Hispanic" displayed="false" sortkey="4" />
         <Subject id="popasn" field="ASIAN_NH" name="Total Asian Population"
                  short_name="As Amer" displayed="false" sortkey="5" />
+        <Subject id="votedem" field="SUM_D" name="Registered Democrat"
+                 short_name="Reg Dem" displayed="false" sortkey="6" />
+        <Subject id="voterep" field="SUM_R" name="Registered Republican"
+                 short_name="Reg Rep" displayed="false" sortkey="7" />
+        <Subject id="voteoth" field="SUM_O" name="Registered Other"
+                 short_name="Reg Oth" displayed="false" sortkey="8" />
         <Subject id="popnam" field="AI_AN_NH" name="Total American Indian/Alaskan Native"
-                 short_name="Nat Amer" displayed="false" sortkey="6" />        
+                 short_name="Nat Amer" displayed="false" sortkey="9" />
         <Subject id="poppild" field="HAW_OPI_NH" name="Total Native Hawaiian/Pacific Islander"
-                 short_name="Pac Isldr" displayed="false" sortkey="7" />
+                 short_name="Pac Isldr" displayed="false" sortkey="10" />
         <Subject id="popoth" field="OTHER_NH" name="Total Other Race"
-                 short_name="Other" displayed="false" sortkey="8" />
+                 short_name="Other" displayed="false" sortkey="11" />
         <Subject id="poptwo" field="TWO_MORE" name="Total Two or more races"
-                 short_name="Two+" displayed="false" sortkey="9" />
+                 short_name="Two+" displayed="false" sortkey="12" />
         <Subject id="vap" field="TOT18O_POP" name="Total Population 18 years and older (voting age)"
-                 short_name="Voters" displayed="false" sortkey="10" />
+                 short_name="Voters" displayed="false" sortkey="13" />
         <Subject id="vapwnh" field="O18WHITE" name="18 years and older, white alone"
-                 short_name="Wht Votng Age" displayed="false" sortkey="11" percentage_denominator="vap" />
+                 short_name="Wht Votng Age" displayed="false" sortkey="14" percentage_denominator="vap" />
         <Subject id="vaphisp" field="O18HISPAN" name="18 years and older, hispanic"
-                 short_name="Hisp. VAP" displayed="false" sortkey="12" percentage_denominator="vap" />
+                 short_name="Hisp. VAP" displayed="false" sortkey="15" percentage_denominator="vap" />
         <Subject id="vapblk" field="O18BLACK" name="18 years and older, Black or African American"
-                 short_name="Black VAP" displayed="false" sortkey="13" percentage_denominator="vap" />
+                 short_name="Black VAP" displayed="false" sortkey="16" percentage_denominator="vap" />
         <Subject id="vapnam" field="O18AI_AN" name="18 years and older, American Indian and Alaska Native alone"
-                 short_name="Nat Amer VAP" displayed="false" sortkey="14" percentage_denominator="vap" />
+                 short_name="Nat Amer VAP" displayed="false" sortkey="17" percentage_denominator="vap" />
         <Subject id="vapasn" field="O18ASIAN" name="18 years and older, Asian alone"
-                 short_name="As Amer VAP" displayed="false" sortkey="15" percentage_denominator="vap" />
+                 short_name="As Amer VAP" displayed="false" sortkey="18" percentage_denominator="vap" />
         <Subject id="vappild" field="O18NHI_PI" name="18 years and older, Native Hawaiian and Other Pacific Islander"
-                 short_name="Pac Isldr VAP" displayed="false" sortkey="16" percentage_denominator="vap" />
+                 short_name="Pac Isldr VAP" displayed="false" sortkey="19" percentage_denominator="vap" />
         <Subject id="vapoth" field="O18_SOR" name="18 years and older, Some Other Race alone"
-                 short_name="Other VAP" displayed="false" sortkey="17" percentage_denominator="vap" />
+                 short_name="Other VAP" displayed="false" sortkey="20" percentage_denominator="vap" />
         <Subject id="vaptwo" field="O18_2MORE" name="18 years and older, Two or More Races"
-                 short_name="Two+ VAP" displayed="false" sortkey="18" percentage_denominator="vap" />
+                 short_name="Two+ VAP" displayed="false" sortkey="21" percentage_denominator="vap" />
         <Subject id="prison" field="CF_POP" name="Prison population"
-                 short_name="Prison Pop." displayed="false" sortkey="19" />
+                 short_name="Prison Pop." displayed="false" sortkey="22" />
         <Subject id="ageu18" field="U18_POP" name="Age - under 18"
-                 short_name="Under 18" displayed="false" sortkey="20" />
+                 short_name="Under 18" displayed="false" sortkey="23" />
         <Subject id="age1824" field="A18_24_POP" name="Age - 18-24"
-                 short_name="18-24" displayed="false" sortkey="21" />
+                 short_name="18-24" displayed="false" sortkey="24" />
         <Subject id="age2534" field="A25_34_POP" name="Age - 25-34"
-                 short_name="25-34" displayed="false" sortkey="22" />
+                 short_name="25-34" displayed="false" sortkey="25" />
         <Subject id="age3549" field="A35_49_POP" name="Age - 35-49"
-                 short_name="35-49" displayed="false" sortkey="23" />
+                 short_name="35-49" displayed="false" sortkey="26" />
         <Subject id="age5064" field="A50_64_POP" name="Age - 50-64"
-                 short_name="50-64" displayed="false" sortkey="24" />
+                 short_name="50-64" displayed="false" sortkey="27" />
         <Subject id="age65o" field="A65O_POP" name="Age - 65 and over"
-                 short_name="65+" displayed="false" sortkey="25" />
-        <Subject id="votedem" field="SUM_D" name="Voted Democrat"
-                 short_name="Vote Dem" displayed="false" sortkey="26" />
-        <Subject id="voterep" field="SUM_R" name="Voted Republican"
-                 short_name="Vote Rep" displayed="false" sortkey="27" />
-        <Subject id="voteoth" field="SUM_O" name="Voted Other"
-                 short_name="Vote Oth" displayed="false" sortkey="28" />
+                 short_name="65+" displayed="false" sortkey="28" />
     </Subjects>
 
     <Scoring>

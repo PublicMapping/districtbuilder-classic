@@ -497,7 +497,7 @@ def commonplan(request, planid):
         reporting_template = None
         tags = []
         calculator_reports = []
-    demos = Subject.objects.all().order_by('sort_key')[0:5]
+    demos = Subject.objects.all().order_by('sort_key')[0:8]
     layers = []
     snaplayers = []
 
