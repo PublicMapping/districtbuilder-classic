@@ -2467,11 +2467,51 @@ function mapinit(srs,maxExtent) {
             return rules;
         };
 
+        var getDistrictShadingRules = function() {
+            districts = [
+                { id:1, name:'District 1', color: '#ffd8b1'},
+                { id:2, name:'District 2', color: '#808000'},
+                { id:3, name:'District 3', color: '#aaffc3'},
+                { id:4, name:'District 4', color: '#800000'},
+                { id:5, name:'District 5', color: '#fffac8'},
+                { id:6, name:'District 6', color: '#aa6e28'},
+                { id:7, name:'District 7', color: '#e6beff'},
+                { id:8, name:'District 8', color: '#008080'},
+                { id:9, name:'District 9', color: '#fabebe'},
+                { id:10, name:'District 10', color: '#d2f53c'},
+                { id:11, name:'District 11', color: '#f032e6'},
+                { id:12, name:'District 12', color: '#46f0f0'},
+                { id:13, name:'District 13', color: '#911eb4'},
+                { id:14, name:'District 14', color: '#f58231'},
+                { id:15, name:'District 15', color: '#0082c8'},
+                { id:16, name:'District 16', color: '#ffe119'},
+                { id:17, name:'District 17', color: '#3cb44b'},
+                { id:18, name:'District 18', color: '#e6194b'},
+            ];
+
+            return districts.map(function(d) {
+                return new OpenLayers.Rule({
+                    filter: new OpenLayers.Filter.Function({
+                        evaluate: function(feature) {
+                            return feature.district_id === d.id;
+                        }
+                    }),
+                    symbolizer: {
+                        fillColor: d.color,
+                        fillOpacity: 0.5,
+                        strokeColor: '#000000',
+                        strokeWidth: 2,
+                        strokeOpacity: 0.67
+                    }
+                });
+            });
+        }
+
         var callbackDistrict = function(sld) {
             var userStyle = getDefaultStyle(sld,getDistrictBy().name);
             var newStyle = new OpenLayers.Style(districtStyle, {
                 title: userStyle.title,
-                rules: userStyle.rules.concat(getLockedRules())
+                rules: userStyle.rules.concat(getDistrictShadingRules()).concat(getLockedRules())
             });
             $('#map').trigger('style_changed', [newStyle, districtLayer.name]);
          };
@@ -2621,7 +2661,7 @@ function mapinit(srs,maxExtent) {
                 var newOptions = OpenLayers.Util.extend({}, districtStyle);
                 var newStyle = new OpenLayers.Style(newOptions,{
                     title:'Districts',
-                    rules: getLockedRules()
+                    rules: getDistrictShadingRules().concat(getLockedRules())
                 });
                 $('#map').trigger('style_changed', [newStyle, districtLayer.name]);
                 return;
