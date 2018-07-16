@@ -1796,7 +1796,10 @@ function mapinit(srs,maxExtent) {
                     "White",
                     "Black",
                     "Hispanic",
-                    "As Amer"
+                    "As Amer",
+                    "Reg Dem",
+                    "Reg Rep",
+                    "Reg Oth"
                 ];
                 // sort the characteristics alphabetically by label
                 ctics = $(ctics).sort(function(a, b) {
