@@ -44,6 +44,12 @@ function write_settings() {
 
 }
 
+function make_translations() {
+    echo "Create and compile translations"
+    docker-compose \
+        exec -T django ./manage.py makelanguagefiles
+}
+
 function change_geoserver_admin_password() {
     docker-compose \
         exec -T geoserver ./bin/change_admin_password.sh
@@ -74,6 +80,7 @@ then
         docker-compose up -d "${MIGRATION_CONTAINERS[@]}"
         run_migrations
         reconfigure
+        make_translations
         change_geoserver_admin_password
     fi
     exit

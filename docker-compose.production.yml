@@ -50,15 +50,3 @@ services:
       driver: syslog
       options:
         tag: districtbuilder-geoserver
-
-  languages:
-    image: districtbuilder-languages:${GIT_COMMIT:-latest}
-    container_name: districtbuilder-languages
-    restart: on-failure
-    volumes:
-      - /opt/district-builder/user-data/config_settings.py:/usr/src/app/publicmapping/config_settings.py
-      - /opt/district-builder/user-data/config.xml:/usr/src/app/config/config.xml
-    logging:
-      driver: syslog
-      options:
-        tag: districtbuilder-languages
