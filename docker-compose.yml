@@ -80,18 +80,6 @@ services:
     ports:
       - "${MAP_SERVER_PORT}:${WEB_APP_PORT}"
 
-  languages:
-    build:
-      context: ./django/publicmapping
-    env_file:
-      - .env
-    entrypoint: /usr/local/bin/python
-    command:
-      - "manage.py"
-      - "makelanguagefiles"
-    depends_on:
-      - django
-
 volumes:
   reports:
   data:
