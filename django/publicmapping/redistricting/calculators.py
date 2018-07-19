@@ -210,7 +210,7 @@ class CalculatorBase(object):
                 except:
                     # No problem, it may be a string
                     pass
-        elif argtype == 'subject' and not district is None:
+        elif argtype == 'subject' and district is not None:
             # This method is more fault tolerant than _set.get, since it
             # won't throw an exception if the item doesn't exist.
             add_subject = True
@@ -2399,9 +2399,9 @@ class DistrictSplitCounter(CalculatorBase):
         Calculate splits between a district and a target geolevel.
 
         @keyword district: A L{District} whose splits should be computed.
-        @keyword boundary_id: The ID of the geolevel to compare for splits.
+        @keyword geolevel_id: The ID of the geolevel to compare for splits.
         """
-        if not 'district' in kwargs:
+        if 'district' not in kwargs:
             return
 
         district = kwargs['district']
