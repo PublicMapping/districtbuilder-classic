@@ -421,6 +421,16 @@
                 <Argument name="target" value="18"/>
             </ScoreFunction>
 
+            <ScoreFunction id="congress_plan_splits_count" type="plan"
+                calculator="redistricting.calculators.SplitCounter"
+                label="Split Counties"
+                description="The number of counties that are split by a district within the plan."
+            >
+                <!-- 2 is the County level for this config -->
+                <Argument name="boundary_id" value="geolevel.2" />
+                <Argument name="only_total" value="1" />
+            </ScoreFunction>
+
             <ScoreFunction id="congress_plan_polsbypopper" type="plan"
                 calculator="redistricting.calculators.PolsbyPopper"
                 label="Average Compactness"
@@ -537,6 +547,18 @@
                 <Score ref="district_polsbypopper" />
             </ScorePanel>
 
+	    <!-- Submission One-page Summary -->
+            <ScorePanel id="plan_submission_summary" type="plan_summary" position="1"
+                title="Plan Summary" cssclass="plan_summary congressional" template="plan_summary.html">
+                <Score ref="congress_plan_equipopulation_summary"/>
+                <Score ref="congress_plan_noncontiguous"/>
+                <Score ref="congress_plan_polsbypopper"/>
+                <Score ref="congress_plan_equivalence"/>
+                <Score ref="congress_plan_competitiveness"/>
+                <Score ref="congress_plan_vapnownh_thresh"/>
+                <Score ref="congress_plan_splits_count" />
+            </ScorePanel>
+
             <!-- Demographics -->
             <ScorePanel id="congressional_panel_demo" type="district" position="2"
                 title="Demographics" cssclass="district_demographics congressional"
@@ -578,6 +600,11 @@
                 <ScorePanel ref="panel_compact_mine" />
                 <ScorePanel ref="panel_equivalence_mine" />
                 <ScorePanel ref="panel_competitiveness_mine" />
+            </ScoreDisplay>
+
+            <ScoreDisplay id="congress_submission_summary" legislativebodyref="congress" type="sidebar"
+                title="Split Counties">
+                <ScorePanel ref="plan_submission_summary" />
             </ScoreDisplay>
 
              <!-- Sidebar configuration -->

@@ -7,8 +7,7 @@ from django.core import serializers
 from django.template import loader
 from django.utils import translation
 
-from django.contrib.auth.models import User
-from redistricting.models import ScoreDisplay, PlanSubmission
+from redistricting.models import ScorePanel, PlanSubmission
 
 
 class Command(BaseCommand):
@@ -26,24 +25,18 @@ class Command(BaseCommand):
             return
 
         template = loader.get_template('submission_summary.html')
-        admin = User.objects.get(username='admin')
         # We're going to reuse the summary panel from the main map editing page
-        score_display = ScoreDisplay.objects.get(
-            owner=admin,
-            legislative_body=submission.plan.legislative_body,
-            title='Basic Information'
-        )
+        score_panel = ScorePanel.objects.filter(name='plan_submission_summary')[0]
+        districts = [d for d in submission.plan.district_set.all() if not d.is_unassigned]
         # The above Score Display is split into two ScorePanels: the top summary panel and the
         # bottom panel of per-district scores. We want the summary panel.
         # The type field is apparently limited to three options: 1) plan 2) plan_summary 3) district
-        score_panel = score_display.scorepanel_set.filter(type='plan_summary')[0]
         scores_html = score_panel.render(submission.plan)
         GeoJSONSerializer = serializers.get_serializer('geojson')
         serializer = GeoJSONSerializer()
         # is_unassigned is a property so we can't use queryset filtering
         # The unassigned district is a catch-all for geounits that haven't been assigned to a real
         # district. We don't want to display this on the submission map, so filter it out here.
-        districts = [d for d in submission.plan.district_set.all() if not d.is_unassigned]
         geojson = serializer.serialize(
             districts,
             geometry_field='geom',
