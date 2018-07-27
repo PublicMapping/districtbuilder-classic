@@ -512,6 +512,54 @@
                 <SubjectArgument name="denominator" ref="poptot" />
             </ScoreFunction>
 
+            <ScoreFunction id="report_score_percent_age0018_population_congress" type="district"
+                calculator="redistricting.reportcalculators.PopulationPercent"
+                label="Ages under 18" >
+                <LegislativeBody ref="congress"/>
+                <SubjectArgument name="numerator" ref="ageu18" />
+                <SubjectArgument name="denominator" ref="poptot" />
+            </ScoreFunction>
+
+            <ScoreFunction id="report_score_percent_age1824_population_congress" type="district"
+                calculator="redistricting.reportcalculators.PopulationPercent"
+                label="Ages 18-24" >
+                <LegislativeBody ref="congress"/>
+                <SubjectArgument name="numerator" ref="age1824" />
+                <SubjectArgument name="denominator" ref="poptot" />
+            </ScoreFunction>
+
+            <ScoreFunction id="report_score_percent_age2534_population_congress" type="district"
+                calculator="redistricting.reportcalculators.PopulationPercent"
+                label="Ages 25-34" >
+                <LegislativeBody ref="congress"/>
+                <SubjectArgument name="numerator" ref="age2534" />
+                <SubjectArgument name="denominator" ref="poptot" />
+            </ScoreFunction>
+
+            <ScoreFunction id="report_score_percent_age3549_population_congress" type="district"
+                calculator="redistricting.reportcalculators.PopulationPercent"
+                label="Ages 35-49" >
+                <LegislativeBody ref="congress"/>
+                <SubjectArgument name="numerator" ref="age3549" />
+                <SubjectArgument name="denominator" ref="poptot" />
+            </ScoreFunction>
+
+            <ScoreFunction id="report_score_percent_age5064_population_congress" type="district"
+                calculator="redistricting.reportcalculators.PopulationPercent"
+                label="Ages 50-64" >
+                <LegislativeBody ref="congress"/>
+                <SubjectArgument name="numerator" ref="age5064" />
+                <SubjectArgument name="denominator" ref="poptot" />
+            </ScoreFunction>
+
+            <ScoreFunction id="report_score_percent_age65o_population_congress" type="district"
+                calculator="redistricting.reportcalculators.PopulationPercent"
+                label="Ages 65+" >
+                <LegislativeBody ref="congress"/>
+                <SubjectArgument name="numerator" ref="age65o" />
+                <SubjectArgument name="denominator" ref="poptot" />
+            </ScoreFunction>
+
             <ScoreFunction id="report_score_compactness_lw" type="district"
                 calculator="redistricting.reportcalculators.Compactness"
                 label="Length/Width" >
@@ -638,12 +686,12 @@
                 <Score ref="report_score_percent_pacific_islander_population_congress" />
                 <Score ref="report_score_percent_other_races_population_congress" />
                 <Score ref="report_score_percent_two_races_population_congress" />
-                <Score ref="report_score_total_age0018_population_congress" />
-                <Score ref="report_score_total_age1824_population_congress" />
-                <Score ref="report_score_total_age2534_population_congress" />
-                <Score ref="report_score_total_age3549_population_congress" />
-                <Score ref="report_score_total_age5064_population_congress" />
-                <Score ref="report_score_total_age65o_population_congress" />
+                <Score ref="report_score_percent_age0018_population_congress" />
+                <Score ref="report_score_percent_age1824_population_congress" />
+                <Score ref="report_score_percent_age2534_population_congress" />
+                <Score ref="report_score_percent_age3549_population_congress" />
+                <Score ref="report_score_percent_age5064_population_congress" />
+                <Score ref="report_score_percent_age65o_population_congress" />
             </ScorePanel>
 
             <ScorePanel id="report_panel_compactness" type="district" position="1"

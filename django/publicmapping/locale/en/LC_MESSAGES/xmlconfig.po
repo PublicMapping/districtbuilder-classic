@@ -3427,3 +3427,75 @@ msgstr "Two or more races"
 #: /usr/src/app/config/config.xml:509
 msgid "report_score_percent_two_races_population_congress long description"
 msgstr ""
+
+#: /usr/src/app/config/config.xml:517
+msgid "report_score_percent_age0018_population_congress short label"
+msgstr "Ages under 18"
+
+#: /usr/src/app/config/config.xml:517
+msgid "report_score_percent_age0018_population_congress label"
+msgstr "Ages under 18"
+
+#: /usr/src/app/config/config.xml:517
+msgid "report_score_percent_age0018_population_congress long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:525
+msgid "report_score_percent_age1824_population_congress short label"
+msgstr "Ages 18-24"
+
+#: /usr/src/app/config/config.xml:525
+msgid "report_score_percent_age1824_population_congress label"
+msgstr "Ages 18-24"
+
+#: /usr/src/app/config/config.xml:525
+msgid "report_score_percent_age1824_population_congress long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:533
+msgid "report_score_percent_age2534_population_congress short label"
+msgstr "Ages 25-34"
+
+#: /usr/src/app/config/config.xml:533
+msgid "report_score_percent_age2534_population_congress label"
+msgstr "Ages 25-34"
+
+#: /usr/src/app/config/config.xml:533
+msgid "report_score_percent_age2534_population_congress long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:541
+msgid "report_score_percent_age3549_population_congress short label"
+msgstr "Ages 35-49"
+
+#: /usr/src/app/config/config.xml:541
+msgid "report_score_percent_age3549_population_congress label"
+msgstr "Ages 35-49"
+
+#: /usr/src/app/config/config.xml:541
+msgid "report_score_percent_age3549_population_congress long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:549
+msgid "report_score_percent_age5064_population_congress short label"
+msgstr "Ages 50-64"
+
+#: /usr/src/app/config/config.xml:549
+msgid "report_score_percent_age5064_population_congress label"
+msgstr "Ages 50-64"
+
+#: /usr/src/app/config/config.xml:549
+msgid "report_score_percent_age5064_population_congress long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:557
+msgid "report_score_percent_age65o_population_congress short label"
+msgstr "Ages 65+"
+
+#: /usr/src/app/config/config.xml:557
+msgid "report_score_percent_age65o_population_congress label"
+msgstr "Ages 65+"
+
+#: /usr/src/app/config/config.xml:557
+msgid "report_score_percent_age65o_population_congress long description"
+msgstr ""

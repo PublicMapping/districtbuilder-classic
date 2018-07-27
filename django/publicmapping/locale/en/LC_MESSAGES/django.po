@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-31 13:25-0400\n"
+"POT-Creation-Date: 2018-07-31 16:46-0400\n"
 "PO-Revision-Date: 2012-11-06 16:01-0600\n"
 "Last-Translator: David Zwarg <dzwarg@azavea.com>\n"
 "Language-Team: Azavea <info@azavea.com>\n"
@@ -79,7 +79,7 @@ msgid ""
 msgstr ""
 
 #: publicmapping/templates/account.html:43
-#: redistricting/templates/editplan.html:343
+#: redistricting/templates/editplan.html:326
 msgid "Email Address"
 msgstr ""
 
@@ -90,12 +90,12 @@ msgid ""
 msgstr ""
 
 #: publicmapping/templates/account.html:51
-#: redistricting/templates/editplan.html:327
+#: redistricting/templates/editplan.html:310
 msgid "First Name"
 msgstr ""
 
 #: publicmapping/templates/account.html:58
-#: redistricting/templates/editplan.html:331
+#: redistricting/templates/editplan.html:314
 msgid "Last Name"
 msgstr ""
 
@@ -117,7 +117,7 @@ msgid "Sign Up"
 msgstr ""
 
 #: publicmapping/templates/account.html:98
-#: redistricting/templates/editplan.html:470
+#: redistricting/templates/editplan.html:453
 msgid "Indicates required field"
 msgstr ""
 
@@ -459,12 +459,10 @@ msgid "Homepage tweet text"
 msgstr ""
 
 #: publicmapping/templates/index.html:136
-#: redistricting/templates/viewplan.html:862
 msgid "Tweet"
 msgstr ""
 
 #: publicmapping/templates/index.html:150
-#: redistricting/templates/viewplan.html:244
 msgid "Share"
 msgstr ""
 
@@ -964,7 +962,7 @@ msgid "Population Percent"
 msgstr ""
 
 #: redistricting/reportcalculators.py:153
-#: redistricting/templates/viewplan.html:1051
+#: redistricting/templates/viewplan.html:955
 msgid "Compactness"
 msgstr ""
 
@@ -1157,7 +1155,7 @@ msgid "Far Under target"
 msgstr ""
 
 #: redistricting/templates/basic_information.html:81
-#: redistricting/templates/viewplan.html:1052
+#: redistricting/templates/viewplan.html:956
 msgid "Contiguity"
 msgstr ""
 
@@ -1173,6 +1171,12 @@ msgstr ""
 #: redistricting/templates/community_demographics.html:43
 msgid "Community"
 msgstr ""
+
+#: redistricting/templates/competitiveness.html:64
+#, fuzzy
+#| msgid "Sorry, there is no demographic data for this plan"
+msgid "Sorry, there is no competitiveness data for this plan"
+msgstr "Sorry, there is no demographic data for this map"
 
 #: redistricting/templates/editplan.html:35
 msgid "Undo"
@@ -1341,127 +1345,14 @@ msgstr ""
 msgid "Select Multi-<br/>Member Districts"
 msgstr ""
 
-#: redistricting/templates/editplan.html:154
-msgid "Submit Final Plan to Contest"
-msgstr "Submit Final Map to Contest"
-
-#: redistricting/templates/editplan.html:155
-msgid ""
-"You can submit your completed plan to be considered for the contest by "
-"filling out this form."
-msgstr ""
-"You can submit your completed map to be considered for the contest by "
-"filling out this form."
-
-#: redistricting/templates/editplan.html:156
-#: redistricting/templates/editplan.html:466
-msgid "Submit Final Plan"
-msgstr "Submit Final Map"
-
-#: redistricting/templates/editplan.html:162
-msgid "Share Plan With All Users"
-msgstr "Share Map With All Users"
-
-#: redistricting/templates/editplan.html:163
-#, python-format
-msgid ""
-"By sharing a copy of your %(plan_text)s below, you are making your "
-"%(plan_text)s available to all other users in the system. Give your "
-"%(plan_text)s a unique name in order to share it. A copy of your current "
-"%(plan_text)s will be added to the \"Shared\" section of the plan chooser."
-msgstr ""
-"By sharing a copy of your %(plan_text)s below, you are making your "
-"%(plan_text)s available to all other users in the system. Give your "
-"%(plan_text)s a unique name in order to share it. A copy of your current "
-"%(plan_text)s will be added to the \"Shared\" section of the map chooser."
-
-#: redistricting/templates/editplan.html:165
-#, python-format
-msgid "Name your shared %(plan_text)s"
-msgstr ""
-
-#: redistricting/templates/editplan.html:167
-msgid "Save and Share"
-msgstr ""
-
-#: redistricting/templates/editplan.html:171
-msgid "Congratulations!"
-msgstr ""
-
-#: redistricting/templates/editplan.html:172
-#, python-format
-msgid ""
-"You have successfully shared your %(plan_text)s. You can share your "
-"%(plan_text)s with others by giving them this link:"
-msgstr ""
-
-#: redistricting/templates/editplan.html:174
-#, python-format
-msgid "Continue Editing Current %(plantext)s"
-msgstr ""
-
-#: redistricting/templates/editplan.html:175
-#, python-format
-msgid "Select New %(plan_text)s to Edit"
-msgstr ""
-
-#: redistricting/templates/editplan.html:183
-#: redistricting/templates/editplan.html:195
-msgid "Verify and Submit Plan to Leaderboards"
-msgstr "Verify and Submit Map to Leaderboards"
-
-#: redistricting/templates/editplan.html:184
-msgid ""
-"In order to be considered for placement on the leaderboards your plan must "
-"meet the criteria for creating a legal redistricting plan. Keep in mind that "
-"as soon as you edit a verified plan, it will automatically become "
-"\"unverified\" and you will need to re-verify it in order for it to again be "
-"considered for the leaderboards."
-msgstr ""
-"In order to be considered for placement on the leaderboards your map must "
-"meet the criteria for creating a legal redistricting map. Keep in mind that "
-"as soon as you edit a verified map, it will automatically become \"unverified"
-"\" and you will need to re-verify it in order for it to again be considered "
-"for the leaderboards."
-
-#: redistricting/templates/editplan.html:185
-msgid ""
-"By verifying your plan, you are <em><strong>not</strong></em> sharing your "
-"plan with other users. Your plan title and user name will simply show up in "
-"the top ten lists (if your plan ranks in the top ten)."
-msgstr ""
-"By verifying your map, you are <em><strong>not</strong></em> sharing your "
-"map with other users. Your map title and user name will simply show up in "
-"the top ten lists (if your map ranks in the top ten)."
-
-#: redistricting/templates/editplan.html:187
-msgid "How to verify and submit your plan:"
-msgstr "How to verify and submit your map:"
-
 #: redistricting/templates/editplan.html:189
-msgid "Click the \"Verify and Submit to Leaderboards\" button."
-msgstr ""
-
-#: redistricting/templates/editplan.html:190
-msgid "If verified, you will be taken to the Leaderboard page."
-msgstr ""
-
-#: redistricting/templates/editplan.html:191
-msgid ""
-"Check the leaderboards to see if your plan ranks in any of the top ten score "
-"types."
-msgstr ""
-"Check the leaderboards to see if your map ranks in any of the top ten score "
-"types."
-
-#: redistricting/templates/editplan.html:206
 msgid ""
 "Choose communities to paste into your map. A map can contain any number of "
 "communities. If you would like to remove communities from your map, use the "
 "community unassign tool."
 msgstr ""
 
-#: redistricting/templates/editplan.html:208
+#: redistricting/templates/editplan.html:191
 msgid ""
 "Choose districts to paste into your plan.  A plan has a maximum number of "
 "districts allowed by law.  If you would like to paste districts into a plan, "
@@ -1474,51 +1365,51 @@ msgstr ""
 "you must have fewer districts in your map than the maximum allowed.  If you "
 "would like to remove districts from your map, use the district unassign tool."
 
-#: redistricting/templates/editplan.html:212
+#: redistricting/templates/editplan.html:195
 #, python-format
 msgid "1. Choose %(plantext)s"
 msgstr ""
 
-#: redistricting/templates/editplan.html:218
+#: redistricting/templates/editplan.html:201
 #, python-format
 msgid "2. Select %(bodymember)s to copy"
 msgstr ""
 
-#: redistricting/templates/editplan.html:225
+#: redistricting/templates/editplan.html:208
 #, python-format
 msgid "Click on a %(body_member_long_label)s's name to see a map"
 msgstr ""
 
-#: redistricting/templates/editplan.html:231
+#: redistricting/templates/editplan.html:214
 #, python-format
 msgid "3. Paste selected %(body_member_long_label)s into working %(plan_text)s"
 msgstr ""
 
-#: redistricting/templates/editplan.html:265
+#: redistricting/templates/editplan.html:248
 msgid ""
 "Click on a row to edit the number of members for the selected district. "
 "Press ENTER to complete editing a district."
 msgstr ""
 
-#: redistricting/templates/editplan.html:269
+#: redistricting/templates/editplan.html:252
 msgid ""
 "When all desired edits are made, press the Save button to save all changes "
 "to the database."
 msgstr ""
 
-#: redistricting/templates/editplan.html:273
+#: redistricting/templates/editplan.html:256
 msgid "Target # of representatives:"
 msgstr ""
 
-#: redistricting/templates/editplan.html:274
+#: redistricting/templates/editplan.html:257
 msgid "Target # of multi-member districts:"
 msgstr ""
 
-#: redistricting/templates/editplan.html:275
+#: redistricting/templates/editplan.html:258
 msgid "Target # of members per multi-member district:"
 msgstr ""
 
-#: redistricting/templates/editplan.html:278
+#: redistricting/templates/editplan.html:261
 msgid ""
 "Your plan currently has <span id=\"multi_num_reps\" class=\"multi_val\"></"
 "span> representatives."
@@ -1526,7 +1417,7 @@ msgstr ""
 "Your map currently has <span id=\"multi_num_reps\" class=\"multi_val\"></"
 "span> representatives."
 
-#: redistricting/templates/editplan.html:279
+#: redistricting/templates/editplan.html:262
 msgid ""
 "Your plan currently has <span id=\"multi_num_dists\" class=\"multi_val\"></"
 "span> multi-member districts."
@@ -1534,52 +1425,52 @@ msgstr ""
 "Your map currently has <span id=\"multi_num_dists\" class=\"multi_val\"></"
 "span> multi-member districts."
 
-#: redistricting/templates/editplan.html:282
+#: redistricting/templates/editplan.html:265
 #: redistricting/templates/viewplan.html:409
 msgid "Save"
 msgstr ""
 
-#: redistricting/templates/editplan.html:335
+#: redistricting/templates/editplan.html:318
 msgid "Full Names of Team Members (if applicable)"
 msgstr ""
 
-#: redistricting/templates/editplan.html:339
+#: redistricting/templates/editplan.html:322
 msgid "Team Name (if applicable)"
 msgstr ""
 
-#: redistricting/templates/editplan.html:347
+#: redistricting/templates/editplan.html:330
 msgid "Street Address"
 msgstr ""
 
-#: redistricting/templates/editplan.html:351
+#: redistricting/templates/editplan.html:334
 msgid "Phone Number"
 msgstr ""
 
-#: redistricting/templates/editplan.html:355
+#: redistricting/templates/editplan.html:338
 msgid "County"
 msgstr ""
 
-#: redistricting/templates/editplan.html:429
+#: redistricting/templates/editplan.html:412
 msgid "Zip code"
 msgstr ""
 
-#: redistricting/templates/editplan.html:433
+#: redistricting/templates/editplan.html:416
 msgid "Contest division"
 msgstr ""
 
-#: redistricting/templates/editplan.html:436
+#: redistricting/templates/editplan.html:419
 msgid "Youth (Grades 5-12)"
 msgstr ""
 
-#: redistricting/templates/editplan.html:437
+#: redistricting/templates/editplan.html:420
 msgid "Higher Ed (Undergraduate, Graduate, Professional)"
 msgstr ""
 
-#: redistricting/templates/editplan.html:438
+#: redistricting/templates/editplan.html:421
 msgid "Adult (Non-student)"
 msgstr ""
 
-#: redistricting/templates/editplan.html:444
+#: redistricting/templates/editplan.html:427
 msgid ""
 "Values &ndash; tell us what values, considerations and trade-offs you made "
 "in your plan:"
@@ -1587,7 +1478,7 @@ msgstr ""
 "Values &ndash; tell us what values, considerations and trade-offs you made "
 "in your map:"
 
-#: redistricting/templates/editplan.html:454
+#: redistricting/templates/editplan.html:437
 msgid ""
 "\n"
 "                    By submitting a plan for consideration, you are "
@@ -1610,31 +1501,35 @@ msgstr ""
 "                    map whenever feasible.\n"
 "                    "
 
-#: redistricting/templates/editplan.html:488
+#: redistricting/templates/editplan.html:449
+msgid "Submit Final Plan"
+msgstr "Submit Final Map"
+
+#: redistricting/templates/editplan.html:471
 msgid "Community Info"
 msgstr ""
 
-#: redistricting/templates/editplan.html:489
+#: redistricting/templates/editplan.html:472
 msgid "0"
 msgstr ""
 
-#: redistricting/templates/editplan.html:493
+#: redistricting/templates/editplan.html:476
 msgid "1. Edit Community Label:"
 msgstr ""
 
-#: redistricting/templates/editplan.html:500
+#: redistricting/templates/editplan.html:483
 msgid "2. Edit Community Type:"
 msgstr ""
 
-#: redistricting/templates/editplan.html:511
+#: redistricting/templates/editplan.html:494
 msgid "3. Comments:"
 msgstr ""
 
-#: redistricting/templates/editplan.html:519
+#: redistricting/templates/editplan.html:502
 msgid "Oops!"
 msgstr ""
 
-#: redistricting/templates/editplan.html:520
+#: redistricting/templates/editplan.html:503
 msgid "Sorry, your information could not be saved. Please try again later."
 msgstr ""
 
@@ -1865,7 +1760,7 @@ msgstr ""
 
 #: redistricting/templates/viewplan.html:307
 #: redistricting/templates/viewplan.html:309
-#: redistricting/templates/viewplan.html:1093
+#: redistricting/templates/viewplan.html:997
 msgid "Select Plan Type"
 msgstr "Select Map Type"
 
@@ -1940,7 +1835,7 @@ msgid "User Name:"
 msgstr ""
 
 #: redistricting/templates/viewplan.html:390
-#: redistricting/templates/viewplan.html:942
+#: redistricting/templates/viewplan.html:846
 msgid "Plan Name:"
 msgstr "Map Name:"
 
@@ -2019,9 +1914,9 @@ msgid "Reference Layer:"
 msgstr ""
 
 #: redistricting/templates/viewplan.html:546
-#: redistricting/templates/viewplan.html:1029
-#: redistricting/templates/viewplan.html:1050
-#: redistricting/templates/viewplan.html:1072
+#: redistricting/templates/viewplan.html:933
+#: redistricting/templates/viewplan.html:954
+#: redistricting/templates/viewplan.html:976
 msgid "None"
 msgstr ""
 
@@ -2135,130 +2030,87 @@ msgstr "My Ranked Maps"
 msgid "Select Legislative Body"
 msgstr ""
 
-#: redistricting/templates/viewplan.html:817
-#, python-format
-msgid "Share a %(plan_text_title)s"
-msgstr ""
-
-#: redistricting/templates/viewplan.html:830
-msgid "This plan has been shared"
-msgstr "This map has been shared"
-
-#: redistricting/templates/viewplan.html:831
-msgid ""
-"Anyone can view this plan by visiting the following URL in a web browser:"
-msgstr ""
-"Anyone can view this map by visiting the following URL in a web browser:"
-
-#: redistricting/templates/viewplan.html:860
-msgid "Shared map tweet text"
-msgstr ""
-
-#: redistricting/templates/viewplan.html:893
-msgid "Redistricting plan by DistrictBuilder"
-msgstr "Redistricting map by DistrictBuilder"
-
-#: redistricting/templates/viewplan.html:902
-msgid "Plan File Export"
-msgstr "Map File Export"
-
-#: redistricting/templates/viewplan.html:903
-#, python-format
-msgid ""
-"\n"
-"                  The %(bmlll)s index file is a comma-separated-value file "
-"(csv).\n"
-"                  Each line lists the unique id of the building blocks of "
-"each %(plan_text)s\n"
-"                  (such as ward, census block, etc.) and the district to "
-"which it belongs. This\n"
-"                  file can be imported to your account or someone else's "
-"account or used in analysis\n"
-"                  of the %(plan_text)s using other GIS software.\n"
-"                  "
-msgstr ""
-
-#: redistricting/templates/viewplan.html:940
+#: redistricting/templates/viewplan.html:844
 msgid "Community Map Name:"
 msgstr ""
 
-#: redistricting/templates/viewplan.html:953
+#: redistricting/templates/viewplan.html:857
 msgid "Please select a plan"
 msgstr "Please select a map"
 
-#: redistricting/templates/viewplan.html:967
+#: redistricting/templates/viewplan.html:871
 msgid "Currently Viewing:"
 msgstr ""
 
-#: redistricting/templates/viewplan.html:996
+#: redistricting/templates/viewplan.html:900
 msgid "Plan not saved"
 msgstr "Map not saved"
 
-#: redistricting/templates/viewplan.html:1001
-#: redistricting/templates/viewplan.html:1002
-#: redistricting/templates/viewplan.html:1003
+#: redistricting/templates/viewplan.html:905
+#: redistricting/templates/viewplan.html:906
+#: redistricting/templates/viewplan.html:907
 msgid "Please Wait"
 msgstr ""
 
-#: redistricting/templates/viewplan.html:1001
+#: redistricting/templates/viewplan.html:905
 #, python-format
 msgid "Please wait. New %(body_members)s are computed..."
 msgstr ""
 
-#: redistricting/templates/viewplan.html:1002
+#: redistricting/templates/viewplan.html:906
 msgid "Please wait. Data is being retrieved..."
 msgstr ""
 
-#: redistricting/templates/viewplan.html:1003
+#: redistricting/templates/viewplan.html:907
 msgid "Please wait. Plan is being validated. This may take a few minutes."
 msgstr "Please wait. Map is being validated. This may take a few minutes."
 
-#: redistricting/templates/viewplan.html:1027
+#: redistricting/templates/viewplan.html:931
 #, python-format
 msgid "Select %(layer_type)s Thematic Map"
 msgstr ""
 
-#: redistricting/templates/viewplan.html:1040
+#: redistricting/templates/viewplan.html:944
 msgid "Choose District Thematic Map"
 msgstr ""
 
-#: redistricting/templates/viewplan.html:1054
+#: redistricting/templates/viewplan.html:958
 msgid "Adjacency"
 msgstr ""
 
-#: redistricting/templates/viewplan.html:1057
+#: redistricting/templates/viewplan.html:961
 msgid "Convex Hull Ratio"
 msgstr ""
 
-#: redistricting/templates/viewplan.html:1070
+#: redistricting/templates/viewplan.html:974
 msgid "Choose a Reference Layer"
 msgstr ""
 
-#: redistricting/templates/viewplan.html:1081
+#: redistricting/templates/viewplan.html:985
 msgid "Show Labels?"
 msgstr ""
 
-#: redistricting/templates/viewplan.html:1084
+#: redistricting/templates/viewplan.html:988
 msgid "OR..."
 msgstr ""
 
-#: redistricting/templates/viewplan.html:1086
+#: redistricting/templates/viewplan.html:990
 msgid "Choose a:<br/>legislative district or community map<br/>reference layer"
 msgstr ""
 
-#: redistricting/templates/viewplan.html:1100
+#: redistricting/templates/viewplan.html:1004
 msgid "Select Plan to Display as Reference Layer"
 msgstr "Select Map to Display as Reference Layer"
 
-#: redistricting/templates/viewplan.html:1105
+#: redistricting/templates/viewplan.html:1009
 msgid "OK"
 msgstr ""
 
-#: redistricting/templates/viewplan.html:1142
+#: redistricting/templates/viewplan.html:1046
 msgid "Edit Statistics Sets"
 msgstr ""
 
-#: redistricting/templates/viewplan.html:1144
+#: redistricting/templates/viewplan.html:1048
 msgid ""
 "You can select up to three statistics at once to display in\n"
 "        the sidebar. Each set of three statistics will be saved in the "
@@ -2267,23 +2119,23 @@ msgid ""
 "        statistics saved."
 msgstr ""
 
-#: redistricting/templates/viewplan.html:1149
+#: redistricting/templates/viewplan.html:1053
 msgid "Select up to 3 statistics"
 msgstr ""
 
-#: redistricting/templates/viewplan.html:1150
+#: redistricting/templates/viewplan.html:1054
 msgid "Clear Choices"
 msgstr ""
 
-#: redistricting/templates/viewplan.html:1154
+#: redistricting/templates/viewplan.html:1058
 msgid "Name Statistics Set"
 msgstr ""
 
-#: redistricting/templates/viewplan.html:1156
+#: redistricting/templates/viewplan.html:1060
 msgid "Save Set"
 msgstr ""
 
-#: redistricting/templates/viewplan.html:1159
+#: redistricting/templates/viewplan.html:1063
 msgid "... Or select a saved statistics set"
 msgstr ""
 
@@ -2764,3 +2616,76 @@ msgstr ""
 #: redistricting/views.py:2777
 msgid "No plan with that ID was found."
 msgstr "No map with that ID was found."
+
+#~ msgid "Submit Final Plan to Contest"
+#~ msgstr "Submit Final Map to Contest"
+
+#~ msgid ""
+#~ "You can submit your completed plan to be considered for the contest by "
+#~ "filling out this form."
+#~ msgstr ""
+#~ "You can submit your completed map to be considered for the contest by "
+#~ "filling out this form."
+
+#~ msgid "Share Plan With All Users"
+#~ msgstr "Share Map With All Users"
+
+#~ msgid ""
+#~ "By sharing a copy of your %(plan_text)s below, you are making your "
+#~ "%(plan_text)s available to all other users in the system. Give your "
+#~ "%(plan_text)s a unique name in order to share it. A copy of your current "
+#~ "%(plan_text)s will be added to the \"Shared\" section of the plan chooser."
+#~ msgstr ""
+#~ "By sharing a copy of your %(plan_text)s below, you are making your "
+#~ "%(plan_text)s available to all other users in the system. Give your "
+#~ "%(plan_text)s a unique name in order to share it. A copy of your current "
+#~ "%(plan_text)s will be added to the \"Shared\" section of the map chooser."
+
+#~ msgid "Verify and Submit Plan to Leaderboards"
+#~ msgstr "Verify and Submit Map to Leaderboards"
+
+#~ msgid ""
+#~ "In order to be considered for placement on the leaderboards your plan "
+#~ "must meet the criteria for creating a legal redistricting plan. Keep in "
+#~ "mind that as soon as you edit a verified plan, it will automatically "
+#~ "become \"unverified\" and you will need to re-verify it in order for it "
+#~ "to again be considered for the leaderboards."
+#~ msgstr ""
+#~ "In order to be considered for placement on the leaderboards your map must "
+#~ "meet the criteria for creating a legal redistricting map. Keep in mind "
+#~ "that as soon as you edit a verified map, it will automatically become "
+#~ "\"unverified\" and you will need to re-verify it in order for it to again "
+#~ "be considered for the leaderboards."
+
+#~ msgid ""
+#~ "By verifying your plan, you are <em><strong>not</strong></em> sharing "
+#~ "your plan with other users. Your plan title and user name will simply "
+#~ "show up in the top ten lists (if your plan ranks in the top ten)."
+#~ msgstr ""
+#~ "By verifying your map, you are <em><strong>not</strong></em> sharing your "
+#~ "map with other users. Your map title and user name will simply show up in "
+#~ "the top ten lists (if your map ranks in the top ten)."
+
+#~ msgid "How to verify and submit your plan:"
+#~ msgstr "How to verify and submit your map:"
+
+#~ msgid ""
+#~ "Check the leaderboards to see if your plan ranks in any of the top ten "
+#~ "score types."
+#~ msgstr ""
+#~ "Check the leaderboards to see if your map ranks in any of the top ten "
+#~ "score types."
+
+#~ msgid "This plan has been shared"
+#~ msgstr "This map has been shared"
+
+#~ msgid ""
+#~ "Anyone can view this plan by visiting the following URL in a web browser:"
+#~ msgstr ""
+#~ "Anyone can view this map by visiting the following URL in a web browser:"
+
+#~ msgid "Redistricting plan by DistrictBuilder"
+#~ msgstr "Redistricting map by DistrictBuilder"
+
+#~ msgid "Plan File Export"
+#~ msgstr "Map File Export"
