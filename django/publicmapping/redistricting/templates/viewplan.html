@@ -235,7 +235,7 @@
         <li id="tab_plan"><a href="#step_plan">{% trans "Plan" %}</a><li>
         <li id="tab_draw"><a href="#step_draw">{% if is_registered %}{% trans "Draw" %}{% else %}{% trans "View" %}{% endif %}</a></li>
         <li id="tab_evaluate"><a href="#step_evaluate">{% trans "Evaluate" %}</a></li>
-        <li id="tab_share" class="last"><a href="#step_share">{% trans "Share" %}</a></li>
+        <li id="tab_share" class="last"><a href="#step_share">Submit</a></li>
         {% if has_leaderboard and not plan.is_community %}
         <li id="tab_leaderboard" class="rounded"><a href="#step_leaderboard">{% trans "Leaderboards" %}</a></li>
         {% endif %}
@@ -796,103 +796,8 @@
     <div id="step_share" class="main_content share fulltab">
       <div class="shadow_left"></div>
       <div class="shadow_top"></div>
-      <div class="toolbar ui-widget-header"><h1>{% blocktrans with plan_text|title as plan_text_title %}Share a {{ plan_text_title }}{% endblocktrans %}</h1></div>
-      <div class="tab_content">
-          <div id="saveandshare">
-              {% block share_panel %}
-              {% comment %}
-
-              Define a block entitled 'share_panel': this panel would show
-              sharing options in an editor interface, but the default
-              viewer does not have that capability.
-
-              {% endcomment %}
-              <div class="explanation">
-                  <h3>{% trans "This plan has been shared" %}</h3>
-                  <p>{% trans "Anyone can view this plan by visiting the following URL in a web browser:" %}</p>
-                  <div id="share_url">
-                      <script type="text/javascript">document.write(window.location.protocol, '//',
-                         window.location.host, "{% url 'plan-view' planid=plan.id %}");
-                      </script>
-                 <ul class="share-buttons">
-                  <li class="twitter-tweet">
-                  </li>
-                    <script type="text/javascript" src="https://platform.twitter.com/widgets.js"></script>
-                    <script>
-                        // Hack to get the Twitter and Facebook buttons to load properly.
-                        // If loaded immediately via regular HTML markup + script execution,
-                        // the iFrame that is loaded is 1x1 and the buttons have no width.
-                        // This is related to the eccentricities of the share buttons' scripts
-                        // running immediately on a link with this parent element. The Twitter
-                        // workaround is to load it dynamically when the "Share" tab is clicked.
-                        // The Facebook button will recompute if the DOM structure changes, so this
-                        // introduces an artificial change on page load. This might work for Twitter
-                        // too, but hasn't been tested.
-                        function createShareButtons() {
-                            var twitterLinkContainer = document.querySelector('.twitter-tweet');
-                            var fbLikeContainer = document.querySelector('.facebook-like');
-                            var emailContainer = document.querySelector('.email-share');
-                            emailContainer.parentNode.insertBefore(fbLikeContainer, emailContainer);
-                            if (twitterLinkContainer.children.length === 0) {
-                                // Create new anchor tag with appropriate attributes
-                                var twitterLink = document.createElement('a');
-                                twitterLink.href = "https://twitter.com/intent/tweet";
-                                twitterLink.className = "twitter-share-button";
-                                twitterLink.setAttribute("data-text", "{% trans "Shared map tweet text" %}");
-                                twitterLink.setAttribute("data-hashtags", "redistricting");
-                                twitterLink.innerHTML = "{% trans "Tweet" %}";
-                                // Insert into container
-                                var twitterLinkContainer = document.querySelector('.twitter-tweet');
-                                twitterLinkContainer.appendChild(twitterLink);
-                                // Tell Twitter library to load new widget
-                                twttr.widgets.load(twitterLinkContainer);
-                            }
-                        }
-                    </script>
-
-                  <li class="email-share">
-                    <a id="email-share-link">
-                      <button id="email-share-button"><img id="email-share-img" src="{% static 'images/icon-mail.png' %}"></button>
-                    </a>
-                  </li>
-
-                  <li class="facebook-like">
-                    <div
-                      class="fb-share-button"
-                      data-href="{{ request.build_absolute_uri }}"
-                      data-layout="button_count"
-                      data-size="small"
-                      data-mobile-iframe="true">
-                        <a target="_blank"
-                          href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_url|urlencode }}&amp;src=sdkpreparse"
-                          class="fb-xfbml-parse-ignore">Share
-                        </a>
-                    </div>
-                  </li>
-
-                  <script type="text/javascript">
-                    var mailLink = 'mailto:?subject={% trans "Redistricting plan by DistrictBuilder" %}&body=' + window.location.href;
-                    document.getElementById('email-share-link').setAttribute('href', mailLink);
-                  </script>
-                </ul>
-                  <div class="clear"></div>
-                  </div>
-              </div>
-              {% endblock %}
-              <div class="blockfile">
-                  <h3>{% trans "Plan File Export" %}</h3>
-                  <p>{% blocktrans with body_member_long_label|lower as bmlll %}
-                  The {{ bmlll }} index file is a comma-separated-value file (csv).
-                  Each line lists the unique id of the building blocks of each {{ plan_text }}
-                  (such as ward, census block, etc.) and the district to which it belongs. This
-                  file can be imported to your account or someone else's account or used in analysis
-                  of the {{ plan_text }} using other GIS software.
-                  {% endblocktrans %}
-                  </p>
-                  <div id='districtIndexFileTarget' />
-              </div>
-          </div>
-        </div>
+      <div class="toolbar ui-widget-header"><h1>Submit Your Map</h1></div>
+      <div class="tab_content" id="sharepagetab">
         {% block verify_submit %}
         {% comment %}
 

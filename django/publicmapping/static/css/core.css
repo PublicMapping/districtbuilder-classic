@@ -2197,14 +2197,16 @@ margin-bottom:20px;
 }
 
 .share #saveandshare,
-.share #verifyandpost {
+.share #verifyandpost,
+.share #submittocontest {
     float: left;
 }
 
-.share #verifyandpost {
-    width: 47%;
+.share #verifyandpost,
+.share #submittocontest {
+    width: 100%;
     border: 1px solid #ccc;
-    margin-left: 25px;
+    margin-bottom: 25px;
     padding: 20px;
     background: #FBFBF3;
     -moz-border-radius: 4px;
@@ -2215,13 +2217,35 @@ margin-bottom:20px;
     box-shadow: 0 0 13px -5px #666666;
 }
 
-.share #verifyandpost .explanation {
+.share #verifyandpost .explanation,
+.share #submittocontest .explanation {
     margin: 0 0 15px 0;
 }
 
 #scoring {display:none}
 
+#sharepagetab {
+    padding-left: 18%;
+    padding-right: 18%;
+    overflow: hidden;
+}
 
+.share #sharepageleft {
+    display: inline-block;
+    width: 60%;
+}
+
+.share #sharepageright {
+    display: inline-block;
+    width: 27%;
+    margin-left: 25px;
+    margin-top: -10%;
+    float: right;
+    padding: 20px;
+    padding-top: 12%;
+    height: 110%;
+    background-color: #dbe6ec;
+}
 
 
 /* Report Table Styles

@@ -144,53 +144,35 @@
       </div>
       {% endwith %}
       {% endblock %}
-      
-        {% block share_panel %}
-            {% if allow_email_submissions and not plan.is_community %}
-            <div id="emailplan">
-                <div>
-                    <h3>{% trans "Submit Final Plan to Contest" %}</h3>
-                    <p>{% trans "You can submit your completed plan to be considered for the contest by filling out this form." %}</p>
-                    <button id="btnEmailPlan">{% trans "Submit Final Plan" %}</button>
-                </div>
-            </div>
-            {% endif %}
-
-            <div class="explanation">
-                <h3>{% trans "Share Plan With All Users" %}</h3>
-                <p>{% blocktrans %}By sharing a copy of your {{ plan_text }} below, you are making your {{ plan_text }} available to all other users in the system. Give your {{ plan_text }} a unique name in order to share it. A copy of your current {{ plan_text }} will be added to the "Shared" section of the plan chooser.{% endblocktrans %}</p>
-                <div>
-                    <h3>{% blocktrans %}Name your shared {{ plan_text }}{% endblocktrans %}</h3>
-                    <input id="txtPlanName" />
-                    <button id="btnSaveAndShare">{% trans "Save and Share" %}</button>
-                </div>
-            </div>
-
-            <div id="successfulShare" title="{% trans "Congratulations!" %}" >
-                <p>{% blocktrans %}You have successfully shared your {{ plan_text }}. You can share your {{ plan_text }} with others by giving them this link:{% endblocktrans %}</p>
-                <p id="sharedPermalink"><p>
-                <button id="continueEditing">{% blocktrans with plan_text|title as plantext %}Continue Editing Current {{ plantext }}{% endblocktrans %}</button>
-                <a href="/districtmapping/plan/0/view/"><button id="selectNew">{% blocktrans with plan_text|title as plantext %}Select New {{ plan_text }} to Edit{% endblocktrans %}</button></a>
-            </div>
-        {% endblock %}
 
     {% block verify_submit %}
         {% if has_leaderboard and not plan.is_community %}
-        <div id="verifyandpost">
-            <div class="explanation">
-               <h3>{% trans "Verify and Submit Plan to Leaderboards" %}</h3>
-                <p>{% trans 'In order to be considered for placement on the leaderboards your plan must meet the criteria for creating a legal redistricting plan. Keep in mind that as soon as you edit a verified plan, it will automatically become "unverified" and you will need to re-verify it in order for it to again be considered for the leaderboards.' %}</p>
-                <p>{% blocktrans %}By verifying your plan, you are <em><strong>not</strong></em> sharing your plan with other users. Your plan title and user name will simply show up in the top ten lists (if your plan ranks in the top ten).{% endblocktrans %}</p>
-                <p>
-                {% trans "How to verify and submit your plan:" %}
-                <ol>
-                  <li>{% trans 'Click the "Verify and Submit to Leaderboards" button.' %}</li>
-                  <li>{% trans "If verified, you will be taken to the Leaderboard page." %}</li>
-                  <li>{% trans "Check the leaderboards to see if your plan ranks in any of the top ten score types." %}</li>
-                </ol>
-                </p>
+        <div id="sharepageleft">
+            <div id="verifyandpost">
+                <div class="explanation">
+                   <h3>1. Check your map</h3>
+                    <p>Start here to check if your map is constitutional based on contiguity and population.</p>
+                    <p>Once your map is validated, it’s ready to submit to the contest.</p>
+                </div>
+                <button id="btnVerifyAndSubmit">Validate</button>
             </div>
-            <button id="btnVerifyAndSubmit">{% trans "Verify and Submit Plan to Leaderboards" %}</button>            
+            <div id="submittocontest">
+                <div class="explanation">
+                    <h3>2. Submit your map to Draw the Lines</h3>
+                    <p>When you’re ready, submit your map to the Draw the Lines contest here.</p>
+                    <p>(NOTE: Once you press Submit on the form, your submission to the contest is final and can't be changed.  But you can continue to play around with your map!)</p>
+                </div>
+                <button id="btnEmailPlan">Submit</button>
+            </div>
+        </div>
+        <div id="sharepageright">
+            <div class="explanation">
+                <h3>Did you know?</h3>
+                <ul>
+                    <p> • You can see how your map stacks up against others by checking out the Leaderboards page.</p>
+                    <p> • If you want to make changes to your map, just use the button at the top to head back to the Draw page.</p>
+                </ul>
+            </div>
         </div>
         {% endif %}
     {% endblock %}
