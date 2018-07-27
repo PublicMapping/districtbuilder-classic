@@ -85,12 +85,6 @@
                 <LegislativeBody ref="congress"/>
             </ScoreFunction>
 
-            <ScoreFunction id="district_convexhullratio" type="district"
-                calculator="redistricting.calculators.ConvexHullRatio"
-                label="Convex Hull Ratio" user_selectable="true">
-                <LegislativeBody ref="congress"/>
-            </ScoreFunction>
-
             <ScoreFunction id="district_contiguous" type="district"
                 calculator="redistricting.calculators.Contiguity"
                 label="Contiguous" user_selectable="true">
