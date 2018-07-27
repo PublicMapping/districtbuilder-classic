@@ -448,6 +448,70 @@
                 <Argument name="max" value="709216" />
             </ScoreFunction>
 
+            <ScoreFunction id="report_score_percent_white_population_congress" type="district"
+                calculator="redistricting.reportcalculators.PopulationPercent"
+                label="White Population">
+                <SubjectArgument name="numerator" ref="popwnh" />
+                <SubjectArgument name="denominator" ref="poptot" />
+                <LegislativeBody ref="congress"/>
+            </ScoreFunction>
+
+            <ScoreFunction id="report_score_percent_black_population_congress" type="district"
+                calculator="redistricting.reportcalculators.PopulationPercent"
+                label="Black Population" >
+                <LegislativeBody ref="congress"/>
+                <SubjectArgument name="numerator" ref="popblk" />
+                <SubjectArgument name="denominator" ref="poptot" />
+            </ScoreFunction>
+
+            <ScoreFunction id="report_score_percent_hispanic_population_congress" type="district"
+                calculator="redistricting.reportcalculators.PopulationPercent"
+                label="Hispanic Population" >
+                <LegislativeBody ref="congress"/>
+                <SubjectArgument name="numerator" ref="pophisp" />
+                <SubjectArgument name="denominator" ref="poptot" />
+            </ScoreFunction>
+
+            <ScoreFunction id="report_score_percent_asian_population_congress" type="district"
+                calculator="redistricting.reportcalculators.PopulationPercent"
+                label="Asian Population" >
+                <LegislativeBody ref="congress"/>
+                <SubjectArgument name="numerator" ref="popasn" />
+                <SubjectArgument name="denominator" ref="poptot" />
+            </ScoreFunction>
+
+            <ScoreFunction id="report_score_percent_amer_ind_population_congress" type="district"
+                calculator="redistricting.reportcalculators.PopulationPercent"
+                label="American Indian/Alaskan Native" >
+                <LegislativeBody ref="congress"/>
+                <SubjectArgument name="numerator" ref="popnam" />
+                <SubjectArgument name="denominator" ref="poptot" />
+            </ScoreFunction>
+
+            <ScoreFunction id="report_score_percent_pacific_islander_population_congress" type="district"
+                calculator="redistricting.reportcalculators.PopulationPercent"
+                label="Native Hawaiian/Pacific Islander" >
+                <LegislativeBody ref="congress"/>
+                <SubjectArgument name="numerator" ref="poppild" />
+                <SubjectArgument name="denominator" ref="poptot" />
+            </ScoreFunction>
+
+            <ScoreFunction id="report_score_percent_other_races_population_congress" type="district"
+                calculator="redistricting.reportcalculators.PopulationPercent"
+                label="Other Race" >
+                <LegislativeBody ref="congress"/>
+                <SubjectArgument name="numerator" ref="popoth" />
+                <SubjectArgument name="denominator" ref="poptot" />
+            </ScoreFunction>
+
+            <ScoreFunction id="report_score_percent_two_races_population_congress" type="district"
+                calculator="redistricting.reportcalculators.PopulationPercent"
+                label="Two or more races" >
+                <LegislativeBody ref="congress"/>
+                <SubjectArgument name="numerator" ref="poptwo" />
+                <SubjectArgument name="denominator" ref="poptot" />
+            </ScoreFunction>
+
             <ScoreFunction id="report_score_compactness_lw" type="district"
                 calculator="redistricting.reportcalculators.Compactness"
                 label="Length/Width" >
@@ -566,6 +630,20 @@
             <ScorePanel id="report_panel_population" type="district" position="2"
                 title="Population" template="report_panel.html" cssclass="reports population" >
                 <Score ref="report_score_total_population_congress" />
+                <Score ref="report_score_percent_white_population_congress" />
+                <Score ref="report_score_percent_black_population_congress" />
+                <Score ref="report_score_percent_hispanic_population_congress" />
+                <Score ref="report_score_percent_asian_population_congress" />
+                <Score ref="report_score_percent_amer_ind_population_congress" />
+                <Score ref="report_score_percent_pacific_islander_population_congress" />
+                <Score ref="report_score_percent_other_races_population_congress" />
+                <Score ref="report_score_percent_two_races_population_congress" />
+                <Score ref="report_score_total_age0018_population_congress" />
+                <Score ref="report_score_total_age1824_population_congress" />
+                <Score ref="report_score_total_age2534_population_congress" />
+                <Score ref="report_score_total_age3549_population_congress" />
+                <Score ref="report_score_total_age5064_population_congress" />
+                <Score ref="report_score_total_age65o_population_congress" />
             </ScorePanel>
 
             <ScorePanel id="report_panel_compactness" type="district" position="1"
