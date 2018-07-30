@@ -697,9 +697,6 @@
             <ScorePanel id="report_panel_compactness" type="district" position="1"
                 title="Compactness" template="report_panel.html" cssclass="reports compactness">
                 <Score ref="report_score_compactness_pp" />
-                <Score ref="report_score_compactness_sc" />
-                <Score ref="report_score_compactness_lw" />
-                <Score ref="report_score_compactness_ro" />
             </ScorePanel>
 
             <ScorePanel id="report_panel_spatial" type="plan" position="5"
