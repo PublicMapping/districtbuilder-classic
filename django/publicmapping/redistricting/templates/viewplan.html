@@ -235,7 +235,7 @@
         <li id="tab_plan"><a href="#step_plan">{% trans "Plan" %}</a><li>
         <li id="tab_draw"><a href="#step_draw">{% if is_registered %}{% trans "Draw" %}{% else %}{% trans "View" %}{% endif %}</a></li>
         <li id="tab_evaluate"><a href="#step_evaluate">{% trans "Evaluate" %}</a></li>
-        <li id="tab_share" class="last"><a href="#step_share">Submit</a></li>
+        <li id="tab_share" class="{% if not is_registered %}ui-state-disabled{% endif %}"><a href="#step_share">Submit</a></li>
         {% if has_leaderboard and not plan.is_community %}
         <li id="tab_leaderboard" class="rounded"><a href="#step_leaderboard">{% trans "Leaderboards" %}</a></li>
         {% endif %}
