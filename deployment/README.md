@@ -15,6 +15,7 @@ Amazon Web Services deployment is driven by [Terraform](https://terraform.io/), 
     * [User Data](#user-data)
     * [`scripts/infra`](#scriptsinfra)
     * [Loading Shapefile data](#loading-shapefile-data)
+    * [Fixing Staging](#fixing-staging)
 
 ## Deployment
 
@@ -75,3 +76,27 @@ $ export DOCKER_CERT_PATH=/path/to/docker/certs
 $ export GIT_COMMIT=1234567
 $ ./scripts/load_configured_data --production
 ```
+
+### Fixing Staging
+Depending on the configuration changes, staging will sometimes get into a bad state after deployment as we do not handle all types of config changes perfectly. As a result, you may need to "wipe the slate clean" in staging to see your changes. You can do this by ssh-ing into the staging app server, downloading the appropriate script, and running it, like so (**NOTE: the database will be dropped and recreated!**):
+
+```bash
+$ ssh-add ~/.ssh/district-builder.pem
+...
+$ ssh -A ~/.ssh/district-builder.pem ec2-user@34.207.181.197
+...
+$ ssh ec2-user@10.0.0.237
+...
+$ docker exec -ti districtbuilder-django bash
+...
+# Remove existing copy of script (if it exists)
+$ rm recreate_staging_from_scratch
+# Download latest copy of script
+$ wget https://raw.githubusercontent.com/azavea/district-builder-dtl-pa/develop/scripts/recreate_staging_from_scratch
+# Run script
+$ bash recreate_staging_from_scratch
+# Remove script
+$ rm recreate_staging_from_scratch
+```
+
+The `district-builder.pem` file is available on the file share. Note that the bastion and/or the app server IP addresses may have changed.
