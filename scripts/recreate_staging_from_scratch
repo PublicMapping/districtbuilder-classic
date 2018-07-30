@@ -1,0 +1,54 @@
+#!/bin/bash
+set -e
+
+function usage() {
+    echo -n \
+"Usage: $(basename "$0")
+Recreate the database in staging, load data, and reconfigure.
+
+This is meant to be run manually inside of the django container on the
+staging app server to get the database in a good state after certain types of
+config changes that require a \"clean slate\".
+
+NOTE: All plans and users will be lost!
+"
+}
+
+function recreate_database() {
+    echo "Dropping and recreating database"
+    ./manage.py reset_db --close-sessions
+}
+
+function unzip_data() {
+    echo "Unzipping data"
+    unzip -o /data/districtbuilder_data.zip -d /data
+}
+
+function migrate() {
+    echo "Running migrations"
+    ./manage.py migrate
+}
+
+function configure() {
+    echo "Configuring"
+    ./manage.py setup config/config.xml -g0 -g1 &&
+    ./manage.py setup config/config.xml -n0 -n1 &&
+    ./manage.py setup config/config.xml -t &&
+    ./manage.py setup config/config.xml --views &&
+    ./manage.py setup config/config.xml -G &&
+    ./manage.py setup config/config.xml -l
+}
+
+if [ "${BASH_SOURCE[0]}" = "${0}" ]
+then
+    if [ "${1:-}" = "--help" ]
+    then
+        usage
+    else
+        recreate_database
+        unzip_data
+        migrate
+        configure
+    fi
+    exit
+fi
