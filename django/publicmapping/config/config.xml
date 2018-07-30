@@ -11,8 +11,8 @@
             </LegislativeBodies>
 
             <GeoLevels>
-                <GeoLevel ref="tract">
-                   <GeoLevel ref="county" />
+                <GeoLevel ref="tract" label="Census Tracts">
+                   <GeoLevel ref="county" label="County Lines" />
                 </GeoLevel>
             </GeoLevels>
         </Region>
@@ -260,7 +260,7 @@
 
             <ScoreFunction id="district_votedem_percent" type="district"
                 calculator="redistricting.calculators.Percent"
-                label="Voted Democrat">
+                label="Registered Democrat">
                 <SubjectArgument name="numerator" ref="votedem" />
                 <SubjectArgument name="denominator" ref="vap" />
                 <LegislativeBody ref="congress"/>
@@ -268,14 +268,14 @@
 
             <ScoreFunction id="district_votedem_thresh" type="district"
                 calculator="redistricting.calculators.Threshold"
-                label="Voted Democrat Threshold">
+                label="Registered Democrat Threshold">
                 <ScoreArgument name="value" ref="district_votedem_percent" />
                 <Argument name="threshold" value="0.5" />
             </ScoreFunction>
 
             <ScoreFunction id="district_voterep_percent" type="district"
                 calculator="redistricting.calculators.Percent"
-                label="Voted Republican">
+                label="Registered Republican">
                 <SubjectArgument name="numerator" ref="voterep" />
                 <SubjectArgument name="denominator" ref="vap" />
                 <LegislativeBody ref="congress"/>
@@ -283,14 +283,14 @@
 
             <ScoreFunction id="district_voterep_thresh" type="district"
                 calculator="redistricting.calculators.Threshold"
-                label="Voted Republican Threshold">
+                label="Registered Republican Threshold">
                 <ScoreArgument name="value" ref="district_voterep_percent" />
                 <Argument name="threshold" value="0.5" />
             </ScoreFunction>
 
             <ScoreFunction id="district_voteoth_percent" type="district"
                 calculator="redistricting.calculators.Percent"
-                label="Voted Other">
+                label="Registered Other">
                 <SubjectArgument name="numerator" ref="voteoth" />
                 <SubjectArgument name="denominator" ref="vap" />
                 <LegislativeBody ref="congress"/>
@@ -298,7 +298,7 @@
 
             <ScoreFunction id="district_voteoth_thresh" type="district"
                 calculator="redistricting.calculators.Threshold"
-                label="Voted Other Threshold">
+                label="Registered Other Threshold">
                 <ScoreArgument name="value" ref="district_voteoth_percent" />
                 <Argument name="threshold" value="0.5" />
             </ScoreFunction>
@@ -361,7 +361,7 @@
 
             <ScoreFunction id="congress_plan_equipopulation_validation" type="plan"
                 calculator="redistricting.calculators.Equipopulation"
-                label="Target Pop. (705,688)"
+                label="Target Pop. (702,160 - 709,216)"
                 description="The population of each Congressional district must be 705,688 +/- 0.5%.">
                 <Argument name="min" value="702160"/>
                 <Argument name="max" value="709216"/>
@@ -371,7 +371,7 @@
 
             <ScoreFunction id="congress_plan_equipopulation_summary" type="plan"
                 calculator="redistricting.calculators.Equipopulation"
-                label="Target Pop. (705,688)"
+                label="Target Pop. (702,160 - 709,216)"
                 description="The population of each Congressional district must be 705,688 +/- 0.5%.">
                 <Argument name="min" value="702160"/>
                 <Argument name="max" value="709216"/>
@@ -427,13 +427,13 @@
 
             <ScoreFunction id="congress_plan_polsbypopper" type="plan"
                 calculator="redistricting.calculators.PolsbyPopper"
-                label="Average Compactness"
+                label="Avg. Compactness (100% is best)"
                 description="The competition is using the &apos;Polsby-Popper&apos; compactness measure. This measure is a ratio of the area of a circle with the same perimeter as a district to the area of the district." >
             </ScoreFunction>
 
             <ScoreFunction id="congress_plan_equivalence" type="plan"
                 calculator="redistricting.calculators.Equivalence"
-                label="Equal Population"
+                label="Pop. Equivalence (0 is best)"
                 description="The Equipopulation score is the difference between the district with the highest population and the district with the lowest population.">
                 <SubjectArgument name="value" ref="poptot" />
             </ScoreFunction>

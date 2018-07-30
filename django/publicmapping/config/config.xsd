@@ -578,6 +578,7 @@
             <xs:element name="GeoLevel" type="NestedGeoLevelType" />
         </xs:all>
         <xs:attribute name="ref" type="xs:IDREF" use="required" />
+        <xs:attribute name="label" type="xs:string" />
     </xs:complexType>
     <xs:complexType name="RefType">
         <xs:annotation>
