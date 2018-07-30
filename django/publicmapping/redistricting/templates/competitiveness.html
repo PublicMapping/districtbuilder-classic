@@ -1,0 +1,35 @@
+<script type="text/javascript">
+     loadTooltips();
+</script>
+
+{% load humanize %}
+{% load redistricting_extras %}
+{% load i18n %}
+<div class="info_table">
+    {% if districtscores %}
+    <table id="competitiveness_table">
+        <thead>
+            <tr>
+                <th class="district_name">{% trans "Dist." %}</th>
+                {% for function in functions %}
+                <th class="info_header score{{ forloop.counter }}">{{ function }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in districtscores %}
+            <tr class="{% cycle 'odd' 'even' %} inforow_{{ row.district.district_id }}"
+                onclick="toggleDistrict({{ row.district.district_id }})"
+                ondblclick="zoomToDistrict({{ row.district.district_id }})">
+                <td class="district_name">{{ row.district.short_label }}</td>
+                {% for score in row.scores %}
+                <td class="cellcompact score{{ forloop.counter }}">{{ score.score|safe }}</td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="error"> {% trans "Sorry, there is no competitiveness data for this plan" %}</div>
+    {% endif %}
+</div>

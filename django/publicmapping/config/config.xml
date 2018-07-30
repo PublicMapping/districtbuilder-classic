@@ -674,6 +674,15 @@
                 <Score ref="district_vapasn_percent" />
             </ScorePanel>
 
+            <!-- Competitiveness -->
+            <ScorePanel id="congressional_panel_competitiveness" type="district" position="2"
+                title="Competitiveness" cssclass="district_competitiveness congressional"
+                template="competitiveness.html">
+                <Score ref="district_votedem_percent" />
+                <Score ref="district_voterep_percent" />
+                <Score ref="district_voteoth_percent" />
+            </ScorePanel>
+
             <!-- Calculator Reports configuration -->
             <ScorePanel id="report_panel_population" type="district" position="2"
                 title="Population" template="report_panel.html" cssclass="reports population" >
@@ -733,6 +742,11 @@
             <ScoreDisplay id="congress_sidebar_demo" legislativebodyref="congress" type="sidebar" title="Demographics" cssclass="demographics">
                 <ScorePanel ref="congressional_panel_summary" />
                 <ScorePanel ref="congressional_panel_demo" />
+            </ScoreDisplay>
+
+            <ScoreDisplay id="congress_sidebar_competitiveness" legislativebodyref="congress" type="sidebar" title="Competitiveness" cssclass="competitiveness">
+                <ScorePanel ref="congressional_panel_summary" />
+                <ScorePanel ref="congressional_panel_competitiveness" />
             </ScoreDisplay>
 
             <!-- Calculator Reports configuration -->

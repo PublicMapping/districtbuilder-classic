@@ -2601,6 +2601,7 @@ def statistics_sets(request, planid):
 
         admin_display_names = [
             "%s_sidebar_demo" % plan.legislative_body.name,
+            "%s_sidebar_competitiveness" % plan.legislative_body.name,
         ]
 
         if plan.legislative_body.is_community:
