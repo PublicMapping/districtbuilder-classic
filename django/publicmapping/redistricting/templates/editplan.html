@@ -154,15 +154,16 @@
                     <p>Start here to check if your map is constitutional based on contiguity and population.</p>
                     <p>Once your map is validated, it’s ready to submit to the contest.</p>
                 </div>
-                <button id="btnVerifyAndSubmit">Validate</button>
+                <p id="verifiedp" class="{% if not plan.is_valid %}hiddenelem{% endif %}"><img id="validatedimg" src="/static/images/icon-verified.png">Validated</p>
+                <button id="btnVerifyAndSubmit" class="{% if plan.is_valid %}hiddenelem{% endif %}">Validate</button>
             </div>
-            <div id="submittocontest">
+            <div id="submittocontest" class="{% if not plan.is_valid %}inactivebox{% endif %}">
                 <div class="explanation">
                     <h3>2. Submit your map to Draw the Lines</h3>
                     <p>When you’re ready, submit your map to the Draw the Lines contest here.</p>
                     <p>(NOTE: Once you press Submit on the form, your submission to the contest is final and can't be changed.  But you can continue to play around with your map!)</p>
                 </div>
-                <button id="btnEmailPlan">Submit</button>
+                <button id="btnEmailPlan" class="{% if not plan.is_valid %}hiddenelem{% endif %}">Submit</button>
             </div>
         </div>
         <div id="sharepageright">

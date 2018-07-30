@@ -220,7 +220,10 @@ $(function() {
                 if (data.success) {
                     // score was successful, clear leaderboard
                     $("#topranked_content").remove();
-                    $('#steps').tabs('select', '#step_leaderboard');
+                    $('#btnVerifyAndSubmit').addClass('hiddenelem');
+                    $('#verifiedp').removeClass();
+                    $('#submittocontest').removeClass('inactivebox');
+                    $('#btnEmailPlan').removeClass('hiddenelem');
                 } else {
                     // score failed, show reason
                     $('<div />').attr('title', gettext("Validation Failed")).html(data.message).dialog({autoOpen:true});

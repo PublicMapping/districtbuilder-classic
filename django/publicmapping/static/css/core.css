@@ -2247,6 +2247,20 @@ margin-bottom:20px;
     background-color: #dbe6ec;
 }
 
+.inactivebox {
+    background-color: #eee;
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+#validatedimg {
+    width: 12px;
+    margin-right: 4px;
+}
+
+.hiddenelem {
+    display: none;
+}
 
 /* Report Table Styles
 =======================================*/
