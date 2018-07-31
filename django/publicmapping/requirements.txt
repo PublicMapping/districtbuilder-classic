@@ -28,4 +28,5 @@ lxml==3.8.0
 colorbrewer==0.1.1
 python-dateutil==2.6.0
 requests==2.18.4
+rollbar==0.14.1
 git+git://github.com/PublicMapping/district-builder-config.git@0.1.0

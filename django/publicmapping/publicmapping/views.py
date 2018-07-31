@@ -84,6 +84,8 @@ def index(request):
                 'sessionavail': avail,
                 'ga_account': settings.GA_ACCOUNT,
                 'ga_domain': settings.GA_DOMAIN,
+                'debug': settings.DEBUG,
+                'rollbar_client_token': settings.ROLLBAR_CLIENT_TOKEN,
                 'user': request.user,
                 'site': Site.objects.get_current(),
                 'language_code': get_language(),

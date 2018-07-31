@@ -34,6 +34,8 @@ services:
     image: districtbuilder-celery:${GIT_COMMIT:-latest}
     container_name: districtbuilder-celery
     restart: on-failure
+    environment:
+      - CELERY_ROLLBAR=True
     volumes:
       - /opt/district-builder/user-data/config_settings.py:/usr/src/app/publicmapping/config_settings.py
       - /opt/district-builder/user-data/config.xml:/usr/src/app/config/config.xml

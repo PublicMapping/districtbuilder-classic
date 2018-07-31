@@ -75,6 +75,19 @@ MIDDLEWARE = [
     'django.middleware.locale.LocaleMiddleware',
 ]
 
+# Rollbar setup
+ROLLBAR_SERVER_TOKEN = os.getenv('ROLLBAR_SERVER_TOKEN', None)
+ROLLBAR_CLIENT_TOKEN = os.getenv('ROLLBAR_CLIENT_TOKEN', None)
+ROLLBAR = None
+if ROLLBAR_SERVER_TOKEN and not DEBUG:
+    ROLLBAR = {
+        'access_token': ROLLBAR_SERVER_TOKEN,
+        'environment': 'production',
+        'branch': 'master',
+        'root': '/usr/src/app',
+    }
+    MIDDLEWARE.append('rollbar.contrib.django.middleware.RollbarNotifierMiddleware')
+
 SERIALIZATION_MODULES = {
     "geojson": "django.contrib.gis.serializers.geojson",
 }

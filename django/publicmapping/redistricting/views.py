@@ -634,7 +634,9 @@ def commonplan(request, planid):
         'language_code':
         translation.get_language(),
         'LANGUAGES':
-        settings.LANGUAGES  # needed (as CAPS) for language chooser
+        settings.LANGUAGES,  # needed (as CAPS) for language chooser
+        'debug': settings.DEBUG,
+        'rollbar_client_token': settings.ROLLBAR_CLIENT_TOKEN
     }
 
 

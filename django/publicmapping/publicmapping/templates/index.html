@@ -47,6 +47,20 @@
     <link rel="stylesheet" type="text/css" href="{% static 'jquery/themes/custom-theme/jquery-ui.custom.css' %}"/>
     <link rel="stylesheet" type="text/css" href="{% static 'css/core.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'css/visuals.css' %}" />
+    {% if rollbar_client_token and not debug %}
+    <!-- Rollbar -->
+    <script type="text/javascript">
+      var _rollbarConfig = {
+          accessToken: "{{ rollbar_client_token }}",
+          captureUncaught: true,
+          captureUnhandledRejections: true,
+          payload: {
+              environment: "production"
+          }
+      };
+      {% include "rollbar_snippet.js" %}
+    </script>
+    {% endif %}
     {% comment %}
 
     Load Google Analytics Script if the ga_account has been set

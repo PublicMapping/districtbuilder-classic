@@ -55,6 +55,20 @@
         <link rel="stylesheet" type="text/css" href="{% static 'css/ie7.css' %}"/>
         <![endif]-->
     <link rel="stylesheet" type="text/css" href="{% static 'css/visuals.css' %}"/>
+    {% if rollbar_client_token and not debug %}
+    <!-- Rollbar -->
+    <script type="text/javascript">
+      var _rollbarConfig = {
+          accessToken: "{{ rollbar_client_token }}",
+          captureUncaught: true,
+          captureUnhandledRejections: true,
+          payload: {
+              environment: "production"
+          }
+      };
+      {% include "rollbar_snippet.js" %}
+    </script>
+    {% endif %}
     <script type="text/javascript" src="{% static 'openlayers/OpenLayers.js' %}"></script>
     {% if "arc" in basemaps %}
     <script type="text/javascript" src="{% static 'openlayers/ArcGISCache.js' %}"></script>
