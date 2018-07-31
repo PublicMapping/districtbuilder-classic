@@ -3058,11 +3058,11 @@ msgstr ""
 
 #: /usr/src/app/config/config.xml:460
 msgid "district_white_percent short label"
-msgstr "White Population (%)"
+msgstr "White Population"
 
 #: /usr/src/app/config/config.xml:460
 msgid "district_white_percent label"
-msgstr "White Population (%)"
+msgstr "White Population"
 
 #: /usr/src/app/config/config.xml:460
 msgid "district_white_percent long description"
@@ -3498,4 +3498,88 @@ msgstr "Ages 65+"
 
 #: /usr/src/app/config/config.xml:557
 msgid "report_score_percent_age65o_population_congress long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:316
+msgid "district_black_percent short label"
+msgstr "Black Population"
+
+#: /usr/src/app/config/config.xml:316
+msgid "district_black_percent label"
+msgstr "Black Population"
+
+#: /usr/src/app/config/config.xml:316
+msgid "district_black_percent long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:324
+msgid "district_hispanic_percent short label"
+msgstr "Hispanic Population"
+
+#: /usr/src/app/config/config.xml:324
+msgid "district_hispanic_percent label"
+msgstr "Hispanic Population"
+
+#: /usr/src/app/config/config.xml:324
+msgid "district_hispanic_percent long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:332
+msgid "district_asian_percent short label"
+msgstr "Asian Population"
+
+#: /usr/src/app/config/config.xml:332
+msgid "district_asian_percent label"
+msgstr "Asian Population"
+
+#: /usr/src/app/config/config.xml:332
+msgid "district_asian_percent long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:340
+msgid "district_amer_ind_percent short label"
+msgstr "American Indian/Alaskan Native"
+
+#: /usr/src/app/config/config.xml:340
+msgid "district_amer_ind_percent label"
+msgstr "American Indian/Alaskan Native"
+
+#: /usr/src/app/config/config.xml:340
+msgid "district_amer_ind_percent long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:348
+msgid "district_native_pac_percent short label"
+msgstr "Native Hawaiian/Pacific Islander"
+
+#: /usr/src/app/config/config.xml:348
+msgid "district_native_pac_percent label"
+msgstr "Native Hawaiian/Pacific Islander"
+
+#: /usr/src/app/config/config.xml:348
+msgid "district_native_pac_percent long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:356
+msgid "district_other_percent short label"
+msgstr "Other Race"
+
+#: /usr/src/app/config/config.xml:356
+msgid "district_other_percent label"
+msgstr "Other Race"
+
+#: /usr/src/app/config/config.xml:356
+msgid "district_other_percent long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:364
+msgid "district_two_percent short label"
+msgstr "Two or more races"
+
+#: /usr/src/app/config/config.xml:364
+msgid "district_two_percent label"
+msgstr "Two or more races"
+
+#: /usr/src/app/config/config.xml:364
+msgid "district_two_percent long description"
 msgstr ""

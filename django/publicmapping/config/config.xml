@@ -303,6 +303,70 @@
                 <Argument name="threshold" value="0.5" />
             </ScoreFunction>
 
+            <ScoreFunction id="district_white_percent" type="district"
+                calculator="redistricting.calculators.Percent"
+                label="White Population">
+                <SubjectArgument name="numerator" ref="popwnh" />
+                <SubjectArgument name="denominator" ref="poptot" />
+                <LegislativeBody ref="congress"/>
+            </ScoreFunction>
+
+            <ScoreFunction id="district_black_percent" type="district"
+                calculator="redistricting.calculators.Percent"
+                label="Black Population" >
+                <LegislativeBody ref="congress"/>
+                <SubjectArgument name="numerator" ref="popblk" />
+                <SubjectArgument name="denominator" ref="poptot" />
+            </ScoreFunction>
+
+            <ScoreFunction id="district_hispanic_percent" type="district"
+                calculator="redistricting.calculators.Percent"
+                label="Hispanic Population" >
+                <LegislativeBody ref="congress"/>
+                <SubjectArgument name="numerator" ref="pophisp" />
+                <SubjectArgument name="denominator" ref="poptot" />
+            </ScoreFunction>
+
+            <ScoreFunction id="district_asian_percent" type="district"
+                calculator="redistricting.calculators.Percent"
+                label="Asian Population" >
+                <LegislativeBody ref="congress"/>
+                <SubjectArgument name="numerator" ref="popasn" />
+                <SubjectArgument name="denominator" ref="poptot" />
+            </ScoreFunction>
+
+            <ScoreFunction id="district_amer_ind_percent" type="district"
+                calculator="redistricting.calculators.Percent"
+                label="American Indian/Alaskan Native" >
+                <LegislativeBody ref="congress"/>
+                <SubjectArgument name="numerator" ref="popnam" />
+                <SubjectArgument name="denominator" ref="poptot" />
+            </ScoreFunction>
+
+            <ScoreFunction id="district_native_pac_percent" type="district"
+                calculator="redistricting.calculators.Percent"
+                label="Native Hawaiian/Pacific Islander" >
+                <LegislativeBody ref="congress"/>
+                <SubjectArgument name="numerator" ref="poppild" />
+                <SubjectArgument name="denominator" ref="poptot" />
+            </ScoreFunction>
+
+            <ScoreFunction id="district_other_percent" type="district"
+                calculator="redistricting.calculators.Percent"
+                label="Other Race" >
+                <LegislativeBody ref="congress"/>
+                <SubjectArgument name="numerator" ref="popoth" />
+                <SubjectArgument name="denominator" ref="poptot" />
+            </ScoreFunction>
+
+            <ScoreFunction id="district_two_percent" type="district"
+                calculator="redistricting.calculators.Percent"
+                label="Two or more races" >
+                <LegislativeBody ref="congress"/>
+                <SubjectArgument name="numerator" ref="poptwo" />
+                <SubjectArgument name="denominator" ref="poptot" />
+            </ScoreFunction>
+
             <ScoreFunction id="district_ageu18_percent" type="district"
                 calculator="redistricting.calculators.Percent"
                 label="Under 18">
