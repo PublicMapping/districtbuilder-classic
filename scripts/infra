@@ -21,7 +21,7 @@ Execute Terraform subcommands with remote state management.
 }
 
 function test_docker_endpoint () {
-  curl -is "https://origin.${DB_STATE}.districtbuilder.azavea.com:2476/info" \
+  curl -is "https://${DOCKER_HOST}/info" \
     --cert "${HOME}/.docker/cert.pem" \
     --key "${HOME}/.docker/key.pem" \
     --cacert "${HOME}/.docker/ca.pem" | grep "200 OK"
@@ -76,7 +76,7 @@ if [ "${BASH_SOURCE[0]}" = "${0}" ]; then
                     rm "client.zip"
 
                     export DOCKER_TLS_VERIFY=1
-                    export DOCKER_HOST="origin.${DB_STATE}.districtbuilder.azavea.com:2476"
+                    export DOCKER_HOST="${DOCKER_HOST}"
                     export DOCKER_CERT_PATH="/root/.docker"
 
                     set +e

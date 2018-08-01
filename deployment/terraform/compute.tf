@@ -29,7 +29,7 @@ data "template_file" "user_data" {
   template = "${file("templates/cloud-config.tpl")}"
 
   vars {
-    zip_file_uri = "districtbuilder-${lower(var.environment)}-config-${var.aws_region}/docker_certs/server/${lower(var.state)}.zip"
+    zip_file_uri = "${var.remote_state_bucket_prefix}-${lower(var.environment)}-config-${var.aws_region}/docker_certs/server/${lower(var.state)}.zip"
   }
 }
 
@@ -65,11 +65,11 @@ resource "null_resource" "provision_app_server" {
       type        = "ssh"
       host        = "${aws_instance.app_server.private_ip}"
       user        = "ec2-user"
-      private_key = "${file(pathexpand("~/.ssh/district-builder.pem"))}"
+      private_key = "${file(pathexpand("${var.ssh_identity_file_path}"))}"
 
       bastion_host        = "${data.terraform_remote_state.core.bastion_hostname}"
       bastion_user        = "ec2-user"
-      bastion_private_key = "${file(pathexpand("~/.ssh/district-builder.pem"))}"
+      bastion_private_key = "${file(pathexpand("${var.ssh_identity_file_path}"))}"
     }
   }
 
@@ -85,11 +85,11 @@ resource "null_resource" "provision_app_server" {
       type        = "ssh"
       host        = "${aws_instance.app_server.private_ip}"
       user        = "ec2-user"
-      private_key = "${file(pathexpand("~/.ssh/district-builder.pem"))}"
+      private_key = "${file(pathexpand("${var.ssh_identity_file_path}"))}"
 
       bastion_host        = "${data.terraform_remote_state.core.bastion_hostname}"
       bastion_user        = "ec2-user"
-      bastion_private_key = "${file(pathexpand("~/.ssh/district-builder.pem"))}"
+      bastion_private_key = "${file(pathexpand("${var.ssh_identity_file_path}"))}"
     }
   }
 
