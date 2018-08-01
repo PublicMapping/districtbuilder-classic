@@ -89,11 +89,11 @@ msgstr ""
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:688
 msgid "panel_compact_all short label"
-msgstr "Schwartzberg"
+msgstr "Compactness"
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:688
 msgid "panel_compact_all label"
-msgstr "Schwartzberg"
+msgstr "Compactness"
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:688
 msgid "panel_compact_all long description"
@@ -140,11 +140,11 @@ msgstr ""
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:693
 msgid "panel_compact_mine short label"
-msgstr "Schwartzberg"
+msgstr "Compactness"
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:693
 msgid "panel_compact_mine label"
-msgstr "Schwartzberg"
+msgstr "Compactness"
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:693
 msgid "panel_compact_mine long description"
@@ -477,11 +477,11 @@ msgstr ""
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:670
 msgid "report_score_unassigned short label"
-msgstr "Unassigned Blocks"
+msgstr "Unassigned Tracts"
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:670
 msgid "report_score_unassigned label"
-msgstr "Unassigned Blocks"
+msgstr "Unassigned Tracts"
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:670
 msgid "report_score_unassigned long description"
@@ -574,10 +574,7 @@ msgid "plan_all_contiguous long description"
 msgstr ""
 "Contiguity means that every part of a district must be reachable from every "
 "other part without crossing the district's borders. All districts within a "
-"plan must be contiguous. Water contiguity is permitted given Virginia's "
-"extensive coastal region. 'Point contiguity' or 'touch-point contiguity' "
-"where two sections of a district are connected at a single point is not "
-"permitted."
+"plan must be contiguous."
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:969
 msgid "congress-equipop short label"
@@ -592,7 +589,7 @@ msgid "congress-equipop long description"
 msgstr ""
 "<p>Your plan does not meet the competition criteria for "
 "Equipopulation:</p><p>The population of each Congressional district must be "
-"727,366 +/- 0.5%.</p>"
+"705,688 +/- 0.5%.</p>"
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:973
 msgid "congress-contiguous short label"
@@ -608,9 +605,7 @@ msgstr ""
 "<p>Your plan does not meet the competition criteria for "
 "Contiguity</p><p>Every part of a district must be reachable from every other"
 " part without crossing the district's borders. All districts within a plan "
-"must be contiguous. Water contiguity is permitted given Virginia's extensive"
-" coastal region. 'Point contiguity' or 'touch-point contiguity' where two "
-"sections of a district are connected at a single point is not permitted.</p>"
+"must be contiguous."
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:979
 msgid "congress-district-count short label"
@@ -626,11 +621,11 @@ msgstr ""
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:982
 msgid "congress-assigned short label"
-msgstr "AllBlocksAssigned - Congress"
+msgstr "AllTractsAssigned - Congress"
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:982
 msgid "congress-assigned label"
-msgstr "AllBlocksAssigned - Congress"
+msgstr "AllTractsAssigned - Congress"
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:982
 msgid "congress-assigned long description"
@@ -958,7 +953,7 @@ msgstr "Black VAP"
 
 #: /usr/src/app/config/config.xml:80
 msgid "vapblk label"
-msgstr "Voting Age Population - African-American"
+msgstr "18 years and older, Black or African American"
 
 #: /usr/src/app/config/config.xml:80
 msgid "vapblk long description"
@@ -970,7 +965,7 @@ msgstr "Hisp. VAP"
 
 #: /usr/src/app/config/config.xml:83
 msgid "vaphisp label"
-msgstr "Voting Age Population - Hispanic/Latino"
+msgstr "18 years and older, hispanic"
 
 #: /usr/src/app/config/config.xml:83
 msgid "vaphisp long description"
@@ -982,7 +977,7 @@ msgstr "Hispanic"
 
 #: /usr/src/app/config/config.xml:85
 msgid "pophisp label"
-msgstr "Hispanic or Latino"
+msgstr "Total Hispanic/Latino Population"
 
 #: /usr/src/app/config/config.xml:85
 msgid "pophisp long description"
@@ -994,7 +989,7 @@ msgstr "As Amer"
 
 #: /usr/src/app/config/config.xml:87
 msgid "popasn label"
-msgstr "Asian-American"
+msgstr "Total Asian Population"
 
 #: /usr/src/app/config/config.xml:87
 msgid "popasn long description"
@@ -1006,7 +1001,7 @@ msgstr "Nat Amer"
 
 #: /usr/src/app/config/config.xml:89
 msgid "popnam label"
-msgstr "Native American"
+msgstr "Total American Indian/Alaskan Native"
 
 #: /usr/src/app/config/config.xml:89
 msgid "popnam long description"
@@ -1018,7 +1013,7 @@ msgstr "Pac Isldr"
 
 #: /usr/src/app/config/config.xml:91
 msgid "poppild label"
-msgstr "Pacific Islander"
+msgstr "Total Native Hawaiian/Pacific Islander"
 
 #: /usr/src/app/config/config.xml:91
 msgid "poppild long description"
@@ -1030,7 +1025,7 @@ msgstr "Voters"
 
 #: /usr/src/app/config/config.xml:93
 msgid "vap label"
-msgstr "Voting Age Population"
+msgstr "Total Population 18 years and older (voting age)"
 
 #: /usr/src/app/config/config.xml:93
 msgid "vap long description"
@@ -1042,7 +1037,7 @@ msgstr "Wht Votng Age"
 
 #: /usr/src/app/config/config.xml:96
 msgid "vapwnh label"
-msgstr "Voting Age Population - White"
+msgstr "18 years and older, white alone"
 
 #: /usr/src/app/config/config.xml:96
 msgid "vapwnh long description"
@@ -1054,7 +1049,7 @@ msgstr "Black"
 
 #: /usr/src/app/config/config.xml:98
 msgid "popblk label"
-msgstr "African-American"
+msgstr "Total Black Population"
 
 #: /usr/src/app/config/config.xml:98
 msgid "popblk long description"
@@ -1066,7 +1061,7 @@ msgstr "White"
 
 #: /usr/src/app/config/config.xml:100
 msgid "popwnh label"
-msgstr "Total White Non-Hispanic"
+msgstr "Total White Population"
 
 #: /usr/src/app/config/config.xml:100
 msgid "popwnh long description"
@@ -1074,11 +1069,11 @@ msgstr ""
 
 #: /usr/src/app/config/config.xml:103
 msgid "vapasn short label"
-msgstr "As Am Votng Age"
+msgstr "As Amer VAP"
 
 #: /usr/src/app/config/config.xml:103
 msgid "vapasn label"
-msgstr "Voting Age Population - Asian-American"
+msgstr "18 years and older, Asian alone"
 
 #: /usr/src/app/config/config.xml:103
 msgid "vapasn long description"
@@ -1086,11 +1081,11 @@ msgstr ""
 
 #: /usr/src/app/config/config.xml:106
 msgid "vapnam short label"
-msgstr "Nat Amer Votng Age"
+msgstr "Nat Amer VAP"
 
 #: /usr/src/app/config/config.xml:106
 msgid "vapnam label"
-msgstr "Voting Age Population - Native American"
+msgstr "18 years and older, American Indian and Alaska Native alone"
 
 #: /usr/src/app/config/config.xml:106
 msgid "vapnam long description"
@@ -1098,11 +1093,11 @@ msgstr ""
 
 #: /usr/src/app/config/config.xml:109
 msgid "vappild short label"
-msgstr "Pac Isldr Votng Age"
+msgstr "Pac Isldr VAP"
 
 #: /usr/src/app/config/config.xml:109
 msgid "vappild label"
-msgstr "Voting Age Population - Pacific Islander"
+msgstr "18 years and older, Native Hawaiian and Other Pacific Islander"
 
 #: /usr/src/app/config/config.xml:109
 msgid "vappild long description"
@@ -2185,4 +2180,1406 @@ msgstr "AllBlocksAssigned - Senate"
 
 #: /usr/src/app/config/config.xml:977
 msgid "senate-assigned long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:8
+msgid "pa short label"
+msgstr "pa"
+
+#: /usr/src/app/config/config.xml:8
+msgid "pa label"
+msgstr "Pennsylvania"
+
+#: /usr/src/app/config/config.xml:8
+msgid "pa long description"
+msgstr "The Commonwealth of Pennsylvania"
+
+#: /usr/src/app/config/config.xml:37
+msgid "popoth short label"
+msgstr "Other"
+
+#: /usr/src/app/config/config.xml:37
+msgid "popoth label"
+msgstr "Total Other Race"
+
+#: /usr/src/app/config/config.xml:37
+msgid "popoth long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:39
+msgid "poptwo short label"
+msgstr "Two+"
+
+#: /usr/src/app/config/config.xml:39
+msgid "poptwo label"
+msgstr "Total Two or more races"
+
+#: /usr/src/app/config/config.xml:39
+msgid "poptwo long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:55
+msgid "vapoth short label"
+msgstr "Other VAP"
+
+#: /usr/src/app/config/config.xml:55
+msgid "vapoth label"
+msgstr "18 years and older, Some Other Race alone"
+
+#: /usr/src/app/config/config.xml:55
+msgid "vapoth long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:57
+msgid "vaptwo short label"
+msgstr "Two+ VAP"
+
+#: /usr/src/app/config/config.xml:57
+msgid "vaptwo label"
+msgstr "18 years and older, Two or More Races"
+
+#: /usr/src/app/config/config.xml:57
+msgid "vaptwo long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:59
+msgid "prison short label"
+msgstr "Prison Pop."
+
+#: /usr/src/app/config/config.xml:59
+msgid "prison label"
+msgstr "Prison population"
+
+#: /usr/src/app/config/config.xml:59
+msgid "prison long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:61
+msgid "ageu18 short label"
+msgstr "Under 18"
+
+#: /usr/src/app/config/config.xml:61
+msgid "ageu18 label"
+msgstr "Age - under 18"
+
+#: /usr/src/app/config/config.xml:61
+msgid "ageu18 long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:63
+msgid "age1824 short label"
+msgstr "18-24"
+
+#: /usr/src/app/config/config.xml:63
+msgid "age1824 label"
+msgstr "Age - 18-24"
+
+#: /usr/src/app/config/config.xml:63
+msgid "age1824 long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:65
+msgid "age2534 short label"
+msgstr "25-34"
+
+#: /usr/src/app/config/config.xml:65
+msgid "age2534 label"
+msgstr "Age - 25-34"
+
+#: /usr/src/app/config/config.xml:65
+msgid "age2534 long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:67
+msgid "age3549 short label"
+msgstr "35-49"
+
+#: /usr/src/app/config/config.xml:67
+msgid "age3549 label"
+msgstr "Age - 35-49"
+
+#: /usr/src/app/config/config.xml:67
+msgid "age3549 long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:69
+msgid "age5064 short label"
+msgstr "50-64"
+
+#: /usr/src/app/config/config.xml:69
+msgid "age5064 label"
+msgstr "Age - 50-64"
+
+#: /usr/src/app/config/config.xml:69
+msgid "age5064 long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:71
+msgid "age65o short label"
+msgstr "65+"
+
+#: /usr/src/app/config/config.xml:71
+msgid "age65o label"
+msgstr "Age - 65 and over"
+
+#: /usr/src/app/config/config.xml:71
+msgid "age65o long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:73
+msgid "votedem short label"
+msgstr "Reg Dem"
+
+#: /usr/src/app/config/config.xml:73
+msgid "votedem label"
+msgstr "Registered Democrat"
+
+#: /usr/src/app/config/config.xml:73
+msgid "votedem long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:75
+msgid "voterep short label"
+msgstr "Reg Rep"
+
+#: /usr/src/app/config/config.xml:75
+msgid "voterep label"
+msgstr "Registered Republican"
+
+#: /usr/src/app/config/config.xml:75
+msgid "voterep long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:77
+msgid "voteoth short label"
+msgstr "Reg Oth"
+
+#: /usr/src/app/config/config.xml:77
+msgid "voteoth label"
+msgstr "Registered Other"
+
+#: /usr/src/app/config/config.xml:77
+msgid "voteoth long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:624
+msgid "tract short label"
+msgstr "tract"
+
+#: /usr/src/app/config/config.xml:624
+msgid "tract label"
+msgstr "tract"
+
+#: /usr/src/app/config/config.xml:624
+msgid "tract long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:14
+msgid "pa_tract short label"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:14
+msgid "pa_tract label"
+msgstr "Census Tracts"
+
+#: /usr/src/app/config/config.xml:14
+msgid "pa_tract long description"
+msgstr "tract"
+
+#: /usr/src/app/config/config.xml:15
+msgid "pa_county short label"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:15
+msgid "pa_county label"
+msgstr "County Lines"
+
+#: /usr/src/app/config/config.xml:15
+msgid "pa_county long description"
+msgstr "county"
+
+#: /usr/src/app/config/config.xml:427
+msgid "congress_plan_polsbypopper short label"
+msgstr "Avg. Compactness (100% is best)"
+
+#: /usr/src/app/config/config.xml:427
+msgid "congress_plan_polsbypopper label"
+msgstr "Avg. Compactness (100% is best)"
+
+#: /usr/src/app/config/config.xml:427
+msgid "congress_plan_polsbypopper long description"
+msgstr ""
+"The competition is using the 'Polsby-Popper' compactness measure. This "
+"measure is a ratio of the area of a circle with the same perimeter as a "
+"district to the area of the district."
+
+#: /usr/src/app/config/config.xml:498
+msgid "panel_equivalence_all short label"
+msgstr "Equal Population"
+
+#: /usr/src/app/config/config.xml:498
+msgid "panel_equivalence_all label"
+msgstr "Equal Population"
+
+#: /usr/src/app/config/config.xml:498
+msgid "panel_equivalence_all long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:433
+msgid "congress_plan_equivalence short label"
+msgstr "Pop. Equivalence (0 is best)"
+
+#: /usr/src/app/config/config.xml:433
+msgid "congress_plan_equivalence label"
+msgstr "Pop. Equivalence (0 is best)"
+
+#: /usr/src/app/config/config.xml:433
+msgid "congress_plan_equivalence long description"
+msgstr ""
+"The Equipopulation score is the difference between the district with the "
+"highest population and the district with the lowest population."
+
+#: /usr/src/app/config/config.xml:510
+msgid "panel_competitiveness_all short label"
+msgstr "Competitiveness"
+
+#: /usr/src/app/config/config.xml:510
+msgid "panel_competitiveness_all label"
+msgstr "Competitiveness"
+
+#: /usr/src/app/config/config.xml:510
+msgid "panel_competitiveness_all long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:412
+msgid "congress_plan_competitiveness_leaderboard short label"
+msgstr "Competitiveness"
+
+#: /usr/src/app/config/config.xml:412
+msgid "congress_plan_competitiveness_leaderboard label"
+msgstr "Competitiveness"
+
+#: /usr/src/app/config/config.xml:412
+msgid "congress_plan_competitiveness_leaderboard long description"
+msgstr ""
+"Each plan's overall political competitiveness is determined by averaging "
+"each district.s 'partisan differential'.  The partisan differential of each "
+"district is calculated by subtracting the Democratic 'partisan index' from "
+"the Republican 'partisan index'.<br/><br/>'Heavily' competitive districts "
+"are districts with partisan differentials of less than or equal to 5%. "
+"'Generally' competitive districts are districts with partisan differentials "
+"of greater than 5% but less than 10%."
+
+#: /usr/src/app/config/config.xml:504
+msgid "panel_equivalence_mine short label"
+msgstr "Equal Population"
+
+#: /usr/src/app/config/config.xml:504
+msgid "panel_equivalence_mine label"
+msgstr "Equal Population"
+
+#: /usr/src/app/config/config.xml:504
+msgid "panel_equivalence_mine long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:516
+msgid "panel_competitiveness_mine short label"
+msgstr "Competitiveness"
+
+#: /usr/src/app/config/config.xml:516
+msgid "panel_competitiveness_mine label"
+msgstr "Competitiveness"
+
+#: /usr/src/app/config/config.xml:516
+msgid "panel_competitiveness_mine long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:381
+msgid "congress_plan_equipopulation_summary short label"
+msgstr "Target Pop. (702,160 - 709,216)"
+
+#: /usr/src/app/config/config.xml:381
+msgid "congress_plan_equipopulation_summary label"
+msgstr "Target Pop. (702,160 - 709,216)"
+
+#: /usr/src/app/config/config.xml:381
+msgid "congress_plan_equipopulation_summary long description"
+msgstr ""
+"The population of each Congressional district must be 705,688 +/- 0.5%."
+
+#: /usr/src/app/config/config.xml:108
+msgid "congress_plan_noncontiguous short label"
+msgstr "Contiguous"
+
+#: /usr/src/app/config/config.xml:108
+msgid "congress_plan_noncontiguous label"
+msgstr "Contiguous"
+
+#: /usr/src/app/config/config.xml:108
+msgid "congress_plan_noncontiguous long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:403
+msgid "congress_plan_competitiveness short label"
+msgstr "Competitiveness"
+
+#: /usr/src/app/config/config.xml:403
+msgid "congress_plan_competitiveness label"
+msgstr "Competitiveness"
+
+#: /usr/src/app/config/config.xml:403
+msgid "congress_plan_competitiveness long description"
+msgstr ""
+"Each plan's overall political competitiveness is determined by averaging "
+"each district.s 'partisan differential'.  The partisan differential of each "
+"district is calculated by subtracting the Democratic 'partisan index' from "
+"the Republican 'partisan index'.<br/><br/>'Heavily' competitive districts "
+"are districts with partisan differentials of less than or equal to 5%. "
+"'Generally' competitive districts are districts with partisan differentials "
+"of greater than 5% but less than 10%."
+
+#: /usr/src/app/config/config.xml:419
+msgid "congress_plan_vapnownh_thresh short label"
+msgstr "Majority-Minority"
+
+#: /usr/src/app/config/config.xml:419
+msgid "congress_plan_vapnownh_thresh label"
+msgstr "Majority-Minority"
+
+#: /usr/src/app/config/config.xml:419
+msgid "congress_plan_vapnownh_thresh long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:186
+msgid "district_vapnownh_thresh short label"
+msgstr "Non-white VAP Threshold"
+
+#: /usr/src/app/config/config.xml:186
+msgid "district_vapnownh_thresh label"
+msgstr "Non-white VAP Threshold"
+
+#: /usr/src/app/config/config.xml:186
+msgid "district_vapnownh_thresh long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:171
+msgid "district_vapwnh_percent short label"
+msgstr "White VAP"
+
+#: /usr/src/app/config/config.xml:171
+msgid "district_vapwnh_percent label"
+msgstr "White VAP"
+
+#: /usr/src/app/config/config.xml:171
+msgid "district_vapwnh_percent long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:534
+msgid "congressional_panel_info short label"
+msgstr "Basic Information"
+
+#: /usr/src/app/config/config.xml:534
+msgid "congressional_panel_info label"
+msgstr "Basic Information"
+
+#: /usr/src/app/config/config.xml:534
+msgid "congressional_panel_info long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:115
+msgid "congressional_population short label"
+msgstr "Tot Pop"
+
+#: /usr/src/app/config/config.xml:115
+msgid "congressional_population label"
+msgstr "Tot Pop"
+
+#: /usr/src/app/config/config.xml:115
+msgid "congressional_population long description"
+msgstr "Population interval calculator for congressional."
+
+#: /usr/src/app/config/config.xml:84
+msgid "district_polsbypopper short label"
+msgstr "Compactness"
+
+#: /usr/src/app/config/config.xml:84
+msgid "district_polsbypopper label"
+msgstr "Compactness"
+
+#: /usr/src/app/config/config.xml:84
+msgid "district_polsbypopper long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:126
+msgid "district_vapblk_percent short label"
+msgstr "Black VAP"
+
+#: /usr/src/app/config/config.xml:126
+msgid "district_vapblk_percent label"
+msgstr "Black VAP"
+
+#: /usr/src/app/config/config.xml:126
+msgid "district_vapblk_percent long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:141
+msgid "district_vaphisp_percent short label"
+msgstr "His. VAP"
+
+#: /usr/src/app/config/config.xml:141
+msgid "district_vaphisp_percent label"
+msgstr "His. VAP"
+
+#: /usr/src/app/config/config.xml:141
+msgid "district_vaphisp_percent long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:156
+msgid "district_vapasn_percent short label"
+msgstr "Asian VAP"
+
+#: /usr/src/app/config/config.xml:156
+msgid "district_vapasn_percent label"
+msgstr "Asian VAP"
+
+#: /usr/src/app/config/config.xml:156
+msgid "district_vapasn_percent long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:463
+msgid "report_score_compactness_pp short label"
+msgstr "Polsby-Popper"
+
+#: /usr/src/app/config/config.xml:463
+msgid "report_score_compactness_pp label"
+msgstr "Polsby-Popper"
+
+#: /usr/src/app/config/config.xml:463
+msgid "report_score_compactness_pp long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:134
+msgid "district_vapblk_thresh short label"
+msgstr "Black VAP Threshold"
+
+#: /usr/src/app/config/config.xml:134
+msgid "district_vapblk_thresh label"
+msgstr "Black VAP Threshold"
+
+#: /usr/src/app/config/config.xml:134
+msgid "district_vapblk_thresh long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:149
+msgid "district_vap_thresh short label"
+msgstr "His. VAP Threshold"
+
+#: /usr/src/app/config/config.xml:149
+msgid "district_vap_thresh label"
+msgstr "His. VAP Threshold"
+
+#: /usr/src/app/config/config.xml:149
+msgid "district_vap_thresh long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:164
+msgid "district_vapasn_thresh short label"
+msgstr "Asian VAP Threshold"
+
+#: /usr/src/app/config/config.xml:164
+msgid "district_vapasn_thresh label"
+msgstr "Asian VAP Threshold"
+
+#: /usr/src/app/config/config.xml:164
+msgid "district_vapasn_thresh long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:179
+msgid "district_vapwnh_thresh short label"
+msgstr "White VAP Threshold"
+
+#: /usr/src/app/config/config.xml:179
+msgid "district_vapwnh_thresh label"
+msgstr "White VAP Threshold"
+
+#: /usr/src/app/config/config.xml:179
+msgid "district_vapwnh_thresh long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:194
+msgid "district_vapnam_percent short label"
+msgstr "Nat. Amer. VAP"
+
+#: /usr/src/app/config/config.xml:194
+msgid "district_vapnam_percent label"
+msgstr "Nat. Amer. VAP"
+
+#: /usr/src/app/config/config.xml:194
+msgid "district_vapnam_percent long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:202
+msgid "district_vapnam_thresh short label"
+msgstr "Nat. Amer. VAP Threshold"
+
+#: /usr/src/app/config/config.xml:202
+msgid "district_vapnam_thresh label"
+msgstr "Nat. Amer. VAP Threshold"
+
+#: /usr/src/app/config/config.xml:202
+msgid "district_vapnam_thresh long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:209
+msgid "district_vappild_percent short label"
+msgstr "Pac. Isldr. VAP"
+
+#: /usr/src/app/config/config.xml:209
+msgid "district_vappild_percent label"
+msgstr "Pac. Isldr. VAP"
+
+#: /usr/src/app/config/config.xml:209
+msgid "district_vappild_percent long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:217
+msgid "district_vappild_thresh short label"
+msgstr "Pac. Isldr. VAP Threshold"
+
+#: /usr/src/app/config/config.xml:217
+msgid "district_vappild_thresh label"
+msgstr "Pac. Isldr. VAP Threshold"
+
+#: /usr/src/app/config/config.xml:217
+msgid "district_vappild_thresh long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:224
+msgid "district_vapoth_percent short label"
+msgstr "Other VAP"
+
+#: /usr/src/app/config/config.xml:224
+msgid "district_vapoth_percent label"
+msgstr "Other VAP"
+
+#: /usr/src/app/config/config.xml:224
+msgid "district_vapoth_percent long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:232
+msgid "district_vapoth_thresh short label"
+msgstr "Other VAP Threshold"
+
+#: /usr/src/app/config/config.xml:232
+msgid "district_vapoth_thresh label"
+msgstr "Other VAP Threshold"
+
+#: /usr/src/app/config/config.xml:232
+msgid "district_vapoth_thresh long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:239
+msgid "district_vaptwo_percent short label"
+msgstr "Two+ Races VAP"
+
+#: /usr/src/app/config/config.xml:239
+msgid "district_vaptwo_percent label"
+msgstr "Two+ Races VAP"
+
+#: /usr/src/app/config/config.xml:239
+msgid "district_vaptwo_percent long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:247
+msgid "district_vaptwo_thresh short label"
+msgstr "Two+ Races VAP Threshold"
+
+#: /usr/src/app/config/config.xml:247
+msgid "district_vaptwo_thresh label"
+msgstr "Two+ Races VAP Threshold"
+
+#: /usr/src/app/config/config.xml:247
+msgid "district_vaptwo_thresh long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:254
+msgid "district_prison_percent short label"
+msgstr "Incarcerated"
+
+#: /usr/src/app/config/config.xml:254
+msgid "district_prison_percent label"
+msgstr "Incarcerated"
+
+#: /usr/src/app/config/config.xml:254
+msgid "district_prison_percent long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:262
+msgid "district_prison_thresh short label"
+msgstr "Incarcerated Threshold"
+
+#: /usr/src/app/config/config.xml:262
+msgid "district_prison_thresh label"
+msgstr "Incarcerated Threshold"
+
+#: /usr/src/app/config/config.xml:262
+msgid "district_prison_thresh long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:269
+msgid "district_votedem_percent short label"
+msgstr "Registered Democrat"
+
+#: /usr/src/app/config/config.xml:269
+msgid "district_votedem_percent label"
+msgstr "Registered Democrat"
+
+#: /usr/src/app/config/config.xml:269
+msgid "district_votedem_percent long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:277
+msgid "district_votedem_thresh short label"
+msgstr "Registered Democrat Threshold"
+
+#: /usr/src/app/config/config.xml:277
+msgid "district_votedem_thresh label"
+msgstr "Registered Democrat Threshold"
+
+#: /usr/src/app/config/config.xml:277
+msgid "district_votedem_thresh long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:284
+msgid "district_voterep_percent short label"
+msgstr "Registered Republican"
+
+#: /usr/src/app/config/config.xml:284
+msgid "district_voterep_percent label"
+msgstr "Registered Republican"
+
+#: /usr/src/app/config/config.xml:284
+msgid "district_voterep_percent long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:292
+msgid "district_voterep_thresh short label"
+msgstr "Registered Republican Threshold"
+
+#: /usr/src/app/config/config.xml:292
+msgid "district_voterep_thresh label"
+msgstr "Registered Republican Threshold"
+
+#: /usr/src/app/config/config.xml:292
+msgid "district_voterep_thresh long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:299
+msgid "district_voteoth_percent short label"
+msgstr "Registered Other"
+
+#: /usr/src/app/config/config.xml:299
+msgid "district_voteoth_percent label"
+msgstr "Registered Other"
+
+#: /usr/src/app/config/config.xml:299
+msgid "district_voteoth_percent long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:307
+msgid "district_voteoth_thresh short label"
+msgstr "Registered Other Threshold"
+
+#: /usr/src/app/config/config.xml:307
+msgid "district_voteoth_thresh label"
+msgstr "Registered Other Threshold"
+
+#: /usr/src/app/config/config.xml:307
+msgid "district_voteoth_thresh long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:314
+msgid "district_ageu18_percent short label"
+msgstr "Under 18"
+
+#: /usr/src/app/config/config.xml:314
+msgid "district_ageu18_percent label"
+msgstr "Under 18"
+
+#: /usr/src/app/config/config.xml:314
+msgid "district_ageu18_percent long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:322
+msgid "district_age1824_percent short label"
+msgstr "18-24"
+
+#: /usr/src/app/config/config.xml:322
+msgid "district_age1824_percent label"
+msgstr "18-24"
+
+#: /usr/src/app/config/config.xml:322
+msgid "district_age1824_percent long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:330
+msgid "district_age2534_percent short label"
+msgstr "25-34"
+
+#: /usr/src/app/config/config.xml:330
+msgid "district_age2534_percent label"
+msgstr "25-34"
+
+#: /usr/src/app/config/config.xml:330
+msgid "district_age2534_percent long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:338
+msgid "district_age3549_percent short label"
+msgstr "35-49"
+
+#: /usr/src/app/config/config.xml:338
+msgid "district_age3549_percent label"
+msgstr "35-49"
+
+#: /usr/src/app/config/config.xml:338
+msgid "district_age3549_percent long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:346
+msgid "district_age5064_percent short label"
+msgstr "50-64"
+
+#: /usr/src/app/config/config.xml:346
+msgid "district_age5064_percent label"
+msgstr "50-64"
+
+#: /usr/src/app/config/config.xml:346
+msgid "district_age5064_percent long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:354
+msgid "district_age65o_percent short label"
+msgstr "65+"
+
+#: /usr/src/app/config/config.xml:354
+msgid "district_age65o_percent label"
+msgstr "65+"
+
+#: /usr/src/app/config/config.xml:354
+msgid "district_age65o_percent long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:364
+msgid "congress_plan_count_districts short label"
+msgstr "Count Districts"
+
+#: /usr/src/app/config/config.xml:364
+msgid "congress_plan_count_districts label"
+msgstr "Count Districts"
+
+#: /usr/src/app/config/config.xml:364
+msgid "congress_plan_count_districts long description"
+msgstr ""
+"The number of districts in a Congressional redistricting plan must be 18."
+
+#: /usr/src/app/config/config.xml:371
+msgid "congress_plan_equipopulation_validation short label"
+msgstr "Target Pop. (702,160 - 709,216)"
+
+#: /usr/src/app/config/config.xml:371
+msgid "congress_plan_equipopulation_validation label"
+msgstr "Target Pop. (702,160 - 709,216)"
+
+#: /usr/src/app/config/config.xml:371
+msgid "congress_plan_equipopulation_validation long description"
+msgstr ""
+"The population of each Congressional district must be 705,688 +/- 0.5%."
+
+#: /usr/src/app/config/config.xml:391
+msgid "plan_all_tracts_assigned short label"
+msgstr "All Tracts Assigned"
+
+#: /usr/src/app/config/config.xml:391
+msgid "plan_all_tracts_assigned label"
+msgstr "All Tracts Assigned"
+
+#: /usr/src/app/config/config.xml:391
+msgid "plan_all_tracts_assigned long description"
+msgstr "All tracts in the plan must be assigned."
+
+#: /usr/src/app/config/config.xml:606
+msgid "congress_submission_summary short label"
+msgstr "Split Counties"
+
+#: /usr/src/app/config/config.xml:606
+msgid "congress_submission_summary label"
+msgstr "Split Counties"
+
+#: /usr/src/app/config/config.xml:606
+msgid "congress_submission_summary long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:552
+msgid "plan_submission_summary short label"
+msgstr "Plan Summary"
+
+#: /usr/src/app/config/config.xml:552
+msgid "plan_submission_summary label"
+msgstr "Plan Summary"
+
+#: /usr/src/app/config/config.xml:552
+msgid "plan_submission_summary long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:428
+msgid "congress_plan_splits_count short label"
+msgstr "Split Counties"
+
+#: /usr/src/app/config/config.xml:428
+msgid "congress_plan_splits_count label"
+msgstr "Split Counties"
+
+#: /usr/src/app/config/config.xml:428
+msgid "congress_plan_splits_count long description"
+msgstr "The number of counties that are split by a district within the plan."
+
+#: /usr/src/app/config/config.xml:453
+msgid "report_score_total_white_population_congress short label"
+msgstr "Total White Population"
+
+#: /usr/src/app/config/config.xml:453
+msgid "report_score_total_white_population_congress label"
+msgstr "Total White Population"
+
+#: /usr/src/app/config/config.xml:453
+msgid "report_score_total_white_population_congress long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:460
+msgid "district_white_percent short label"
+msgstr "White Population"
+
+#: /usr/src/app/config/config.xml:460
+msgid "district_white_percent label"
+msgstr "White Population"
+
+#: /usr/src/app/config/config.xml:460
+msgid "district_white_percent long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:460
+msgid "report_score_total_black_population_congress short label"
+msgstr "Total Black Population"
+
+#: /usr/src/app/config/config.xml:460
+msgid "report_score_total_black_population_congress label"
+msgstr "Total Black Population"
+
+#: /usr/src/app/config/config.xml:460
+msgid "report_score_total_black_population_congress long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:467
+msgid "report_score_total_hispanic_population_congress short label"
+msgstr "Total Hispanic Population"
+
+#: /usr/src/app/config/config.xml:467
+msgid "report_score_total_hispanic_population_congress label"
+msgstr "Total Hispanic Population"
+
+#: /usr/src/app/config/config.xml:467
+msgid "report_score_total_hispanic_population_congress long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:474
+msgid "report_score_total_asian_population_congress short label"
+msgstr "Total Asian Population"
+
+#: /usr/src/app/config/config.xml:474
+msgid "report_score_total_asian_population_congress label"
+msgstr "Total Asian Population"
+
+#: /usr/src/app/config/config.xml:474
+msgid "report_score_total_asian_population_congress long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:481
+msgid "report_score_total_amer_ind_population_congress short label"
+msgstr "Total American Indian/Alaskan Native"
+
+#: /usr/src/app/config/config.xml:481
+msgid "report_score_total_amer_ind_population_congress label"
+msgstr "Total American Indian/Alaskan Native"
+
+#: /usr/src/app/config/config.xml:481
+msgid "report_score_total_amer_ind_population_congress long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:488
+msgid "report_score_total_pacific_islander_population_con short label"
+msgstr "Total Native Hawaiian/Pacific Islander"
+
+#: /usr/src/app/config/config.xml:488
+msgid "report_score_total_pacific_islander_population_con label"
+msgstr "Total Native Hawaiian/Pacific Islander"
+
+#: /usr/src/app/config/config.xml:488
+msgid "report_score_total_pacific_islander_population_con long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:495
+msgid "report_score_total_other_races_population_congress short label"
+msgstr "Total Other Race"
+
+#: /usr/src/app/config/config.xml:495
+msgid "report_score_total_other_races_population_congress label"
+msgstr "Total Other Race"
+
+#: /usr/src/app/config/config.xml:495
+msgid "report_score_total_other_races_population_congress long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:502
+msgid "report_score_total_two_races_population_congress short label"
+msgstr "Total Two or more races"
+
+#: /usr/src/app/config/config.xml:502
+msgid "report_score_total_two_races_population_congress label"
+msgstr "Total Two or more races"
+
+#: /usr/src/app/config/config.xml:502
+msgid "report_score_total_two_races_population_congress long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:509
+msgid "report_score_total_ageu18_population_congress short label"
+msgstr "Ages 0-17"
+
+#: /usr/src/app/config/config.xml:509
+msgid "report_score_total_ageu18_population_congress label"
+msgstr "Ages 0-17"
+
+#: /usr/src/app/config/config.xml:509
+msgid "report_score_total_ageu18_population_congress long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:516
+msgid "report_score_total_age1824_population_congress short label"
+msgstr "Ages 18-24"
+
+#: /usr/src/app/config/config.xml:516
+msgid "report_score_total_age1824_population_congress label"
+msgstr "Ages 18-24"
+
+#: /usr/src/app/config/config.xml:516
+msgid "report_score_total_age1824_population_congress long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:523
+msgid "report_score_total_age2534_population_congress short label"
+msgstr "Ages 25-34"
+
+#: /usr/src/app/config/config.xml:523
+msgid "report_score_total_age2534_population_congress label"
+msgstr "Ages 25-34"
+
+#: /usr/src/app/config/config.xml:523
+msgid "report_score_total_age2534_population_congress long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:530
+msgid "report_score_total_age3549_population_congress short label"
+msgstr "Ages 35-49"
+
+#: /usr/src/app/config/config.xml:530
+msgid "report_score_total_age3549_population_congress label"
+msgstr "Ages 35-49"
+
+#: /usr/src/app/config/config.xml:530
+msgid "report_score_total_age3549_population_congress long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:537
+msgid "report_score_total_age5064_population_congress short label"
+msgstr "Ages 50-64"
+
+#: /usr/src/app/config/config.xml:537
+msgid "report_score_total_age5064_population_congress label"
+msgstr "Ages 50-64"
+
+#: /usr/src/app/config/config.xml:537
+msgid "report_score_total_age5064_population_congress long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:544
+msgid "report_score_total_age65o_population_congress short label"
+msgstr "Ages 65+"
+
+#: /usr/src/app/config/config.xml:544
+msgid "report_score_total_age65o_population_congress label"
+msgstr "Ages 65+"
+
+#: /usr/src/app/config/config.xml:544
+msgid "report_score_total_age65o_population_congress long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:67
+msgid "age18u short label"
+msgstr "Under 18"
+
+#: /usr/src/app/config/config.xml:67
+msgid "age18u label"
+msgstr "Age - under 18"
+
+#: /usr/src/app/config/config.xml:67
+msgid "age18u long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:509
+msgid "report_score_total_age18u_population_congress short label"
+msgstr "Ages under 18"
+
+#: /usr/src/app/config/config.xml:509
+msgid "report_score_total_age18u_population_congress label"
+msgstr "Ages under 18"
+
+#: /usr/src/app/config/config.xml:509
+msgid "report_score_total_age18u_population_congress long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:308
+msgid "district_age18u_percent short label"
+msgstr "Under 18"
+
+#: /usr/src/app/config/config.xml:308
+msgid "district_age18u_percent label"
+msgstr "Under 18"
+
+#: /usr/src/app/config/config.xml:308
+msgid "district_age18u_percent long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:67
+msgid "age18-u short label"
+msgstr "Under 18"
+
+#: /usr/src/app/config/config.xml:67
+msgid "age18-u label"
+msgstr "Age - under 18"
+
+#: /usr/src/app/config/config.xml:67
+msgid "age18-u long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:67
+msgid "age17 short label"
+msgstr "Under 18"
+
+#: /usr/src/app/config/config.xml:67
+msgid "age17 label"
+msgstr "Age - under 18"
+
+#: /usr/src/app/config/config.xml:67
+msgid "age17 long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:509
+msgid "report_score_total_age-u18_population_congress short label"
+msgstr "Ages under 18"
+
+#: /usr/src/app/config/config.xml:509
+msgid "report_score_total_age-u18_population_congress label"
+msgstr "Ages under 18"
+
+#: /usr/src/app/config/config.xml:509
+msgid "report_score_total_age-u18_population_congress long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:509
+msgid "report_score_total_age0018_population_congress short label"
+msgstr "Ages under 18"
+
+#: /usr/src/app/config/config.xml:509
+msgid "report_score_total_age0018_population_congress label"
+msgstr "Ages under 18"
+
+#: /usr/src/app/config/config.xml:509
+msgid "report_score_total_age0018_population_congress long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:666
+msgid "congressional_panel_competitiveness short label"
+msgstr "Competitiveness"
+
+#: /usr/src/app/config/config.xml:666
+msgid "congressional_panel_competitiveness label"
+msgstr "Competitiveness"
+
+#: /usr/src/app/config/config.xml:666
+msgid "congressional_panel_competitiveness long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:733
+msgid "congress_sidebar_competitiveness short label"
+msgstr "Competitiveness"
+
+#: /usr/src/app/config/config.xml:733
+msgid "congress_sidebar_competitiveness label"
+msgstr "Competitiveness"
+
+#: /usr/src/app/config/config.xml:733
+msgid "congress_sidebar_competitiveness long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:460
+msgid "report_score_percent_white_population_congress short label"
+msgstr "White Population"
+
+#: /usr/src/app/config/config.xml:460
+msgid "report_score_percent_white_population_congress label"
+msgstr "White Population"
+
+#: /usr/src/app/config/config.xml:460
+msgid "report_score_percent_white_population_congress long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:461
+msgid "report_score_percent_black_population_congress short label"
+msgstr "Black Population"
+
+#: /usr/src/app/config/config.xml:461
+msgid "report_score_percent_black_population_congress label"
+msgstr "Black Population"
+
+#: /usr/src/app/config/config.xml:461
+msgid "report_score_percent_black_population_congress long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:469
+msgid "report_score_percent_hispanic_population_congress short label"
+msgstr "Hispanic Population"
+
+#: /usr/src/app/config/config.xml:469
+msgid "report_score_percent_hispanic_population_congress label"
+msgstr "Hispanic Population"
+
+#: /usr/src/app/config/config.xml:469
+msgid "report_score_percent_hispanic_population_congress long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:477
+msgid "report_score_percent_asian_population_congress short label"
+msgstr "Asian Population"
+
+#: /usr/src/app/config/config.xml:477
+msgid "report_score_percent_asian_population_congress label"
+msgstr "Asian Population"
+
+#: /usr/src/app/config/config.xml:477
+msgid "report_score_percent_asian_population_congress long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:485
+msgid "report_score_percent_amer_ind_population_congress short label"
+msgstr "American Indian/Alaskan Native"
+
+#: /usr/src/app/config/config.xml:485
+msgid "report_score_percent_amer_ind_population_congress label"
+msgstr "American Indian/Alaskan Native"
+
+#: /usr/src/app/config/config.xml:485
+msgid "report_score_percent_amer_ind_population_congress long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:493
+msgid "report_score_percent_pacific_islander_population_c short label"
+msgstr "Native Hawaiian/Pacific Islander"
+
+#: /usr/src/app/config/config.xml:493
+msgid "report_score_percent_pacific_islander_population_c label"
+msgstr "Native Hawaiian/Pacific Islander"
+
+#: /usr/src/app/config/config.xml:493
+msgid "report_score_percent_pacific_islander_population_c long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:501
+msgid "report_score_percent_other_races_population_congre short label"
+msgstr "Other Race"
+
+#: /usr/src/app/config/config.xml:501
+msgid "report_score_percent_other_races_population_congre label"
+msgstr "Other Race"
+
+#: /usr/src/app/config/config.xml:501
+msgid "report_score_percent_other_races_population_congre long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:509
+msgid "report_score_percent_two_races_population_congress short label"
+msgstr "Two or more races"
+
+#: /usr/src/app/config/config.xml:509
+msgid "report_score_percent_two_races_population_congress label"
+msgstr "Two or more races"
+
+#: /usr/src/app/config/config.xml:509
+msgid "report_score_percent_two_races_population_congress long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:517
+msgid "report_score_percent_age0018_population_congress short label"
+msgstr "Ages under 18"
+
+#: /usr/src/app/config/config.xml:517
+msgid "report_score_percent_age0018_population_congress label"
+msgstr "Ages under 18"
+
+#: /usr/src/app/config/config.xml:517
+msgid "report_score_percent_age0018_population_congress long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:525
+msgid "report_score_percent_age1824_population_congress short label"
+msgstr "Ages 18-24"
+
+#: /usr/src/app/config/config.xml:525
+msgid "report_score_percent_age1824_population_congress label"
+msgstr "Ages 18-24"
+
+#: /usr/src/app/config/config.xml:525
+msgid "report_score_percent_age1824_population_congress long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:533
+msgid "report_score_percent_age2534_population_congress short label"
+msgstr "Ages 25-34"
+
+#: /usr/src/app/config/config.xml:533
+msgid "report_score_percent_age2534_population_congress label"
+msgstr "Ages 25-34"
+
+#: /usr/src/app/config/config.xml:533
+msgid "report_score_percent_age2534_population_congress long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:541
+msgid "report_score_percent_age3549_population_congress short label"
+msgstr "Ages 35-49"
+
+#: /usr/src/app/config/config.xml:541
+msgid "report_score_percent_age3549_population_congress label"
+msgstr "Ages 35-49"
+
+#: /usr/src/app/config/config.xml:541
+msgid "report_score_percent_age3549_population_congress long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:549
+msgid "report_score_percent_age5064_population_congress short label"
+msgstr "Ages 50-64"
+
+#: /usr/src/app/config/config.xml:549
+msgid "report_score_percent_age5064_population_congress label"
+msgstr "Ages 50-64"
+
+#: /usr/src/app/config/config.xml:549
+msgid "report_score_percent_age5064_population_congress long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:557
+msgid "report_score_percent_age65o_population_congress short label"
+msgstr "Ages 65+"
+
+#: /usr/src/app/config/config.xml:557
+msgid "report_score_percent_age65o_population_congress label"
+msgstr "Ages 65+"
+
+#: /usr/src/app/config/config.xml:557
+msgid "report_score_percent_age65o_population_congress long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:316
+msgid "district_black_percent short label"
+msgstr "Black Population"
+
+#: /usr/src/app/config/config.xml:316
+msgid "district_black_percent label"
+msgstr "Black Population"
+
+#: /usr/src/app/config/config.xml:316
+msgid "district_black_percent long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:324
+msgid "district_hispanic_percent short label"
+msgstr "Hispanic Population"
+
+#: /usr/src/app/config/config.xml:324
+msgid "district_hispanic_percent label"
+msgstr "Hispanic Population"
+
+#: /usr/src/app/config/config.xml:324
+msgid "district_hispanic_percent long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:332
+msgid "district_asian_percent short label"
+msgstr "Asian Population"
+
+#: /usr/src/app/config/config.xml:332
+msgid "district_asian_percent label"
+msgstr "Asian Population"
+
+#: /usr/src/app/config/config.xml:332
+msgid "district_asian_percent long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:340
+msgid "district_amer_ind_percent short label"
+msgstr "American Indian/Alaskan Native"
+
+#: /usr/src/app/config/config.xml:340
+msgid "district_amer_ind_percent label"
+msgstr "American Indian/Alaskan Native"
+
+#: /usr/src/app/config/config.xml:340
+msgid "district_amer_ind_percent long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:348
+msgid "district_native_pac_percent short label"
+msgstr "Native Hawaiian/Pacific Islander"
+
+#: /usr/src/app/config/config.xml:348
+msgid "district_native_pac_percent label"
+msgstr "Native Hawaiian/Pacific Islander"
+
+#: /usr/src/app/config/config.xml:348
+msgid "district_native_pac_percent long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:356
+msgid "district_other_percent short label"
+msgstr "Other Race"
+
+#: /usr/src/app/config/config.xml:356
+msgid "district_other_percent label"
+msgstr "Other Race"
+
+#: /usr/src/app/config/config.xml:356
+msgid "district_other_percent long description"
+msgstr ""
+
+#: /usr/src/app/config/config.xml:364
+msgid "district_two_percent short label"
+msgstr "Two or more races"
+
+#: /usr/src/app/config/config.xml:364
+msgid "district_two_percent label"
+msgstr "Two or more races"
+
+#: /usr/src/app/config/config.xml:364
+msgid "district_two_percent long description"
 msgstr ""

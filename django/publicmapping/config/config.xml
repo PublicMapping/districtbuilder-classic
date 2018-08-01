@@ -11,8 +11,8 @@
             </LegislativeBodies>
 
             <GeoLevels>
-                <GeoLevel ref="tract">
-                   <GeoLevel ref="county" />
+                <GeoLevel ref="tract" label="Census Tracts">
+                   <GeoLevel ref="county" label="County Lines" />
                 </GeoLevel>
             </GeoLevels>
         </Region>
@@ -82,12 +82,6 @@
             <ScoreFunction id="district_polsbypopper" type="district"
                 calculator="redistricting.calculators.PolsbyPopper"
                 label="Compactness" user_selectable="true">
-                <LegislativeBody ref="congress"/>
-            </ScoreFunction>
-
-            <ScoreFunction id="district_convexhullratio" type="district"
-                calculator="redistricting.calculators.ConvexHullRatio"
-                label="Convex Hull Ratio" user_selectable="true">
                 <LegislativeBody ref="congress"/>
             </ScoreFunction>
 
@@ -266,7 +260,7 @@
 
             <ScoreFunction id="district_votedem_percent" type="district"
                 calculator="redistricting.calculators.Percent"
-                label="Voted Democrat">
+                label="Registered Democrat">
                 <SubjectArgument name="numerator" ref="votedem" />
                 <SubjectArgument name="denominator" ref="vap" />
                 <LegislativeBody ref="congress"/>
@@ -274,14 +268,14 @@
 
             <ScoreFunction id="district_votedem_thresh" type="district"
                 calculator="redistricting.calculators.Threshold"
-                label="Voted Democrat Threshold">
+                label="Registered Democrat Threshold">
                 <ScoreArgument name="value" ref="district_votedem_percent" />
                 <Argument name="threshold" value="0.5" />
             </ScoreFunction>
 
             <ScoreFunction id="district_voterep_percent" type="district"
                 calculator="redistricting.calculators.Percent"
-                label="Voted Republican">
+                label="Registered Republican">
                 <SubjectArgument name="numerator" ref="voterep" />
                 <SubjectArgument name="denominator" ref="vap" />
                 <LegislativeBody ref="congress"/>
@@ -289,14 +283,14 @@
 
             <ScoreFunction id="district_voterep_thresh" type="district"
                 calculator="redistricting.calculators.Threshold"
-                label="Voted Republican Threshold">
+                label="Registered Republican Threshold">
                 <ScoreArgument name="value" ref="district_voterep_percent" />
                 <Argument name="threshold" value="0.5" />
             </ScoreFunction>
 
             <ScoreFunction id="district_voteoth_percent" type="district"
                 calculator="redistricting.calculators.Percent"
-                label="Voted Other">
+                label="Registered Other">
                 <SubjectArgument name="numerator" ref="voteoth" />
                 <SubjectArgument name="denominator" ref="vap" />
                 <LegislativeBody ref="congress"/>
@@ -304,9 +298,73 @@
 
             <ScoreFunction id="district_voteoth_thresh" type="district"
                 calculator="redistricting.calculators.Threshold"
-                label="Voted Other Threshold">
+                label="Registered Other Threshold">
                 <ScoreArgument name="value" ref="district_voteoth_percent" />
                 <Argument name="threshold" value="0.5" />
+            </ScoreFunction>
+
+            <ScoreFunction id="district_white_percent" type="district"
+                calculator="redistricting.calculators.Percent"
+                label="White Population">
+                <SubjectArgument name="numerator" ref="popwnh" />
+                <SubjectArgument name="denominator" ref="poptot" />
+                <LegislativeBody ref="congress"/>
+            </ScoreFunction>
+
+            <ScoreFunction id="district_black_percent" type="district"
+                calculator="redistricting.calculators.Percent"
+                label="Black Population" >
+                <LegislativeBody ref="congress"/>
+                <SubjectArgument name="numerator" ref="popblk" />
+                <SubjectArgument name="denominator" ref="poptot" />
+            </ScoreFunction>
+
+            <ScoreFunction id="district_hispanic_percent" type="district"
+                calculator="redistricting.calculators.Percent"
+                label="Hispanic Population" >
+                <LegislativeBody ref="congress"/>
+                <SubjectArgument name="numerator" ref="pophisp" />
+                <SubjectArgument name="denominator" ref="poptot" />
+            </ScoreFunction>
+
+            <ScoreFunction id="district_asian_percent" type="district"
+                calculator="redistricting.calculators.Percent"
+                label="Asian Population" >
+                <LegislativeBody ref="congress"/>
+                <SubjectArgument name="numerator" ref="popasn" />
+                <SubjectArgument name="denominator" ref="poptot" />
+            </ScoreFunction>
+
+            <ScoreFunction id="district_amer_ind_percent" type="district"
+                calculator="redistricting.calculators.Percent"
+                label="American Indian/Alaskan Native" >
+                <LegislativeBody ref="congress"/>
+                <SubjectArgument name="numerator" ref="popnam" />
+                <SubjectArgument name="denominator" ref="poptot" />
+            </ScoreFunction>
+
+            <ScoreFunction id="district_native_pac_percent" type="district"
+                calculator="redistricting.calculators.Percent"
+                label="Native Hawaiian/Pacific Islander" >
+                <LegislativeBody ref="congress"/>
+                <SubjectArgument name="numerator" ref="poppild" />
+                <SubjectArgument name="denominator" ref="poptot" />
+            </ScoreFunction>
+
+            <ScoreFunction id="district_other_percent" type="district"
+                calculator="redistricting.calculators.Percent"
+                label="Other Race" >
+                <LegislativeBody ref="congress"/>
+                <SubjectArgument name="numerator" ref="popoth" />
+                <SubjectArgument name="denominator" ref="poptot" />
+            </ScoreFunction>
+
+            <ScoreFunction id="district_two_percent" type="district"
+                calculator="redistricting.calculators.Percent"
+                label="Two or more races" >
+                <LegislativeBody ref="congress"/>
+                <SubjectArgument name="numerator" ref="poptwo" />
+                <SubjectArgument name="denominator" ref="poptot" />
             </ScoreFunction>
 
             <ScoreFunction id="district_ageu18_percent" type="district"
@@ -367,7 +425,7 @@
 
             <ScoreFunction id="congress_plan_equipopulation_validation" type="plan"
                 calculator="redistricting.calculators.Equipopulation"
-                label="Target Pop. (705,688)"
+                label="Target Pop. (702,160 - 709,216)"
                 description="The population of each Congressional district must be 705,688 +/- 0.5%.">
                 <Argument name="min" value="702160"/>
                 <Argument name="max" value="709216"/>
@@ -377,7 +435,7 @@
 
             <ScoreFunction id="congress_plan_equipopulation_summary" type="plan"
                 calculator="redistricting.calculators.Equipopulation"
-                label="Target Pop. (705,688)"
+                label="Target Pop. (702,160 - 709,216)"
                 description="The population of each Congressional district must be 705,688 +/- 0.5%.">
                 <Argument name="min" value="702160"/>
                 <Argument name="max" value="709216"/>
@@ -433,13 +491,13 @@
 
             <ScoreFunction id="congress_plan_polsbypopper" type="plan"
                 calculator="redistricting.calculators.PolsbyPopper"
-                label="Average Compactness"
+                label="Avg. Compactness (100% is best)"
                 description="The competition is using the &apos;Polsby-Popper&apos; compactness measure. This measure is a ratio of the area of a circle with the same perimeter as a district to the area of the district." >
             </ScoreFunction>
 
             <ScoreFunction id="congress_plan_equivalence" type="plan"
                 calculator="redistricting.calculators.Equivalence"
-                label="Equal Population"
+                label="Pop. Equivalence (0 is best)"
                 description="The Equipopulation score is the difference between the district with the highest population and the district with the lowest population.">
                 <SubjectArgument name="value" ref="poptot" />
             </ScoreFunction>
@@ -452,6 +510,118 @@
                 <SubjectArgument name="value" ref="poptot" />
                 <Argument name="min" value="702160" />
                 <Argument name="max" value="709216" />
+            </ScoreFunction>
+
+            <ScoreFunction id="report_score_percent_white_population_congress" type="district"
+                calculator="redistricting.reportcalculators.PopulationPercent"
+                label="White Population">
+                <SubjectArgument name="numerator" ref="popwnh" />
+                <SubjectArgument name="denominator" ref="poptot" />
+                <LegislativeBody ref="congress"/>
+            </ScoreFunction>
+
+            <ScoreFunction id="report_score_percent_black_population_congress" type="district"
+                calculator="redistricting.reportcalculators.PopulationPercent"
+                label="Black Population" >
+                <LegislativeBody ref="congress"/>
+                <SubjectArgument name="numerator" ref="popblk" />
+                <SubjectArgument name="denominator" ref="poptot" />
+            </ScoreFunction>
+
+            <ScoreFunction id="report_score_percent_hispanic_population_congress" type="district"
+                calculator="redistricting.reportcalculators.PopulationPercent"
+                label="Hispanic Population" >
+                <LegislativeBody ref="congress"/>
+                <SubjectArgument name="numerator" ref="pophisp" />
+                <SubjectArgument name="denominator" ref="poptot" />
+            </ScoreFunction>
+
+            <ScoreFunction id="report_score_percent_asian_population_congress" type="district"
+                calculator="redistricting.reportcalculators.PopulationPercent"
+                label="Asian Population" >
+                <LegislativeBody ref="congress"/>
+                <SubjectArgument name="numerator" ref="popasn" />
+                <SubjectArgument name="denominator" ref="poptot" />
+            </ScoreFunction>
+
+            <ScoreFunction id="report_score_percent_amer_ind_population_congress" type="district"
+                calculator="redistricting.reportcalculators.PopulationPercent"
+                label="American Indian/Alaskan Native" >
+                <LegislativeBody ref="congress"/>
+                <SubjectArgument name="numerator" ref="popnam" />
+                <SubjectArgument name="denominator" ref="poptot" />
+            </ScoreFunction>
+
+            <ScoreFunction id="report_score_percent_pacific_islander_population_congress" type="district"
+                calculator="redistricting.reportcalculators.PopulationPercent"
+                label="Native Hawaiian/Pacific Islander" >
+                <LegislativeBody ref="congress"/>
+                <SubjectArgument name="numerator" ref="poppild" />
+                <SubjectArgument name="denominator" ref="poptot" />
+            </ScoreFunction>
+
+            <ScoreFunction id="report_score_percent_other_races_population_congress" type="district"
+                calculator="redistricting.reportcalculators.PopulationPercent"
+                label="Other Race" >
+                <LegislativeBody ref="congress"/>
+                <SubjectArgument name="numerator" ref="popoth" />
+                <SubjectArgument name="denominator" ref="poptot" />
+            </ScoreFunction>
+
+            <ScoreFunction id="report_score_percent_two_races_population_congress" type="district"
+                calculator="redistricting.reportcalculators.PopulationPercent"
+                label="Two or more races" >
+                <LegislativeBody ref="congress"/>
+                <SubjectArgument name="numerator" ref="poptwo" />
+                <SubjectArgument name="denominator" ref="poptot" />
+            </ScoreFunction>
+
+            <ScoreFunction id="report_score_percent_age0018_population_congress" type="district"
+                calculator="redistricting.reportcalculators.PopulationPercent"
+                label="Ages under 18" >
+                <LegislativeBody ref="congress"/>
+                <SubjectArgument name="numerator" ref="ageu18" />
+                <SubjectArgument name="denominator" ref="poptot" />
+            </ScoreFunction>
+
+            <ScoreFunction id="report_score_percent_age1824_population_congress" type="district"
+                calculator="redistricting.reportcalculators.PopulationPercent"
+                label="Ages 18-24" >
+                <LegislativeBody ref="congress"/>
+                <SubjectArgument name="numerator" ref="age1824" />
+                <SubjectArgument name="denominator" ref="poptot" />
+            </ScoreFunction>
+
+            <ScoreFunction id="report_score_percent_age2534_population_congress" type="district"
+                calculator="redistricting.reportcalculators.PopulationPercent"
+                label="Ages 25-34" >
+                <LegislativeBody ref="congress"/>
+                <SubjectArgument name="numerator" ref="age2534" />
+                <SubjectArgument name="denominator" ref="poptot" />
+            </ScoreFunction>
+
+            <ScoreFunction id="report_score_percent_age3549_population_congress" type="district"
+                calculator="redistricting.reportcalculators.PopulationPercent"
+                label="Ages 35-49" >
+                <LegislativeBody ref="congress"/>
+                <SubjectArgument name="numerator" ref="age3549" />
+                <SubjectArgument name="denominator" ref="poptot" />
+            </ScoreFunction>
+
+            <ScoreFunction id="report_score_percent_age5064_population_congress" type="district"
+                calculator="redistricting.reportcalculators.PopulationPercent"
+                label="Ages 50-64" >
+                <LegislativeBody ref="congress"/>
+                <SubjectArgument name="numerator" ref="age5064" />
+                <SubjectArgument name="denominator" ref="poptot" />
+            </ScoreFunction>
+
+            <ScoreFunction id="report_score_percent_age65o_population_congress" type="district"
+                calculator="redistricting.reportcalculators.PopulationPercent"
+                label="Ages 65+" >
+                <LegislativeBody ref="congress"/>
+                <SubjectArgument name="numerator" ref="age65o" />
+                <SubjectArgument name="denominator" ref="poptot" />
             </ScoreFunction>
 
             <ScoreFunction id="report_score_compactness_lw" type="district"
@@ -568,18 +738,38 @@
                 <Score ref="district_vapasn_percent" />
             </ScorePanel>
 
+            <!-- Competitiveness -->
+            <ScorePanel id="congressional_panel_competitiveness" type="district" position="2"
+                title="Competitiveness" cssclass="district_competitiveness congressional"
+                template="competitiveness.html">
+                <Score ref="district_votedem_percent" />
+                <Score ref="district_voterep_percent" />
+                <Score ref="district_voteoth_percent" />
+            </ScorePanel>
+
             <!-- Calculator Reports configuration -->
             <ScorePanel id="report_panel_population" type="district" position="2"
                 title="Population" template="report_panel.html" cssclass="reports population" >
                 <Score ref="report_score_total_population_congress" />
+                <Score ref="report_score_percent_white_population_congress" />
+                <Score ref="report_score_percent_black_population_congress" />
+                <Score ref="report_score_percent_hispanic_population_congress" />
+                <Score ref="report_score_percent_asian_population_congress" />
+                <Score ref="report_score_percent_amer_ind_population_congress" />
+                <Score ref="report_score_percent_pacific_islander_population_congress" />
+                <Score ref="report_score_percent_other_races_population_congress" />
+                <Score ref="report_score_percent_two_races_population_congress" />
+                <Score ref="report_score_percent_age0018_population_congress" />
+                <Score ref="report_score_percent_age1824_population_congress" />
+                <Score ref="report_score_percent_age2534_population_congress" />
+                <Score ref="report_score_percent_age3549_population_congress" />
+                <Score ref="report_score_percent_age5064_population_congress" />
+                <Score ref="report_score_percent_age65o_population_congress" />
             </ScorePanel>
 
             <ScorePanel id="report_panel_compactness" type="district" position="1"
                 title="Compactness" template="report_panel.html" cssclass="reports compactness">
                 <Score ref="report_score_compactness_pp" />
-                <Score ref="report_score_compactness_sc" />
-                <Score ref="report_score_compactness_lw" />
-                <Score ref="report_score_compactness_ro" />
             </ScorePanel>
 
             <ScorePanel id="report_panel_spatial" type="plan" position="5"
@@ -616,6 +806,11 @@
             <ScoreDisplay id="congress_sidebar_demo" legislativebodyref="congress" type="sidebar" title="Demographics" cssclass="demographics">
                 <ScorePanel ref="congressional_panel_summary" />
                 <ScorePanel ref="congressional_panel_demo" />
+            </ScoreDisplay>
+
+            <ScoreDisplay id="congress_sidebar_competitiveness" legislativebodyref="congress" type="sidebar" title="Competitiveness" cssclass="competitiveness">
+                <ScorePanel ref="congressional_panel_summary" />
+                <ScorePanel ref="congressional_panel_competitiveness" />
             </ScoreDisplay>
 
             <!-- Calculator Reports configuration -->

@@ -520,7 +520,7 @@ def commonplan(request, planid):
             'geolevel': level.id,
             'level': level.name,
             'layer': 'simple_' + level.name,
-            'long_description': level.get_long_description(),
+            'long_description': level.get_label(),
             'min_zoom': level.min_zoom
         })
     default_selected = False
@@ -2601,6 +2601,7 @@ def statistics_sets(request, planid):
 
         admin_display_names = [
             "%s_sidebar_demo" % plan.legislative_body.name,
+            "%s_sidebar_competitiveness" % plan.legislative_body.name,
         ]
 
         if plan.legislative_body.is_community:

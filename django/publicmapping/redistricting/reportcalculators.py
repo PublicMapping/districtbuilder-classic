@@ -83,6 +83,38 @@ class Population(CalculatorBase):
         })
 
 
+class PopulationPercent(CalculatorBase):
+    """
+    Report on the percentage of a population in each district.
+    """
+
+    def compute(self, **kwargs):
+        district = kwargs['district']
+
+        num = self.get_value('numerator', district)
+        den = self.get_value('denominator', district)
+
+        try:
+            percent = float(num) / float(den)
+        except:
+            percent = 0
+
+        pop_percent_avg_key = "pop_percent" + self.arg_dict['numerator'][1]
+
+        self.result = {
+            'raw': [{
+                'label': _('DistrictID'),
+                'type': 'string',
+                'value': district.long_label
+            }, {
+                'label': _('Population Percent'),
+                'type': 'percent',
+                'value': percent,
+                'avg_key': pop_percent_avg_key,
+            }]
+        }
+
+
 class Compactness(CalculatorBase):
     """
     Report on the compactness of a district.
