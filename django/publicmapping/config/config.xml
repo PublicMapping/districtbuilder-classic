@@ -97,7 +97,7 @@
                 <ScoreArgument name="value1" ref="district_contiguous"/>
             </ScoreFunction>
 
-            <ScoreFunction id="congress_plan_noncontiguous" type="plan"
+            <ScoreFunction id="B_congress_plan_noncontiguous" type="plan"
                 calculator="redistricting.calculators.Contiguity"
                 label="Contiguous">
                 <Argument name="target" value="18" />
@@ -433,7 +433,7 @@
                 <Argument name="validation" value="1"/>
             </ScoreFunction>
 
-            <ScoreFunction id="congress_plan_equipopulation_summary" type="plan"
+            <ScoreFunction id="A_congress_plan_equipopulation_summary" type="plan"
                 calculator="redistricting.calculators.Equipopulation"
                 label="Target Pop. (702,160 - 709,216)"
                 description="The population of each Congressional district must be 705,688 +/- 0.5%.">
@@ -455,7 +455,7 @@
                 description="Contiguity means that every part of a district must be reachable from every other part without crossing the district&apos;s borders. All districts within a plan must be contiguous.">
             </ScoreFunction>
 
-            <ScoreFunction id="congress_plan_competitiveness" type="plan"
+            <ScoreFunction id="C_congress_plan_competitiveness" type="plan"
                 calculator="redistricting.calculators.Competitiveness"
                 label="Competitiveness"
                 description="Each plan&apos;s overall political competitiveness is determined by averaging each district.s &apos;partisan differential&apos;.  The partisan differential of each district is calculated by subtracting the Democratic &apos;partisan index&apos; from the Republican &apos;partisan index&apos;.&lt;br/&gt;&lt;br/&gt;&apos;Heavily&apos; competitive districts are districts with partisan differentials of less than or equal to 5%. &apos;Generally&apos; competitive districts are districts with partisan differentials of greater than 5% but less than 10%.">
@@ -472,7 +472,7 @@
                 <SubjectArgument name="republican" ref="voterep" />
             </ScoreFunction>
 
-            <ScoreFunction id="congress_plan_vapnownh_thresh" type="plan"
+            <ScoreFunction id="D_congress_plan_vapnownh_thresh" type="plan"
                 calculator="redistricting.calculators.SumValues"
                 label="Majority-Minority">
                 <ScoreArgument name="value1" ref="district_vapnownh_thresh" />
@@ -489,13 +489,13 @@
                 <Argument name="only_total" value="1" />
             </ScoreFunction>
 
-            <ScoreFunction id="congress_plan_polsbypopper" type="plan"
+            <ScoreFunction id="E_congress_plan_polsbypopper" type="plan"
                 calculator="redistricting.calculators.PolsbyPopper"
                 label="Avg. Compactness (100% is best)"
                 description="The competition is using the &apos;Polsby-Popper&apos; compactness measure. This measure is a ratio of the area of a circle with the same perimeter as a district to the area of the district." >
             </ScoreFunction>
 
-            <ScoreFunction id="congress_plan_equivalence" type="plan"
+            <ScoreFunction id="F_congress_plan_equivalence" type="plan"
                 calculator="redistricting.calculators.Equivalence"
                 label="Pop. Equivalence (0 is best)"
                 description="The Equipopulation score is the difference between the district with the highest population and the district with the lowest population.">
@@ -664,25 +664,25 @@
             <ScorePanel id="panel_compact_all" type="plan" position="1"
                 title="Compactness" template="leaderboard_panel_all.html"
                 is_ascending="false">
-                <Score ref="congress_plan_polsbypopper" />
+                <Score ref="E_congress_plan_polsbypopper" />
             </ScorePanel>
 
             <ScorePanel id="panel_compact_mine" type="plan" position="1"
                 title="Compactness" template="leaderboard_panel_mine.html"
                 is_ascending="false">
-                <Score ref="congress_plan_polsbypopper" />
+                <Score ref="E_congress_plan_polsbypopper" />
             </ScorePanel>
 
             <ScorePanel id="panel_equivalence_all" type="plan" position="2"
                 title="Equal Population" template="leaderboard_panel_all.html"
                 is_ascending="false">
-                <Score ref="congress_plan_equivalence" />
+                <Score ref="F_congress_plan_equivalence" />
             </ScorePanel>
 
             <ScorePanel id="panel_equivalence_mine" type="plan" position="2"
                 title="Equal Population" template="leaderboard_panel_mine.html"
                 is_ascending="false">
-                <Score ref="congress_plan_equivalence" />
+                <Score ref="F_congress_plan_equivalence" />
             </ScorePanel>
 
             <ScorePanel id="panel_competitiveness_all" type="plan" position="3"
@@ -700,12 +700,12 @@
             <!-- Summary above all sidebar panels -->
             <ScorePanel id="congressional_panel_summary" type="plan_summary" position="1"
                 title="Plan Summary" cssclass="plan_summary congressional" template="plan_summary.html">
-                <Score ref="congress_plan_equipopulation_summary"/>
-                <Score ref="congress_plan_noncontiguous"/>
-                <Score ref="congress_plan_polsbypopper"/>
-                <Score ref="congress_plan_equivalence"/>
-                <Score ref="congress_plan_competitiveness"/>
-                <Score ref="congress_plan_vapnownh_thresh"/>
+                <Score ref="A_congress_plan_equipopulation_summary"/>
+                <Score ref="B_congress_plan_noncontiguous"/>
+                <Score ref="E_congress_plan_polsbypopper"/>
+                <Score ref="F_congress_plan_equivalence"/>
+                <Score ref="C_congress_plan_competitiveness"/>
+                <Score ref="D_congress_plan_vapnownh_thresh"/>
             </ScorePanel>
 
             <!-- Basic Information -->
@@ -720,12 +720,12 @@
 	    <!-- Submission One-page Summary -->
             <ScorePanel id="plan_submission_summary" type="plan_summary" position="1"
                 title="Plan Summary" cssclass="plan_summary congressional" template="plan_summary.html">
-                <Score ref="congress_plan_equipopulation_summary"/>
-                <Score ref="congress_plan_noncontiguous"/>
-                <Score ref="congress_plan_polsbypopper"/>
-                <Score ref="congress_plan_equivalence"/>
-                <Score ref="congress_plan_competitiveness"/>
-                <Score ref="congress_plan_vapnownh_thresh"/>
+                <Score ref="A_congress_plan_equipopulation_summary"/>
+                <Score ref="B_congress_plan_noncontiguous"/>
+                <Score ref="E_congress_plan_polsbypopper"/>
+                <Score ref="F_congress_plan_equivalence"/>
+                <Score ref="C_congress_plan_competitiveness"/>
+                <Score ref="D_congress_plan_vapnownh_thresh"/>
                 <Score ref="congress_plan_splits_count" />
             </ScorePanel>
 
