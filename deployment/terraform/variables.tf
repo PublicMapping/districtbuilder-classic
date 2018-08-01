@@ -21,3 +21,5 @@ variable "ssl_certificate_arn" {}
 variable "cdn_price_class" {
   default = "PriceClass_100"
 }
+
+variable "is_subdomain" {}
