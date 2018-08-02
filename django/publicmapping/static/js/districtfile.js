@@ -101,10 +101,10 @@ districtfile = function(options) {
             var fileStatus = data.status,
                 button;
             if (_options.type == 'index') {
-                button = $('<button type="button" id="btnExportDistrictIndexFile" class="button" />');
+                button = $('<button type="button" id="btnExportDistrictIndexFile" title="Downloads a zipped .csv file that maps census tracts to districts for this map." class="button" />');
             }
             else {
-                button = $('<button type="button" id="btnExportDistrictShapeFile" class="button" />');
+                button = $('<button type="button" id="btnExportDistrictShapeFile" title="Downloads a zipped ESRI shapefile (.shp) of this map that can be viewed in GIS software." class="button" />');
             };
             
 
