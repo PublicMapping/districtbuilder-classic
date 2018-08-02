@@ -31,3 +31,8 @@ variable "is_subdomain" {}
 variable "ssh_identity_file_path" {
   default = "~/.ssh/district-builder-pa.pem"
 }
+
+variable "cloudfront_aliases" {
+  description = "List of CNAMES that will refer to this project"
+  default = []
+}
