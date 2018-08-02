@@ -13,7 +13,7 @@ services:
       - DB_DEBUG=1
       - IMAGE_VERSION=${IMAGE_VERSION:-latest}
       - DB_STATE=${DB_STATE:-pa}
-      - DB_SETTINGS_BUCKET=${DB_SETTINGS_BUCKET:-districtbuilder-staging-config-us-east-1}
+      - DB_SETTINGS_BUCKET=${DB_SETTINGS_BUCKET:-district-builder-dtl-staging-config-us-east-1}
       - DOCKER_HOST=${DOCKER_HOST:-origin.staging.pa.districtbuilder.azavea.com:2476}
     volumes:
       - ./:/usr/local/src
