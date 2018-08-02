@@ -20,7 +20,7 @@ resource "aws_cloudfront_distribution" "cdn" {
   retain_on_delete = true
 
   price_class = "${var.cdn_price_class}"
-  aliases     = ["${local.application_domain}"]
+  aliases     = ["${concat(list(local.application_domain), var.cloudfront_aliases)}"]
 
   default_cache_behavior {
     allowed_methods  = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
