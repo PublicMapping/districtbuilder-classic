@@ -84,13 +84,13 @@
               {% endifnotequal %}
             </select>
             </div>
-            <button id="dragdrop_tool" class="titletip" title="{% blocktrans %}Select areas on the map then drag them to into a {{ body_member_long_label }} for reassignment{% endblocktrans %}">{% blocktrans %}Click and<br/>Drag{% endblocktrans %}</button>
+            <button id="dragdrop_tool" class="titletip" title="{% blocktrans %}Select areas on the map then drag them into a {{ body_member_long_label }} for reassignment{% endblocktrans %}">{% blocktrans %}Click and<br/>Drag{% endblocktrans %}</button>
           </div>
         </div>
         <div class="toolset_group toolset_group_lg last">  
         {% if not plan.is_community %}
           <div id="fix_unassigned">
-            <button id="fix_unassigned_button" class="titletip" title="{% blocktrans %}Perform automated resolution of minor unassigned geographies{% endblocktrans %}">{% blocktrans %}Fix<br/>Unassigned{% endblocktrans %}</button>
+            <button id="fix_unassigned_button" class="titletip" title="{% blocktrans %}Automatically fix small unassigned areas{% endblocktrans %}">{% blocktrans %}Fix<br/>Unassigned{% endblocktrans %}</button>
           </div>
           {% endif %}
 
