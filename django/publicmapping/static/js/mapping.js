@@ -3068,6 +3068,7 @@ function mapinit(srs,maxExtent) {
 
                     var updateAssignments = true;
                     $('#map').trigger('version_changed', [data.version, updateAssignments]);
+                    $('#saveplaninfo').trigger('planSaved', [ data.edited ]);
 
 
                     $('#working').dialog('close');
