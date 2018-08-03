@@ -412,7 +412,7 @@ msgstr ""
 #: redistricting/templates/error.email:26
 #: redistricting/templates/importedplan.email:29
 #: redistricting/templates/submitted.email:17
-msgid "The Public Mapping Team"
+msgid "The Draw the Lines Team"
 msgstr ""
 
 #: publicmapping/templates/index.html:44 publicmapping/templates/index.html:162

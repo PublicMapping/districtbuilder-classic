@@ -26,5 +26,5 @@ Context:
 
 {% endfor %}
 {% trans "Happy Redistricting!" %}
-{% trans "The Public Mapping Team" %}
+{% trans "The Draw the Lines Team" %}
 {% endautoescape %}
