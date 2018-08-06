@@ -23,7 +23,7 @@ Amazon Web Services deployment is driven by [Terraform](https://terraform.io/), 
 
 #### SSH Keys
 
-You'll need to download the `district-builder` SSH Keypair from the fileshare, and store it at `~/.ssh/district-builder.pem`.
+You'll need to download the `district-builder-pa` SSH Keypair from the fileshare, and store it at `~/.ssh/district-builder-pa.pem`.
 
 #### `DB_SETTINGS_BUCKET`
 
@@ -36,22 +36,26 @@ You will upload your own DistrictBuilder `config.xml` and shapefile zip to the A
 #### `scripts/infra`
 Once the settings bucket and User Data are configured, you can run the deployment. To deploy the infrastructure for a DistrictBuilder instance (EC2, Route53 records, etc.) resources, use the `infra` wrapper script to lookup the remote state of the infrastructure and assemble a plan for work to be done. You can run `scripts/infra` inside of the `terraform` Docker container defined in `docker-compose.ci.yml`, which contains all of the necessary software dependencies for deployments.
 
-First, obtain your account's AWS API keypair, and add them to your environment. Then, set `DB_SETTINGS_BUCKET` and `IMAGE_VERSION`, and run `scripts/infra`:
+First, obtain your account's AWS API keypair, and configure your `district-builder-pa` AWS profile. Then, set `DB_SETTINGS_BUCKET` and `IMAGE_VERSION`, and run `scripts/infra`:
 
 
 ```bash
-$ export AWS_ACCESS_KEY_ID="****************F2DQ"
-$ export AWS_ACCESS_KEY_ID="****************TLJ/"
-$ export DB_SETTINGS_BUCKET="districtbuilder-staging-config-us-east-1"
+$ aws --profile district-builder-pa configure
+AWS Access Key ID [None]: ****************BWCA 
+AWS Secret Access Key [None]: ****************hlS4 
+Default region name [None]: us-east-1 
+Default output format [None]:
+$ export AWS_PROFILE=district-builder-pa
+$ export DB_SETTINGS_BUCKET="district-builder-dtl-staging-config-us-east-1"
 # IMAGE_VERSION can be a git SHA, or version tag
 $ export IMAGE_VERSION=123456"
-$ docker-compose -f docker-compose.ci.yml run --rm terraform ./scripts/infra plan
+$ docker-compose -f docker-compose.ci.yml -f docker-compose.ci.override.yml run --rm terraform ./scripts/infra plan
 ```
 
 Once the plan has been assembled, and you agree with the changes, apply it:
 
 ```bash
-$ docker-compose -f docker-compose.ci.yml run --rm terraform ./scripts/infra apply
+$ docker-compose -f docker-compose.ci.yml -f docker-compose.ci.override.yml run --rm terraform ./scripts/infra apply
 ```
 
 This will attempt to apply the infrastructure plan assembled in the previous step using Amazon's APIs and use `docker-compose` to configure the App Server with User Data, build container images, start services and run migrations. In order to change specific attributes of the infrastructure, inspect the contents of the environment's `tfvars` file in Amazon S3. To modify application variables, change `.env`.
@@ -81,11 +85,11 @@ $ ./scripts/load_configured_data --production
 Depending on the configuration changes, staging will sometimes get into a bad state after deployment as we do not handle all types of config changes perfectly. As a result, you may need to "wipe the slate clean" in staging to see your changes. You can do this by ssh-ing into the staging app server, downloading the appropriate script, and running it, like so (**NOTE: the database will be dropped and recreated!**):
 
 ```bash
-$ ssh-add ~/.ssh/district-builder.pem
+$ ssh-add ~/.ssh/district-builder-pa.pem
 ...
-$ ssh -A ~/.ssh/district-builder.pem ec2-user@34.207.181.197
+$ ssh -A ec2-user@bastion.staging.pa.districtbuilder.azavea.com
 ...
-$ ssh ec2-user@10.0.0.237
+$ ssh ec2-user@pa.districtbuilder.internal
 ...
 $ docker exec -ti districtbuilder-django bash
 ...
@@ -98,5 +102,3 @@ $ bash recreate_staging_from_scratch
 # Remove script
 $ rm recreate_staging_from_scratch
 ```
-
-The `district-builder.pem` file is available on the file share. Note that the bastion and/or the app server IP addresses may have changed.
