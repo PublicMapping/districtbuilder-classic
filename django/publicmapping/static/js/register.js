@@ -173,7 +173,7 @@ $(function(){
                     if (data.success) {
                         if (typeof(_gaq) != 'undefined') { _gaq.push(['_trackEvent', 'Users', 'Registered']); }
                         $('#register').dialog('close');
-                        $('<div />').text(gettext("You've been registered for the public mapping project.")).dialog({
+                        $('<div />').text(gettext("You've been registered for Draw the Lines-PA.")).dialog({
                             modal:true,
                             width:300,
                             title:gettext("Success!"),

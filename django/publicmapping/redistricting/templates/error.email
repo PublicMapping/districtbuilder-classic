@@ -23,5 +23,5 @@ Context:
 {% trans "If you correct this issue and upload your file again, we can try again." %}
 
 {% trans "Happy Redistricting!" %}
-{% trans "The Public Mapping Team" %}
+{% trans "The Draw the Lines Team" %}
 {% endautoescape %}

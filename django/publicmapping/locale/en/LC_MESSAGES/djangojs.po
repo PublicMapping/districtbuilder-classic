@@ -735,7 +735,7 @@ msgid "Signup Unavailable"
 msgstr ""
 
 #: static/js/register.js:178
-msgid "You've been registered for the public mapping project."
+msgid "You've been registered for Draw the Lines-PA."
 msgstr ""
 
 #: static/js/register.js:181

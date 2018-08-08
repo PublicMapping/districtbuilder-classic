@@ -100,7 +100,7 @@ msgid "Last Name"
 msgstr ""
 
 #: publicmapping/templates/account.html:65
-msgid "Organization"
+msgid "Organization/School"
 msgstr ""
 
 #: publicmapping/templates/account.html:77
@@ -412,7 +412,7 @@ msgstr ""
 #: redistricting/templates/error.email:26
 #: redistricting/templates/importedplan.email:29
 #: redistricting/templates/submitted.email:17
-msgid "The Public Mapping Team"
+msgid "The Draw the Lines Team"
 msgstr ""
 
 #: publicmapping/templates/index.html:44 publicmapping/templates/index.html:162
@@ -434,19 +434,23 @@ msgid "Support"
 msgstr ""
 
 #: publicmapping/templates/index.html:118
-msgid "About the Public Mapping Project"
-msgstr ""
+msgid "Welcome, Draw the Lines PA mappers!"
+msgstr "Welcome, Draw the Lines PA mappers!"
 
 #: publicmapping/templates/index.html:120
 msgid "Frequently Asked Questions"
 msgstr ""
 
 #: publicmapping/templates/index.html:121
-msgid "Quick Start Guide"
+msgid "How to Draw a Map"
 msgstr ""
 
 #: publicmapping/templates/index.html:122
-msgid "Redistricting Resources"
+msgid "DTL Competition Guide"
+msgstr ""
+
+#: publicmapping/templates/index.html:123
+msgid "DTL Users Forum"
 msgstr ""
 
 #: publicmapping/templates/index.html:124
@@ -1278,7 +1282,7 @@ msgstr ""
 #: redistricting/templates/editplan.html:87
 #, python-format
 msgid ""
-"Select areas on the map then drag them to into a %(body_member_long_label)s "
+"Select areas on the map then drag them into a %(body_member_long_label)s "
 "for reassignment"
 msgstr ""
 
@@ -1287,7 +1291,7 @@ msgid "Click and<br/>Drag"
 msgstr ""
 
 #: redistricting/templates/editplan.html:93
-msgid "Perform automated resolution of minor unassigned geographies"
+msgid "Automatically fix small unassigned areas"
 msgstr ""
 
 #: redistricting/templates/editplan.html:93
@@ -1830,7 +1834,7 @@ msgstr ""
 
 #: redistricting/templates/viewplan.html:386
 msgid "Plan Details"
-msgstr "Map Details"
+msgstr "Details of Selected Map"
 
 #: redistricting/templates/viewplan.html:387
 msgid "User Name:"
@@ -1901,7 +1905,7 @@ msgstr ""
 
 #: redistricting/templates/viewplan.html:512
 msgid "Edit Stats"
-msgstr ""
+msgstr "Edit Display Stats"
 
 #: redistricting/templates/viewplan.html:517
 msgid "Statistics"
@@ -1984,7 +1988,7 @@ msgstr ""
 
 #: redistricting/templates/viewplan.html:702
 msgid "Locked For Editing"
-msgstr ""
+msgstr "Locked From Editing"
 
 #: redistricting/templates/viewplan.html:709
 msgid "Highlighted"

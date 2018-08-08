@@ -102,9 +102,10 @@
       <div id="logo">
                <!--<img src="{% static 'images/title-static.png" />-->
               <span style="font-size:250%; font-family:arial,sans-serif; font-weight:bold; color:white">
-                 {% trans "DistrictBuilder" %}
+                 {% trans "DistrictBuilder" %}, by
                </span>
       </div>
+      <img style="height: 44px; margin-top: 8px; margin-left: 12px;" src="{% static 'images/dtl-logo.jpg' %}" />
       <div id="site_nav">
         <ul>
 
@@ -128,15 +129,16 @@
     <div id="body_box">
       <div id="tour_news">
         <div id="news">
-          <h3>{% trans "About the Public Mapping Project" %}</h3>
+          <h3>Welcome!<br><small>Draw your own map with help from the links below.</small></h3>
           <ul>
-            <li><a href="http://www.publicmapping.org/faq">{% trans "Frequently Asked Questions" %}</a></li>
-            <li><a href="http://www.publicmapping.org/resources/software">{% trans "Quick Start Guide" %}</a></li>
-            <li><a href="http://www.publicmapping.org/resources/redistricting">{% trans "Redistricting Resources" %}</a></li>
+            <li><a target="_blank" href="https://drawthelinespa.org">{% trans "How to Draw a Map" %}</a></li>
+            <li><a target="_blank" href="https://drawthelinespa.org">{% trans "DTL Competition Guide" %}</a></li>
+            <li><a target="_blank" href="https://drawthelinespa.org">{% trans "DTL Users Forum" %}</a></li>
+            <li><a target="_blank" href="https://drawthelinespa.org">{% trans "Frequently Asked Questions" %}</a></li>
           </ul>
-          <h3>{% trans "About this DistrictBuilder instance" %}</h3>
+          <br><br>
           <ul>
-            <li><a href="https://drawthelinespa.org/about/">{% trans "About this DistrictBuilder instance" %}</a></li>
+            <li>About <a target="_blank" href="http://districtbuilder.org">DistrictBuilder</a> and <a target="_blank" href="https://azavea.com">Azavea</a>.</li>
           </ul>
         </div>
 
@@ -344,11 +346,6 @@
 
         <!-- Heap badge program, see: https://heapanalytics.com/badge -->
         <a href="https://heapanalytics.com/?utm_source=badge" rel="nofollow"><img style="width:108px;height:41px" src="//heapanalytics.com/img/badge.png" alt="Heap | Mobile and Web Analytics" /></a>
-        <br>
-        <span id="poweredbytext">
-          {% trans "A project of" %}
-          <a target="_blank" href="http://www.publicmapping.org">PublicMapping.org</a>
-        </span>
       </div>
       {% comment %}
       ATTRIBUTION NOTICE SECTION ENDS

@@ -14,5 +14,5 @@ Context:
 {% trans "Your Plan" %} ("{{ plan.name }}") {% trans "has been successfully submitted. Thank you for your submission." %}
 
 {% trans "Happy Redistricting!" %}
-{% trans "The Public Mapping Team" %}
+{% trans "The Draw the Lines Team" %}
 {% endautoescape %}
