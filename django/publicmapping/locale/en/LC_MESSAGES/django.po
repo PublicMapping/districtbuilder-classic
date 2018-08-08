@@ -442,7 +442,7 @@ msgid "Frequently Asked Questions"
 msgstr ""
 
 #: publicmapping/templates/index.html:121
-msgid "How to Make a Map"
+msgid "How to Draw a Map"
 msgstr ""
 
 #: publicmapping/templates/index.html:122
