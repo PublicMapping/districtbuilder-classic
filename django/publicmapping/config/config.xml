@@ -425,7 +425,7 @@
 
             <ScoreFunction id="congress_plan_equipopulation_validation" type="plan"
                 calculator="redistricting.calculators.Equipopulation"
-                label="Target Pop. (702,160 - 709,216)"
+                label="Target Population (705,688)"
                 description="The population of each Congressional district must be 705,688 +/- 0.5%.">
                 <Argument name="min" value="702160"/>
                 <Argument name="max" value="709216"/>
@@ -435,7 +435,7 @@
 
             <ScoreFunction id="A_congress_plan_equipopulation_summary" type="plan"
                 calculator="redistricting.calculators.Equipopulation"
-                label="Target Pop. (702,160 - 709,216)"
+                label="Target Population (705,688)"
                 description="The population of each Congressional district must be 705,688 +/- 0.5%.">
                 <Argument name="min" value="702160"/>
                 <Argument name="max" value="709216"/>
@@ -491,13 +491,13 @@
 
             <ScoreFunction id="E_congress_plan_polsbypopper" type="plan"
                 calculator="redistricting.calculators.PolsbyPopper"
-                label="Avg. Compactness (100% is best)"
+                label="Compactness"
                 description="The competition is using the &apos;Polsby-Popper&apos; compactness measure. This measure is a ratio of the area of a circle with the same perimeter as a district to the area of the district." >
             </ScoreFunction>
 
             <ScoreFunction id="F_congress_plan_equivalence" type="plan"
                 calculator="redistricting.calculators.Equivalence"
-                label="Pop. Equivalence (0 is best)"
+                label="Population Equivalence"
                 description="The Equipopulation score is the difference between the district with the highest population and the district with the lowest population.">
                 <SubjectArgument name="value" ref="poptot" />
             </ScoreFunction>
