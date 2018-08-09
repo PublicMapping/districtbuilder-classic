@@ -2400,11 +2400,11 @@ msgstr "county"
 
 #: /usr/src/app/config/config.xml:427
 msgid "congress_plan_polsbypopper short label"
-msgstr "Avg. Compactness (100% is best)"
+msgstr "Compactness"
 
 #: /usr/src/app/config/config.xml:427
 msgid "congress_plan_polsbypopper label"
-msgstr "Avg. Compactness (100% is best)"
+msgstr "Compactness"
 
 #: /usr/src/app/config/config.xml:427
 msgid "congress_plan_polsbypopper long description"
@@ -2427,11 +2427,11 @@ msgstr ""
 
 #: /usr/src/app/config/config.xml:433
 msgid "congress_plan_equivalence short label"
-msgstr "Pop. Equivalence (0 is best)"
+msgstr "Population Equivalence"
 
 #: /usr/src/app/config/config.xml:433
 msgid "congress_plan_equivalence label"
-msgstr "Pop. Equivalence (0 is best)"
+msgstr "Population Equivalence"
 
 #: /usr/src/app/config/config.xml:433
 msgid "congress_plan_equivalence long description"
@@ -2496,11 +2496,11 @@ msgstr ""
 
 #: /usr/src/app/config/config.xml:381
 msgid "congress_plan_equipopulation_summary short label"
-msgstr "Target Pop. (702,160 - 709,216)"
+msgstr "Target Population (705,688)"
 
 #: /usr/src/app/config/config.xml:381
 msgid "congress_plan_equipopulation_summary label"
-msgstr "Target Pop. (702,160 - 709,216)"
+msgstr "Target Population (705,688)"
 
 #: /usr/src/app/config/config.xml:381
 msgid "congress_plan_equipopulation_summary long description"
@@ -2985,11 +2985,11 @@ msgstr ""
 
 #: /usr/src/app/config/config.xml:371
 msgid "congress_plan_equipopulation_validation short label"
-msgstr "Target Pop. (702,160 - 709,216)"
+msgstr "Target Population (705,688)"
 
 #: /usr/src/app/config/config.xml:371
 msgid "congress_plan_equipopulation_validation label"
-msgstr "Target Pop. (702,160 - 709,216)"
+msgstr "Target Population (705,688)"
 
 #: /usr/src/app/config/config.xml:371
 msgid "congress_plan_equipopulation_validation long description"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-31 16:46-0400\n"
+"POT-Creation-Date: 2018-08-08 12:39-0400\n"
 "PO-Revision-Date: 2012-11-06 16:01-0600\n"
 "Last-Translator: David Zwarg <dzwarg@azavea.com>\n"
 "Language-Team: Azavea <info@azavea.com>\n"
@@ -1123,7 +1123,7 @@ msgid "Thank you."
 msgstr ""
 
 #: redistricting/templates/basic_information.html:44
-#: redistricting/templates/competitiveness.html:44
+#: redistricting/templates/competitiveness.html:13
 #: redistricting/templates/demographics.html:44
 msgid "Dist."
 msgstr ""
@@ -1131,7 +1131,6 @@ msgstr ""
 #: redistricting/templates/basic_information.html:64
 #: redistricting/templates/communities.html:61
 #: redistricting/templates/community_demographics.html:61
-#: redistricting/templates/competitiveness.html:64
 #: redistricting/templates/demographics.html:64
 msgid "Sorry, there is no demographic data for this plan"
 msgstr "Sorry, there is no demographic data for this map"
@@ -1178,7 +1177,7 @@ msgstr ""
 msgid "Community"
 msgstr ""
 
-#: redistricting/templates/competitiveness.html:64
+#: redistricting/templates/competitiveness.html:33
 #, fuzzy
 #| msgid "Sorry, there is no demographic data for this plan"
 msgid "Sorry, there is no competitiveness data for this plan"
