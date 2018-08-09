@@ -335,6 +335,9 @@
             </div>
           <div id="upload_selection" class="middlecolumn" >
               <label>{% trans "Upload a District Index file:" %}</label>
+              <br><br>
+              <p style="font-weight: 1;">Upload a District Index File here to load a map template into your account. <a href="http://www.publicmapping.org/user-guide/user-guide-verison-1-2/managing-plans-1-2#TOC-Upload-Plan">What's a District Index File?</a></p>
+              <br>
               <form method="POST" enctype="multipart/form-data" action="/districtmapping/plan/upload/" id="frmUpload">
                 {% csrf_token %}
                 <input type="file" id="indexFile" name="indexFile"/>
