@@ -246,8 +246,8 @@
       ATTRIBUTION NOTICE SECTION ENDS
       {% endcomment %}
       <ul id="steps_tabs"> <!-- tabs have to be first UL in #steps or else tabs wont work -->
-        <li id="tab_plan"><a href="#step_plan">{% trans "Plan" %}</a><li>
-        <li id="tab_draw"><a href="#step_draw">{% if is_registered %}{% trans "Draw" %}{% else %}{% trans "View" %}{% endif %}</a></li>
+        <li id="tab_plan"><a href="#step_plan">Select</a><li>
+        <li id="tab_draw"><a href="#step_draw">Map</a></li>
         <li id="tab_evaluate"><a href="#step_evaluate">{% trans "Evaluate" %}</a></li>
         <li id="tab_share" class="{% if not is_registered %}ui-state-disabled{% endif %}"><a href="#step_share">Submit</a></li>
         {% if has_leaderboard and not plan.is_community %}
@@ -335,6 +335,9 @@
             </div>
           <div id="upload_selection" class="middlecolumn" >
               <label>{% trans "Upload a District Index file:" %}</label>
+              <br><br>
+              <p style="font-weight: 1;">Upload a District Index File here to load a map template into your account. <a href="http://www.publicmapping.org/user-guide/user-guide-verison-1-2/managing-plans-1-2#TOC-Upload-Plan">What's a District Index File?</a></p>
+              <br>
               <form method="POST" enctype="multipart/form-data" action="/districtmapping/plan/upload/" id="frmUpload">
                 {% csrf_token %}
                 <input type="file" id="indexFile" name="indexFile"/>
