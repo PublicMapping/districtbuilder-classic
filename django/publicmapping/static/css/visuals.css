@@ -7,7 +7,7 @@
 
        http://www.apache.org/licenses/LICENSE-2.0
 
-   Unless required by applicable law or agreed to in writing, software 
+   Unless required by applicable law or agreed to in writing, software
    distributed under the License is distributed on an "AS IS" BASIS,
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
@@ -20,7 +20,7 @@
        This stylesheet defines all the styles used in The Public Mapping
        Project django web application.
 
-   Author: 
+   Author:
         Brian Jacobs, Andrew Jennings, David Zwarg, Kenny Shepard
 */
 
@@ -28,15 +28,15 @@
 /*body bg*/
 
 body#static {  background: url(/static/images/bg-body-home.png) 0 0 repeat-x;}
-body#app {  background: url(/static/images/bg-app.png) 0 0 repeat;}
+body#app {}
 
 /*homepage*/
 
 div #logo .site-title {
-  font-size: 250%; 
+  font-size: 150%;
   font-family: arial, helvetica, sans-serif;
-  font-weight:bold; 
-  color: #fff; 
+  font-weight:bold;
+  color: #fff;
   text-shadow: 0 -1px #222;
   margin: 0;
   padding: 0;
@@ -52,7 +52,7 @@ div#banner {
 div#body_box {
   position:relative;
   text-align: left;
-  margin: 30px 0 0 0 ; 
+  margin: 30px 0 0 0 ;
 }
 div#tour_news {
   width: 300px;
@@ -76,10 +76,10 @@ div#news span {
     padding: 3px;
 }
 div#news h3 {
-  font-size: 21px; 
+  font-size: 21px;
   line-height: 26px;
   color: #e1e8b1;
-  margin: 0 0 12px 0; 
+  margin: 0 0 12px 0;
   font-weight: bold;
 }
 
@@ -249,16 +249,14 @@ div#logoffdlg {
     color: #6a6a6a;
     font-weight: bold;
 }
-form#registerForm input.field, form#registerForm input.error, 
+form#registerForm input.field, form#registerForm input.error,
 form#forgotForm input.field, form#forgotForm input.error {
     padding: 0 0 0 8px;
     width: 230px;
     height: 30px;
     border: 1px solid #ccc;
     margin: 0 0 10px 15px;
-    -moz-border-radius: 8px;
-    -webkit-border-radius: 8px;
-    border-radius: 8px;
+    border-radius: 0;
 }
 #districtComment input.field, #districtComment input.error {
     padding: 0 0 0 8px;
@@ -351,9 +349,9 @@ div #sponsors .logoRight {
 }
 
 div #sponsors p {
-font-size: 12px; 
-text-align: right; 
-font-weight: bold; 
+font-size: 12px;
+text-align: right;
+font-weight: bold;
 color: rgb(62, 107, 127);
 }
 
@@ -374,22 +372,22 @@ margin-top: 2px;
 /*----------------MAPPING PAGE---------------------------------------*/
 
 
-div#step_plan .toolbar { background-color:#7cb7b3}
+div#step_plan .toolbar {}
 
-div#step_evaluate .toolbar {background-color: #87ae8b}
-div#step_share .toolbar {background-color:#acae87}
-div#step_leaderboard .toolbar {background-color: #b09873}
+div#step_evaluate .toolbar {}
+div#step_share .toolbar {}
+div#step_leaderboard .toolbar {/* background-color: #b09873 */}
 
-div#step_leaderboard div.toolbar li {background-color: #b7a17f; border: 1px solid #c1af92;}
-div#step_leaderboard div.toolbar  li.ui-state-active {background-color: #967f5b; border: 1px solid #857152}
+div#step_leaderboard div.toolbar li {border-radius: 0;color: #000 !important;font-weight: 400;}
+div#step_leaderboard div.toolbar  li.ui-state-active {border-bottom: 2px solid #004FE2 !important;margin-right: 16px;}
 
 
-div.tab_content {background: #e3f0ef;}
-    
-/*plan content */    
-ul#plan_buttons li {background-color:#8BD1BC;} 
-div#form_container, div#name_statistics_set  {background-color: #ecf6f5;}
-div#form_action{background-color: #8ac7b5;}
+div.tab_content {}
+
+/*plan content */
+ul#plan_buttons li {background-color: transparent;border: 0;}
+div#form_container, div#name_statistics_set  {background-color: #FBFBF3;}
+div#form_action{background-color: #FBFBF3;border: 1px solid #ddd;}
 
 /*plan chooser */
 div#start_mapping_help {
@@ -403,50 +401,106 @@ div#start_mapping_help {
 
 /*buttons */
 
-#app button, .ui-dialog button, #app .multiple .ui-buttonset .ui-button { 
-    background-color: #1F8CBE;
-    border: 1px solid #3B7181;
+#app button, .ui-dialog button, #app .multiple .ui-buttonset .ui-button {
     }
-#app .multiple  .ui-buttonset .ui-button.ui-state-active {background-color: #1F8CBE}
-    
+#app .multiple  .ui-buttonset .ui-button.ui-state-active {background-color: #d8e9f5;color: #000;padding: 0.4em 1em;}
+
  button#stats_legend {background-color: #bb9160;}
 
  .toolbar_menu, div#toolsets .toolbar_menu_container .ui-button.active{
-	background: #99c4b4;
-	border-color: #c2ddde;
-	border-bottom: 1px solid #99c4b4;
+  background: #99c4b4;
+  border-color: #c2ddde;
+  border-bottom: 1px solid #99c4b4;
 }
- 
 
-    
-/* plan toolbars*/    
+
+
+/* plan toolbars*/
 div#toolbar_plans {
-  background: transparent url(/static/images/bg-app.png) 0 0 repeat;
   }
-  
+
 div#toolsets .ui-button.ui-state-hover {}
- 
-div#toolsets .ui-button.toggle, div#toolsets .ui-button.ui-state-active{}  
+
+div#toolsets .ui-button.toggle, div#toolsets .ui-button.ui-state-active{}
 
 /*sidebar */
 
 div#map_menu_header {}
 div#map_menu_header button.menu_toggle{background-color: #6B9571;}
 
-div.info_table tbody tr { 
-    background: #f7f4e5;
+div.info_table tbody tr {
+    background: #fff;
 }
 
 
 
-    
+
 /*jQgrid customization */
-.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
-background: #ECF6F5 
-}
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {background: transparent;}
 .ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight, tr.chooserAlt.ui-state-highlight  td, tr.ui-state-hover.ui-state-highlight  td {
 background: #EFD695
 }
  {
 background: #EFD695
+}
+
+#map_menu .mapping_tabs {
+  display: none;
+}
+
+#step_plan button,
+#step_evaluate button,
+#step_leaderboard button,
+#step_share button {
+  background-color: #fff !important;
+  color: #000 !important;
+  border-radius: 100px;
+  /* border-color: transparent !important; */
+  border-width: 2px !important;
+  font-size: 13px !important;
+}
+
+#step_share #btnEmailPlan {
+  background-color: #004FE2 !important;
+  color: #fff !important;
+  border-color: transparent !important;
+}
+
+#gbox_plan_table {
+  background-color: #fff;
+}
+
+#gbox_plan_table tr {
+  border: 1px solid #ddd !important;
+  font-size: 14px;
+  padding-top: 4px !important;
+}
+
+.ui-jqgrid tr.ui-row-ltr td[aria-describedby="plan_table_fields.delete"] {
+  padding: 0 !important;
+}
+
+#map_settings_content > div > label {
+  width: 90px;
+  display: inline-block;
+}
+
+#map_settings_content > div:first-child > label {
+  margin-bottom: 8px;
+}
+
+#map_type_content_container label {
+  border-radius: 100px;
+  border: 0px solid #ddd !important;
+}
+
+#app .multiple .ui-buttonset .ui-button:last-child {
+  margin-right: 0;
+}
+
+#doRegister {
+  color: #fff !important;
+  background-color: #004FE2 !important;
+  border-color: transparent !important;
+  border-radius: 100px;
 }
