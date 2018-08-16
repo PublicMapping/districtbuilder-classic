@@ -99,13 +99,7 @@
      {% include "facebook_sdk.html" %}
 
    <div id="static_header">
-      <div id="logo">
-               <!--<img src="{% static 'images/title-static.png" />-->
-              <span style="font-size:250%; font-family:arial,sans-serif; font-weight:bold; color:white">
-                 {% trans "DistrictBuilder" %}, by
-               </span>
-      </div>
-      <img style="height: 44px; margin-top: 8px; margin-left: 12px;" src="{% static 'images/dtl-logo.jpg' %}" />
+      <img style="height: 34px; margin-top: 8px" src="{% static 'images/title-app.png' %}" />
       <div id="site_nav">
         <ul>
 
@@ -129,16 +123,13 @@
     <div id="body_box">
       <div id="tour_news">
         <div id="news">
-          <h3>Welcome!<br><small>Draw your own map with help from the links below.</small></h3>
+          <h3>Draw your own map with help from the links below.</h3>
+          <h4 style="font-size: 18px; font-weight: 600; margin-bottom: 21px; margin-top: 24px;">Resources</h4>
           <ul>
             <li><a target="_blank" href="https://drawthelinespa.org">{% trans "How to Draw a Map" %}</a></li>
             <li><a target="_blank" href="https://drawthelinespa.org">{% trans "DTL Competition Guide" %}</a></li>
             <li><a target="_blank" href="https://drawthelinespa.org">{% trans "DTL Users Forum" %}</a></li>
             <li><a target="_blank" href="https://drawthelinespa.org">{% trans "Frequently Asked Questions" %}</a></li>
-          </ul>
-          <br><br>
-          <ul>
-            <li>About <a target="_blank" href="http://districtbuilder.org">DistrictBuilder</a> and <a target="_blank" href="https://azavea.com">Azavea</a>.</li>
           </ul>
         </div>
 
@@ -344,8 +335,11 @@
         <!-- Keep this on one line to avoid an underscore in Chrome -->
         <a target="_blank" href="http://www.districtbuilder.org"><img alt="{% trans "Powered By DistrictBuilder" %}" src="{% static 'images/db_sprite.png' %}"></a>
 
+        <a target="_blank" href="http://www.azavea.com"><img style="height: 24px; margin-right: 16px;" alt="Built by Azavea" src="{% static 'images/azavea-logo.png' %}"></a>
+
         <!-- Heap badge program, see: https://heapanalytics.com/badge -->
-        <a href="https://heapanalytics.com/?utm_source=badge" rel="nofollow"><img style="width:108px;height:41px" src="//heapanalytics.com/img/badge.png" alt="Heap | Mobile and Web Analytics" /></a>
+        <a href="https://heapanalytics.com/?utm_source=badge" rel="nofollow"><img style="width:108px;height:41px" src="//heapanalytics.com/img/badgeLight.png" alt="Heap | Mobile and Web Analytics" /></a>
+
       </div>
       {% comment %}
       ATTRIBUTION NOTICE SECTION ENDS

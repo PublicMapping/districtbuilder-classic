@@ -27,7 +27,7 @@
 
 /*body bg*/
 
-body#static {  background: url(/static/images/bg-body-home.png) 0 0 repeat-x;}
+body#static {}
 body#app {}
 
 /*homepage*/
@@ -61,12 +61,12 @@ div#tour_news {
 }
 div#tour_news ul {margin-left: 15px;}
 div#tour_news li {margin-bottom: 5px;}
-div#tour_news a {color: #fff; font-weight:bold;}
+div#tour_news a {color: #000;font-weight: 400;}
 
 div#news {
   text-align:left;
   font-size: 14px;
-  color: #fff;
+  color: #000;
   line-height: 20px;
 }
 
@@ -76,21 +76,23 @@ div#news span {
     padding: 3px;
 }
 div#news h3 {
-  font-size: 21px;
-  line-height: 26px;
-  color: #e1e8b1;
-  margin: 0 0 12px 0;
+  font-size: 24px;
+  line-height: 1.4;
+  color: #000000;
+  margin: 20px 0 30px 0;
   font-weight: bold;
+}
+
+div#news h3:first-child {
+  margin-top: 0;
 }
 
 #static button {
     background-color: #39A787;
-    background-image: url(/static/images/bg-button-lg.png);
     background-position: center center;
     background-repeat: repeat-x;
     font-size: 11px;
-    font-weight: bold;
-    text-shadow: 0 -1px #333;
+    font-weight: 400;
     color: #fff;
     }
 
@@ -109,29 +111,30 @@ div#news h3 {
 }
 
 #static button#login {
-  background-color: #be801f;
-  font-size: 20px;
+  background-color: #004FE2;
+  font-size: 18px;
+  border-radius: 100px;
+  border-color: transparent;
 }
 
 #static button#sign_up {
-  font-size: 16px;
-  background-color: #39a787;
+  font-size: 14px;
+  background-color: #fff;
+  border-radius: 100px;
+  border: 2px solid #000;
+  color: #000;
 }
 
 #static button#doAnonymous {
-  font-size: 16px;
-  background-color: #3a80a0;
+  font-size: 14px;
+  background-color: #fff;
+  border-radius: 100px;
+  border: 2px solid #000;
+  color: #000;
 }
 div#user {
-  background: url(/static/images/bg-home-panel.png) 0 0 repeat-x;
   margin-left: 330px;
   height: 253px;
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
-   border-radius: 5px;
-  -moz-box-shadow: 0 0 40px #95bec6;
-  -webkit-box-shadow:0 0 40px #95bec6;
-  box-shadow: 0 0 40px #95bec6;
 }
 div#user h2 {
   margin-left: 5px;
@@ -144,10 +147,10 @@ div #user p {
 }
 
 div#user a {
-  color: #fff;
+  color: #004FE2;
   text-decoration: underline;
   font-size: 11px;
-  font-weight: bold;
+  font-weight: 400;
   }
 
 div#login {
@@ -159,9 +162,9 @@ div#login {
 }
 
 div#login h3 {
-  margin: 20px 0 10px;
-  font-size:  20px;
-  color: #fff;
+  margin: 0 0 10px;
+  font-size: 16px;
+  color: #000;
   font-weight: bold;
 }
 div#login input {
@@ -191,16 +194,16 @@ div#signup {
 }
 div#signupBox {display:none}
 div#signup h3 {
-  margin-top: 20px;
-  font-size:  20px;
-  color: #fff;
+  margin-top: 0;
+  font-size: 16px;
+  color: #000;
   font-weight: bold;
 }
 div#signup h4 {
   margin: 10px 0 7px;
   font-size:  14px;
-  color: #e0e7b2;
-  font-weight: bold;
+  color: #000000;
+  font-weight: 400;
 }
 div#signUpButton {
     text-align: right;
@@ -332,10 +335,10 @@ div#logoffdlg p {
     margin: 5px 0px;
 }
 div#footer {
-    clear: both;
-    margin: 20px 0 0 0;
+    /* clear: both; */
+    margin: 91px 0 0 0;
     background: url(/static/images/divider.png) 0 0 repeat-x;
-    padding: 20px 0 15px 0;
+    padding: 36px 0 15px 0;
 }
 
 div.attribution { float:left; }
@@ -503,4 +506,42 @@ background: #EFD695
   background-color: #004FE2 !important;
   border-color: transparent !important;
   border-radius: 100px;
+}
+
+#sharepageleft {
+  width: 50%;
+  display: inline-block;
+}
+
+#sharepageright {display: inline-block;width: 27%;margin-left: 25px;margin-top: -10%;float: right;padding: 20px;padding-top: 20px;padding-top: 12%;}
+
+.explanation ul {
+  font-size: 14px;
+  margin-left: 18px;
+  padding: 0;
+}
+
+#submittocontest {
+  width: 100%;
+  border: 1px solid #ccc;
+  margin-bottom: 25px;
+  padding: 20px;
+  background: #ffffff;
+}
+
+#submittocontest.inactivebox {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+#validatedimg {
+  margin-top: -10px;
+  position: relative;
+  top: 5px;
+  height: 24px;
+  margin-right: 8px;
+}
+
+.hiddenelem {
+  display: none;
 }

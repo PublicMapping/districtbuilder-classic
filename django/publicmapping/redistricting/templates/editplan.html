@@ -14,7 +14,7 @@
    distributed under the License is distributed on an "AS IS" BASIS,
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
-   limitations under the License. 
+   limitations under the License.
 
    This file is part of The Public Mapping Project
    https://github.com/PublicMapping/
@@ -36,7 +36,7 @@
           <button id="history_redo" class="disabled">{% trans "Redo" %}</button>
           <input id="history_cursor" type="hidden"/>
       {% endblock %}
-      
+
       {% block toolset_tabs %}
         {% with district_label=body_member_long_label|capfirst %}
           <ul class="mapping_tabs">
@@ -45,12 +45,12 @@
                 {% blocktrans %}{{ district_label }} Tools{% endblocktrans %}
                 </a>
             </li>
-          </ul>  
+          </ul>
         {% endwith %}
       {% endblock %}
-      
-      
-          
+
+
+
       {% block toolset_draw %}
       <div class="toolset" id="toolset_draw">
         <div class="toolset_group">
@@ -59,7 +59,7 @@
           <button class="identify_map_tool btntoggle titletip" title="{% trans "Click on a geounit to see its demographic info." %}" >{% trans "Info" %}</button>
           </div>
          </div>
-       
+
 
     {% with district_label=body_member_long_label|capfirst %}
         <div class="toolset_group toolset_group_lg">
@@ -68,7 +68,7 @@
             <button id="rectangle_drawing_tool" title="{% trans "Select by rectangle" %}" class="btntoggle titletip" >{% blocktrans %}Rectangle<br/>Select{% endblocktrans %}</button>
             <button id="polygon_drawing_tool" title="{% trans "Select by drawing a polygon" %}" class="btntoggle titletip">{% trans "Polygon<br/>Select" %}</button>
           </div>
-        </div>  
+        </div>
         <div class="toolset_group toolset_group_lg">
           <div>
             <button id="anchor_tool" class="titletip" title="{% blocktrans %}Enable anchor mode, then select a {{ body_member_long_label }} name to repeatedly assign areas to a {{ body_member_long_label }}{% endblocktrans %}">{% blocktrans with body_member_long_label|capfirst as district_label %}Anchor<br/>{{ district_label }}{% endblocktrans %}</button>
@@ -87,22 +87,22 @@
             <button id="dragdrop_tool" class="titletip" title="{% blocktrans %}Select areas on the map then drag them into a {{ body_member_long_label }} for reassignment{% endblocktrans %}">{% blocktrans %}Click and<br/>Drag{% endblocktrans %}</button>
           </div>
         </div>
-        <div class="toolset_group toolset_group_lg last">  
+        <div class="toolset_group toolset_group_lg last">
         {% if not plan.is_community %}
           <div id="fix_unassigned">
             <button id="fix_unassigned_button" class="titletip" title="{% blocktrans %}Automatically fix small unassigned areas{% endblocktrans %}">{% blocktrans %}Fix<br/>Unassigned{% endblocktrans %}</button>
           </div>
           {% endif %}
 
-          
+
     {% comment %}End of district_label var{% endcomment %}
     {% endwith %}
             {% comment %}
-            
+
             This hidden div is used to style the locked districts.
             This is needed, because the locked legend item does not
             exist before the first district layer is drawn.
-            
+
             {% endcomment %}
             <div class="locked" style="display:none"></div>
         </div>
@@ -134,8 +134,8 @@
           <button id="show_splits_button">{% blocktrans %}Show<br/>Splits{% endblocktrans %}</button>
           <button id="generate_splits_report_button">{% blocktrans %}Generate<br/>Splits Report{% endblocktrans %}</button>
          </div>
-        
-        <div class="toolset_group toolset_group_lg last">       
+
+        <div class="toolset_group toolset_group_lg last">
           {% if plan.legislative_body.multi_members_allowed %}
           <button id="multi_member_toggle">{% blocktrans %}Select Multi-<br/>Member Districts{% endblocktrans %}</button>
           {% endif %}
@@ -150,7 +150,7 @@
         <div id="sharepageleft">
             <div id="verifyandpost">
                 <div class="explanation">
-                   <h3>1. Check your map</h3>
+                   <h2>1. Check your map</h2>
                     <p>Start here to check if your map is constitutional based on contiguity and population.</p>
                     <p>Once your map is validated, it’s ready to submit to the contest.</p>
                 </div>
@@ -159,7 +159,7 @@
             </div>
             <div id="submittocontest" class="{% if not plan.is_valid %}inactivebox{% endif %}">
                 <div class="explanation">
-                    <h3>2. Submit your map to Draw the Lines</h3>
+                    <h2>2. Submit your map to Draw the Lines</h2>
                     <p>When you’re ready, submit your map to the Draw the Lines contest here.</p>
                     <p>(NOTE: Once you press Submit on the form, your submission to the contest is final and can't be changed.  But you can continue to play around with your map!)</p>
                 </div>
@@ -170,8 +170,8 @@
             <div class="explanation">
                 <h3>Did you know?</h3>
                 <ul>
-                    <p> • You can see how your map stacks up against others by checking out the Leaderboards page.</p>
-                    <p> • If you want to make changes to your map, just use the button at the top to head back to the Map page.</p>
+                    <li>You can see how your map stacks up against others by checking out the Leaderboards page.</li>
+                    <li>If you want to make changes to your map, just use the button at the top to head back to the Map page.</li>
                 </ul>
             </div>
         </div>
@@ -201,7 +201,7 @@
                 <div id="shared_districts_pager"></div>
             </div>
             <div id="shared_district_maps">
-               
+
                <div id="shared_district_map_div"></div>
                <p><strong>{% blocktrans %}Click on a {{ body_member_long_label }}'s name to see a map{% endblocktrans %}</strong></p>
             </div>
@@ -448,7 +448,7 @@
                 </td>
             </tr>
         </table>
-        <div id="email_plan_required_note"> * {% trans "Indicates required field" %} </div>        
+        <div id="email_plan_required_note"> * {% trans "Indicates required field" %} </div>
     </div>
     <script type="text/javascript" src="{% static 'js/emailplan.js' %}"></script>
     <script type="text/javascript">
@@ -469,14 +469,14 @@
     <div id="districtComment" title="{% trans "Community Info" %}">
         <input type="hidden" value="{% trans "0" %}" id="id_district_pk" name="district_pk"/>
         <input type="hidden" value="" id="id_district_id" name="district_id"/>
-        
+
         <div class="dialog_step">
           <h3>{% trans "1. Edit Community Label:" %}</h3>
           <div id="district_label" class="district_input">
               <input type="text" class="field" value="" id="id_label" name="label" maxlength="200"/>
           </div>
         </div>
-        
+
         <div class="dialog_step">
           <h3>{% trans "2. Edit Community Type:" %}</h3>
           <div id="district_type" class="district_input">
@@ -487,14 +487,14 @@
               </select>
           </div>
         </div>
-        
+
         <div class="dialog_step">
           <h3>{% trans "3. Comments:" %}</h3>
               <p>
                   <textarea id="id_comment" name="comment" cols="40" rows="10"></textarea>
               </p>
         </div>
-        
+
         </div>
     </div>
     <div id="districtCommentErr" title="{% trans "Oops!" %}">

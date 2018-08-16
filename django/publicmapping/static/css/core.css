@@ -33,6 +33,7 @@ body {
   width: 100%;
   min-width: 980px;
   background-color: #F4F9FC;
+  color: #000;
 }
 
 
@@ -50,10 +51,10 @@ div.static_wrap {
 
 div#static_header {
   padding: 35px 0 20px;
-  padding: 35px 0 20px;
+  padding: 35px 0 0px;
   margin: 0 0 20px;
   height: 86px;
-  background: url(/static/images/divider.png) 0 100% repeat-x;
+  /* background: url(/static/images/divider.png) 0 100% repeat-x; */
 }
 div#app_header {
   padding: 0;
@@ -172,12 +173,12 @@ ul#steps_tabs li.ui-state-default.ui-tabs-selected {
 }
 
 ul#steps_tabs li.ui-state-default.ui-state-disabled {
-  background-image: url(/static/images/bg-arrow-button-disabled.png);
+  /* background-image: url(/static/images/bg-arrow-button-disabled.png); */
   opacity: 1;
-  filter: Alpha(Opacity=100);
+  color: #000 !important;
 }
 ul#steps_tabs li.ui-state-default.ui-state-disabled a {
-  color: rgba(255,255,255, .3);
+  color: rgba(0, 0, 0, 0.3);
   text-shadow:none;
   filter: Alpha(Opacity=35);
 }
@@ -2080,64 +2081,26 @@ div#nameandshare,
 }
 
 .share #saveandshare,
-.share #verifyandpost,
-.share #submittocontest {
-    float: left;
+.share #verifyandpost {
 }
 
-.share #verifyandpost,
-.share #submittocontest {
+.share #verifyandpost {
+    /* background: #FBFBF3; */
     width: 100%;
     border: 1px solid #ccc;
     margin-bottom: 25px;
     padding: 20px;
-    background: #FBFBF3;
+    background: #ffffff;
 }
 
-.share #verifyandpost .explanation,
-.share #submittocontest .explanation {
+.share #verifyandpost .explanation {
     margin: 0 0 15px 0;
 }
 
 #scoring {display:none}
 
-#sharepagetab {
-    padding-left: 18%;
-    padding-right: 18%;
-    overflow: hidden;
-}
 
-.share #sharepageleft {
-    display: inline-block;
-    width: 60%;
-}
 
-.share #sharepageright {
-    display: inline-block;
-    width: 27%;
-    margin-left: 25px;
-    margin-top: -10%;
-    float: right;
-    padding: 20px;
-    padding-top: 12%;
-    height: 110%;
-    background-color: #dbe6ec;
-}
-
-.inactivebox {
-    background-color: #eee;
-    opacity: 0.7;
-    cursor: not-allowed;
-}
-
-#validatedimg {
-    width: 12px;
-    margin-right: 4px;
-}
-
-.hiddenelem {
-    display: none;
-}
 
 /* Report Table Styles
 =======================================*/
