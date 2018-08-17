@@ -389,8 +389,8 @@ div.tab_content {}
 
 /*plan content */
 ul#plan_buttons li {background-color: transparent;border: 0;}
-div#form_container, div#name_statistics_set  {background-color: #FBFBF3;}
-div#form_action{background-color: #FBFBF3;border: 1px solid #ddd;}
+div#form_container, div#name_statistics_set  {background-color: #fff;}
+div#form_action{background-color: #fff; border: 1px solid #ddd;}
 
 /*plan chooser */
 div#start_mapping_help {
