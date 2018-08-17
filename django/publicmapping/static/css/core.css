@@ -445,7 +445,7 @@ div.tab_content {
 
 div.tab_content h3 {
   color: #3e3e3e;
-  font-size: 14px;
+  font-size: 16px;
   letter-spacing: -0.03em;
   font-weight: bold;
   margin-bottom: 10px;
@@ -1542,7 +1542,7 @@ div#map_settings_content #opacity_slider {
     width: 100%;
     height: 6px;
     margin: 5px 0;
-    background-color: #c6c6c6;
+    background: #c6c6c6;
     border: none;
     position: relative;
     top: 3px;
@@ -2564,4 +2564,12 @@ span.multi_val.invalid {
 
 #email-share-img {
   height: 18px;
+}
+
+.ui-widget-header {
+  background: none !important;
+}
+
+.ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited {
+  color: #000 !important;
 }
