@@ -389,8 +389,8 @@ div.tab_content {}
 
 /*plan content */
 ul#plan_buttons li {background-color: transparent;border: 0;}
-div#form_container, div#name_statistics_set  {background-color: #fff;}
-div#form_action{background-color: #fff; border: 1px solid #ddd;}
+div#form_container, div#name_statistics_set  {background-color: #FBFBF3;}
+div#form_action{background-color: #FBFBF3;border: 1px solid #ddd;}
 
 /*plan chooser */
 div#start_mapping_help {
@@ -475,7 +475,7 @@ background: #EFD695
 
 #gbox_plan_table tr {
   border: 1px solid #ddd !important;
-  font-size: 14px;
+  font-size: 13px;
   padding-top: 4px !important;
 }
 
@@ -484,7 +484,7 @@ background: #EFD695
 }
 
 #map_settings_content > div > label {
-  width: 90px;
+  width: 70px;
   display: inline-block;
 }
 

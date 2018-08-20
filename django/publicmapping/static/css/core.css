@@ -28,7 +28,7 @@ html {
     width: 100%;
 }
 body {
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "objektiv-mk1", Arial, Helvetica, sans-serif;
   height: 100%;
   width: 100%;
   min-width: 980px;
@@ -105,7 +105,7 @@ div#site_nav li {
 #language_menu_div {
   color: #fff;
   font-size: 11px;
-  font-weight: bold;
+  font-weight: 500;
   text-decoration: none;
   padding: 0 15px;
   line-height: 40px;
@@ -123,7 +123,7 @@ div#site_nav li {
 #app div#logo {
   margin: 6px 0 0 15px;
   font-size:20px;
-  font-weight: bold;
+  font-weight: 500;
   text-shadow: 0 -1px #222;
   color: #fff;
 }
@@ -149,8 +149,7 @@ ul#steps_tabs {
 
 ul#steps_tabs li {
   font-size: 14px;
-  font-weight: 300;
-  font-family: Arial;
+  font-weight: 500;
   margin: 0 -20px 0 0;
   border:none;
   background-color: transparent;
@@ -169,7 +168,7 @@ ul#steps_tabs li a:focus {
 ul#steps_tabs li.ui-state-default.ui-tabs-selected {
   /* background-image: url(/static/images/bg-arrow-button-active.png); */
   padding-bottom: 4px;
-  border-bottom: 1px solid #000 !important;
+  border-bottom: 2px solid #000 !important;
 }
 
 ul#steps_tabs li.ui-state-default.ui-state-disabled {
@@ -236,7 +235,7 @@ div.toolbar .ui-tabs-nav { /*jquery ui tab override */
 }
 
 div.fulltab .toolbar {height: 50px;}
-div.fulltab  .toolbar h1 {font-size: 30px;padding: 21px 0 0 15px;}
+div.fulltab  .toolbar h1 {font-size: 30px;padding: 21px 0 0 15px;font-weight: 800;}
 
 
 
@@ -271,7 +270,7 @@ div#step_leaderboard {
   background:none;
   border:none;
   font-size: 14px;
-  font-weight:bold;
+  font-weight: 500;
 }
 
 #leaderboard_nav li.ui-state-active {
@@ -340,7 +339,7 @@ div.leaderboard_panel {
 }
 div.leaderboard_title {
   font-size:16px;
-  font-weight: bold;
+  font-weight: 500;
   color: #3E3E3E;
   margin-bottom: 10px;
 }
@@ -356,7 +355,7 @@ div.leaderboard_panel table{
 }
 
 div.leaderboard_panel .ui-widget-content .ui-th-ltr {
-  font-weight: bold;
+  font-weight: 500;
  }
 
 div.leaderboard_panel .titleHelp {
@@ -366,7 +365,7 @@ div.leaderboard_panel .titleHelp {
 
 div.leaderboard_panel table th{
 background: #ECF6F5;
-font-weight:bold;
+font-weight: 500;
 font-size: 12px;
 }
 div.leaderboard_panel table td, div.leaderboard_panel table th {
@@ -414,7 +413,7 @@ div#step_leaderboard div.shadow_top  {
 
 div #footer p {
 font-size: 12px;
-font-weight: bold;
+font-weight: 500;
 color: rgb(62, 107, 127);
 }
 
@@ -445,9 +444,8 @@ div.tab_content {
 
 div.tab_content h3 {
   color: #3e3e3e;
-  font-size: 16px;
-  letter-spacing: -0.03em;
-  font-weight: bold;
+  font-size: 15px;
+  font-weight: 500;
   margin-bottom: 10px;
 }
 
@@ -467,14 +465,14 @@ div.leg_selector_container {
 
 div.leg_selector_container select {
   font-size: 14px;
-  font-weight:bold;
+  font-weight: 500;
   color: #5a5a5a;
 }
 
 span.leg_selector_instructions {
   font-size: 16px;
   color: #3e3e3e;
-  font-weight:bold;
+  font-weight: 500;
   padding-right: 6px;
   }
 
@@ -518,7 +516,7 @@ ul#plan_buttons li.active {
   margin-left: 0;
   z-index:10;
   background-color: hsla(203, 57%, 90%, 1);
-  font-weight: 800;
+  font-weight: 500;
 }
 
 div#select_plan {
@@ -544,9 +542,7 @@ div#step_plan div.middlecolumn  {
   right: 302px;
   font-size:12px;
   margin-top:0;
-  padding:15px 0 15px 15px;
-
-
+  padding: 13px 0 15px 15px;
 }
 
 div#search_filter {
@@ -606,7 +602,7 @@ cursor:pointer;
 
 div#upload_selection {
   display:none;
-   font-weight:bold;
+   font-weight: 500;
 }
 
 
@@ -627,7 +623,7 @@ div#form_column{
 div#form_container {
   background-color: #ececec;
   margin-top: 15px;
-  padding: 12px 18px 15px;
+  padding: 12px 12px 15px;
   border: 1px solid #ddd;
   font-size: 14px;
   }
@@ -670,23 +666,25 @@ margin-bottom:9px
 div#form_action{
   background-color: #bbb;
   margin-top: 15px;
-  padding: 12px 18px 15px;
+  padding: 12px 12px 15px;
   font-size: 14px;
   color: #3e3e3e;
-  font-weight:bold;
+  font-weight: 500;
 }
 
 #lblStartDrawing {
-  font-size: 14px;
+  font-size: 15px;
   color: #3e3e3e;
-  font-weight:bold;
+  font-weight: 500;
+  padding-bottom: 10px;
+  display: block;
 }
 
 div#form_action input#txtNewName {
 width: 100%;
 }
 
-div#form_action button {margin-top: 10px;width: 100%;background-color: #004FE2 !important;color: #fff !important;border-color: transparent !important;}
+div#form_action button {margin-top: 10px;width: 100%;background-color: #004FE2 !important;color: #fff !important;border-color: transparent !important;font-weight: 500;}
 
 
 form#plan_form {
@@ -697,7 +695,7 @@ div#form_container label#name_label,div#form_container label#description_label  
 div#form_container label, div#radCopyOrEdit {
   font-size: 12px;
   color: #555;
-  font-weight:bold;
+  font-weight: 500;
   }
 div#radCopyOrEdit {margin-bottom: 5px}
 
@@ -753,7 +751,7 @@ ul#TemplateTypeButtons li {
   cursor:pointer;
   display:block;
   font-size:14px;
-  font-weight:bold;
+  font-weight: 500;
   padding:13px 0;
   text-align:center;
   position:relative;
@@ -794,7 +792,7 @@ div#TemplateTypeContent {
 div#TemplateTypeContent label {
 display:block;
 font-size:14px;
-font-weight:bold;
+font-weight:500;
 margin-bottom:5px;
 }
 
@@ -808,7 +806,7 @@ div#PlanChooser button#btnSelectPlan {display:none; margin-top: 15px; font-size:
 
 div#SharedSelection, div#SelectorsHelp{
   font-size: 16px;
-  font-weight:bold;
+  font-weight:500;
 }
 
 div#PlanChooser li.inactive {
@@ -875,7 +873,7 @@ div#toolbar_plans .planname, #currently_viewing {
   padding-left: 0;
   line-height: 14px;
 }
-div#toolbar_plans .planname label{font-weight:bold;}
+div#toolbar_plans .planname label{font-weight: 500;}
 
 div#toolbar_plans #saveplanbtn {
   background: url(/static/images/icon-save.png) 0 0 no-repeat;
@@ -910,7 +908,7 @@ div#map {
 #mapandmenu ul.mapping_tabs li {
   top: 0;
   font-size: 11px;
-  font-weight: 800;
+  font-weight: 600;
   margin: 0 7px 0 0;
   border: 1px solid transparent;
   border-bottom: none;
@@ -1188,7 +1186,7 @@ div#toolsets .toolbar_menu_container .ui-button.active{
 div.toolset_group {
   float:left;
   font-size: 11px;
-  font-weight:bold;
+  font-weight: 500;
   cursor:pointer;
   background: url(/static/images/divider-vert.png) 100% 0 repeat-y;
   padding: 3px 4px 3px;
@@ -1203,8 +1201,8 @@ div.toolset_group .help{
 
 div.toolset_group label {
   font-size: 11px;
-  font-weight:bold;
-  color: #fff
+  font-weight: 500;
+  color: #fff;
 }
 div.toolset_group select {
   width: 100px;
@@ -1230,7 +1228,7 @@ div#no_edit_at_zoom_level {
     background-repeat: repeat-x;
     background-color: #333;
     border: 2px solid #000;
-    font-size: 11px;
+    font-size: 12px;
     color: #000;
     background-color: #fff;
     }
@@ -1253,7 +1251,7 @@ div#no_edit_at_zoom_level {
     background-color: transparent;
     border: none;
     font-size: 11px;
-    font-weight: bold;
+    font-weight: 500;
     color: #fff;
 }
 #app .multiple .ui-buttonset .ui-button.ui-state-active {
@@ -1284,9 +1282,9 @@ button#start_drawing   {
 }
 
 button#start_mapping[disabled="disabled"] {
-    background-color: #DDD;
-    color: #444;
-    cursor: default;
+    background-color: #dddddd7d !important;
+    color: #8b8b8b !important;
+    cursor: not-allowed;
 }
 
 div#map_menu {
@@ -1368,7 +1366,7 @@ div#map_menu_header label {
   display: block;
   float:left;
   font-size: 11px;
-  font-weight:bold;
+  font-weight:500;
   line-height: 12px;
   }
 
@@ -1387,7 +1385,7 @@ button#legend_toggle.collapse {
   right: 15px;
   }
 
-button#legend_toggle.ui-state-default {border: 1px solid transparent;}
+button#legend_toggle.ui-state-default {border: 1px solid transparent;font-weight: 500;}
 
 div#map_legend_content {
     position: absolute;
@@ -1412,7 +1410,7 @@ div#map_legend_content {
 }
 div#map_legend_content h1 {
     font-size: 11pt;
-    font-weight: bold;
+    font-weight: 500;
     text-align:center;
 }
 div#map_legend_content table td {
@@ -1420,7 +1418,7 @@ div#map_legend_content table td {
 }
 div#map_legend_content table th {
     font-size: .65em;
-    font-weight: bold;
+    font-weight: 500;
 }
 div#map_legend_content table {
     margin: 0 3px 10px;
@@ -1525,12 +1523,12 @@ div#map_settings_content #map_type_content_container {margin-right:0;}
 
 div#map_settings_content h1 {
     font-size: 11pt;
-    font-weight: bold;
+    font-weight: 500;
     text-align:center;
 }
 div#map_settings_content #map_settings_layers, div#map_settings_content .layer_type_container {
     font-size: 0.65em;
-    font-weight:bold;
+    font-weight:500;
     vertical-align:middle;
     }
 div#map_settings_content #reference_layer_id   {display:none;margin: 4px 0 2px;float:left;line-height: 14px;display: none !important;}
@@ -1578,9 +1576,9 @@ div.plan_summary {
     position:relative;
 }
 div.plan_summary h3 {
-  font-size: 18px;
+  font-size: 16px;
   line-height: 26px;
-  font-weight: bold;
+  font-weight: 600;
   margin: -5px 0 10px;
 }
 div.plan_summary label {
@@ -1588,7 +1586,7 @@ div.plan_summary label {
   width: 160px;
   text-align:left;
   font-size: 12px;
-  font-weight: bold;
+  font-weight: 500;
   /* margin-left: 3px; */
   }
 div.plan_summary span {
@@ -1636,7 +1634,7 @@ div.info_table th {
     top: 10px;
     text-align:center;
     padding: 3px;
-    font-weight: bold;
+    font-weight: 500;
     font-size: 11px;
     line-height: 11px;
 }
@@ -1660,7 +1658,7 @@ div.info_table table tr.even {
   background: #fff;
 }
 div.info_table table tr td {
-    font-size: 10pt;
+    font-size: 12px;
     text-align: center;
     padding: 5px 5px;
 }
@@ -1670,7 +1668,7 @@ div.info_table .district_name{
 div.info_table td.district_name {
     overflow: hidden;
     font-size: 12px;
-    font-weight: bold;
+    font-weight: 500;
     text-align: center;
 }
 div.info_table .community_name {
@@ -1679,7 +1677,7 @@ div.info_table .community_name {
 div.info_table td.community_name {
     overflow: hidden;
     font-size: 12px;
-    font-weight: bold;
+    font-weight: 500;
     text-align: left;
 }
 div.info_table .score1{
@@ -1697,14 +1695,14 @@ table#demographics_table td.cellright{
 }
 div.info_table .error {
   font-size: 12px;
-  font-weight: bold;
+  font-weight: 500;
   color:#333;
   padding: 8px;
 }
 span.poptot {
   padding: 1px;
   color: #3c3c3c;
-  font-size: 11px;
+  font-size: 12px;
   display:block;
   min-width: 64px;
   text-align:center;
@@ -1752,7 +1750,7 @@ div#stats_legend_panel{
   width: 240px;
   max-width:none;
   font-size: 11px;
-  font-weight: bold;
+  font-weight: 500;
   -moz-border-radius: 10px 10px 0 0;
   -webkit-border-radius: 10px 10px 0 0;
   border-radius: 10px 10px 0 0;
@@ -1768,7 +1766,7 @@ div#stats_legend_panel div.legend_item.last {
 }
 div#stats_legend_panel h5 {
   font-size: 12px;
-  font-weight: bold;
+  font-weight: 500;
   margin-bottom: 3px;
 }
 div#stats_legend_panel li{
@@ -1800,6 +1798,7 @@ div#map_menu button#stats_legend {
   background-color: #fff;
   border: 2px solid #222 !important;
   font-size: 12px;
+  font-weight: 500;
 }
 
 
@@ -1813,7 +1812,7 @@ div#map_menu button#stats_legend {
 #shared_districts_instructions {
     margin-bottom: 10px;
 }
-#shared_districts_content h2 {margin-bottom: 8px; font-size: 16px; font-weight:bold;}
+#shared_districts_content h2 {margin-bottom: 8px; font-size: 16px; font-weight:500;}
 #shared_plans_column {
 }
 #shared_districts_column {
@@ -1821,7 +1820,7 @@ div#map_menu button#stats_legend {
 #shared_districts_dialog  #step_3 {
 }
 #shared_districts_dialog  #step_3 h2{
-  float:left; margin-right: 10px; font-size: 16px; font-weight:bold;
+  float:left; margin-right: 10px; font-size: 16px; font-weight:500;
 }
 
 
@@ -1844,7 +1843,7 @@ div#map_menu button#stats_legend {
 
 .evaluate .stats-group .master {
   font-size: 1.5em;
-  font-weight: bold;
+  font-weight: 500;
   padding: 7px 3px;
   background: hsla(203, 30%, 93%, 1);
 }
@@ -1898,7 +1897,7 @@ background: url("/static/images/divider-horz.png") 0 100% repeat-x;
   background: url("/static/images/divider-horz.png") repeat-x 100% 0;
 }
 .evaluate #reportButtons #btnOpenReport {float:right}
-.evaluate #reportButtons #btnPreviewReport {float:left;border-radius: 100px;background-color: #004FE2 !important;color: #fff !important;border-color: transparent !important;/* padding: 4px 7px; *//* font-size: 14px; */margin-top: 12px;}
+.evaluate #reportButtons #btnPreviewReport {float:left;border-radius: 100px;background-color: #004FE2 !important;color: #fff !important;border-color: transparent !important;/* padding: 4px 7px; */margin-top: 12px;}
 
 .evaluate #options span {
     display: block;
@@ -1916,7 +1915,7 @@ background: url("/static/images/divider-horz.png") 0 100% repeat-x;
 .reportStatus {
     color: #818181;
     font-size: 23px;
-    font-weight: bold;
+    font-weight: 500;
     line-height: 27px;
     position: absolute;
     text-align: center;
@@ -1931,7 +1930,7 @@ background: url("/static/images/divider-horz.png") 0 100% repeat-x;
 
 #reportPreview h1#genreport {
     text-align:center;
-  font-weight:bold;
+  font-weight:500;
   font-size: 23px;
 }
 #reportPreview p {
@@ -2009,7 +2008,7 @@ background: url("/static/images/divider-horz.png") 0 100% repeat-x;
   padding-top:0;
 }
 .evaluate .alt_reports #options input {vertical-align: middle}
-.evaluate .alt_reports #options .master {font-weight:bold; font-size: 12px; margin-top: 12px; margin-bottom: 4px;}
+.evaluate .alt_reports #options .master {font-weight:500; font-size: 12px; margin-top: 12px; margin-bottom: 4px;}
 .evaluate .alt_reports #options .child {font-size: 11px; margin-right: 15px;}
 .evaluate .alt_reports #reportButtons {width: 56%; padding-top:20px;}
 .evaluate .alt_reports #reportPreviewContainer {overflow:auto; font-size: 12px;}
@@ -2045,7 +2044,7 @@ div#nameandshare,
     background: none repeat scroll 0 0 #DDDDDD;
     border: 1px solid #CCCCCC;
     font-size: 12px;
-    font-weight: bold;
+    font-weight: 500;
     margin: 15px 0;
     padding: 12px;
     text-decoration: none;
@@ -2099,7 +2098,9 @@ div#nameandshare,
 
 #scoring {display:none}
 
-
+.explanation h2 {
+  font-weight: 600;
+}
 
 
 /* Report Table Styles
@@ -2108,7 +2109,7 @@ div#nameandshare,
 #reportPreview h2 {
   background: #4e6651;
   color: #fff;
-  font-weight: bold;
+  font-weight: 500;
   padding-left: 5px;
 }
 
@@ -2210,7 +2211,7 @@ div.districtidtip {
 }
 
 /* JQUERY UI GLOBAL OVERRIDE */
-.ui-widget, .ui-widget button, .ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button {font-family: Arial, Helvetica, sans-serif;}
+.ui-widget, .ui-widget button, .ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button {font-family: "objektiv-mk1", Arial, Helvetica, sans-serif;}
 
 .ui-dialog {
   border: none;
@@ -2242,7 +2243,7 @@ div.districtidtip {
 .ui-dialog .ui-dialog-buttonpane {padding-top: 0; margin-top: 0;border:none}
 
 
-.ui-dialog .dialog_step h2 {margin-bottom: 5px; font-size: 16px; font-weight:bold;}
+.ui-dialog .dialog_step h2 {margin-bottom: 5px; font-size: 16px; font-weight:500;}
 .ui-dialog h3 {margin-bottom: 8px; font-size: 16px;}
 
 .ui-dialog .dialog_step .centered {text-align:center}
@@ -2354,7 +2355,7 @@ div.districtidtip {
 #choose_layers_instructions {margin-bottom: 10px;}
 #choose_layers_button_group button {float:left; margin-right: 10px;}
 #reference_labels_check {vertical-align: bottom;}
-#reference_labels_label {font-weight: bold;}
+#reference_labels_label {font-weight: 500;}
 #reference_labels_check_wrapper {display: none;}
 
 /* district label&comment */
@@ -2395,13 +2396,13 @@ button#label_district_button.ui-state-default {border: 1px solid #ccc;}
 #multi_member_targets {
     margin-top: 15px;
     font-size: 10pt;
-    font-weight: bold;
+    font-weight: 500;
 }
 
 #multi_member_values {
     margin-top: 15px;
     font-size: 10pt;
-    font-weight: bold;
+    font-weight: 500;
 }
 
 #multi_member_save_button {
@@ -2460,7 +2461,7 @@ span.multi_val.invalid {
     font-size: 10pt;
 }
 #districtComment label {
-    font-weight: bold;
+    font-weight: 500;
 }
 #districtComment #id_comment {
     height: 80px;
@@ -2495,7 +2496,7 @@ span.multi_val.invalid {
 }
 .districtComment .infoLabel {
     font-size: 12pt;
-    font-weight: bold;
+    font-weight: 500;
     float: left;
     border: none;
     background: url("/static/images/divider.png") repeat-x 0 100% transparent;
@@ -2506,7 +2507,7 @@ span.multi_val.invalid {
 .districtComment h4 {
     clear:both;
     font-size: 10pt;
-    font-weight: bold;
+    font-weight: 500;
 }
 .districtComment .edit_district_info {
   position: absolute;
