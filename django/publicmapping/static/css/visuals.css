@@ -112,9 +112,10 @@ div#news h3:first-child {
 
 #static button#login {
   background-color: #004FE2;
-  font-size: 18px;
+  font-size: 16px;
   border-radius: 100px;
   border-color: transparent;
+  font-weight: 500;
 }
 
 #static button#sign_up {
@@ -203,7 +204,7 @@ div#signup h4 {
   margin: 10px 0 7px;
   font-size:  14px;
   color: #000000;
-  font-weight: 400;
+  font-weight: 500;
 }
 div#signUpButton {
     text-align: right;
@@ -484,12 +485,14 @@ background: #EFD695
 }
 
 #map_settings_content > div > label {
-  width: 70px;
+  width: 96px;
   display: inline-block;
+  font-weight: 500;
 }
 
 #map_settings_content > div:first-child > label {
   margin-bottom: 8px;
+  font-weight: 500;
 }
 
 #map_type_content_container label {

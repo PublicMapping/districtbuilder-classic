@@ -1544,6 +1544,7 @@ div#map_settings_content #opacity_slider {
     border: none;
     position: relative;
     top: 3px;
+    width: 175px !important;
 }
 div#map_settings_content .ui-slider .ui-slider-handle {
     cursor: default;
