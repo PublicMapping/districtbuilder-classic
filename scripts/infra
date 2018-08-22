@@ -20,19 +20,20 @@ Execute Terraform subcommands with remote state management.
 "
 }
 
-function test_docker_endpoint () {
-  curl -is "https://${DOCKER_HOST}/info" \
-    --cert "${HOME}/.docker/cert.pem" \
-    --key "${HOME}/.docker/key.pem" \
-    --cacert "${HOME}/.docker/ca.pem" | grep "200 OK"
-}
-
 function wait_for_docker() {
 
-  while ! test_docker_endpoint;
-  do
-    test_docker_endpoint
+  for i in {1..5}; do
+      if docker-compose ps > /dev/null; then
+        echo 'Docker daemon is running!'
+        return
+      else
+        echo "Docker daemon is not running. $(( 5 - i)) attempts remaining."
+        sleep 5
+      fi;
   done
+
+  echo 'Error waiting for Docker daemon.'
+  exit 1
 }
 
 if [ "${BASH_SOURCE[0]}" = "${0}" ]; then
