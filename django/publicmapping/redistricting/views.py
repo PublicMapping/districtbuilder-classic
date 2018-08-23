@@ -2111,6 +2111,8 @@ def submit_plan(request, planid):
         old_plan = Plan.objects.get(pk=planid)
         plan.id = None
         plan.owner = admin
+        # This is in fact not true, but prevents the plan from showing up on the Leaderboard
+        plan.is_valid = False
         plan.is_shared = False
         plan.version = 0
         # Plan names need to be unique by owner, so we have to add a random key
