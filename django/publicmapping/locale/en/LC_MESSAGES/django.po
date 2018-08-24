@@ -1904,7 +1904,7 @@ msgstr ""
 
 #: redistricting/templates/viewplan.html:512
 msgid "Edit Stats"
-msgstr "Edit Display Stats"
+msgstr "Edit Stats"
 
 #: redistricting/templates/viewplan.html:517
 msgid "Statistics"
