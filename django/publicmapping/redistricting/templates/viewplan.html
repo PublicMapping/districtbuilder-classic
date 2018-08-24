@@ -546,10 +546,6 @@
               <label>Basemap</label>
               <div id="map_type_content_container" style="display: inline-block;"></div>
             </div>
-            <div id="reference_layer_id" class="layer_type_container">
-                <div id="reference_layer_label">{% trans "Reference Layer:" %}</div>
-                <div id="reference_layer_name">{% trans "None" %}</div>
-            </div>
           </div>
           {% block multi_member %}
           {% comment %}
@@ -870,6 +866,10 @@
        </div>
      </div>
      {% endif %}
+      <div id="reference_layer_id" class="toolset_group">
+        <label>{% trans "Reference Layer:" %}</label>
+          <span id="reference_layer_name">{% trans "None" %}</span>
+      </div>
      {% if plan and is_editable %}
      {% comment %}
 

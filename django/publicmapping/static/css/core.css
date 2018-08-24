@@ -1531,7 +1531,7 @@ div#map_settings_content #map_settings_layers, div#map_settings_content .layer_t
     font-weight:500;
     vertical-align:middle;
     }
-div#map_settings_content #reference_layer_id   {display:none;margin: 4px 0 2px;float:left;line-height: 14px;display: none !important;}
+div#map_settings_content #reference_layer_id   {margin: 4px 0 2px;float:left;line-height: 14px;}
 div#map_settings_content #reference_layer_name  {
   font-weight: normal;
 }
