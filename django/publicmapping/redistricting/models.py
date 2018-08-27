@@ -2851,6 +2851,7 @@ class PlanSubmission(models.Model):
     last_name = models.CharField(max_length=100)
     email_address = models.EmailField()
 
+    organization_name = models.CharField(max_length=100, blank=True)
     team_member_names = models.CharField(max_length=500, blank=True)
     team_name = models.CharField(max_length=100, blank=True)
 

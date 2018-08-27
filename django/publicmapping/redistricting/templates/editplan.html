@@ -313,20 +313,20 @@
                 <td><input name="last_name" class="field required" maxlength="30" value="{{ userinfo.lastname }}" /></td>
             </tr>
             <tr>
-                <td class="fname">{% trans "Full Names of Team Members (if applicable)" %}</td>
-                <td><input name="team_member_names" class="field" maxlength="120" /></td>
-            </tr>
-            <tr>
                 <td class="fname">{% trans "Team Name (if applicable)" %}</td>
                 <td><input name="team_name" class="field" maxlength="120" /></td>
             </tr>
             <tr>
-                <td class="fname">{% trans "Email Address" %} *</td>
-                <td><input name="email_address" class="field required" maxlength="75" value="{{ userinfo.email }}" /><br/>
+                <td class="fname">{% trans "Full Names of Team Members (if applicable)" %}</td>
+                <td><input name="team_member_names" class="field" maxlength="400" /></td>
             </tr>
             <tr>
-                <td class="fname">{% trans "Street Address" %} *</td>
-                <td><input name="street_address" class="field required" maxlength="120" /></td>
+                <td class="fname">{% trans "School/Organization (if applicable)" %}</td>
+                <td><input name="organization_name" class="field" maxlength="120" /></td>
+            </tr>
+            <tr>
+                <td class="fname">{% trans "Email Address" %} *</td>
+                <td><input name="email_address" class="field required" maxlength="75" value="{{ userinfo.email }}" /><br/>
             </tr>
             <tr>
                 <td class="fname">{% trans "Phone Number" %} *</td>
@@ -438,7 +438,7 @@
                     and have it presented to a legislative body. Unless
                     you request otherwise, the project partners will attempt
                     to include attribution (your name or team name) for the
-                    plan whenever feasible.
+                    plan whenever possible.
                     {% endblocktrans %}
                 </td>
             </tr>
