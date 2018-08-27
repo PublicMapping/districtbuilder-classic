@@ -382,8 +382,8 @@ div#step_evaluate .toolbar {}
 div#step_share .toolbar {}
 div#step_leaderboard .toolbar {/* background-color: #b09873 */}
 
-div#step_leaderboard div.toolbar li {border-radius: 0;color: #000 !important;font-weight: 400;}
-div#step_leaderboard div.toolbar  li.ui-state-active {border-bottom: 2px solid #004FE2 !important;margin-right: 16px;}
+div#step_leaderboard div.toolbar li {border-radius: 0;color: #000 !important;font-weight: 400;margin-right: 16px;}
+div#step_leaderboard div.toolbar  li.ui-state-active {border-bottom: 2px solid #004FE2 !important;/* margin-right: 16px; */}
 
 
 div.tab_content {}
@@ -407,7 +407,7 @@ div#start_mapping_help {
 
 #app button, .ui-dialog button, #app .multiple .ui-buttonset .ui-button {
     }
-#app .multiple  .ui-buttonset .ui-button.ui-state-active {background-color: #d8e9f5;color: #000;padding: 0.4em 1em;}
+#app .multiple  .ui-buttonset .ui-button.ui-state-active {background-color: transparent;color: #000;}
 
  button#stats_legend {background-color: #bb9160;}
 

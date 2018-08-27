@@ -7,7 +7,7 @@
 
        http://www.apache.org/licenses/LICENSE-2.0
 
-   Unless required by applicable law or agreed to in writing, software 
+   Unless required by applicable law or agreed to in writing, software
    distributed under the License is distributed on an "AS IS" BASIS,
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
@@ -20,14 +20,14 @@
        This stylesheet defines all the styles used for reports
        in The Public Mapping Project django web application.
 
-   Author: 
+   Author:
         Brian Jacobs, Andrew Jennings, David Zwarg, Kenny Shepard
 */
 .report_panel_title { font-weight: bold; font-size: 1.2em; }
 .report_function { border-top: 2px solid #ddd; margin-bottom: 15px; }
 .report_function_wrap {margin-bottom: 30px}
 .report_score_cell { font-size: 0.9em; }
-.report_score_cell.header { font-weight: bold; text-align: center; }
+.report_score_cell.header {font-weight: 500;text-align: center;}
 .report_score_cell.footer { font-weight: bold; }
 
 .left { text-align: left; }
@@ -53,12 +53,12 @@
 */
 .report_panel {
     max-width: 960px;
-	font-family: Arial, Helvetica, sans-serif;
+    font-family: "objektiv-mk1", Arial, Helvetica, sans-serif;
 }
 
 .report_function_title {
   font-size:16px;
-  font-weight: bold;
+  font-weight: 500;
   color: #3E3E3E;
   margin: 5px 5px 5px 0;
 }
@@ -74,17 +74,18 @@
 .report_panel .ui-widget-content .ui-th-ltr {
   font-weight: bold;
 }
- 
+
 .report_panel table th{
-    background: #ECF6F5;
+    background: transparent;
     font-weight:bold;
     font-size: 12px;
 }
 
 .report_panel table td, .report_panel table th {
     padding: 4px 7px;
-    border: 1px solid #ccc;
+    border: 1px solid #ddd;
     line-height: 14px;
+    font-size: 14px;
 }
 
 .report_panel table tr { background: #fafafa; }
