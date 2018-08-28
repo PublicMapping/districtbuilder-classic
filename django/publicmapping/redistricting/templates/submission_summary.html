@@ -36,6 +36,7 @@
     <div class="plan-name">Map name: {{ submission.submitted_plan_name }}</div>
     <div class="contestant-name">Contestant name: {{ submission.first_name }} {{ submission.last_name }}</div>
     <div class="contestant-email">Email: {{ submission.email_address }}</div>
+    <div class="map-values">Prioritized Values: {{ submission.values_choices }}</div>
     <div class="scores">
       <h2>This Map's Metrics</h2>
       {{ scores_html | safe }}

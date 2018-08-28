@@ -43,6 +43,7 @@ emailplan = function(options) {
             autoOpen: false,
             modal: true,
             width: 535,
+            height: 650,
             resizable: false,
             closable: true
         }, options);
@@ -58,11 +59,24 @@ emailplan = function(options) {
         _options.container.dialog(_options);
         _options.target.click(showDialog);
         _options.submitButton.click(submitForm);
+        _options.container.find('.values_choices').change(validateAndWarnValuesChoices);
+        // It is possible to reload the page after putting the form in an invalid state
+        validateAndWarnValuesChoices();
     };
 
     // Show the dialog
     var showDialog = function() {
         _options.container.dialog('open');
+    };
+
+    var validateValuesChoices = function() {
+        var checked_values_count = _options.container.find('.values_choices:checked').length;
+        return checked_values_count >= 1 && checked_values_count <= 3;
+    };
+
+    var validateAndWarnValuesChoices = function() {
+        var values_valid = validateValuesChoices();
+        _options.container.find('#values_choices_error_message').toggle(!values_valid);
     };
 
     // Validate form and submit to server for sending email
@@ -91,6 +105,13 @@ emailplan = function(options) {
                 obj.addClass("error");
             }
         });
+
+        // Join values selections into string
+        values.values_choices = _options.container.find('.values_choices:checked').map(
+            function() { return this.value; } // thises are each checkbox <input>
+        ).get().join(', ');
+
+        failedVerification = failedVerification || !validateValuesChoices();
 
         if (failedVerification) { return; }
 

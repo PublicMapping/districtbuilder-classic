@@ -421,8 +421,66 @@
                 </td>
             </tr>
             <tr>
+                <td colspan="2" id="values_choices_label">
+                  {% trans "Select up to three values that you prioritized while drawing your map: *" %}
+                </td>
+            </tr>
+            <tr id="values_choices_error_message" class="error">
+                <td colspan="2">
+                  {% trans "You must select from 1 to 3 values" %}
+                </td>
+            </tr>
+            <tr>
+                <td><ul>
+                  <!-- The "values_choices" class is used to limit the number of selections to 3 -->
+                  <li>
+                    <input name="values" id="val_coi" class="values_choices" value="Community(ies) of Interest" type="checkbox" />
+                    <label for="val_coi">{% trans "Community(ies) of Interest" %}</label>
+                  </li>
+                  <li>
+                    <input name="values" id="val_compact" class="values_choices" value="Compactness" type="checkbox" />
+                    <label for="val_compact">{% trans "Compactness" %}</label>
+                  </li>
+                  <li>
+                    <input name="values" id="val_cmpttive" class="values_choices" value="Competitive Elections" type="checkbox" />
+                    <label for="val_cmpttive">{% trans "Competitive Elections" %}</label>
+                  </li>
+                  <li>
+                    <input name="values" id="val_contiguity" class="values_choices" value="Contiguity" type="checkbox" />
+                    <label for="val_contiguity">{% trans "Contiguity" %}</label>
+                  </li>
+                  <li>
+                    <input name="values" id="val_equipop" class="values_choices" value="Equal Population" type="checkbox" />
+                    <label for="val_equipop">{% trans "Equal Population" %}</label>
+                  </li>
+                </ul></td>
+                <td><ul>
+                  <li>
+                    <input name="values" id="val_splits" class="values_choices" value="Jurisdictional Splits" type="checkbox" />
+                    <label for="val_splits">{% trans "Jurisdictional Splits" %}</label>
+                  </li>
+                  <li>
+                    <input name="values" id="val_repr" class="values_choices" value="Minority Representation" type="checkbox" />
+                    <label for="val_repr">{% trans "Minority Representation" %}</label>
+                  </li>
+                  <li>
+                    <input name="values" id="val_adv" class="values_choices" value="Party Advantage" type="checkbox" />
+                    <label for="val_adv">{% trans "Party Advantage" %}</label>
+                  </li>
+                  <li>
+                    <input name="values" id="val_other" class="values_choices" value="Other" type="checkbox" />
+                    <label for="val_other">{% trans "Other (explain in your personal statement)" %}</label>
+                  </li>
+                </ul></td>
+            </tr>
+            <tr>
                 <td colspan="2" id="values_text_column">
-                    {% trans "Values &ndash; tell us what values, considerations and trade-offs you made in your plan:" %} *
+                  {% blocktrans %}
+                    Personal Statement &ndash; Please write or paste your Personal Statement (if
+                    text) into the box below. Or, include a link to your statement (if video, audio,
+                    or other). See <a href="#" target="_blank">Competition Rules</a> for
+                    instructions on how to do your Personal Statement.
+                  {% endblocktrans %} *
                 </td>
             </tr>
             <tr>
