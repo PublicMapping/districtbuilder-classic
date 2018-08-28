@@ -232,13 +232,15 @@ tr.split_totals td, tr.separator_row td { background-color: #f0f0f0; font-weight
   color: #6a6a6a;
   font-weight: bold;
 }
-#values_text_column { font-weight: bold; }
+#values_text_column, #values_choices_label { font-weight: bold; }
 #disclaimer_text_column { font-size: 0.85em; background-color: #eee; }
 #more_info_text { width:100%; }
 #email_plan_submit_column { text-align: right; padding-top: 10px; }
 #email_plan_required_note { font-size: 0.85em; text-align: left; }
-#email_plan_dialog .error { border: 1px solid #ff0000; }
 
+.ui-dialog #email_plan_dialog table {
+  border-collapse: collapse;
+}
 .ui-dialog #email_plan_dialog tr {
   height: 40px;
 }
@@ -249,6 +251,15 @@ tr.split_totals td, tr.separator_row td { background-color: #f0f0f0; font-weight
   -moz-border-radius: 4px;
   -webkit-border-radius: 4px;
 }
+
+.ui-dialog #email_plan_dialog li {
+  list-style-type: none;
+}
+
+.ui-dialog #email_plan_dialog .field.error, .ui-dialog #email_plan_dialog .error {
+  border: 1px solid #ff0000;
+}
+
 .ui-dialog #email_plan_dialog input.field {
   width: 250px;
 }
