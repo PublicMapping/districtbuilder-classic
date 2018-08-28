@@ -2868,6 +2868,9 @@ class PlanSubmission(models.Model):
         ),
         max_length=5
     )
+    # This is presented to the user as a choice list, but we just want to turn around and display it
+    # to the judges, so we can store it as a text field.
+    values_choices = models.CharField(max_length=100, blank=True)
     values_statement = models.TextField(blank=True)
 
     REGIONS = {
