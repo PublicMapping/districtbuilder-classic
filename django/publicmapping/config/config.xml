@@ -733,9 +733,9 @@
             <ScorePanel id="congressional_panel_demo" type="district" position="2"
                 title="Demographics" cssclass="district_demographics congressional"
                 template="demographics.html">
-                <Score ref="district_vapblk_percent" />
-                <Score ref="district_vaphisp_percent" />
-                <Score ref="district_vapasn_percent" />
+                <Score ref="district_black_percent" />
+                <Score ref="district_hispanic_percent" />
+                <Score ref="district_asian_percent" />
             </ScorePanel>
 
             <!-- Competitiveness -->
