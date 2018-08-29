@@ -674,14 +674,14 @@
             </ScorePanel>
 
             <ScorePanel id="panel_equivalence_all" type="plan" position="2"
-                title="Equal Population" template="leaderboard_panel_all.html"
-                is_ascending="false">
+                title="Equivalence" template="leaderboard_panel_all.html"
+                is_ascending="true">
                 <Score ref="F_congress_plan_equivalence" />
             </ScorePanel>
 
             <ScorePanel id="panel_equivalence_mine" type="plan" position="2"
-                title="Equal Population" template="leaderboard_panel_mine.html"
-                is_ascending="false">
+                title="Equivalence" template="leaderboard_panel_mine.html"
+                is_ascending="true">
                 <Score ref="F_congress_plan_equivalence" />
             </ScorePanel>
 
