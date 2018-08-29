@@ -830,7 +830,7 @@
                 <Score ref="congress_plan_equipopulation_validation" />
             </Criterion>
             <Criterion id="congress-contiguous" name="AllContiguous - Congress"
-                description="&lt;p&gt;Your plan does not meet the competition criteria for Contiguity&lt;/p&gt;&lt;p&gt;Every part of a district must be reachable from every other part without crossing the district's borders. All districts within a plan must be contiguous.">
+                description="&lt;p&gt;Your map does not meet the constitutional criteria for contiguity.&lt;/p&gt;&lt;p&gt;Each mapping unit must be connected to a district. No assigned unit can be disconnected from the rest of its district. All districts within a map must be contiguous.">
                 <Score ref="plan_all_contiguous" />
             </Criterion>
             <Criterion id="congress-district-count" name="CountDistricts - Congress" description="">
