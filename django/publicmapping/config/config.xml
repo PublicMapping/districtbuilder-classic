@@ -79,13 +79,13 @@
 
     <Scoring>
         <ScoreFunctions>
-            <ScoreFunction id="district_polsbypopper" type="district"
+            <ScoreFunction id="district_03_polsbypopper" type="district"
                 calculator="redistricting.calculators.PolsbyPopper"
                 label="Compactness" user_selectable="true">
                 <LegislativeBody ref="congress"/>
             </ScoreFunction>
 
-            <ScoreFunction id="district_contiguous" type="district"
+            <ScoreFunction id="district_02_contiguous" type="district"
                 calculator="redistricting.calculators.Contiguity"
                 label="Contiguous" user_selectable="true">
                 <LegislativeBody ref="congress"/>
@@ -94,7 +94,7 @@
             <ScoreFunction id="plan_contiguous" type="plan"
                 calculator="redistricting.calculators.SumValues"
                 label="Contiguous">
-                <ScoreArgument name="value1" ref="district_contiguous"/>
+                <ScoreArgument name="value1" ref="district_02_contiguous"/>
             </ScoreFunction>
 
             <ScoreFunction id="B_congress_plan_noncontiguous" type="plan"
@@ -115,7 +115,7 @@
             </ScoreFunction>
 
             <!-- District score functions -->
-            <ScoreFunction id="district_vapblk_percent" type="district"
+            <ScoreFunction id="district_19_vapblk_percent" type="district"
                 calculator="redistricting.calculators.Percent"
                 label="Black VAP">
                 <SubjectArgument name="numerator" ref="vapblk" />
@@ -126,11 +126,11 @@
             <ScoreFunction id="district_vapblk_thresh" type="district"
                 calculator="redistricting.calculators.Threshold"
                 label="Black VAP Threshold">
-                <ScoreArgument name="value" ref="district_vapblk_percent" />
+                <ScoreArgument name="value" ref="district_19_vapblk_percent" />
                 <Argument name="threshold" value="0.5" />
             </ScoreFunction>
 
-            <ScoreFunction id="district_vaphisp_percent" type="district"
+            <ScoreFunction id="district_20_vaphisp_percent" type="district"
                 calculator="redistricting.calculators.Percent"
                 label="His. VAP">
                 <SubjectArgument name="numerator" ref="vaphisp" />
@@ -141,11 +141,11 @@
             <ScoreFunction id="district_vap_thresh" type="district"
                 calculator="redistricting.calculators.Threshold"
                 label="His. VAP Threshold">
-                <ScoreArgument name="value" ref="district_vaphisp_percent" />
+                <ScoreArgument name="value" ref="district_20_vaphisp_percent" />
                 <Argument name="threshold" value="0.5" />
             </ScoreFunction>
 
-            <ScoreFunction id="district_vapasn_percent" type="district"
+            <ScoreFunction id="district_18_vapasn_percent" type="district"
                 calculator="redistricting.calculators.Percent"
                 label="Asian VAP">
                 <SubjectArgument name="numerator" ref="vapasn" />
@@ -156,11 +156,11 @@
             <ScoreFunction id="district_vapasn_thresh" type="district"
                 calculator="redistricting.calculators.Threshold"
                 label="Asian VAP Threshold">
-                <ScoreArgument name="value" ref="district_vapasn_percent" />
+                <ScoreArgument name="value" ref="district_18_vapasn_percent" />
                 <Argument name="threshold" value="0.5" />
             </ScoreFunction>
 
-            <ScoreFunction id="district_vapwnh_percent" type="district"
+            <ScoreFunction id="district_23_vapwnh_percent" type="district"
                 calculator="redistricting.calculators.Percent"
                 label="White VAP">
                 <SubjectArgument name="numerator" ref="vapwnh" />
@@ -171,19 +171,19 @@
             <ScoreFunction id="district_vapwnh_thresh" type="district"
                 calculator="redistricting.calculators.Threshold"
                 label="White VAP Threshold">
-                <ScoreArgument name="value" ref="district_vapwnh_percent" />
+                <ScoreArgument name="value" ref="district_23_vapwnh_percent" />
                 <Argument name="threshold" value="0.5" />
             </ScoreFunction>
 
             <ScoreFunction id="district_vapnownh_thresh" type="district"
                 calculator="redistricting.calculators.Threshold"
                 label="Non-white VAP Threshold">
-                <ScoreArgument name="value" ref="district_vapwnh_percent" />
+                <ScoreArgument name="value" ref="district_23_vapwnh_percent" />
                 <Argument name="threshold" value="0.5" />
                 <Argument name="less_than" value="1" />
             </ScoreFunction>
 
-            <ScoreFunction id="district_vapnam_percent" type="district"
+            <ScoreFunction id="district_21_vapnam_percent" type="district"
                 calculator="redistricting.calculators.Percent"
                 label="Nat. Amer. VAP">
                 <SubjectArgument name="numerator" ref="vapnam" />
@@ -194,11 +194,11 @@
             <ScoreFunction id="district_vapnam_thresh" type="district"
                 calculator="redistricting.calculators.Threshold"
                 label="Nat. Amer. VAP Threshold">
-                <ScoreArgument name="value" ref="district_vapnam_percent" />
+                <ScoreArgument name="value" ref="district_21_vapnam_percent" />
                 <Argument name="threshold" value="0.5" />
             </ScoreFunction>
 
-            <ScoreFunction id="district_vappild_percent" type="district"
+            <ScoreFunction id="district_22_vappild_percent" type="district"
                 calculator="redistricting.calculators.Percent"
                 label="Pac. Isldr. VAP">
                 <SubjectArgument name="numerator" ref="vappild" />
@@ -209,11 +209,11 @@
             <ScoreFunction id="district_vappild_thresh" type="district"
                 calculator="redistricting.calculators.Threshold"
                 label="Pac. Isldr. VAP Threshold">
-                <ScoreArgument name="value" ref="district_vappild_percent" />
+                <ScoreArgument name="value" ref="district_22_vappild_percent" />
                 <Argument name="threshold" value="0.5" />
             </ScoreFunction>
 
-            <ScoreFunction id="district_vapoth_percent" type="district"
+            <ScoreFunction id="district_25_vapoth_percent" type="district"
                 calculator="redistricting.calculators.Percent"
                 label="Other VAP">
                 <SubjectArgument name="numerator" ref="vapoth" />
@@ -224,11 +224,11 @@
             <ScoreFunction id="district_vapoth_thresh" type="district"
                 calculator="redistricting.calculators.Threshold"
                 label="Other VAP Threshold">
-                <ScoreArgument name="value" ref="district_vapoth_percent" />
+                <ScoreArgument name="value" ref="district_25_vapoth_percent" />
                 <Argument name="threshold" value="0.5" />
             </ScoreFunction>
 
-            <ScoreFunction id="district_vaptwo_percent" type="district"
+            <ScoreFunction id="district_24_vaptwo_percent" type="district"
                 calculator="redistricting.calculators.Percent"
                 label="Two+ Races VAP">
                 <SubjectArgument name="numerator" ref="vaptwo" />
@@ -239,11 +239,11 @@
             <ScoreFunction id="district_vaptwo_thresh" type="district"
                 calculator="redistricting.calculators.Threshold"
                 label="Two+ Races VAP Threshold">
-                <ScoreArgument name="value" ref="district_vaptwo_percent" />
+                <ScoreArgument name="value" ref="district_24_vaptwo_percent" />
                 <Argument name="threshold" value="0.5" />
             </ScoreFunction>
 
-            <ScoreFunction id="district_prison_percent" type="district"
+            <ScoreFunction id="district_26_prison_percent" type="district"
                 calculator="redistricting.calculators.Percent"
                 label="Incarcerated">
                 <SubjectArgument name="numerator" ref="prison" />
@@ -254,11 +254,11 @@
             <ScoreFunction id="district_prison_thresh" type="district"
                 calculator="redistricting.calculators.Threshold"
                 label="Incarcerated Threshold">
-                <ScoreArgument name="value" ref="district_prison_percent" />
+                <ScoreArgument name="value" ref="district_26_prison_percent" />
                 <Argument name="threshold" value="0.5" />
             </ScoreFunction>
 
-            <ScoreFunction id="district_votedem_percent" type="district"
+            <ScoreFunction id="district_27_votedem_percent" type="district"
                 calculator="redistricting.calculators.Percent"
                 label="Registered Democrat">
                 <SubjectArgument name="numerator" ref="votedem" />
@@ -269,11 +269,11 @@
             <ScoreFunction id="district_votedem_thresh" type="district"
                 calculator="redistricting.calculators.Threshold"
                 label="Registered Democrat Threshold">
-                <ScoreArgument name="value" ref="district_votedem_percent" />
+                <ScoreArgument name="value" ref="district_27_votedem_percent" />
                 <Argument name="threshold" value="0.5" />
             </ScoreFunction>
 
-            <ScoreFunction id="district_voterep_percent" type="district"
+            <ScoreFunction id="district_28_voterep_percent" type="district"
                 calculator="redistricting.calculators.Percent"
                 label="Registered Republican">
                 <SubjectArgument name="numerator" ref="voterep" />
@@ -284,11 +284,11 @@
             <ScoreFunction id="district_voterep_thresh" type="district"
                 calculator="redistricting.calculators.Threshold"
                 label="Registered Republican Threshold">
-                <ScoreArgument name="value" ref="district_voterep_percent" />
+                <ScoreArgument name="value" ref="district_28_voterep_percent" />
                 <Argument name="threshold" value="0.5" />
             </ScoreFunction>
 
-            <ScoreFunction id="district_voteoth_percent" type="district"
+            <ScoreFunction id="district_29_voteoth_percent" type="district"
                 calculator="redistricting.calculators.Percent"
                 label="Registered Other">
                 <SubjectArgument name="numerator" ref="voteoth" />
@@ -299,11 +299,11 @@
             <ScoreFunction id="district_voteoth_thresh" type="district"
                 calculator="redistricting.calculators.Threshold"
                 label="Registered Other Threshold">
-                <ScoreArgument name="value" ref="district_voteoth_percent" />
+                <ScoreArgument name="value" ref="district_29_voteoth_percent" />
                 <Argument name="threshold" value="0.5" />
             </ScoreFunction>
 
-            <ScoreFunction id="district_white_percent" type="district"
+            <ScoreFunction id="district_15_white_percent" type="district"
                 calculator="redistricting.calculators.Percent"
                 label="White Population">
                 <SubjectArgument name="numerator" ref="popwnh" />
@@ -311,7 +311,7 @@
                 <LegislativeBody ref="congress"/>
             </ScoreFunction>
 
-            <ScoreFunction id="district_black_percent" type="district"
+            <ScoreFunction id="district_12_black_percent" type="district"
                 calculator="redistricting.calculators.Percent"
                 label="Black Population" >
                 <LegislativeBody ref="congress"/>
@@ -319,7 +319,7 @@
                 <SubjectArgument name="denominator" ref="poptot" />
             </ScoreFunction>
 
-            <ScoreFunction id="district_hispanic_percent" type="district"
+            <ScoreFunction id="district_13_hispanic_percent" type="district"
                 calculator="redistricting.calculators.Percent"
                 label="Hispanic Population" >
                 <LegislativeBody ref="congress"/>
@@ -327,7 +327,7 @@
                 <SubjectArgument name="denominator" ref="poptot" />
             </ScoreFunction>
 
-            <ScoreFunction id="district_asian_percent" type="district"
+            <ScoreFunction id="district_11_asian_percent" type="district"
                 calculator="redistricting.calculators.Percent"
                 label="Asian Population" >
                 <LegislativeBody ref="congress"/>
@@ -335,7 +335,7 @@
                 <SubjectArgument name="denominator" ref="poptot" />
             </ScoreFunction>
 
-            <ScoreFunction id="district_amer_ind_percent" type="district"
+            <ScoreFunction id="district_10_amer_ind_percent" type="district"
                 calculator="redistricting.calculators.Percent"
                 label="American Indian/Alaskan Native" >
                 <LegislativeBody ref="congress"/>
@@ -343,7 +343,7 @@
                 <SubjectArgument name="denominator" ref="poptot" />
             </ScoreFunction>
 
-            <ScoreFunction id="district_native_pac_percent" type="district"
+            <ScoreFunction id="district_14_native_pac_percent" type="district"
                 calculator="redistricting.calculators.Percent"
                 label="Native Hawaiian/Pacific Islander" >
                 <LegislativeBody ref="congress"/>
@@ -351,7 +351,7 @@
                 <SubjectArgument name="denominator" ref="poptot" />
             </ScoreFunction>
 
-            <ScoreFunction id="district_other_percent" type="district"
+            <ScoreFunction id="district_17_other_percent" type="district"
                 calculator="redistricting.calculators.Percent"
                 label="Other Race" >
                 <LegislativeBody ref="congress"/>
@@ -359,7 +359,7 @@
                 <SubjectArgument name="denominator" ref="poptot" />
             </ScoreFunction>
 
-            <ScoreFunction id="district_two_percent" type="district"
+            <ScoreFunction id="district_16_two_percent" type="district"
                 calculator="redistricting.calculators.Percent"
                 label="Two or more races" >
                 <LegislativeBody ref="congress"/>
@@ -367,7 +367,7 @@
                 <SubjectArgument name="denominator" ref="poptot" />
             </ScoreFunction>
 
-            <ScoreFunction id="district_ageu18_percent" type="district"
+            <ScoreFunction id="district_04_ageu18_percent" type="district"
                 calculator="redistricting.calculators.Percent"
                 label="Under 18">
                 <SubjectArgument name="numerator" ref="ageu18" />
@@ -375,7 +375,7 @@
                 <LegislativeBody ref="congress"/>
             </ScoreFunction>
 
-            <ScoreFunction id="district_age1824_percent" type="district"
+            <ScoreFunction id="district_05_age1824_percent" type="district"
                 calculator="redistricting.calculators.Percent"
                 label="18-24">
                 <SubjectArgument name="numerator" ref="age1824" />
@@ -383,7 +383,7 @@
                 <LegislativeBody ref="congress"/>
             </ScoreFunction>
 
-            <ScoreFunction id="district_age2534_percent" type="district"
+            <ScoreFunction id="district_06_age2534_percent" type="district"
                 calculator="redistricting.calculators.Percent"
                 label="25-34">
                 <SubjectArgument name="numerator" ref="age2534" />
@@ -391,7 +391,7 @@
                 <LegislativeBody ref="congress"/>
             </ScoreFunction>
 
-            <ScoreFunction id="district_age3549_percent" type="district"
+            <ScoreFunction id="district_07_age3549_percent" type="district"
                 calculator="redistricting.calculators.Percent"
                 label="35-49">
                 <SubjectArgument name="numerator" ref="age3549" />
@@ -399,7 +399,7 @@
                 <LegislativeBody ref="congress"/>
             </ScoreFunction>
 
-            <ScoreFunction id="district_age5064_percent" type="district"
+            <ScoreFunction id="district_08_age5064_percent" type="district"
                 calculator="redistricting.calculators.Percent"
                 label="50-64">
                 <SubjectArgument name="numerator" ref="age5064" />
@@ -407,7 +407,7 @@
                 <LegislativeBody ref="congress"/>
             </ScoreFunction>
 
-            <ScoreFunction id="district_age65o_percent" type="district"
+            <ScoreFunction id="district_09_age65o_percent" type="district"
                 calculator="redistricting.calculators.Percent"
                 label="65+">
                 <SubjectArgument name="numerator" ref="age65o" />
@@ -713,11 +713,11 @@
                 title="Basic Information" cssclass="district_basic_info congressional"
                 template="basic_information.html">
                 <Score ref="congressional_population" />
-                <Score ref="district_contiguous" />
-                <Score ref="district_polsbypopper" />
+                <Score ref="district_02_contiguous" />
+                <Score ref="district_03_polsbypopper" />
             </ScorePanel>
 
-	    <!-- Submission One-page Summary -->
+        <!-- Submission One-page Summary -->
             <ScorePanel id="plan_submission_summary" type="plan_summary" position="1"
                 title="Plan Summary" cssclass="plan_summary congressional" template="plan_summary.html">
                 <Score ref="A_congress_plan_equipopulation_summary"/>
@@ -733,18 +733,18 @@
             <ScorePanel id="congressional_panel_demo" type="district" position="2"
                 title="Demographics" cssclass="district_demographics congressional"
                 template="demographics.html">
-                <Score ref="district_black_percent" />
-                <Score ref="district_hispanic_percent" />
-                <Score ref="district_asian_percent" />
+                <Score ref="district_12_black_percent" />
+                <Score ref="district_13_hispanic_percent" />
+                <Score ref="district_11_asian_percent" />
             </ScorePanel>
 
             <!-- Competitiveness -->
             <ScorePanel id="congressional_panel_competitiveness" type="district" position="2"
                 title="Competitiveness" cssclass="district_competitiveness congressional"
                 template="competitiveness.html">
-                <Score ref="district_votedem_percent" />
-                <Score ref="district_voterep_percent" />
-                <Score ref="district_voteoth_percent" />
+                <Score ref="district_27_votedem_percent" />
+                <Score ref="district_28_voterep_percent" />
+                <Score ref="district_29_voteoth_percent" />
             </ScorePanel>
 
             <!-- Calculator Reports configuration -->
