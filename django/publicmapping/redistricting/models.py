@@ -1680,9 +1680,9 @@ class Plan(models.Model):
         # Grab ScoreFunctions so we can use cached scores for districts if they exist
         computed_district_score = ComputedDistrictScore()
         polsbypopper_function = ScoreFunction.objects.get(
-            name='district_polsbypopper')
+            name='district_03_polsbypopper')
         contiguity_function = ScoreFunction.objects.get(
-            name='district_contiguous')
+            name='district_02_contiguous')
 
         # Need to use filter for optional calculators because they may not be in database
         # if they are not in config.xml
