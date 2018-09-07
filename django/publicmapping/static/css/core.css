@@ -1192,7 +1192,7 @@ div.toolset_group .help{
 div.toolset_group label {
   font-size: 11px;
   font-weight: 500;
-  color: #fff;
+  color: #000000;
 }
 div.toolset_group select {
   width: 100px;
