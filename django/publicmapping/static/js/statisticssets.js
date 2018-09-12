@@ -178,6 +178,11 @@ statisticssets = function(options) {
                 $('#map').trigger('resort_by_visibility');
                 $('#map').trigger('draw_highlighted_districts', [ true ]);
                 _displayCache[displayId] = rsp;
+                // Map has changed so require it to be re-validated
+                $('#verifiedp').addClass('hiddenelem');
+                $('#btnVerifyAndSubmit').removeClass('hiddenelem');
+                $('#submittocontest').addClass('inactivebox');
+                $('#btnEmailPlan').addClass('hiddenelem');
             }
         );  
     }
