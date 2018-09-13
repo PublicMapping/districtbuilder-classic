@@ -73,7 +73,7 @@
                  short_name="35-49" displayed="false" sortkey="26" />
         <Subject id="age5064" field="A50_64_POP" name="Age - 50-64"
                  short_name="50-64" displayed="false" sortkey="27" />
-        <Subject id="age65o" field="A65O_POP" name="Age - 65 and over"
+        <Subject id="age65o" field="A650_POP" name="Age - 65 and over"
                  short_name="65+" displayed="false" sortkey="28" />
     </Subjects>
 
