@@ -507,6 +507,40 @@
             </tr>
         </table>
         <div id="email_plan_required_note"> * {% trans "Indicates required field" %} </div>
+        <div style="display:none">
+        <ul class="share-buttons" id="submit-share-buttons">
+          <li class="twitter-tweet">
+            <a href="https://twitter.com/intent/tweet"
+              data-text="I just submitted a voting map to the Draw the Lines PA mapping competition. Join me! @drawthelinespa #SlaytheGerrymander."
+              data-url="https://map.drawthelinespa.org/"
+              class="twitter-share-button">
+              {% trans "Tweet" %}
+            </a>
+            <script type="text/javascript" src="https://platform.twitter.com/widgets.js"></script>
+          </li>
+
+          <li class="facebook-like">
+            <div
+              class="fb-share-button"
+              data-href="https://map.drawthelinespa.org/"
+              data-text="I just submitted a voting map to the Draw the Lines PA mapping competition. Join me! @drawthelinespa #SlaytheGerrymander."
+              data-layout="button_count"
+              data-size="small"
+              data-mobile-iframe="true">
+                <a target="_blank"
+                  href="https://www.facebook.com/sharer/sharer.php?u=https://map.drawthelinespa.org/&amp;src=sdkpreparse"
+                  class="fb-xfbml-parse-ignore">{% trans "Share" %}
+                </a>
+            </div>
+          </li>
+
+          <li class="email-share">
+            <a id="email-share-link" href="mailto:?subject=I%20just%20submitted%20a%20voting%20map%20to%20the%20Draw%20the%20Lines%20PA%20mapping%20competition.%20Join%20me!%20%40drawthelinespa%20%23SlaytheGerrymander&body=https://map.drawthelinespa.org/">
+              <button id="email-share-button"><img id="email-share-img" src="{% static 'images/icon-mail.png' %}"></button>
+            </a>
+          </li>
+        </ul>
+        </div>
     </div>
     <script type="text/javascript" src="{% static 'js/emailplan.js' %}"></script>
     <script type="text/javascript">

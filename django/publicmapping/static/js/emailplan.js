@@ -122,6 +122,8 @@ emailplan = function(options) {
             escapeOnClose: false, resizable:false,
             open: function() { $(".ui-dialog-titlebar-close", $(this).parent()).hide(); }
         });
+
+        var shareButtons = $('#submit-share-buttons');
         
         $.ajax({
             type: 'POST',
@@ -131,13 +133,13 @@ emailplan = function(options) {
                 waitDialog.remove();
                 if (data.success) {
                     $('<div />').attr('title', gettext('Submitting Plan'))
-                        .text(gettext('Thanks, your plan has been submitted.')).dialog({
+                        .text(gettext('Success! Map submitted. Share Draw the Lines with your friends:')).dialog({
                           modal:true, resizable:false,
                           buttons: [{
                             text: gettext("OK"),
                             click: function() { $(this).dialog('close'); }
                           }]
-                      });
+                      }).append(shareButtons);
                 } else if ('redirect' in data) {
                     window.location.href = data.redirect;
                 } else if ('message' in data) {
