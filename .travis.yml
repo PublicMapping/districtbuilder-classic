@@ -26,23 +26,19 @@ before_deploy:
   -in district-builder-pa.pem.enc -out ~/.ssh/district-builder-pa.pem -d
 - cp django/publicmapping/config/config.xml deployment/user-data/config.xml
 - mv ./data/districtbuilder_data.zip deployment/user-data/
-- set -v
 deploy:
 - provider: script
   skip_cleanup: true
-  script: DB_SETTINGS_BUCKET=${PROD_DB_SETTINGS_BUCKET} DB_DOCKER_HOST=${PROD_DB_DOCKER_HOST} scripts/deploy | tee deployment.log
+  script: DB_SETTINGS_BUCKET=${PROD_DB_SETTINGS_BUCKET} DB_DOCKER_HOST=${PROD_DB_DOCKER_HOST} scripts/deploy
   on:
     repo: azavea/district-builder-dtl-pa
     branch: master
 - provider: script
   skip_cleanup: true
-  script: scripts/deploy | tee deployment.log
+  script: scripts/deploy
   on:
     repo: azavea/district-builder-dtl-pa
     branch: develop
 after_deploy:
-# Potential fix for truncated build logs.
-# https://github.com/travis-ci/travis-ci/issues/8973
-- cat deployment.log && sleep 10
 - docker-compose -f docker-compose.ci.yml run --rm --entrypoint git terraform clean -fdx
 - rm -f ~/.ssh/district-builder-pa.pem
