@@ -283,6 +283,38 @@ def emailpassword(user):
 
 
 @cache_control(no_cache=True)
+def passwordhint(request):
+    status = {'success': False}
+    data = request.POST
+    username = data.get('username')
+    email = data.get('email')
+    if not username and not email:
+        status['field'] = 'both'
+        status['message'] = 'Missing username and email.'
+    elif not username:
+        status['field'] = 'username'
+        status['message'] = 'Missing username.'
+    elif not email:
+        status['field'] = 'email'
+        status['message'] = 'Missing email.'
+    else:
+        try:
+            user = User.objects.get(
+                username__exact=username,
+                email__exact=email
+            )
+            status['success'] = True
+            status['mode'] = 'hinting'
+            status['hint'] = user.profile.pass_hint
+        except Exception:
+            status['field'] = 'both'
+            status['message'] = \
+                'Invalid email and username combination. Please try again.'
+
+    return HttpResponse(json.dumps(status))
+
+
+@cache_control(no_cache=True)
 def forgotpassword(request):
     """
     A form endpoint to provide a facility for retrieving a forgotten
@@ -293,40 +325,46 @@ def forgotpassword(request):
         request -- An HttpRequest
 
     Returns:
-        A JSON object with a password hint or a message indicating that an
+        A JSON object with a message indicating that an
         email was sent with their new password.
     """
     status = {'success': False}
     data = request.POST
     username = data.get('username')
     email = data.get('email')
-    if username:
+    if not username and not email:
+        status['field'] = 'both'
+        status['message'] = 'Missing username and email.'
+    elif not username:
+        status['field'] = 'username'
+        status['message'] = 'Missing username.'
+    elif not email:
+        status['field'] = 'email'
+        status['message'] = 'Missing email.'
+    else:
         try:
-            user = User.objects.get(username__exact=username)
-            status['success'] = True
-            status['mode'] = 'hinting'
-            status['hint'] = user.profile.pass_hint
-        except:
-            status['field'] = 'username'
-            status['message'] = 'Invalid username. Please try again.'
-    elif email:
-        try:
-            user = User.objects.get(email__exact=email)
+            user = User.objects.get(
+                email__exact=email,
+                username__exact=username
+            )
             status['mode'] = 'sending'
             status['success'] = emailpassword(user)
         except User.DoesNotExist:
-            logger.info('Email not found: %s' % email)
-            status['field'] = 'email'
-            status['message'] = 'Invalid email address. Please try again.'
+            logger.info(
+                'Email and username combination not found: %s %s'.format(
+                    email,
+                    username
+                )
+            )
+            status['field'] = 'both'
+            status['message'] = \
+                'Invalid email and username combination. Please try again.'
             status['success'] = False
-        except:
+        except Exception:
             logger.exception('Error sending password reset email')
-            status[
-                'message'] = 'An error occurred sending password reset email'
+            status['message'] = \
+                'An error occurred sending password reset email'
             status['success'] = False
-    else:
-        status['field'] = 'both'
-        status['message'] = 'Missing username or email.'
 
     return HttpResponse(json.dumps(status))
 

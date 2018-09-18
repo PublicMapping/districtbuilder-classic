@@ -43,6 +43,7 @@ urlpatterns = ([
         'template_name': 'index.html'
     }),
     url(r'^accounts/logout/$', publicmapping_views.userlogout),
+    url(r'^accounts/hint/$', publicmapping_views.passwordhint),
     url(r'^accounts/forgot/$', publicmapping_views.forgotpassword),
     url(r'^accounts/update/$', publicmapping_views.userupdate),
     url(r'^districtmapping/', include(redistricting_urls)),

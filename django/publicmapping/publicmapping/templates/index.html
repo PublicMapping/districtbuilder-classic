@@ -216,12 +216,12 @@
     </div>
     {% include "account.html" %}
     <div id="forgotpass">
-        <form id="forgotForm" action="/accounts/forgot/" method="POST">
+        <form id="forgotForm" action="/accounts/hint/" method="POST">
             {% csrf_token %}
             <div id="forgotprompt">
                 <div id="username_hint">{% trans "Get A Hint" %}</div>
                 <div>
-                    {% trans "Enter your username to retrieve your password hint that you used when registering for an account." %}
+                    Enter your username and email address to get your password hint.
                 </div>
                 <p>&nbsp;</p>
                 <table class="forgotTable">
@@ -230,13 +230,6 @@
                         <td><input id="forgotusername" name="forgotusername" class="field" maxlength="30"/></td>
                     </tr>
                 </table>
-                <div id="or">{% trans "OR" %}</div>
-
-                <div id="email_reset">{% trans "Reset Your Password" %}</div>
-                <div>
-                    {% trans "Enter your email address to reset your password if you have forgotten your username." %}
-                </div>
-                <p>&nbsp;</p>
                 <table class="forgotTable">
                     <tr>
                         <td class="fname">{% trans "Email" %}</td>
@@ -245,7 +238,7 @@
                 </table>
             </div>
             <div id="forgotButton">
-                <button id="doRemind">{% trans "Begin" %}</button>
+                <button id="doRemind">{% trans "Get Hint" %}</button>
             </div>
 
             <div id="forgothint">
@@ -254,7 +247,7 @@
 
                 <input id="forgothintbox" name="forgothintbox" class="field"/>
 
-                <p>{% trans "If you still can't recall your password, click on the 'Back' button, and enter your email address, so we can email your password to you." %}</p>
+                <p>{% trans "If you still can't recall your password, click on the 'Reset Password' button so we can reset and email your password to you." %}</p>
 
             </div>
             <div id="forgotsent">
@@ -262,7 +255,7 @@
                 <p>{% trans "Your password has been emailed to you. You should receive your password in your inbox in the next few minutes." %}</p>
             </div>
             <div id="forgotButton2">
-                <button id="doBack">{% trans "Back" %}</button>
+                <button id="doReset">{% trans "Reset Password" %}</button>
                 <button id="doClose">{% trans "Close" %}</button>
             </div>
         </form>
