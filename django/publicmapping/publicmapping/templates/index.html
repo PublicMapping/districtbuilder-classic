@@ -138,8 +138,7 @@
         <ul class="share-buttons">
           <li class="twitter-tweet">
             <a href="https://twitter.com/intent/tweet"
-              data-text="{% trans 'Homepage tweet text' %}"
-              data-hashtags="redistricting"
+              data-text="I'm drawing a voting map for Draw the Lines PA. Join me! @drawthelinespa #SlaytheGerrymander"
               class="twitter-share-button">
               {% trans "Tweet" %}
             </a>
@@ -150,6 +149,7 @@
             <div
               class="fb-share-button"
               data-href="{{ request.build_absolute_uri }}"
+              data-text="I'm drawing a voting map for Draw the Lines PA. Join me! @drawthelinespa #SlaytheGerrymander"
               data-layout="button_count"
               data-size="small"
               data-mobile-iframe="true">
@@ -167,7 +167,7 @@
           </li>
 
           <script type="text/javascript">
-            var mailLink = 'mailto:?subject={% trans "Welcome to DistrictBuilder" %}&body=' + window.location.href;
+            var mailLink = 'mailto:?subject=I%27m%20drawing%20a%20voting%20map%20for%20Draw%20the%20Lines%20PA.%20Join%20me!%20%40drawthelinespa%20%23SlaytheGerrymander&body=' + window.location.href;
             document.getElementById('email-share-link').setAttribute('href', mailLink);
           </script>
         </ul>
