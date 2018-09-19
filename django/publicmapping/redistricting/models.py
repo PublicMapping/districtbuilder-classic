@@ -3235,7 +3235,7 @@ class District(models.Model):
         objects whose two referenced geounits both fall within
         the geometry of this district.
         """
-        if not self.geom:
+        if not self.geom or ContiguityOverride.objects.count() == 0:
             return []
 
         filter = Q(override_geounit__geom__within=self.geom)
