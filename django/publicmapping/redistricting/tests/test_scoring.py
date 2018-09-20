@@ -118,7 +118,7 @@ class ScoringTestCase(BaseTestCase):
         # HTML
         score = schwartzFunction.score(self.district1, 'html')
         self.assertEqual(
-            "86.83%", score,
+            "86.8%", score,
             'Schwartzberg HTML for District 1 was incorrect: ' + score)
 
         # JSON

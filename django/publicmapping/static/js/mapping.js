@@ -2425,7 +2425,14 @@ function mapinit(srs,maxExtent) {
                 row.append(swatch);
 
                 var title = $('<td/>');
-                title.append( rule.title );
+
+                var numberWithCommas = function(x) {
+                  return x.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                }
+
+                newRuleTitle = rule.title.indexOf('.') === -1 ? rule.title :
+                    rule.title.substring(0, rule.title.indexOf('.'))
+                title.append(numberWithCommas(newRuleTitle));
 
                 row.append(title);
 

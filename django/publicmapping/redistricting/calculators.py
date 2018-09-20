@@ -168,9 +168,9 @@ class CalculatorBase(object):
         @return: A string representing the result as a percentage
         """
         if span:
-            t = Template('<span>{{ percentage|floatformat:2 }}%</span>')
+            t = Template('<span>{{ percentage|floatformat:1 }}%</span>')
         else:
-            t = Template('{{ percentage|floatformat:2 }}%')
+            t = Template('{{ percentage|floatformat:1 }}%')
         c = Context({'percentage': self.result['value'] * 100})
         return t.render(c)
 
@@ -1434,9 +1434,11 @@ class Interval(CalculatorBase):
             if 'index' in self.result and 'subject' in self.result:
                 interval = self.result['index']
                 interval_class = "interval_%d" % interval if interval >= 0 else 'no_interval'
+                a = "{:,}".format(self.result['value'])
+                interval_text = a[:a.index('.')]
                 t = '<span class="{{ class }} {{ result.subject }}">' \
-                    '{{ result.value|floatformat:0 }}</span>'
-                c = {'class': interval_class}
+                    '{{ text }}</span>'
+                c = {'class': interval_class, 'text': interval_text}
                 return self.template(t, c)
         return self.empty_html_result
 
