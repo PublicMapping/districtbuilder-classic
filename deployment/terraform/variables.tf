@@ -34,5 +34,5 @@ variable "ssh_identity_file_path" {
 
 variable "cloudfront_aliases" {
   description = "List of CNAMES that will refer to this project"
-  default = []
+  default     = []
 }

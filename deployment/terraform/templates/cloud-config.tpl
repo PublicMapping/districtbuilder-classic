@@ -8,13 +8,55 @@ packages:
   - aws-cli
   - unzip
   - vim
+  - awslogs
 
 write_files:
-- owner: root:root
-  path: /etc/cron.d/docker-prune
-  content: |
-    # Remove all images older than 7 days (168 hours)
-    @daily root docker system prune -af --filter "until=168h"
+  - owner: root:root
+    path: /etc/cron.d/docker-prune
+    content: |
+      # Remove all images older than 7 days (168 hours)
+      @daily root docker system prune -af --filter "until=168h"
+
+  - path: /etc/awslogs/awslogs.conf
+    permissions: 0644
+    owner: root:root
+    content: |
+      [general]
+      state_file = /var/lib/awslogs/agent-state
+
+      [/var/log/dmesg]
+      file = /var/log/dmesg
+      log_group_name = log${environment}${state}AppServer
+      log_stream_name = dmesg/{instance_id}
+
+      [/var/log/messages]
+      file = /var/log/messages
+      log_group_name = log${environment}${state}AppServer
+      log_stream_name = messages/{instance_id}
+      datetime_format = %b %d %H:%M:%S
+
+      [/var/log/docker]
+      file = /var/log/docker
+      log_group_name = log${environment}${state}AppServer
+      log_stream_name = docker/{instance_id}
+      datetime_format = %Y-%m-%dT%H:%M:%S.%f
+
+
+  - path: /etc/init/awslogs.conf
+    permissions: 0644
+    owner: root:root
+    content: |
+      description "Configure and start CloudWatch Logs agent on Amazon ECS container instance"
+      author "Amazon Web Services"
+      start on stopped rc RUNLEVEL=[345]
+
+      script
+          exec 2>>/var/log/cloudwatch-logs-start.log
+          set -x
+          service awslogs start
+          chkconfig awslogs on
+      end script
+
 
 bootcmd:
   - mv /etc/init/ecs.conf /etc/init/ecs.conf.disabled
