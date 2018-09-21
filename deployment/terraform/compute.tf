@@ -30,6 +30,8 @@ data "template_file" "user_data" {
 
   vars {
     zip_file_uri = "${var.remote_state_bucket_prefix}-${lower(var.environment)}-config-${var.aws_region}/docker_certs/server/${lower(var.state)}.zip"
+    state        = "${upper(var.state)}"
+    environment  = "${var.environment}"
   }
 }
 
