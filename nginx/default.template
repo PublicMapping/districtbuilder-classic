@@ -15,9 +15,25 @@ server {
   # Long timeouts are necessary for extended split reports
   proxy_read_timeout 300s;
 
+  location ~ /districtmapping/plan/\d+/unlockedgeometries/ {
+    client_max_body_size 20m;
+    client_body_buffer_size 1m;
+
+    # More buffers are necessary for responses containing
+    # Polygon selections
+    proxy_buffers 24 4k;
+    proxy_pass http://web;
+  }
+
+  location ~ /districtmapping/plan/\d+/district/versioned/ {
+    # More buffers are necessary for responses containing
+    # Polygon selections
+    proxy_buffers 24 4k;
+    proxy_pass http://web;
+  }
+
   location / {
     proxy_pass http://web;
-    client_max_body_size 20M;
   }
 
   location /geoserver/ {
