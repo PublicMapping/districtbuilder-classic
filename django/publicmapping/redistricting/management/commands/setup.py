@@ -134,6 +134,12 @@ class Command(BaseCommand):
             action='store_true',
             help="Create and compile a message file for each language defined.",
             default=False)
+        parser.add_argument(
+            '-u',
+            '--updatefield',
+            dest="updatefield",
+            action="append",
+            help="Subject field to update.")
 
     def setup_logging(self, verbosity):
         """
@@ -215,6 +221,9 @@ file and try again.
         geoutil = SpatialUtils(store)
 
         try:
+            updatefield = None
+            if options.get("updatefield") is not None:
+                updatefield = options.get("updatefield")[0]
             optlevels = options.get("geolevels")
             nestlevels = options.get("nesting")
 
@@ -226,7 +235,8 @@ file and try again.
                     if optlevels is not None:
                         importme = len(optlevels) == 0 or (i in optlevels)
                         if importme:
-                            self.import_geolevel(store, geolevel)
+                            self.import_geolevel(
+                                store, geolevel, updatefield)
 
                     if nestlevels is not None:
                         nestme = len(nestlevels) == 0
@@ -298,7 +308,7 @@ file and try again.
         # means that  an error occurred - the opposite of the meaning of all_ok's bool
         sys.exit(not all_ok)
 
-    def import_geolevel(self, store, geolevel):
+    def import_geolevel(self, store, geolevel, updatefield):
         """
         Import the geography at a geolevel.
 
@@ -340,7 +350,7 @@ ERROR:
                 sconfig.append(salconfig)
             gconfig['subject_fields'].append(sconfig)
 
-        self.import_shape(store, gconfig)
+        self.import_shape(store, gconfig, updatefield)
 
     def import_prereq(self, config, force):
         """
@@ -365,7 +375,7 @@ ERROR:
 
         return success
 
-    def import_shape(self, store, config):
+    def import_shape(self, store, config, updatefield):
         """
         Import a shapefile, based on a config.
 
@@ -543,7 +553,8 @@ ERROR:
                         g,
                         subject_objects,
                         feat,
-                        updates_possible=not should_create)
+                        not should_create,
+                        updatefield)
 
             logger.info('100%')
 
@@ -577,7 +588,11 @@ ERROR:
 
                     if g.count() > 0:
                         self.set_geounit_characteristic(
-                            g[0], subject_objects, feat)
+                            g[0],
+                            subject_objects,
+                            feat,
+                            True,
+                            updatefield)
 
             logger.info('100%')
 
@@ -585,16 +600,19 @@ ERROR:
                                    g,
                                    subject_objects,
                                    feat,
-                                   updates_possible=True):
+                                   updates_possible,
+                                   updatefield):
         to_be_inserted = []
         for attr, obj in subject_objects.iteritems():
             if attr.endswith('_by_id'):
                 continue
+            if updatefield is not None:
+                if attr != updatefield:
+                    continue
             try:
                 value = Decimal(str(feat.get(attr))).quantize(
                     Decimal('000000.0000', 'ROUND_DOWN'))
             except:
-
                 # logger.info('No attribute "%s" on feature %d' , attr, feat.fid)
                 continue
             percentage = '0000.00000000'
