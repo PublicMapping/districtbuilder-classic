@@ -222,6 +222,7 @@ KEY_VALUE_STORE = {
     'DB': os.getenv('KEY_VALUE_STORE_DB'),
 }
 
+MAP_SERVER_PORT = os.getenv('WEB_APP_PORT')
 MAP_SERVER = os.getenv('MAP_SERVER_HOST')
 MAP_SERVER_USER = os.getenv('MAP_SERVER_ADMIN_USER')
 MAP_SERVER_PASS = os.getenv('MAP_SERVER_ADMIN_PASSWORD')
@@ -255,7 +256,10 @@ REPORTS_ENABLED = 'CALC'
 WATCHMAN_CHECKS = (
     'watchman.checks.caches',
     'watchman.checks.databases',
+    'redistricting.health_checks.check_geoserver'
 )
+
+WATCHMAN_ERROR_CODE = 500
 
 # NOTE: Leave this at the end of the file!
 # These settings are generated based on config.xml
