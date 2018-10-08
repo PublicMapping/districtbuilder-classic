@@ -19,6 +19,11 @@ services:
       - ./django/publicmapping/static/:/opt/static/
 
   django:
+    healthcheck:
+      test: ["CMD-SHELL", "/usr/local/bin/python", "manage.py", "watchman"]
+      interval: 5s
+      timeout: 5s
+      retries: 3
     volumes:
       - ./django/publicmapping/:/usr/src/app/
       - ./data/:/data/
