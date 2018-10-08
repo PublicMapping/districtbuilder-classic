@@ -32,6 +32,7 @@ js_info_dict = {
 
 urlpatterns = ([
     url(r'^$', publicmapping_views.index),
+    url(r'^health-check/', include('watchman.urls')),
     url(r'^i18n', include('django.conf.urls.i18n')),
     url(r'^rosetta', include('rosetta.urls')),
     url(r'^jsi18n$',

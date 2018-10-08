@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'polib',
     'rosetta',
     'tagging',
+    'watchman',
 
     # local
     'publicmapping',
@@ -249,6 +250,12 @@ WEB_TEMP = '/tmp'
 SITE_ID = 2
 
 REPORTS_ENABLED = 'CALC'
+
+# Watchman config
+WATCHMAN_CHECKS = (
+    'watchman.checks.caches',
+    'watchman.checks.databases',
+)
 
 # NOTE: Leave this at the end of the file!
 # These settings are generated based on config.xml
