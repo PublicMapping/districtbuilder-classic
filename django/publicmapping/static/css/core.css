@@ -1204,6 +1204,10 @@ background-color: transparent;
 border:none;
 }
 
+#control_assign_district > label {
+  color: #000;
+}
+
 div#no_edit_at_zoom_level {
   height: 51px;
   width: 70%;
