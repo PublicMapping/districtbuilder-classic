@@ -1387,7 +1387,7 @@ msgid "Contest division"
 msgstr ""
 
 #: redistricting/templates/editplan.html:419
-msgid "Youth (Grades 5-12)"
+msgid "Youth (Age 13 through Grade 12)"
 msgstr ""
 
 #: redistricting/templates/editplan.html:420
