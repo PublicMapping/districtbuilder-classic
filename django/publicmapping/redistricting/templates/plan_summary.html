@@ -33,7 +33,7 @@
 {% load redistricting_extras %}
 {% load i18n %}
 <div class="{{ cssclass }}">
-<h3>{{ planname|truncatechars:25 }}</h3>
+<h3>Statewide Stats</h3>
 {% for score in planscores %}
     {% if forloop.first %}
         <div class="summary_header"><label>{% trans "Score (Target)" %}</label><span>{% trans "Districts" %}</span></div>

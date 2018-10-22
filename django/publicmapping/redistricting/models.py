@@ -2863,7 +2863,7 @@ class PlanSubmission(models.Model):
     contest_division = models.CharField(
         choices=(
             ('ADULT', 'Adult (non-student)'),
-            ('YOUTH', 'Youth (grades 5-12)'),
+            ('YOUTH', 'Youth (Age 13 through Grade 12)'),
             ('ACADM', 'Higher Ed (Undergraduate, graduate, professional'),
         ),
         max_length=5
@@ -2946,6 +2946,9 @@ class PlanSubmission(models.Model):
             'Warren',
             'Washington',
             'Westmoreland',
+        ]),
+        'Non-PA Resident': set([
+            'Non-PA Resident',
         ]),
     }
 

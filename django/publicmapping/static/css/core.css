@@ -674,6 +674,11 @@ div#form_action input#txtNewName {
 width: 100%;
 }
 
+label.ui-state-active {
+  background-color: #004FE2 !important;
+  color: #fff !important
+}
+
 div#form_action button {margin-top: 10px;width: 100%;background-color: #004FE2 !important;color: #fff !important;border-color: transparent !important;font-weight: 500;}
 
 

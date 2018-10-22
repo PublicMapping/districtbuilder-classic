@@ -109,10 +109,7 @@ $(function(){
             // A basic password complexity test; At least 8 characters and at least
             // one number, one lower-case letter and one upper-case letter
             var isComplex = function(password) {
-                return /\d/.test(password) &&
-                     /[a-z]/.test(password) &&
-                     /[A-Z]/.test(password) &&
-                     password.length >= 8;
+                return password.length >= 8;
             };
 
             if (!isComplex(newpasswordfield1.val())) {
