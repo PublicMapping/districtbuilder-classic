@@ -2947,6 +2947,9 @@ class PlanSubmission(models.Model):
             'Washington',
             'Westmoreland',
         ]),
+        'Non-PA Resident': set([
+            'Non-PA Resident',
+        ]),
     }
 
     @property
