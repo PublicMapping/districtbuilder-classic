@@ -336,6 +336,7 @@
                 <td class="fname">{% trans "County" %} *</td>
                 <td>
                     <select name="county" class="field required" maxlength="50">
+                        <option disabled selected value>Select an option</option>
                         <option value="Non-PA Resident">Non-PA Resident</option>
                         <option value="Adams">Adams</option>
                         <option value="Allegheny">Allegheny</option>
@@ -415,6 +416,7 @@
                 <td class="fname">{% trans "Contest division" %} *</td>
                 <td>
                     <select name="contest_division" class="field required">
+                        <option disabled selected value>Select an option</option>
                         <option value="YOUTH">{% trans "Youth (Age 13 through Grade 12)" %}</option>
                         <option value="ACADM">{% trans "Higher Ed (Undergraduate, Graduate, Professional)" %}</option>
                         <option value="ADULT">{% trans "Adult (Non-student)" %}</option>
