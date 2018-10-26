@@ -55,13 +55,13 @@
                  short_name="Nat Amer VAP" displayed="false" sortkey="17" percentage_denominator="vap" />
         <Subject id="vapasn" field="O18ASIAN" name="18 years and older, Asian alone"
                  short_name="As Amer VAP" displayed="false" sortkey="18" percentage_denominator="vap" />
-        <Subject id="vappild" field="O18NHI_PI" name="18 years and older, Native Hawaiian and Other Pacific Islander"
+        <Subject id="vappild" field="N18NHI_PI" name="18 years and older, Native Hawaiian and Other Pacific Islander"
                  short_name="Pac Isldr VAP" displayed="false" sortkey="19" percentage_denominator="vap" />
         <Subject id="vapoth" field="O18_SOR" name="18 years and older, Some Other Race alone"
                  short_name="Other VAP" displayed="false" sortkey="20" percentage_denominator="vap" />
         <Subject id="vaptwo" field="O18_2MORE" name="18 years and older, Two or More Races"
                  short_name="Two+ VAP" displayed="false" sortkey="21" percentage_denominator="vap" />
-        <Subject id="prison" field="CF_POP" name="Prison population"
+        <Subject id="prison" field="CFPOP" name="Prison population"
                  short_name="Prison Pop." displayed="false" sortkey="22" />
         <Subject id="ageu18" field="U18_POP" name="Age - under 18"
                  short_name="Under 18" displayed="false" sortkey="23" />
