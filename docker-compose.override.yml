@@ -39,7 +39,3 @@ services:
   geoserver:
     links:
       - postgres:${DATABASE_HOST}
-
-  languages:
-    volumes:
-      - ./django/publicmapping/:/usr/src/app/

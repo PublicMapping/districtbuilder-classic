@@ -25,6 +25,18 @@ services:
       - /opt/district-builder/user-data/districtbuilder_data.zip:/data/districtbuilder_data.zip
       - /opt/district-builder/user-data/config_settings.py:/usr/src/app/publicmapping/config_settings.py
       - /opt/district-builder/user-data/config.xml:/usr/src/app/config/config.xml
+    command:
+      - "--workers=2"
+      - "--timeout=60"
+      - "--bind=0.0.0.0:${WEB_APP_PORT}"
+      - "--log-level=info"
+      - "--access-logfile=-"
+      - "--error-logfile=-"
+      - "--timeout=300"
+      - "-kgevent"
+      - "publicmapping.wsgi"
+    links:
+      - xray:${XRAY_DAEMON_HOST}
     logging:
       driver: syslog
       options:
@@ -50,15 +62,18 @@ services:
       driver: syslog
       options:
         tag: districtbuilder-geoserver
-
-  languages:
-    image: districtbuilder-languages:${GIT_COMMIT:-latest}
-    container_name: districtbuilder-languages
+  xray:
+    image: districtbuilder-xray:${GIT_COMMIT:-latest}
+    container_name: districtbuilder-xray
     restart: on-failure
-    volumes:
-      - /opt/district-builder/user-data/config_settings.py:/usr/src/app/publicmapping/config_settings.py
-      - /opt/district-builder/user-data/config.xml:/usr/src/app/config/config.xml
+    build:
+      context: ./xray
+    env_file:
+      - .env
+    ports:
+      - "${XRAY_DAEMON_PORT}:${XRAY_DAEMON_PORT}"
+      - "${XRAY_DAEMON_PORT}:${XRAY_DAEMON_PORT}/udp"
     logging:
       driver: syslog
       options:
-        tag: districtbuilder-languages
+        tag: districtbuilder-xray
