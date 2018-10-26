@@ -35,6 +35,8 @@ services:
       - "--timeout=300"
       - "-kgevent"
       - "publicmapping.wsgi"
+    links:
+      - xray:${XRAY_DAEMON_HOST}
     logging:
       driver: syslog
       options:
@@ -62,3 +64,18 @@ services:
       driver: syslog
       options:
         tag: districtbuilder-geoserver
+  xray:
+    image: districtbuilder-xray:${GIT_COMMIT:-latest}
+    container_name: districtbuilder-xray
+    restart: on-failure
+    build:
+      context: ./xray
+    env_file:
+      - .env
+    ports:
+      - "${XRAY_DAEMON_PORT}:${XRAY_DAEMON_PORT}"
+      - "${XRAY_DAEMON_PORT}:${XRAY_DAEMON_PORT}/udp"
+    logging:
+      driver: syslog
+      options:
+        tag: districtbuilder-xray

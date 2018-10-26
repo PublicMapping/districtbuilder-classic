@@ -17,6 +17,8 @@ import os
 import logging.config
 import logging
 from . import REDIS_URL
+from aws_xray_sdk.core import xray_recorder
+from aws_xray_sdk.core import patch_all
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -36,6 +38,7 @@ MANAGERS = ADMINS
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', False)
+ENVIRONMENT = os.getenv('ENVIRONMENT', 'Development')
 
 ALLOWED_HOSTS = os.getenv('HOST').split(',')
 
@@ -75,6 +78,12 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.locale.LocaleMiddleware',
 ]
+
+if ENVIRONMENT in ['Staging', 'Production']:
+    xray_recorder.configure(plugins=["EC2Plugin"])
+    patch_all()
+    MIDDLEWARE = ['aws_xray_sdk.ext.django.middleware.XRayMiddleware'] + MIDDLEWARE
+    INSTALLED_APPS += ['aws_xray_sdk.ext.django']
 
 # Rollbar setup
 ROLLBAR_SERVER_TOKEN = os.getenv('ROLLBAR_SERVER_TOKEN', None)
