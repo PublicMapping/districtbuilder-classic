@@ -52,7 +52,7 @@ function make_translations() {
 
 function change_geoserver_admin_password() {
     docker-compose \
-        exec -T geoserver ./bin/change_admin_password.sh
+        exec -T geoserver change_admin_password.sh
 }
 
 if [ "${BASH_SOURCE[0]}" = "${0}" ]
