@@ -79,20 +79,20 @@ MIDDLEWARE = [
     'django.middleware.locale.LocaleMiddleware',
 ]
 
+ROLLBAR_CLIENT_TOKEN = os.getenv('ROLLBAR_CLIENT_TOKEN', None)
+ROLLBAR_SERVER_TOKEN = os.getenv('ROLLBAR_SERVER_TOKEN', None)
+ROLLBAR = None
+
 if ENVIRONMENT in ['Staging', 'Production']:
     xray_recorder.configure(plugins=["EC2Plugin"])
     patch_all()
     MIDDLEWARE = ['aws_xray_sdk.ext.django.middleware.XRayMiddleware'] + MIDDLEWARE
     INSTALLED_APPS += ['aws_xray_sdk.ext.django']
 
-# Rollbar setup
-ROLLBAR_SERVER_TOKEN = os.getenv('ROLLBAR_SERVER_TOKEN', None)
-ROLLBAR_CLIENT_TOKEN = os.getenv('ROLLBAR_CLIENT_TOKEN', None)
-ROLLBAR = None
-if ROLLBAR_SERVER_TOKEN and not DEBUG:
+    # Rollbar setup
     ROLLBAR = {
         'access_token': ROLLBAR_SERVER_TOKEN,
-        'environment': 'production',
+        'environment': ENVIRONMENT,
         'branch': 'master',
         'root': '/usr/src/app',
     }
