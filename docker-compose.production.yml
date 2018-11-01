@@ -26,14 +26,13 @@ services:
       - /opt/district-builder/user-data/config_settings.py:/usr/src/app/publicmapping/config_settings.py
       - /opt/district-builder/user-data/config.xml:/usr/src/app/config/config.xml
     command:
-      - "--workers=2"
+      - "--workers=5"
       - "--timeout=60"
       - "--bind=0.0.0.0:${WEB_APP_PORT}"
       - "--log-level=info"
       - "--access-logfile=-"
       - "--error-logfile=-"
       - "--timeout=300"
-      - "-kgevent"
       - "publicmapping.wsgi"
     links:
       - xray:${XRAY_DAEMON_HOST}
