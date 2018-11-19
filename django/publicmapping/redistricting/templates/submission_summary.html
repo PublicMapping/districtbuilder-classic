@@ -33,7 +33,7 @@
     <h2>Submission Details</h2>
     <div class="region">Region: {{ submission.region }}</div>
     <div class="division">Division: {{ submission.get_contest_division_display }}</div>
-    <div class="plan-name">Map name: {{ submission.submitted_plan_name }}</div>
+    <div class="plan-name">Map name: <a href="{{ plan_url }}">{{ submission.submitted_plan_name }}</a></div>
     <div class="contestant-name">Contestant name: {{ submission.first_name }} {{ submission.last_name }}</div>
     <div class="contestant-email">Email: {{ submission.email_address }}</div>
     <div class="map-values">Prioritized Values: {{ submission.values_choices }}</div>

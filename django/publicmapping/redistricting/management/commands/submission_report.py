@@ -1,10 +1,12 @@
 import os.path
 import codecs
 
+from django.conf import settings
 from django.contrib.staticfiles.storage import staticfiles_storage
 from django.core.management.base import BaseCommand
 from django.core import serializers
 from django.template import loader
+from django.urls import reverse
 from django.utils import translation
 
 from redistricting.models import ScorePanel, PlanSubmission
@@ -45,6 +47,10 @@ class Command(BaseCommand):
         leaflet_css = staticfiles_storage.open('leaflet/leaflet.css').read()
         leaflet_js = staticfiles_storage.open('leaflet/leaflet.js').read()
         context = dict(
+            plan_url='https://{host}{path}'.format(
+                host=settings.ALLOWED_HOSTS[0],
+                path=reverse('plan-view', args=[submission.plan_id])
+            ),
             submission=submission,
             scores_html=scores_html,
             leaflet_css=leaflet_css,
