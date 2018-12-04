@@ -7,6 +7,17 @@ users:
 packages:
   - aws-cli
   - unzip
+  - vim
+
+write_files:
+- owner: root:root
+  path: /etc/cron.d/docker-prune
+  content: |
+    # Remove all images older than 7 days (168 hours)
+    @daily root docker system prune -af --filter "until=168h"
+
+bootcmd:
+  - mv /etc/init/ecs.conf /etc/init/ecs.conf.disabled
 
 runcmd:
   - curl -L https://github.com/docker/compose/releases/download/1.21.0/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose

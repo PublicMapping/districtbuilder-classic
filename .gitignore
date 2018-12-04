@@ -11,6 +11,10 @@ sld
 geoserver/data_dir
 data
 config_settings.py
+
+*-backup.xsd
+
+# Terraform
 deployment/terraform/.terraform
 *.tfplan
 *.tfvars

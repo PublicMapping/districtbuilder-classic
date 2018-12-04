@@ -35,6 +35,7 @@ services:
       - reports:/opt/reports
       - sld:/opt/sld
       - tmp:/tmp
+      - translations:/usr/src/app/locale
     entrypoint: /usr/local/bin/gunicorn
     command:
       - "--workers=2"
@@ -59,6 +60,7 @@ services:
     volumes:
       - reports:/opt/reports
       - tmp:/tmp
+      - translations:/usr/src/app/locale
     entrypoint: /usr/local/bin/celery
     command:
       - "worker"
@@ -80,20 +82,9 @@ services:
     ports:
       - "${MAP_SERVER_PORT}:${WEB_APP_PORT}"
 
-  languages:
-    build:
-      context: ./django/publicmapping
-    env_file:
-      - .env
-    entrypoint: /usr/local/bin/python
-    command:
-      - "manage.py"
-      - "makelanguagefiles"
-    depends_on:
-      - django
-
 volumes:
   reports:
   data:
   sld:
   tmp:
+  translations:
