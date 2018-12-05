@@ -437,7 +437,6 @@ def commonplan(request, planid):
     plan = Plan.objects.filter(id=planid)
     if plan.count() == 1:
         plan = plan[0]
-        plan.edited = getutc(plan.edited)
         levels = plan.legislative_body.get_geolevels()
         districts = plan.get_districts_at_version(
             plan.version, include_geom=False)
@@ -955,6 +954,7 @@ def uploadfile(request):
                 filename = '%s%s' % (dest.name, '.zip')
             else:
                 filename = dest.name
+            os.chmod(filename, 0664)
 
         except Exception as ex:
             logger.error('Could not save uploaded file')
@@ -1180,7 +1180,7 @@ def newdistrict(request, planid):
                 status['success'] = True
                 status['message'] = _('Created 1 new district')
                 plan = Plan.objects.get(pk=planid, owner=request.user)
-                status['edited'] = getutc(plan.edited).isoformat()
+                status['edited'] = plan.edited.isoformat()
                 status['district_id'] = district_id
                 status['version'] = plan.version
             except ValidationError:
@@ -1642,7 +1642,7 @@ def addtodistrict(request, planid, districtid):
                 % {'num_fixed_districts': fixed}
             status['updated'] = fixed
             plan = Plan.objects.get(pk=planid, owner=request.user)
-            status['edited'] = getutc(plan.edited).isoformat()
+            status['edited'] = plan.edited.isoformat()
             status['version'] = plan.version
         except Exception, ex:
             status['exception'] = traceback.format_exc()
@@ -2547,7 +2547,7 @@ def statistics_sets(request, planid):
         admin_displays = ScoreDisplay.objects.filter(
             owner__is_superuser=True,
             legislative_body=plan.legislative_body,
-            name__in=admin_display_names)
+            name__in=admin_display_names).order_by('title')
 
         for admin_display in admin_displays:
             sets.append({

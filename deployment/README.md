@@ -15,6 +15,7 @@ Amazon Web Services deployment is driven by [Terraform](https://terraform.io/), 
     * [User Data](#user-data)
     * [`scripts/infra`](#scriptsinfra)
     * [Loading Shapefile data](#loading-shapefile-data)
+    * [Fixing Staging](#fixing-staging)
 
 ## Deployment
 
@@ -101,3 +102,15 @@ $ bash recreate_staging_from_scratch
 # Remove script
 $ rm recreate_staging_from_scratch
 ```
+
+#### Fixing Pink Tiles
+
+Make sure the `pmp` workspace exists:
+
+1. Log into Geoserver (`http://origin.<domain>:8080/geoserver`). The admin username is `admin` and the password is available as an environment variable (`$MAP_SERVER_ADMIN_PASSWORD`) on the app server within the `districtbuilder-django` container (`docker exec -ti districtbuilder-django bash` and then `echo $MAP_SERVER_ADMIN_PASSWORD`).
+1. Create new `pmp` workspace if it doesn't exit (Name = `pmp`, Namespace URI = `https://github.com/PublicMapping/`)
+1. Reconfigure geoserver (`./manage.py setup config/config.xml -G` within the `districtbuilder-django` container)
+
+#### Duplicate Records
+
+Reporting being broken and the leaderboard saying "No display configured" is caused by duplicate records in the database. The easiest fix is to drop and recreate the database.

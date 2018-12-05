@@ -78,7 +78,7 @@ resource "null_resource" "provision_app_server" {
   provisioner "remote-exec" {
     inline = [
       "sudo mkdir -p /opt/district-builder/user-data",
-      "sudo mv /home/ec2-user/user-data /opt/district-builder",
+      "sudo mv /home/ec2-user/user-data/* /opt/district-builder/user-data",
       "sudo chown -R ec2-user:ec2-user /opt/district-builder/",
       "touch /opt/district-builder/user-data/config_settings.py",
     ]

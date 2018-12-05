@@ -31,8 +31,6 @@ The development environment is docker-compose for services inside a Vagrant virt
 ## tl;dr ##
 
 ```bash
-$ # Copy config and make any necessary edits
-$ cp django/publicmapping/config/config.dist.xml django/publicmapping/config/config.xml
 $ # Copy .env file and add passwords
 $ cp .env.sample .env
 $ ./scripts/setup
@@ -40,9 +38,9 @@ $ vagrant ssh
 $ ./scripts/update
 ```
 
-If you want to get DistrictBuilder up and running quickly with demo data, you can then run
+If you want to get DistrictBuilder up and running quickly with PA data, you can then run
 ```bash
-$ ./scripts/configure_va_demo
+$ ./scripts/configure_pa_data
 ```
 
 Otherwise, you'll need to provide your own shapefiles and config.xml file. Put your zipped shapefile in
@@ -82,12 +80,12 @@ From there, running `./scripts/update` builds containers. The rest of the setup 
 directly or indirectly through a setup management command. To get started, run
 `./scripts/setup`, followed by `vagrant ssh`, followed by `./scripts/update`.
  
-Then, run `./scripts/configure_va_demo`. It is not fast. Currently, it takes several hours, with the exact
+Then, run `./scripts/configure_pa_data`. It is not fast. Currently, it takes several hours, with the exact
 time depending on hardware. We are working on ways to improve the speed of loading data.
 
 The script will do several things
 
-- Fetch zipped shapefile data for Virginia into a specific location
+- Fetch zipped shapefile data for Pennsylvania into a specific location
 - Drop and recreate the `district_builder**
 - Run database migrations: create the relationships that data will be loaded into
 - Load shapes from shapefiles at different levels: create records for the shapes and characteristics
@@ -154,6 +152,7 @@ scp -i <IdentityFile> -P <Port> -r <User>@<Host>:/vagrant/django/publicmapping/l
 You can then verify the translations are correct and commit those files.
 
 ## Support
+
 
 More information about the application settings, configuration information, and run-time information is available in the PublicMapping/DistrictBuilder [wiki](https://github.com/PublicMapping/DistrictBuilder/wiki).
 
@@ -259,5 +258,3 @@ Finally, start services:
 ```bash
 $ ./scripts/server --production
 ```
-
-
