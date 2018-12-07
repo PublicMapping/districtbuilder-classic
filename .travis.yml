@@ -18,13 +18,13 @@ install:
 - sed -i 's/MAP_SERVER_ADMIN_PASSWORD=/MAP_SERVER_ADMIN_PASSWORD=geoserver/' .env
 - cp django/publicmapping/config/config.dist.xml django/publicmapping/config/config.xml
 - "./scripts/update"
-- wget -qO ./data/districtbuilder_data.zip http://s3.amazonaws.com/global-districtbuilder-data-us-east-1/pa/pa_3785_census.zip
+- wget -qO ./data/districtbuilder_data.zip https://s3.amazonaws.com/districtbuilderdata/VA_data.zip
 script:
 - "./scripts/test"
 before_deploy:
 - mkdir -p ~/.ssh
 - openssl aes-256-cbc -K $encrypted_c49e2c465c08_key -iv $encrypted_c49e2c465c08_iv
-  -in district-builder-pa.pem.enc -out ~/.ssh/district-builder-pa.pem -d
+  -in district-builder.pem.enc -out ~/.ssh/district-builder.pem -d
 - cp django/publicmapping/config/config.xml deployment/user-data/config.xml
 - mv ./data/districtbuilder_data.zip deployment/user-data/
 deploy:
@@ -42,4 +42,4 @@ deploy:
     branch: develop
 after_deploy:
 - docker-compose -f docker-compose.ci.yml run --rm --entrypoint git terraform clean -fdx
-- rm -f ~/.ssh/district-builder-pa.pem
+- rm -f ~/.ssh/district-builder.pem

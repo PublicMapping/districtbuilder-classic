@@ -14,7 +14,7 @@ services:
       - IMAGE_VERSION=${IMAGE_VERSION:-latest}
       - DB_STATE=${DB_STATE:-va}
       - DB_SETTINGS_BUCKET=${DB_SETTINGS_BUCKET:-districtbuilder-staging-config-us-east-1}
-      - DB_DOCKER_HOST=${DB_DOCKER_HOST:-origin.staging.pa.districtbuilder.azavea.com:2476}
+      - DB_DOCKER_HOST=${DB_DOCKER_HOST:-origin.staging.va.districtbuilder.azavea.com:2476}
     volumes:
       - ./:/usr/local/src
       - ~/.ssh:/root/.ssh

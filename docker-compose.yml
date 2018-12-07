@@ -59,7 +59,6 @@ services:
     volumes:
       - reports:/opt/reports
       - tmp:/tmp
-      - translations:/usr/src/app/locale
     entrypoint: /usr/local/bin/celery
     command:
       - "worker"

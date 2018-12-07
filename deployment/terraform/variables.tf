@@ -29,7 +29,7 @@ variable "remote_state_bucket_prefix" {
 variable "is_subdomain" {}
 
 variable "ssh_identity_file_path" {
-  default = "~/.ssh/district-builder-pa.pem"
+  default = "~/.ssh/district-builder.pem"
 }
 
 variable "cloudfront_aliases" {

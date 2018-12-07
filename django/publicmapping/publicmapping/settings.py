@@ -98,10 +98,6 @@ if ENVIRONMENT in ['Staging', 'Production']:
     }
     MIDDLEWARE.append('rollbar.contrib.django.middleware.RollbarNotifierMiddleware')
 
-SERIALIZATION_MODULES = {
-    "geojson": "django.contrib.gis.serializers.geojson",
-}
-
 ROOT_URLCONF = 'publicmapping.urls'
 
 TEMPLATES = [
