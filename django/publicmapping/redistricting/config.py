@@ -1054,21 +1054,42 @@ class SpatialUtils:
         # provide a way to easily change it.
         admin_user = 'admin'
         admin_password = os.getenv('MAP_SERVER_ADMIN_PASSWORD')
-        user_pass = '%s:%s' % (admin_user, admin_password)
 
-        auth = 'Basic %s' % base64.b64encode(user_pass)
         self.headers = {
-            'default': {
-                'Authorization': auth,
-                'Content-Type': 'application/json',
-                'Accepts': 'application/json'
-            },
-            'sld': {
-                'Authorization': auth,
-                'Content-Type': 'application/vnd.ogc.sld+xml',
-                'Accepts': 'application/xml'
-            }
+            'default': self.create_auth_headers(admin_user,
+                                                admin_password,
+                                                'application/json',
+                                                'application/json'),
+            'sld': self.create_auth_headers(admin_user, admin_password,
+                                            'application/vnd.ogc.sld+xml',
+                                            'application/xml'),
         }
+
+    @staticmethod
+    def create_auth_headers(username, password,
+                            content_type=None,
+                            accepts=None):
+        """
+        Construct HTTP basic auth headers.
+
+        @param username (string)
+        @param password (string)
+        @param content_type (string, optional): Value for Content-Type header
+        @param accepts (string, optional): Value for Accepts header
+
+        @return: A dictionary of Basic Auth headers including:
+                - Authorization
+                - Content-Type
+                - Accepts
+        """
+        user_pass = '%s:%s' % (username, password)
+
+        headers = {'Authorization': 'Basic %s' % base64.b64encode(user_pass)}
+
+        # Add additional headers, if provided
+        headers.update({'Content-Type': content_type} if content_type else {})
+        headers.update({"Accepts": accepts} if accepts else {})
+        return headers
 
     def purge_geoserver(self):
         """

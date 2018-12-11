@@ -77,7 +77,7 @@ if [ "${BASH_SOURCE[0]}" = "${0}" ]; then
                     rm "client.zip"
 
                     export DOCKER_TLS_VERIFY=1
-                    export DOCKER_HOST="origin.${DB_STATE}.districtbuilder.azavea.com:2476"
+                    export DOCKER_HOST="${DB_DOCKER_HOST}"
                     export DOCKER_CERT_PATH="/root/.docker"
 
                     set +e

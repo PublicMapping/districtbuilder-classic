@@ -1,10 +1,5 @@
 #!/bin/bash
 
-#
-# If you add a step to this file, be sure to also update the
-# Ansible deployment tasks in
-# deployment/ansible/roles/district-builder.app-server/tasks/main.yml
-
 set -e
 
 if [[ -n "${DB_DEBUG}" ]]; then
@@ -57,7 +52,7 @@ function make_translations() {
 
 function change_geoserver_admin_password() {
     docker-compose \
-        exec -T geoserver ./bin/change_admin_password.sh
+        exec -T geoserver change_admin_password.sh
 }
 
 if [ "${BASH_SOURCE[0]}" = "${0}" ]

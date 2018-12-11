@@ -11,7 +11,7 @@ GIT_COMMIT=${GIT_COMMIT:0:7}
 function usage() {
 
     echo -n \
-"Usage: $(basename "$0") [config file path]
+"Usage: $(basename "$0") [-h | --help ][-p | --production] [-c=/path/to/config | --config=/path/to/config]
 
 Configure the application with demo data loaded from /data/districtbuilder_data.zip
 "
@@ -25,11 +25,11 @@ function load_configured_data() {
 
     echo "Loading shapefiles into database"
     docker-compose \
-        exec -T django ./manage.py setup "${configPath}" -g0 -g1 -g2
+        exec -T django ./manage.py setup "${configPath}" -g0 -g1
 
     echo "Nesting geolevels"
     docker-compose \
-        exec -T django ./manage.py setup "${configPath}" -n0 -n1 -n2
+        exec -T django ./manage.py setup "${configPath}" -n0 -n1
 
     echo "Creating template plans"
     docker-compose \
@@ -50,25 +50,32 @@ function load_configured_data() {
 
 if [ "${BASH_SOURCE[0]}" = "${0}" ]
 then
-    if [ "${1:-}" = "--help" ]
-    then
-        usage
-    else
-        configPath=${1:-config/config.xml}
-        if [ "${1:-}" = "--production" ]
-        then
-          # Make these environment variables available
-          # to docker-compose in production.
-          export COMPOSE_FILE="docker-compose.yml:docker-compose.production.yml"
-          export GIT_COMMIT
+    configPath="config/config.xml"
+    DATA_CONTAINERS=("postgres" "django")
+    for FLAG in "${@}"
+    do
+        echo "Processing flag ${FLAG}"
+        case "${FLAG}" in
+            --help|-h)
+                usage
+                exit
+                ;;
+            --production|-p)
+                # Make these environment variables available
+                # to docker-compose in production.
+                export COMPOSE_FILE="docker-compose.yml:docker-compose.production.yml"
+                export GIT_COMMIT
+                DATA_CONTAINERS=("django")
+                ;;
+            --config=*|-c=*)
+                configPath="${FLAG#*=}"
+                ;;
+            *)
+                echo "Flag ${FLAG} is invalid. Skipping..."
+                ;;
+        esac
+    done
 
-          DATA_CONTAINERS=("django")
-        else
-          DATA_CONTAINERS=("postgres" "django")
-        fi
         docker-compose up -d "${DATA_CONTAINERS[@]}"
         load_configured_data
-    fi
-    exit
 fi
-

@@ -20,6 +20,6 @@ deployment/terraform/.terraform
 *.tfvars
 *.tfstate*
 *.retry
-deployment/ansible/roles/district-builder.app-server/defaults/main.yml
+
+# User data
 deployment/user-data
-deployment/ansible/inventory

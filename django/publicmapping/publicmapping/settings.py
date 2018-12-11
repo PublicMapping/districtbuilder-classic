@@ -17,6 +17,8 @@ import os
 import logging.config
 import logging
 from . import REDIS_URL
+from aws_xray_sdk.core import xray_recorder
+from aws_xray_sdk.core import patch_all
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -36,6 +38,7 @@ MANAGERS = ADMINS
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', False)
+ENVIRONMENT = os.getenv('ENVIRONMENT', 'Development')
 
 ALLOWED_HOSTS = os.getenv('HOST').split(',')
 
@@ -57,6 +60,7 @@ INSTALLED_APPS = [
     'polib',
     'rosetta',
     'tagging',
+    'watchman',
 
     # local
     'publicmapping',
@@ -74,6 +78,25 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.locale.LocaleMiddleware',
 ]
+
+ROLLBAR_CLIENT_TOKEN = os.getenv('ROLLBAR_CLIENT_TOKEN', None)
+ROLLBAR_SERVER_TOKEN = os.getenv('ROLLBAR_SERVER_TOKEN', None)
+ROLLBAR = None
+
+if ENVIRONMENT in ['Staging', 'Production']:
+    xray_recorder.configure(plugins=["EC2Plugin"])
+    patch_all()
+    MIDDLEWARE = ['aws_xray_sdk.ext.django.middleware.XRayMiddleware'] + MIDDLEWARE
+    INSTALLED_APPS += ['aws_xray_sdk.ext.django']
+
+    # Rollbar setup
+    ROLLBAR = {
+        'access_token': ROLLBAR_SERVER_TOKEN,
+        'environment': ENVIRONMENT,
+        'branch': 'master',
+        'root': '/usr/src/app',
+    }
+    MIDDLEWARE.append('rollbar.contrib.django.middleware.RollbarNotifierMiddleware')
 
 ROOT_URLCONF = 'publicmapping.urls'
 
@@ -210,6 +233,7 @@ KEY_VALUE_STORE = {
     'DB': os.getenv('KEY_VALUE_STORE_DB'),
 }
 
+MAP_SERVER_PORT = os.getenv('WEB_APP_PORT')
 MAP_SERVER = os.getenv('MAP_SERVER_HOST')
 MAP_SERVER_USER = os.getenv('MAP_SERVER_ADMIN_USER')
 MAP_SERVER_PASS = os.getenv('MAP_SERVER_ADMIN_PASSWORD')
@@ -238,6 +262,15 @@ WEB_TEMP = '/tmp'
 SITE_ID = 2
 
 REPORTS_ENABLED = 'CALC'
+
+# Watchman config
+WATCHMAN_CHECKS = (
+    'watchman.checks.caches',
+    'watchman.checks.databases',
+    'redistricting.health_checks.check_geoserver'
+)
+
+WATCHMAN_ERROR_CODE = 500
 
 # NOTE: Leave this at the end of the file!
 # These settings are generated based on config.xml
