@@ -682,6 +682,86 @@ class PolsbyPopper(CalculatorBase):
             return _("n/a")
 
 
+class Gravelius(CalculatorBase):
+    """
+    Calculator for the Gravelius measure of compactness.
+
+    The Gravelius measure of compactness measures the circumference of a circle
+    with the same area as a district compared to perimeter of the district.
+
+    This calculator will calculate either the compactness score of a single
+    district, or it will average the compactness scores of all districts
+    in a plan.
+    """
+
+    def compute(self, **kwargs):
+        """
+        Calculate the Gravelius measure of compactness.
+
+        @keyword district: A L{District} whose compactness should be
+            computed.
+        @keyword plan: A L{Plan} whose district compactnesses should be
+            averaged.
+        @keyword version: Optional. The version of the plan, defaults to
+            the most recent version.
+        """
+        districts = []
+        if 'district' in kwargs:
+            districts = [kwargs['district']]
+            if districts[0].geom.empty:
+                return
+
+        elif 'plan' in kwargs:
+            plan = kwargs['plan']
+            version = kwargs[
+                'version'] if 'version' in kwargs else plan.version
+            districts = plan.get_districts_at_version(
+                version, include_geom=True)
+
+        else:
+            return
+
+        num = 0
+        compactness = 0
+        for district in districts:
+            if district.district_id == 0:
+                continue
+
+            if district.geom.empty:
+                continue
+
+            perimeter = 0
+            for poly in district.geom:
+                for linestring in poly:
+                    perimeter += linestring.length
+
+            # Calculate the radius of a circle with the same area as the district
+            radius = sqrt(district.geom.area / pi)
+            circumference = 2 * pi * radius
+            # The compactness is the ratio of perimeter to circumference
+            compactness += perimeter / circumference
+            num += 1
+
+        if num == 0:
+            val = 0
+        else:
+            val = compactness / num
+
+        self.result = {'value': val}
+
+    def html(self):
+        """
+        Generate an HTML representation of the compactness score. This
+        is represented as a percentage or "n/a"
+
+        @return: A number formatted similar to "1.00%", or "n/a"
+        """
+        if self.result is not None and 'value' in self.result:
+            return '<span>%s</span>' % self.percentage()
+        else:
+            return _("n/a")
+
+
 class LengthWidthCompactness(CalculatorBase):
     """
     Calculator for the Length/Width measure of compactness.

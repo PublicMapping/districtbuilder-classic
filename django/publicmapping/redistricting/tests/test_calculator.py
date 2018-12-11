@@ -10,7 +10,7 @@ from redistricting.calculators import (
     PolsbyPopper, ConvexHullRatio, SplitCounter, DistrictSplitCounter,
     Interval, MajorityMinority, Equipopulation, Contiguity, Competitiveness,
     LengthWidthCompactness, Equivalence, RepresentationalFairness,
-    CountDistricts)
+    CountDistricts, Gravelius)
 from copy import copy
 
 
@@ -923,6 +923,74 @@ class CalculatorTestCase(BaseTestCase):
         self.assertAlmostEquals(
             expected, calc.result['value'], 6,
             'Polsby-Popper for plan was incorrect. (e:%0.6f,a:%0.6f)' %
+            (expected, calc.result['value']))
+
+    def test_gravelius_single_districts(self):
+        """
+        Test the Gravelius measure of compactness.
+        """
+        dist1ids = self.geounits[0:3] + self.geounits[9:12]
+        dist2ids = self.geounits[18:21] + self.geounits[27:
+                                                        30] + self.geounits[36:
+                                                                            39]
+
+        dist1ids = map(lambda x: str(x.id), dist1ids)
+        dist2ids = map(lambda x: str(x.id), dist2ids)
+
+        self.plan.add_geounits(self.district1.district_id, dist1ids,
+                               self.geolevel.id, self.plan.version)
+        self.plan.add_geounits(self.district2.district_id, dist2ids,
+                               self.geolevel.id, self.plan.version)
+
+        district1 = max(
+            District.objects.filter(
+                plan=self.plan, district_id=self.district1.district_id),
+            key=lambda d: d.version)
+        district2 = max(
+            District.objects.filter(
+                plan=self.plan, district_id=self.district2.district_id),
+            key=lambda d: d.version)
+
+        calc = Gravelius()
+
+        calc.compute(district=district1)
+        expected = 1.151647
+        self.assertAlmostEquals(
+            expected, calc.result['value'], 6,
+            'Gravelius for District 1 was incorrect. (e:%0.6f,a:%0.6f)' %
+            (expected, calc.result['value']))
+
+        calc.compute(district=district2)
+        expected = 1.128379
+        self.assertAlmostEquals(
+            expected, calc.result['value'], 6,
+            'Gravelius for District 2 was incorrect. (e:%0.6f,a:%0.6f)' %
+            (expected, calc.result['value']))
+
+    def test_gravelius_plan(self):
+        """
+        Test the Gravelius measure of compactness.
+        """
+        dist1ids = self.geounits[0:3] + self.geounits[9:12]
+        dist2ids = self.geounits[18:21] + self.geounits[27:
+                                                        30] + self.geounits[36:
+                                                                            39]
+
+        dist1ids = map(lambda x: str(x.id), dist1ids)
+        dist2ids = map(lambda x: str(x.id), dist2ids)
+
+        self.plan.add_geounits(self.district1.district_id, dist1ids,
+                               self.geolevel.id, self.plan.version)
+        self.plan.add_geounits(self.district2.district_id, dist2ids,
+                               self.geolevel.id, self.plan.version)
+
+        calc = Gravelius()
+
+        calc.compute(plan=self.plan)
+        expected = 1.140013  # (1.151647 + 1.128379) / 2
+        self.assertAlmostEquals(
+            expected, calc.result['value'], 6,
+            'Gravelius for plan was incorrect. (e:%0.6f,a:%0.6f)' %
             (expected, calc.result['value']))
 
     def test_lengthwidth(self):
