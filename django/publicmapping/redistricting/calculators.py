@@ -173,6 +173,20 @@ class CalculatorBase(object):
         c = Context({'percentage': self.result['value'] * 100})
         return t.render(c)
 
+    def decimal(self, span=False):
+        """
+        Return the calculator's result value as a properly localized
+        decimal number
+
+        @return: A string representing the result as a decimal
+        """
+        if span:
+            t = Template('<span>{{ value|floatformat:2 }}</span>')
+        else:
+            t = Template('{{ value|floatformat:2 }}')
+        c = Context({'value': self.result['value']})
+        return t.render(c)
+
     def get_value(self, argument, district=None):
         """
         Get the value of an argument if it is a literal or a subject.
@@ -752,12 +766,12 @@ class Gravelius(CalculatorBase):
     def html(self):
         """
         Generate an HTML representation of the compactness score. This
-        is represented as a percentage or "n/a"
+        is represented as a decimal value or "n/a"
 
-        @return: A number formatted similar to "1.00%", or "n/a"
+        @return: A number formatted similar to "1.00", or "n/a"
         """
         if self.result is not None and 'value' in self.result:
-            return '<span>%s</span>' % self.percentage()
+            return self.decimal()
         else:
             return _("n/a")
 
