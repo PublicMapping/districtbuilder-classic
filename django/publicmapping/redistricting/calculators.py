@@ -771,7 +771,7 @@ class Gravelius(CalculatorBase):
         @return: A number formatted similar to "1.00", or "n/a"
         """
         if self.result is not None and 'value' in self.result:
-            return self.decimal()
+            return '<span>%s</span>' % self.decimal()
         else:
             return _("n/a")
 
