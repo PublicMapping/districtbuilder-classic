@@ -1,4 +1,4 @@
-# DistrictBuilder
+# DistrictBuilder Classic
 
 [![Build Status](https://travis-ci.org/PublicMapping/DistrictBuilder.svg?branch=develop)](https://travis-ci.org/PublicMapping/DistrictBuilder)
 
