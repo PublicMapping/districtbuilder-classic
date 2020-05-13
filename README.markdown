@@ -6,6 +6,8 @@
 
 This repository is no longer being maintained. Development for DistrictBuilder is continuing in https://github.com/PublicMapping/districtbuilder.
 
+## Overview
+
 [DistrictBuilder](http://www.districtbuilder.org/) is software created by the [Public Mapping Project](http://www.publicmapping.org/resources/software).
 
 The development environment is docker-compose for services inside a Vagrant virtual machine.
