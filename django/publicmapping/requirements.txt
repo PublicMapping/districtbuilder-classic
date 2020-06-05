@@ -2,7 +2,7 @@ Gunicorn==19.7.1
 dict2xml==1.5
 ipython==5.5.0
 gevent==1.2.2
-Django==1.11.10
+Django==1.11.29
 psycopg2==2.7.3
 celery[redis]==4.1.0
 redis==2.10.6  # See https://github.com/celery/celery/issues/5175
